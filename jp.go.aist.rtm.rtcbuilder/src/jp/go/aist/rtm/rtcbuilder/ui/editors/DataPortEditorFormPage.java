@@ -51,6 +51,7 @@ import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
 import jp.go.aist.rtm.rtcbuilder.RtcBuilderPlugin;
 import jp.go.aist.rtm.rtcbuilder.generator.param.DataPortParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
+import jp.go.aist.rtm.rtcbuilder.nl.Messages;
 import jp.go.aist.rtm.rtcbuilder.ui.StringUtil;
 import jp.go.aist.rtm.rtcbuilder.ui.preference.ComponentPreferenceManager;
 import jp.go.aist.rtm.rtcbuilder.ui.preference.RTCBuilderPreferenceManager;
@@ -98,7 +99,7 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 	 *            親のエディタ
 	 */
 	public DataPortEditorFormPage(RtcBuilderEditor editor) {
-		super(editor, "id", IMessageConstants.DATAPORT_SECTION);
+		super(editor, "id", Messages.getString("IMessageConstants.DATAPORT_SECTION"));
 		//
 		preSelection = null;
 		updateDefaultValue();
@@ -117,11 +118,12 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 	 * {@inheritDoc}
 	 */
 	protected void createFormContent(IManagedForm managedForm) {
-		ScrolledForm form = super.createBase(managedForm, IMessageConstants.DATAPORT_SECTION);
+		ScrolledForm form = super.createBase(managedForm, Messages.getString("IMessageConstants.DATAPORT_SECTION"));
 		FormToolkit toolkit = managedForm.getToolkit();
 		//
 		final Composite composite = createSectionBaseWithLabel(toolkit, form,
-				IMessageConstants.DATAPORT_TITLE, IMessageConstants.DATAPORT_EXPL, 4);
+				Messages.getString("IMessageConstants.DATAPORT_TITLE"),
+				Messages.getString("IMessageConstants.DATAPORT_EXPL"), 4);
 		inportTableViewer = createPortSection(toolkit, composite,
 				IMessageConstants.REQUIRED + IMessageConstants.DATAPORT_TBLLBL_INPORTNAME, 0, true);
 		createHintSection(toolkit, form);
@@ -139,15 +141,23 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 	private void createHintSection(FormToolkit toolkit, ScrolledForm form) {
 		Composite composite = createHintSectionBase(toolkit, form, 3);
 		//
-		createHintLabel(IMessageConstants.DATAPORT_HINT_DATAPORT_TITLE, IMessageConstants.DATAPORT_HINT_DATAPORT_DESC, toolkit, composite);
-		createHintLabel(IMessageConstants.DATAPORT_HINT_INPORT_TITLE, IMessageConstants.DATAPORT_HINT_INPORT_DESC, toolkit, composite);
-		createHintLabel(IMessageConstants.DATAPORT_HINT_OUTPORT_TITLE, IMessageConstants.DATAPORT_HINT_OUTPORT_DESC, toolkit, composite);
-		createHintLabel(IMessageConstants.DATAPORT_HINT_PORTNAME_TITLE, IMessageConstants.DATAPORT_HINT_PORTNAME_DESC, toolkit, composite);
-		createHintLabel(IMessageConstants.DATAPORT_HINT_DATATYPE_TITLE, IMessageConstants.DATAPORT_HINT_DATATYPE_DESC, toolkit, composite);
-		createHintLabel(IMessageConstants.DATAPORT_HINT_VARNAME_TITLE, IMessageConstants.DATAPORT_HINT_VARNAME_DESC, toolkit, composite);
-		createHintLabel(IMessageConstants.DATAPORT_HINT_POSITION_TITLE, IMessageConstants.DATAPORT_HINT_POSITION_DESC, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.DATAPORT_HINT_DATAPORT_TITLE"), IMessageConstants.DATAPORT_HINT_DATAPORT_DESC, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.DATAPORT_HINT_INPORT_TITLE"), IMessageConstants.DATAPORT_HINT_INPORT_DESC, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.DATAPORT_HINT_OUTPORT_TITLE"), IMessageConstants.DATAPORT_HINT_OUTPORT_DESC, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.DATAPORT_HINT_PORTNAME_TITLE"), IMessageConstants.DATAPORT_HINT_PORTNAME_DESC, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.DATAPORT_HINT_DATATYPE_TITLE"), IMessageConstants.DATAPORT_HINT_DATATYPE_DESC, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.DATAPORT_HINT_VARNAME_TITLE"), IMessageConstants.DATAPORT_HINT_VARNAME_DESC, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.DATAPORT_HINT_POSITION_TITLE"), IMessageConstants.DATAPORT_HINT_POSITION_DESC, toolkit, composite);
 		//
-		createHintLabel(IMessageConstants.DATAPORT_HINT_DOCUMENT_TITLE, IMessageConstants.DATAPORT_HINT_DOCUMENT_DESC, toolkit, composite);
+		createHintSpace(toolkit, composite);
+		createHintLabel(Messages.getString("IMC.HINT_DOCUMENT_TITLE"), "", toolkit, composite);
+		createHintLabel(Messages.getString("IMC.DATAPORT_LBL_DESCRIPTION"), Messages.getString("IMC.DATAPORT_HINT_DOC_OVERVIEW"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.DATAPORT_LBL_SEMANTICS"), Messages.getString("IMC.DATAPORT_HINT_DOC_DETAIL"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.DATAPORT_LBL_PORTTYPE"), Messages.getString("IMC.DATAPORT_HINT_DOC_DATATYPE"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.DATAPORT_LBL_DATANUM"), Messages.getString("IMC.DATAPORT_HINT_DOC_DATANUM"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.DATAPORT_LBL_UNIT"), Messages.getString("IMC.DATAPORT_HINT_DOC_UNIT"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.DATAPORT_LBL_OCCUR"), IMessageConstants.DATAPORT_HINT_OCCUR_DESC, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.DATAPORT_LBL_OPERAT"), IMessageConstants.DATAPORT_HINT_OPERAT_DESC, toolkit, composite);
 	}
 
 	private void createDetailSection(FormToolkit toolkit, ScrolledForm form) {
@@ -156,7 +166,7 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 				"Detail", IMessageConstants.DATAPORT_DOCUMENT_EXPL, 2);
 		//
 		portNameText = createLabelAndText(toolkit, composite,
-				IMessageConstants.DATAPORT_LBL_PORTNAME, SWT.BORDER);
+				Messages.getString("IMC.DATAPORT_LBL_PORTNAME"), SWT.BORDER);
 		portNameText.setEditable(false);
 		portNameText.setBackground(getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 		//
@@ -219,7 +229,7 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 		});
 		//
 		idlFileText = createLabelAndFile(toolkit, detailGroup, "idl",
-				IMessageConstants.SERVICEPORT_LBL_IDLFILE, SWT.COLOR_BLACK, SWT.BORDER);
+				Messages.getString("IMC.SERVICEPORT_LBL_IDLFILE"), SWT.COLOR_BLACK, SWT.BORDER);
 
 		//
 		varNameText = createLabelAndText(toolkit, detailGroup, IMessageConstants.DATAPORT_TBLLBL_VARNAME, SWT.BORDER);
@@ -233,30 +243,30 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 		/////
 		Group documentGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
 		documentGroup.setLayout(new GridLayout(2, false));
-		documentGroup.setText("Documentation");
+		documentGroup.setText(Messages.getString("IMC.HINT_DOCUMENT_GRP_TITLE"));
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 2;
 		documentGroup.setLayoutData(gd);
 		//
 		descriptionText = createLabelAndText(toolkit, documentGroup,
-				IMessageConstants.DATAPORT_LBL_DESCRIPTION, SWT.MULTI | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
+				Messages.getString("IMC.DATAPORT_LBL_DESCRIPTION"), SWT.MULTI | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.heightHint = 50;
 		descriptionText.setLayoutData(gridData);
-		typeText = createLabelAndText(toolkit, documentGroup,
-				IMessageConstants.DATAPORT_LBL_PORTTYPE, SWT.BORDER);
-		numberText = createLabelAndText(toolkit, documentGroup,
-				IMessageConstants.DATAPORT_LBL_DATANUM, SWT.BORDER);
 		semanticsText = createLabelAndText(toolkit, documentGroup,
-				IMessageConstants.DATAPORT_LBL_SEMANTICS, SWT.MULTI | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
+				Messages.getString("IMC.DATAPORT_LBL_SEMANTICS"), SWT.MULTI | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
 		semanticsText.setLayoutData(gridData);
+		typeText = createLabelAndText(toolkit, documentGroup,
+				Messages.getString("IMC.DATAPORT_LBL_PORTTYPE"), SWT.BORDER);
+		numberText = createLabelAndText(toolkit, documentGroup,
+				Messages.getString("IMC.DATAPORT_LBL_DATANUM"), SWT.BORDER);
 		unitText = createLabelAndText(toolkit, documentGroup,
-				IMessageConstants.DATAPORT_LBL_UNIT, SWT.BORDER);
+				Messages.getString("IMC.DATAPORT_LBL_UNIT"), SWT.BORDER);
 		occurrenceText = createLabelAndText(toolkit, documentGroup,
-				IMessageConstants.DATAPORT_LBL_OCCUR, SWT.MULTI | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
+				Messages.getString("IMC.DATAPORT_LBL_OCCUR"), SWT.MULTI | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
 		occurrenceText.setLayoutData(gridData);
 		operationText = createLabelAndText(toolkit, documentGroup,
-				IMessageConstants.DATAPORT_LBL_OPERAT, SWT.MULTI | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
+				Messages.getString("IMC.DATAPORT_LBL_OPERAT"), SWT.MULTI | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
 		operationText.setLayoutData(gridData);
 	}
 
