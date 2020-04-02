@@ -57,14 +57,14 @@ public class ProfileInformationDialog extends Dialog {
 	private String inputPath;
 	//
 	private boolean isOverWrite = false;
-	
+
 //	 必須コンポーネント設定の対象 2008.12.11
 	private CheckboxTableViewer viewer;
 	private SystemDiagram systemDiagram;
 
 	/**
 	 * コンストラクタ
-	 * 
+	 *
 	 * @param shell
 	 */
 	public ProfileInformationDialog(Shell shell) {
@@ -179,7 +179,7 @@ public class ProfileInformationDialog extends Dialog {
 		checkButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				FileDialog dialog = new FileDialog(getShell());
+				FileDialog dialog = new FileDialog(getShell(), SWT.SAVE);
 				dialog.setFilterExtensions(new String[] { "*.xml" }); //$NON-NLS-1$
 				if (txtPathLocal.getText().length() > 0)
 					dialog.setFileName(txtPathLocal.getText());
@@ -269,7 +269,7 @@ public class ProfileInformationDialog extends Dialog {
 
 	/**
 	 * システムIDからベンダー、バージョン、システム名をセットする
-	 * 
+	 *
 	 * @param id
 	 *            システムID
 	 */
@@ -279,7 +279,7 @@ public class ProfileInformationDialog extends Dialog {
 
 	/**
 	 * 入力値からシステムIDを生成して返します。
-	 * 
+	 *
 	 * @return システムID
 	 */
 	public String getSystemId() {
@@ -314,7 +314,7 @@ public class ProfileInformationDialog extends Dialog {
 		gd.grabExcessHorizontalSpace = true;
 		gd.horizontalSpan = 2;
 		targetText.setLayoutData(gd);
-		
+
 		return targetText;
 	}
 
@@ -373,12 +373,12 @@ public class ProfileInformationDialog extends Dialog {
 		gd.heightHint = 100;
 		viewer.getTable().setLayoutData(gd);
 		setViewerInput();
-		
+
 		Composite buttonComposite = new Composite(mainComposite, SWT.NONE);
 		GridLayout gridLayout = new GridLayout(1, false);
 		buttonComposite.setLayout(gridLayout);
 		buttonComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
-		
+
 		Button selectButton = new Button(buttonComposite, SWT.PUSH);
 		selectButton.setText(Messages.getString("ProfileInformationDialog.17") ); //$NON-NLS-1$
 		gd = new GridData(GridData.HORIZONTAL_ALIGN_END);
