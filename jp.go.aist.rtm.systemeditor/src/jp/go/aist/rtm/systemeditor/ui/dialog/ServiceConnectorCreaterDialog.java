@@ -49,7 +49,7 @@ import org.eclipse.swt.widgets.Text;
  * サービスポート間の接続のコネクタプロファイルの選択ダイアログ
  * <P>
  * ポート名を入力する 接続しようとしているServicePort間でマッチングを行い、必要に応じて警告を表示する。
- * 
+ *
  * ここでいうマッチングは、PortInterfaceProfile の type、および instance_name」が同じで polarity が
  * PROVIDED と REQUIRED で対応することをいう。
  * <ul>
@@ -57,7 +57,7 @@ import org.eclipse.swt.widgets.Text;
  * <li>一部一致した場合 → 警告「Port interfaces do not match completely.」</li>
  * <li>完全不一致した場合 → 警告「No corresponding port interface.」</li>
  * </ul>
- * 
+ *
  * また、対応するインスタンスをコネクタプロファイルのプロパティに設定する場合は以下のチェックを行います。
  * <ul>
  * <li>type が不一致 → エラー「Unmatch interface type consumer={0} provider={1}」</li>
@@ -75,7 +75,7 @@ public class ServiceConnectorCreaterDialog extends ConnectorDialogBase {
 	static final String MSG_UNMATCH_INTERFACE_TYPE = getString("ServiceConnectorCreaterDialog.13");
 	static final String MSG_UNMATCH_INTERFACE_INSTANCE = getString("ServiceConnectorCreaterDialog.14");
 
-	static final String LABEL_ENTER_PROFILE = getString("ServiceConnectorCreaterDialog.1");
+	static final String LABEL_ENTER_PROFILE = getString("ConnectorCreaterDialogBase.1");
 
 	static final String LABEL_BUTTON_ADD = getString("Common.button.add");
 	static final String LABEL_BUTTON_DELETE = getString("Common.button.delete");
@@ -397,7 +397,7 @@ public class ServiceConnectorCreaterDialog extends ConnectorDialogBase {
 		});
 
 		additionalTableViewer = createAdditionalTableViewer(detailComposite);
-		
+
 		loadDetailData();
 
 		defaultDialogSize = getShell().getSize();
@@ -468,7 +468,7 @@ public class ServiceConnectorCreaterDialog extends ConnectorDialogBase {
 			String provider = e.provider.toString();
 			connectorProfile.setProperty(consumer, provider);
 		}
-		
+
 		if (additionalTableViewer != null) {
 			List<?> additional = (List<?>) additionalTableViewer.getInput();
 			for (Object o : additional) {
@@ -510,7 +510,7 @@ public class ServiceConnectorCreaterDialog extends ConnectorDialogBase {
 	@Override
 	protected void configureShell(Shell shell) {
 		super.configureShell(shell);
-		shell.setText("Port Profile");
+		shell.setText("Connector Profile");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -555,7 +555,7 @@ public class ServiceConnectorCreaterDialog extends ConnectorDialogBase {
 	/**
 	 * PortInterfaceProfileのマッチ数を数える
 	 *    requiredだけが対象
-	 * 
+	 *
 	 * @param interfaces1
 	 * @param interfaces2
 	 * @return
@@ -599,7 +599,7 @@ public class ServiceConnectorCreaterDialog extends ConnectorDialogBase {
 
 	/**
 	 * PortInterfaceProfileがマッチするかどうか
-	 * 
+	 *
 	 * @param profile
 	 * @param profile2
 	 * @return マッチするかどうか
