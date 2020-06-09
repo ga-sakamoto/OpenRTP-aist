@@ -113,7 +113,7 @@ public class DataConnectorCreaterDialog extends ConnectorDialogBase {
 			connectorProfile.setName(outName + "_" + inName);
 		}
 		connectorProfile.setIsReverse(isReverse);
-		
+
 
 		setShellStyle(this.getShellStyle() | SWT.RESIZE);
 		open();
@@ -381,7 +381,7 @@ public class DataConnectorCreaterDialog extends ConnectorDialogBase {
 			}
 		});
 		createLabel(portProfileEditComposite, "");
-		
+
 		final Button detailCheck = new Button(portProfileEditComposite,
 				SWT.CHECK);
 		detailCheck.setText(LABEL_DETAIL);
@@ -431,9 +431,9 @@ public class DataConnectorCreaterDialog extends ConnectorDialogBase {
 
 		ib = new BufferPackage();
 		createBufferComposite(detailComposite, "Buffer (Inport)", ib);
-		
+
 		additionalTableViewer = createAdditionalTableViewer(detailComposite);
-		
+
 		loadDetailData();
 
 		defaultDialogSize = getShell().getSize();
@@ -648,8 +648,11 @@ public class DataConnectorCreaterDialog extends ConnectorDialogBase {
 			types = Arrays.asList(preference.getSubscriptionTypes());
 			isAllowAny = false;
 		}
-		value = loadCombo(subscriptionTypeCombo, types, connectorProfile
-				.getSubscriptionType(), isAllowAny);
+		String defaultVal = connectorProfile.getSubscriptionType();
+		if(defaultVal==null || defaultVal.length()==0) {
+			defaultVal = "flush";
+		}
+		value = loadCombo(subscriptionTypeCombo, types, defaultVal, isAllowAny);
 		connectorProfile.setSubscriptionType(value);
 		//
 		if (!isOffline()) {
@@ -760,7 +763,7 @@ public class DataConnectorCreaterDialog extends ConnectorDialogBase {
 
 	/**
 	 * コンボにおいて、「表示候補のリスト」と、「どのような文字列でも設定可能であるかどうか」を引数に取り、初期表示の文字列を決定する
-	 * 
+	 *
 	 * @param candidateList
 	 *            表示候補リスト
 	 * @param isAllowAny
