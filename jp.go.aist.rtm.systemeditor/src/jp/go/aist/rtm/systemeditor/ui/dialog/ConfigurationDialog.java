@@ -76,7 +76,7 @@ public class ConfigurationDialog extends TitleAreaDialog {
 	private boolean isApply;
 
 	private ConfigurationView view;
-	
+
 	private boolean firstApply;
 
 	private TabItem currentTabItem;
@@ -161,19 +161,19 @@ public class ConfigurationDialog extends TitleAreaDialog {
 
 		return mainComposite;
 	}
-	
+
 	protected void refreshTabItem() {
 		if (currentTabItem == null) return;
 		if (selectedConfigSet == null) return;
-		
+
 		// コントロールを全部作りかえない	2009.12.04
 //		currentTabItem.setControl(createConfigSetComposite(selectedConfigSet));
-		
+
 		// ウィジェットを編集中の状態に戻す 2009.12.04
 		for (NamedValueConfigurationWrapper nv : selectedConfigSet.getNamedValueList()) {
 			nv.loadWidgetValue();
 		}
-		
+
 		// 修正済の背景色のコントロールを元に戻す 2009.12.04
 		resetBackground(currentTabItem.getControl());
 	}
@@ -346,70 +346,70 @@ public class ConfigurationDialog extends TitleAreaDialog {
 		gd.grabExcessHorizontalSpace = true;
 		return gd;
 	}
-	
+
 	private Composite createComposite(final Composite parent) {
 		Composite composite = new Composite(parent, SWT.NONE);
-		
+
 		GridLayout gl = new GridLayout(1, false);
 		gl.marginHeight = 0;
 		gl.marginWidth = 0;
 		composite.setLayout(gl);
-		
+
 		composite.setLayoutData(createGridData());
-		
+
 		return composite;
 	}
-	
+
 	private Label createLabel(final Composite parent) {
 		Label label = new Label(parent, SWT.NONE);
-		
+
 		label.setLayoutData(createGridData());
-		
+
 		return label;
 	}
-	
+
 	private Text createText(final Composite parent) {
 		Text text = new Text(parent, SWT.SINGLE
 				| SWT.BORDER);
-		
+
 		text.setLayoutData(createGridData());
-		
+
 		return text;
 	}
 
 	private Slider createSlider(final Composite parent) {
 		Slider slider = new Slider(parent, SWT.BORDER);
-		
+
 		slider.setLayoutData(createGridData());
-		
+
 		return slider;
 	}
 
 	private Spinner createSpinner(final Composite parent) {
 		Spinner spinner = new Spinner(parent, SWT.BORDER);
-		
+
 		spinner.setLayoutData(createGridData());
-		
+
 		return spinner;
 	}
 
 	private Group createGroup(final Composite parent) {
 		Group group = new Group(parent, SWT.NONE);
-		
+
 		GridLayout gl = new GridLayout(3, false);
 		gl.marginHeight = 1;
 		group.setLayout(gl);
-		
+
 		group.setLayoutData(createGridData());
-		
+
 		return group;
 	}
 
 	private Button createButton(final Composite parent) {
 		Button button = new Button(parent, SWT.RADIO);
-		
+
 		button.setLayoutData(createGridData());
-		
+
 		return button;
 	}
 
@@ -908,14 +908,14 @@ public class ConfigurationDialog extends TitleAreaDialog {
 		if (control != null)
 			control.setBackground(colorRegistry.get(MODIFY_COLOR));
 		isValueModified = true;
-		
+
 		if (!isApply) return;
 		if (!saveData()) return;
-		
+
 		view.applyConfiguration(false);
 		refreshTabItem();
 	}
-	
+
 	private SelectionListener createButtonSelectionListner(
 			final ConfigurationWidget widget) {
 		return new SelectionListener() {
@@ -983,7 +983,7 @@ public class ConfigurationDialog extends TitleAreaDialog {
 				// ステップから制約範囲内の値に換算
 				int step = valueSlider.getSelection();
 				String value = wd.getCondition().getValueByStep(step, wd,
-						valueSliderText.getText());
+						valueSliderText.getText(), wd.getSliderStepStr());
 				if (wd.getCondition().validate(value)) {
 					wd.setValue(value);
 				}
@@ -1060,7 +1060,7 @@ public class ConfigurationDialog extends TitleAreaDialog {
 
 	/**
 	 * 編集結果をモデル情報へ保存する
-	 * 
+	 *
 	 * @return 保存エラーの場合はfalse
 	 */
 	private boolean saveData() {
