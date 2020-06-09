@@ -4,8 +4,8 @@ Created-By: 20.0-b12 (Sun Microsystems Inc.)
 Bundle-ManifestVersion: 2
 Bundle-Name: Nl1 Fragment
 Bundle-SymbolicName: jp.go.aist.rtm.toolscommon.nl1
-Bundle-Version: 1.2.1
-Fragment-Host: jp.go.aist.rtm.toolscommon;bundle-version="1.2.1"
+Bundle-Version: 1.2.2
+Fragment-Host: jp.go.aist.rtm.toolscommon;bundle-version="1.2.2"
 Built-By: ngd
 Built-Date: 2015/06/18 19:54:52
 
