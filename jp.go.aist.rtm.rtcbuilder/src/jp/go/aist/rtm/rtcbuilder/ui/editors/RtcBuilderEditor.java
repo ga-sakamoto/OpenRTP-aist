@@ -37,7 +37,11 @@ import jp.go.aist.rtm.rtcbuilder.ui.preference.DocumentPreferenceManager;
 import jp.go.aist.rtm.rtcbuilder.util.StringUtil;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -110,6 +114,9 @@ public class RtcBuilderEditor extends FormEditor implements IActionFilter {
 		IEditorInput result = input;
 
 		FileEditorInput fileEditorInput = ((FileEditorInput) result);
+
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IWorkspaceRoot root = workspace.getRoot();
 		try {
 			ProfileHandler handler = new ProfileHandler();
 			generatorParam = handler.restorefromXMLFile(fileEditorInput.getPath().toOSString());
@@ -129,6 +136,16 @@ public class RtcBuilderEditor extends FormEditor implements IActionFilter {
 		} else {
 			title = ((FileEditorInput) result).getPath().lastSegment();
 			generatorParam.getRtcParam().setOutputProject(title);
+		}
+		//
+		try {
+			IProject project = root.getProject(this.getRtcParam().getOutputProject());
+			IFolder idlDir  = project.getFolder("idl");
+			if (!idlDir.exists()) {
+				idlDir.create(true, true, null);
+			}
+		} catch (Exception e) {
+			createGeneratorParam();
 		}
 		//on_initializeは常にON
 		setOnInitialize();
