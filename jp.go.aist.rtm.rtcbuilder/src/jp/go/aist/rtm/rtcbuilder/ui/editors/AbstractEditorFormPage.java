@@ -412,12 +412,12 @@ public abstract class AbstractEditorFormPage extends FormPage {
 		String FS = System.getProperty("file.separator");
 		int baseindex = -1;
 		List<DataTypeParam> sourceContents = new ArrayList<DataTypeParam>();
-		
+
         List<String> exclusionList = Arrays.asList(
         		"componentobserver.idl", "dataport.idl", "manager.idl",
         		"openrtm.idl", "rtc.idl", "sdopackage.idl",
         		"sharedmemory.idl");
-		
+
 		for (int intidx = 0; intidx < sources.size(); intidx++) {
 			IdlPathParam source = sources.get(intidx);
 			try {
@@ -464,7 +464,6 @@ public abstract class AbstractEditorFormPage extends FormPage {
 		editor.getGeneratorParam().getDataTypeParams().clear();
 		editor.getGeneratorParam().getDataTypeParams().addAll(sourceContents);
 		//
-
 		return defaultTypeList;
 	}
 
