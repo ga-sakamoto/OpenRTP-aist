@@ -839,6 +839,7 @@ public class ServicePortEditorFormPage extends AbstractEditorFormPage {
 		RTCUtil.getIDLPathes(editor.getRtcParam());
         String FS = System.getProperty("file.separator");
         defaultIFList.clear();
+        currentIFList.clear();
 
         List<String> exclusionList = Arrays.asList(
         		"basicdatatype.idl", "componentobserver.idl", "dataport.idl",
