@@ -14,7 +14,7 @@ public class ServicePortInterfaceParam extends AbstractRecordedParam implements
 
 	public static final String INTERFACE_DIRECTION_PROVIDED = "Provided";
 	public static final String INTERFACE_DIRECTION_REQUIRED = "Required";
-	public static final String[] COMBO_ITEM = 
+	public static final String[] COMBO_ITEM =
 		new String[] {INTERFACE_DIRECTION_PROVIDED, INTERFACE_DIRECTION_REQUIRED};
 	private int selection = 0;
 
@@ -25,7 +25,7 @@ public class ServicePortInterfaceParam extends AbstractRecordedParam implements
 	private String varname;
 	private String idlfile;
 	private String interfacetype;
-	private String idlSearchPath;
+	private String idlSearchPath;	//TODO 削除候補
 	//
 	private String doc_description;
 	private String doc_argument;
