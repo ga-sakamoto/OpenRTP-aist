@@ -40,14 +40,14 @@ public class IDLType extends TestBase {
 		rtcParam.setMaxInstance(1);
 
 		ServicePortParam service1 = new ServicePortParam("sV1",0);
-		List<ServicePortInterfaceParam> srvinterts = new ArrayList<ServicePortInterfaceParam>(); 
-		ServicePortInterfaceParam int1 = new ServicePortInterfaceParam(service1, "sIF1", "", "sIFv", 
-				rootPath + "resource/100/CXX/idltype/Struct/TestService.idl", "TestService", "", 0);
+		List<ServicePortInterfaceParam> srvinterts = new ArrayList<ServicePortInterfaceParam>();
+		ServicePortInterfaceParam int1 = new ServicePortInterfaceParam(service1, "sIF1", "", "sIFv",
+				rootPath + "resource/100/CXX/idltype/Struct/TestService.idl", "TestService", 0);
 		srvinterts.add(int1);
 		service1.getServicePortInterfaces().addAll(srvinterts);
 		List<ServicePortParam> srvports = new ArrayList<ServicePortParam>();
 		srvports.add(service1);
-		
+
 		rtcParam.getServicePorts().addAll(srvports);
 		genParam.setRtcParam(rtcParam);
 
@@ -76,14 +76,14 @@ public class IDLType extends TestBase {
 		rtcParam.setMaxInstance(5);
 
 		ServicePortParam service1 = new ServicePortParam("svPort",0);
-		List<ServicePortInterfaceParam> srvinterts = new ArrayList<ServicePortInterfaceParam>(); 
-		ServicePortInterfaceParam int1 = new ServicePortInterfaceParam(service1, "acc", "", "acc", 
-				rootPath + "resource/100/CXX/idltype/SeqString/MyService.idl", "MyService", "", 0);
+		List<ServicePortInterfaceParam> srvinterts = new ArrayList<ServicePortInterfaceParam>();
+		ServicePortInterfaceParam int1 = new ServicePortInterfaceParam(service1, "acc", "", "acc",
+				rootPath + "resource/100/CXX/idltype/SeqString/MyService.idl", "MyService", 0);
 		srvinterts.add(int1);
 		service1.getServicePortInterfaces().addAll(srvinterts);
 		List<ServicePortParam> srvports = new ArrayList<ServicePortParam>();
 		srvports.add(service1);
-		
+
 		rtcParam.getServicePorts().addAll(srvports);
 		genParam.setRtcParam(rtcParam);
 
@@ -112,9 +112,9 @@ public class IDLType extends TestBase {
 		rtcParam.setMaxInstance(1);
 
 		ServicePortParam service1 = new ServicePortParam("MySVPro",0);
-		List<ServicePortInterfaceParam> srvinterts = new ArrayList<ServicePortInterfaceParam>(); 
-		ServicePortInterfaceParam int1 = new ServicePortInterfaceParam(service1, "myservice", "", "", 
-				rootPath + "resource/100/CXX/idltype/type/MyService.idl", "MyService", "", 0);
+		List<ServicePortInterfaceParam> srvinterts = new ArrayList<ServicePortInterfaceParam>();
+		ServicePortInterfaceParam int1 = new ServicePortInterfaceParam(service1, "myservice", "", "",
+				rootPath + "resource/100/CXX/idltype/type/MyService.idl", "MyService", 0);
 		srvinterts.add(int1);
 		service1.getServicePortInterfaces().addAll(srvinterts);
 		List<ServicePortParam> srvports = new ArrayList<ServicePortParam>();
@@ -147,14 +147,14 @@ public class IDLType extends TestBase {
 		rtcParam.setMaxInstance(1);
 
 		ServicePortParam service1 = new ServicePortParam("sV1",0);
-		List<ServicePortInterfaceParam> srvinterts = new ArrayList<ServicePortInterfaceParam>(); 
-		ServicePortInterfaceParam int1 = new ServicePortInterfaceParam(service1, "sIF1", "", "sIFv", 
-				rootPath + "resource/100/CXX/idltype/Struct2/TestService.idl", "ComFk", "", 0);
+		List<ServicePortInterfaceParam> srvinterts = new ArrayList<ServicePortInterfaceParam>();
+		ServicePortInterfaceParam int1 = new ServicePortInterfaceParam(service1, "sIF1", "", "sIFv",
+				rootPath + "resource/100/CXX/idltype/Struct2/TestService.idl", "ComFk", 0);
 		srvinterts.add(int1);
 		service1.getServicePortInterfaces().addAll(srvinterts);
 		List<ServicePortParam> srvports = new ArrayList<ServicePortParam>();
 		srvports.add(service1);
-		
+
 		rtcParam.getServicePorts().addAll(srvports);
 		genParam.setRtcParam(rtcParam);
 
@@ -184,14 +184,14 @@ public class IDLType extends TestBase {
 		rtcParam.setMaxInstance(1);
 
 		ServicePortParam service1 = new ServicePortParam("sV1",0);
-		List<ServicePortInterfaceParam> srvinterts = new ArrayList<ServicePortInterfaceParam>(); 
-		ServicePortInterfaceParam int1 = new ServicePortInterfaceParam(service1, "sIF1", "", "sIFv", 
-				rootPath + "resource/100/CXX/idltype/IDLType1/TestIDL.idl", "ComFk", "", 0);
+		List<ServicePortInterfaceParam> srvinterts = new ArrayList<ServicePortInterfaceParam>();
+		ServicePortInterfaceParam int1 = new ServicePortInterfaceParam(service1, "sIF1", "", "sIFv",
+				rootPath + "resource/100/CXX/idltype/IDLType1/TestIDL.idl", "ComFk", 0);
 		srvinterts.add(int1);
 		service1.getServicePortInterfaces().addAll(srvinterts);
 		List<ServicePortParam> srvports = new ArrayList<ServicePortParam>();
 		srvports.add(service1);
-		
+
 		rtcParam.getServicePorts().addAll(srvports);
 		genParam.setRtcParam(rtcParam);
 

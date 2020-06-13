@@ -40,9 +40,9 @@ public class ManipTest extends TestBase {
 		rtcParam.setComponentKind("DataFlowComponent");
 
 		ServicePortParam service1 = new ServicePortParam("sv_name", 0);
-		List<ServicePortInterfaceParam> srvinterts = new ArrayList<ServicePortInterfaceParam>(); 
-		ServicePortInterfaceParam int1 = new ServicePortInterfaceParam(service1, "if_name", "", "", 
-				rootPath + "/resource/100/CXX/idlmodule/serviceArgStruct/MyServiceModuleTypeDef.idl", "MyService", "", 0);
+		List<ServicePortInterfaceParam> srvinterts = new ArrayList<ServicePortInterfaceParam>();
+		ServicePortInterfaceParam int1 = new ServicePortInterfaceParam(service1, "if_name", "", "",
+				rootPath + "/resource/100/CXX/idlmodule/serviceArgStruct/MyServiceModuleTypeDef.idl", "MyService", 0);
 		srvinterts.add(int1);
 		service1.getServicePortInterfaces().addAll(srvinterts);
 		List<ServicePortParam> srvports = new ArrayList<ServicePortParam>();
@@ -61,7 +61,7 @@ public class ManipTest extends TestBase {
 		checkCode(result, resourceDir, "MyServiceModuleTypeDefSVC_impl.h");
 		checkCode(result, resourceDir, "MyServiceModuleTypeDefSVC_impl.cpp");
 	}
-	
+
 	public void testIDLType() throws Exception {
 		rtcParam.setName("ModuleName");
 		rtcParam.setDescription("ModuleDescription");
@@ -75,14 +75,14 @@ public class ManipTest extends TestBase {
 		rtcParam.setMaxInstance(1);
 
 		ServicePortParam service1 = new ServicePortParam("sV1",0);
-		List<ServicePortInterfaceParam> srvinterts = new ArrayList<ServicePortInterfaceParam>(); 
-		ServicePortInterfaceParam int1 = new ServicePortInterfaceParam(service1, "sIF1", "", "sIFv", 
-				rootPath + "resource/100/CXX/idltype/IDLType1/TestIDL.idl", "ComFk", "", 0);
+		List<ServicePortInterfaceParam> srvinterts = new ArrayList<ServicePortInterfaceParam>();
+		ServicePortInterfaceParam int1 = new ServicePortInterfaceParam(service1, "sIF1", "", "sIFv",
+				rootPath + "resource/100/CXX/idltype/IDLType1/TestIDL.idl", "ComFk", 0);
 		srvinterts.add(int1);
 		service1.getServicePortInterfaces().addAll(srvinterts);
 		List<ServicePortParam> srvports = new ArrayList<ServicePortParam>();
 		srvports.add(service1);
-		
+
 		rtcParam.getServicePorts().addAll(srvports);
 
 		Generator generator = new Generator();
@@ -97,7 +97,7 @@ public class ManipTest extends TestBase {
 		checkCode(result, resourceDir, "TestIDLSVC_impl.h");
 		checkCode(result, resourceDir, "TestIDLSVC_impl.cpp");
 	}
-	
+
 	public void testManip() throws Exception{
 		rtcParam.setName("ModuleName");
 		rtcParam.setDescription("ModuleDescription");

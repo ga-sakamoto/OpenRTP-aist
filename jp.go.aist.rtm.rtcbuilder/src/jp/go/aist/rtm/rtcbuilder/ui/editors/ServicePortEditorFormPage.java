@@ -5,20 +5,15 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ISelection;
@@ -30,8 +25,6 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -43,7 +36,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
@@ -74,7 +66,6 @@ import jp.go.aist.rtm.rtcbuilder.generator.param.idl.ServiceClassParam;
 import jp.go.aist.rtm.rtcbuilder.nl.Messages;
 import jp.go.aist.rtm.rtcbuilder.ui.StringUtil;
 import jp.go.aist.rtm.rtcbuilder.ui.preference.ComponentPreferenceManager;
-import jp.go.aist.rtm.rtcbuilder.ui.preference.RTCBuilderPreferenceManager;
 import jp.go.aist.rtm.rtcbuilder.util.FileUtil;
 import jp.go.aist.rtm.rtcbuilder.util.RTCUtil;
 import jp.go.aist.rtm.rtcbuilder.util.ValidationUtil;
@@ -438,7 +429,7 @@ public class ServicePortEditorFormPage extends AbstractEditorFormPage {
 					if( selection.getData() instanceof ServicePortParam ) {
 						servicePortViewer.getTree().setRedraw(false);
 						ServicePortInterfaceParam selectParam = new ServicePortInterfaceParam((ServicePortParam)selection.getData() ,
-								defaultIFName, defaultIFInstanceName, defaultIFVarName, "", "", "", 0);
+								defaultIFName, defaultIFInstanceName, defaultIFVarName, "", "", 0);
 						((ServicePortParam)selection.getData()).getServicePortInterfaces().add(selectParam);
 						Object[] expanded = servicePortViewer.getExpandedElements();
 						List<Object> expanding = new ArrayList<Object>();
@@ -845,7 +836,7 @@ public class ServicePortEditorFormPage extends AbstractEditorFormPage {
 	}
 
     private void extractServiceInterface() {
-		List<IdlPathParam> sources = RTCUtil.getIDLPathes(editor.getRtcParam());
+		RTCUtil.getIDLPathes(editor.getRtcParam());
         String FS = System.getProperty("file.separator");
         defaultIFList.clear();
 
@@ -855,8 +846,8 @@ public class ServicePortEditorFormPage extends AbstractEditorFormPage {
         		"openrtm.idl", "rtc.idl", "sdopackage.idl",
         		"sharedmemory.idl");
 
-        for(IdlPathParam source : sources) {
-	        try {
+        for(IdlPathParam source : editor.getRtcParam().getIdlSearchPathList()) {
+        	try {
 	            File idlDir = new File(source.getPath());
 	            String[] list = idlDir.list();
 	            if (list == null) return;

@@ -1,7 +1,6 @@
 package jp.go.aist.rtm.rtcbuilder.ui.editors;
 
 import java.io.ByteArrayInputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
@@ -9,23 +8,6 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.xml.bind.JAXBException;
-
-import jp.go.aist.rtm.rtcbuilder.GuiRtcBuilder;
-import jp.go.aist.rtm.rtcbuilder.IRTCBMessageConstants;
-import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
-import jp.go.aist.rtm.rtcbuilder.RtcBuilderPlugin;
-import jp.go.aist.rtm.rtcbuilder.extension.ImportExtension;
-import jp.go.aist.rtm.rtcbuilder.factory.ExportCreator;
-import jp.go.aist.rtm.rtcbuilder.generator.ProfileHandler;
-import jp.go.aist.rtm.rtcbuilder.generator.param.GeneratorParam;
-import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
-import jp.go.aist.rtm.rtcbuilder.generator.param.idl.IdlPathParam;
-import jp.go.aist.rtm.rtcbuilder.manager.GenerateManager;
-import jp.go.aist.rtm.rtcbuilder.ui.Perspective.LanguageProperty;
-import jp.go.aist.rtm.rtcbuilder.ui.preference.ComponentPreferenceManager;
-import jp.go.aist.rtm.rtcbuilder.util.FileUtil;
-import jp.go.aist.rtm.rtcbuilder.util.RTCUtil;
-import jp.go.aist.rtm.rtcbuilder.util.StringUtil;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -61,6 +43,22 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import jp.go.aist.rtm.rtcbuilder.GuiRtcBuilder;
+import jp.go.aist.rtm.rtcbuilder.IRTCBMessageConstants;
+import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
+import jp.go.aist.rtm.rtcbuilder.RtcBuilderPlugin;
+import jp.go.aist.rtm.rtcbuilder.extension.ImportExtension;
+import jp.go.aist.rtm.rtcbuilder.factory.ExportCreator;
+import jp.go.aist.rtm.rtcbuilder.generator.ProfileHandler;
+import jp.go.aist.rtm.rtcbuilder.generator.param.GeneratorParam;
+import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
+import jp.go.aist.rtm.rtcbuilder.manager.GenerateManager;
+import jp.go.aist.rtm.rtcbuilder.ui.Perspective.LanguageProperty;
+import jp.go.aist.rtm.rtcbuilder.ui.preference.ComponentPreferenceManager;
+import jp.go.aist.rtm.rtcbuilder.util.FileUtil;
+import jp.go.aist.rtm.rtcbuilder.util.RTCUtil;
+import jp.go.aist.rtm.rtcbuilder.util.StringUtil;
 
 /**
  * Basic Profile 設定ページ
@@ -352,8 +350,8 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 				//TODO 複数コンポーネント対応版とする場合には複数設定
 				generatorParam.getRtcParam().getServiceClassParams().clear();
 				setPrefixSuffix(generatorParam.getRtcParam());
-				List<IdlPathParam> idlDirs = RTCUtil.getIDLPathes(editor.getRtcParam());
-				if (rtcBuilder.doGenerateWrite(generatorParam, idlDirs, true)) {
+				RTCUtil.getIDLPathes(editor.getRtcParam());
+				if (rtcBuilder.doGenerateWrite(generatorParam, editor.getRtcParam().getIdlSearchPathList(), true)) {
 					LanguageProperty langProp = LanguageProperty.checkPlugin(editor.getRtcParam());
 					if(langProp != null) {
 						try {
