@@ -7,6 +7,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
@@ -93,8 +95,8 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 	private String defaultPortVarName;
 	private String[] defaultTypeList;
 
-	private List<String> typeIDLList = new ArrayList<String>();
-	private List<String> typeList = new ArrayList<String>();
+	private List<DataParam> typeList = new ArrayList<DataParam>();
+	private List<DataParam> currentList = new ArrayList<DataParam>();
 
 	/**
 	 * コンストラクタ
@@ -185,37 +187,41 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 		typeCombo = new Combo(detailGroup, SWT.DROP_DOWN);
 		/////
 		List<DataTypeParam> dataTypes = editor.getGeneratorParam().getDataTypeParams();
-		typeIDLList.clear();
 		typeList.clear();
 		for(DataTypeParam each : dataTypes) {
 			for(String eachType : each.getDefinedTypes()) {
-				typeList.add(eachType);
-				typeIDLList.add(each.getFullPath());
+				typeList.add(new DataParam(eachType, each.getFullPath()));
 			}
 		}
-		typeCombo.setItems(typeList.toArray(new String[typeList.size()]));
+		Collections.sort(typeList, new DataParamComparator());
+		currentList.clear();
+		currentList.addAll(typeList);
+		for(DataParam item : currentList) {
+			typeCombo.add(item.typeName);
+		}
 		/////
 		typeCombo.select(0);
 		typeCombo.addKeyListener(new KeyListener() {
 			public void keyReleased(KeyEvent e) {
 				String target = typeCombo.getText();
 				String[] keyList = target.split(" ");
-				List<String> filtered = new ArrayList<String>();
-				for (String each : typeList) {
+				currentList.clear();
+				for (DataParam each : typeList) {
 					boolean isHit = true;
 					for(String itemKey: keyList) {
-					  if (each.contains(itemKey)==false) {
+					  if (each.typeName.contains(itemKey)==false) {
 						  isHit = false;
 						  break;
 					  }
 					}
 					if (isHit) {
-						filtered.add(each);
+						currentList.add(each);
 					}
 				}
-				String[] newItems = filtered.toArray(new String[filtered.size()]);
-				Arrays.sort(newItems);
-				typeCombo.setItems(newItems);
+				Collections.sort(currentList, new DataParamComparator());
+				for(DataParam item : currentList) {
+					typeCombo.add(item.typeName);
+				}
 				typeCombo.setText(target);
 				typeCombo.setSelection(new Point(typeCombo.getText().length(), typeCombo.getText().length()) );
 			}
@@ -224,7 +230,7 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 		typeCombo.addSelectionListener(new SelectionListener() {
 			  public void widgetDefaultSelected(SelectionEvent e){}
 			  public void widgetSelected(SelectionEvent e){
-				  idlFileLabel.setText(typeIDLList.get(typeCombo.getSelectionIndex()));
+				  idlFileLabel.setText(currentList.get(typeCombo.getSelectionIndex()).idlPath);
 				  update();
 			  }
 		  });
@@ -238,16 +244,19 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 				defaultTypeList = extractDataTypes();
 				/////
 				List<DataTypeParam> dataTypes = editor.getGeneratorParam().getDataTypeParams();
-				typeIDLList.clear();
 				typeList.clear();
 				typeCombo.removeAll();
 				for(DataTypeParam each : dataTypes) {
 					for(String eachType : each.getDefinedTypes()) {
-						typeList.add(eachType);
-						typeIDLList.add(each.getFullPath());
+						typeList.add(new DataParam(eachType, each.getFullPath()));
 					}
 				}
-				typeCombo.setItems(typeList.toArray(new String[typeList.size()]));
+				Collections.sort(typeList, new DataParamComparator());
+				currentList.clear();
+				currentList.addAll(typeList);
+				for(DataParam item : currentList) {
+					typeCombo.add(item.typeName);
+				}
 			}
 		});
 		//
@@ -598,6 +607,21 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 				if (widgetInfo.matchWidget("addButton"))    setButtonEnabled(outportAddButton, enabled);
 				if (widgetInfo.matchWidget("deleteButton")) setButtonEnabled(outportDeleteButton, enabled);
 			}
+		}
+	}
+	private class DataParam {
+		private String typeName;
+		private String idlPath;
+
+		public DataParam(String typeName, String idlPath) {
+			this.typeName = typeName;
+			this.idlPath = idlPath;
+		}
+	}
+	private class DataParamComparator implements Comparator<DataParam> {
+		@Override
+		public int compare(DataParam p1, DataParam p2) {
+			return p1.typeName.compareTo(p2.typeName);
 		}
 	}
 }
