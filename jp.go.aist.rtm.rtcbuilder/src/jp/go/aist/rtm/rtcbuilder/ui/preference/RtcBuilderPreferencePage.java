@@ -18,7 +18,7 @@ public class RtcBuilderPreferencePage extends FieldEditorPreferencePage implemen
 		super(GRID);
 		setPreferenceStore(RtcBuilderPlugin.getDefault().getPreferenceStore());
 	}
-	
+
 	@Override
 	public void init(IWorkbench workbench) {
 	}
@@ -27,14 +27,9 @@ public class RtcBuilderPreferencePage extends FieldEditorPreferencePage implemen
 	protected void createFieldEditors() {
 		Composite composite = new Composite(getFieldEditorParent(), SWT.NONE);
 		composite.setLayout(new GridLayout(1,false));
-		
+
 		GridData gd = new GridData(GridData.FILL_BOTH);
 		composite.setLayoutData(gd);
-		
-		PathEditor editor = new PathEditor(RTCBuilderPreferenceManager.IDLFILE_DIRECTORIES,
-				IPreferenceMessageConstants.LBL_IDL_SEARCH_DIRS,	"",	composite);
-		editor.getListControl(composite).setLayoutData(gd);
-		addField(editor);
 		//
 		DirectoryFieldEditor dirEditor = new DirectoryFieldEditor(RTCBuilderPreferenceManager.HOME_DIRECTORY,
 				IPreferenceMessageConstants.LBL_HOME_DIR, composite);
