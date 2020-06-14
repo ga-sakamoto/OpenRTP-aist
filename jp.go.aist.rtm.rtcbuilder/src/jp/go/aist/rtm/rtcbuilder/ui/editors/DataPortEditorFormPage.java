@@ -76,7 +76,7 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 	//
 	private Text portNameText;
 	private Combo typeCombo;
-	private Label idlFileLabel;
+	private Text idlFileText;
 	private Text varNameText;
 	private Combo positionCombo;
 	private Text descriptionText;
@@ -171,10 +171,8 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 		Composite composite = createSectionBaseWithLabel(toolkit, form,
 				"Detail", IMessageConstants.DATAPORT_DOCUMENT_EXPL, 2);
 		//
-		portNameText = createLabelAndText(toolkit, composite,
-				Messages.getString("IMC.DATAPORT_LBL_PORTNAME"), SWT.BORDER);
-		portNameText.setEditable(false);
-		portNameText.setBackground(getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+		portNameText = createLabelAndRefText(toolkit, composite,
+				Messages.getString("IMC.DATAPORT_LBL_PORTNAME"), SWT.BORDER, 1);
 		//
 		Group detailGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
 		detailGroup.setLayout(new GridLayout(3, false));
@@ -200,7 +198,7 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 			typeCombo.add(item.typeName);
 		}
 		/////
-		typeCombo.select(0);
+		typeCombo.setText("");
 		typeCombo.addKeyListener(new KeyListener() {
 			public void keyReleased(KeyEvent e) {
 				String target = typeCombo.getText();
@@ -230,7 +228,7 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 		typeCombo.addSelectionListener(new SelectionListener() {
 			  public void widgetDefaultSelected(SelectionEvent e){}
 			  public void widgetSelected(SelectionEvent e){
-				  idlFileLabel.setText(currentList.get(typeCombo.getSelectionIndex()).idlPath);
+				  idlFileText.setText(currentList.get(typeCombo.getSelectionIndex()).idlPath);
 				  update();
 			  }
 		  });
@@ -246,6 +244,7 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 				List<DataTypeParam> dataTypes = editor.getGeneratorParam().getDataTypeParams();
 				typeList.clear();
 				typeCombo.removeAll();
+				idlFileText.setText("");
 				for(DataTypeParam each : dataTypes) {
 					for(String eachType : each.getDefinedTypes()) {
 						typeList.add(new DataParam(eachType, each.getFullPath()));
@@ -260,11 +259,8 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 			}
 		});
 		//
-		toolkit.createLabel(detailGroup, Messages.getString("IMC.SERVICEPORT_LBL_IDLFILE"));
-		idlFileLabel = toolkit.createLabel(detailGroup, "", SWT.BORDER);
-		gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.horizontalSpan = 2;
-		idlFileLabel.setLayoutData(gd);
+		idlFileText = createLabelAndRefText(toolkit, detailGroup,
+				Messages.getString("IMC.SERVICEPORT_LBL_IDLFILE"), SWT.BORDER, 2);
 		//
 		varNameText = createLabelAndText(toolkit, detailGroup, IMessageConstants.DATAPORT_TBLLBL_VARNAME, SWT.BORDER);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
@@ -418,6 +414,9 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 			selectParam.setDocUnit(StringUtil.getDocText(unitText.getText()));
 			selectParam.setDocOccurrence(StringUtil.getDocText(occurrenceText.getText()));
 			selectParam.setDocOperation(StringUtil.getDocText(operationText.getText()));
+			if(typeCombo.getText() != null && typeCombo.getText().length()==0) {
+				idlFileText.setText("");
+			}
 		}
 		//
 		editor.updateEMFDataPorts(
@@ -449,7 +448,8 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 
 	private void clearText() {
 		portNameText.setText("");
-		typeCombo.select(0);
+		typeCombo.setText("");
+		idlFileText.setText("");
 		varNameText.setText("");
 		positionCombo.select(0);
 		descriptionText.setText("");
