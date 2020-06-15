@@ -507,7 +507,7 @@ public class ParamUtil {
 			dataportp.setDataFlowType(dataPortBasic.getDataflowType());
 			dataportp.setInterfaceType(dataPortBasic.getInterfaceType());
 			dataportp.setSubscriptionType(dataPortBasic.getSubscriptionType());
-			dataportp.setIdlFile(dataPortBasic.getIdlFile());
+			dataportp.setDispIdlFile(dataPortBasic.getIdlFile());
 			dataportp.setUnit(dataPortBasic.getUnit());
 			if( dataPortBasic.getConstraint()!=null )
 				dataportp.setConstraint(XmlHandler.restoreConstraint(dataPortBasic.getConstraint()));
@@ -753,7 +753,7 @@ public class ParamUtil {
 		dataport.setType(dataportp.getType());
 		dataport.setVariableName(dataportp.getVarName());
 		dataport.setPosition(Position.fromValue(dataportp.getPosition().toUpperCase()));
-		dataport.setIdlFile(dataportp.getIdlFile());
+		dataport.setIdlFile(dataportp.getDispIdlFile());
 		dataport.setDataflowType(dataportp.getDataFlowType());
 		dataport.setInterfaceType(dataportp.getInterfaceType());
 		dataport.setSubscriptionType(dataportp.getSubscriptionType());

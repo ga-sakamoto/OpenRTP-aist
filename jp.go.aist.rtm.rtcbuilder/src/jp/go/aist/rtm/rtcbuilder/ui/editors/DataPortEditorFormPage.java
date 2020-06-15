@@ -247,7 +247,7 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 				idlFileText.setText("");
 				for(DataTypeParam each : dataTypes) {
 					for(String eachType : each.getDefinedTypes()) {
-						typeList.add(new DataParam(eachType, each.getFullPath()));
+						typeList.add(new DataParam(eachType, each.getDispPath()));
 					}
 				}
 				Collections.sort(typeList, new DataParamComparator());
@@ -377,6 +377,7 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 					}
 					portNameText.setText(portName.toString());
 					typeCombo.setText(selectParam.getType());
+					idlFileText.setText(selectParam.getDispIdlFile());
 					varNameText.setText(StringUtil.getDisplayDocText(selectParam.getVarName()));
 					positionCombo.setText(selectParam.getPosition());
 					descriptionText.setText(StringUtil.getDisplayDocText(selectParam.getDocDescription()));
@@ -407,6 +408,8 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 			selectParam.setType(typeCombo.getText());
 			selectParam.setVarName(StringUtil.getDocText(varNameText.getText()));
 			selectParam.setPosition(positionCombo.getText());
+			selectParam.setDispIdlFile(idlFileText.getText());
+
 			selectParam.setDocDescription(StringUtil.getDocText(descriptionText.getText()));
 			selectParam.setDocType(StringUtil.getDocText(typeText.getText()));
 			selectParam.setDocNum(StringUtil.getDocText(numberText.getText()));
