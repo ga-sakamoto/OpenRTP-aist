@@ -468,7 +468,7 @@ public class ParamUtil {
 				serviceIF.setName(serviceIfDoc.getName());
 				serviceIF.setDirection(serviceIfDoc.getDirection());
 				serviceIF.setInstanceName(serviceIfDoc.getInstanceName());
-				serviceIF.setIdlFile(serviceIfDoc.getIdlFile());
+				serviceIF.setIdlDispFile(serviceIfDoc.getIdlFile());
 				serviceIF.setInterfaceType(serviceIfDoc.getType());
 				if( docSrv!=null ) {
 					serviceIF.setDocDescription(docSrv.getDescription());
@@ -817,7 +817,7 @@ public class ParamUtil {
 			serviceIF.setDirection(serviceinterfacep.getDirection());
 			serviceIF.setInstanceName(serviceinterfacep.getInstanceName());
 			serviceIF.setVariableName(serviceinterfacep.getVarName());
-			serviceIF.setIdlFile(serviceinterfacep.getIdlFile());
+			serviceIF.setIdlFile(serviceinterfacep.getIdlDispFile());
 			serviceIF.setType(serviceinterfacep.getInterfaceType());
 			//
 			DocServiceinterface docserviceIF = factory.createDocServiceinterface();
