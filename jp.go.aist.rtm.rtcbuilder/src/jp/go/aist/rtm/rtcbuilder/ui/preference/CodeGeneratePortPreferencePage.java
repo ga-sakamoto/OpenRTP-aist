@@ -1,6 +1,7 @@
 package jp.go.aist.rtm.rtcbuilder.ui.preference;
 
 import jp.go.aist.rtm.rtcbuilder.RtcBuilderPlugin;
+import jp.go.aist.rtm.rtcbuilder.nl.Messages;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.IMessageConstants;
 
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -14,7 +15,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 public class CodeGeneratePortPreferencePage extends AbstarctFieldEditorPreferencePage implements
 	IWorkbenchPreferencePage {
-	
+
 	public CodeGeneratePortPreferencePage(){
 		setPreferenceStore(RtcBuilderPlugin.getDefault().getPreferenceStore());
 	}
@@ -25,7 +26,7 @@ public class CodeGeneratePortPreferencePage extends AbstarctFieldEditorPreferenc
 		storeServicePortInitialSetting(store);
 		storeServiceINterfaceInitialSetting(store);
 	}
-	
+
 	@Override
 	protected void createFieldEditors() {
 		Composite composite = new Composite(getFieldEditorParent(), SWT.NULL);
@@ -38,69 +39,69 @@ public class CodeGeneratePortPreferencePage extends AbstarctFieldEditorPreferenc
 		createServicePortPart(composite);
 		createServiceInterfacePart(composite);
 	}
-	
+
 	private void createServiceInterfacePart(Composite composite) {
 		Composite serviceIFGroup = createGroup(composite, IPreferenceMessageConstants.PORT_TITLE_SERVICE_INTERFACE);
-		DigitAlphabetStringFieldEditor serviceIFNameEditor = 
+		DigitAlphabetStringFieldEditor serviceIFNameEditor =
 			new DigitAlphabetStringFieldEditor(ComponentPreferenceManager.Generate_ServiceIF_Name,
 					IMessageConstants.SERVICEPORT_LBL_IFNAME, serviceIFGroup);
 		addField(serviceIFNameEditor);
-		DigitAlphabetStringFieldEditor serviceIFInstanceNameEditor = 
+		DigitAlphabetStringFieldEditor serviceIFInstanceNameEditor =
 			new DigitAlphabetStringFieldEditor(ComponentPreferenceManager.Generate_ServiceIF_InstanceName,
 					IMessageConstants.SERVICEPORT_LBL_IFINSTNAME, serviceIFGroup);
 		addField(serviceIFInstanceNameEditor);
-		DigitAlphabetStringFieldEditor serviceIFVarNameEditor = 
+		DigitAlphabetStringFieldEditor serviceIFVarNameEditor =
 			new DigitAlphabetStringFieldEditor(ComponentPreferenceManager.Generate_ServiceIF_VarName,
 					IMessageConstants.SERVICEPORT_LBL_IFVARNAME, serviceIFGroup);
 		addField(serviceIFVarNameEditor);
-		StringFieldEditor serviceIFPrefixEditor = 
+		StringFieldEditor serviceIFPrefixEditor =
 			new StringFieldEditor(ComponentPreferenceManager.Generate_ServiceIF_Prefix,
 				IPreferenceMessageConstants.PORT_LBL_PREFIX, serviceIFGroup);
 		addField(serviceIFPrefixEditor);
-		StringFieldEditor serviceIFSuffixEditor = 
+		StringFieldEditor serviceIFSuffixEditor =
 			new StringFieldEditor(ComponentPreferenceManager.Generate_ServiceIF_Suffix,
 				IPreferenceMessageConstants.PORT_LBL_SUFFIX, serviceIFGroup);
 		addField(serviceIFSuffixEditor);
 	}
 	private void createServicePortPart(Composite composite) {
 		Composite serviceportGroup = createGroup(composite, IPreferenceMessageConstants.PORT_TITLE_SERVICE_PORT);
-		DigitAlphabetStringFieldEditor servicePortNameEditor = 
+		DigitAlphabetStringFieldEditor servicePortNameEditor =
 			new DigitAlphabetStringFieldEditor(ComponentPreferenceManager.Generate_ServicePort_Name,
 					IMessageConstants.SERVICEPORT_LBL_PORTNAME, serviceportGroup);
 		addField(servicePortNameEditor);
-		StringFieldEditor servicePortPrefixEditor = 
+		StringFieldEditor servicePortPrefixEditor =
 			new StringFieldEditor(ComponentPreferenceManager.Generate_ServicePort_Prefix,
 				IPreferenceMessageConstants.PORT_LBL_PREFIX, serviceportGroup);
 		addField(servicePortPrefixEditor);
-		StringFieldEditor servicePortSuffixEditor = 
+		StringFieldEditor servicePortSuffixEditor =
 			new StringFieldEditor(ComponentPreferenceManager.Generate_ServicePort_Suffix,
 				IPreferenceMessageConstants.PORT_LBL_SUFFIX, serviceportGroup);
 		addField(servicePortSuffixEditor);
 	}
 	private void createDataPortPart(Composite composite) {
 		Composite dataportGroup = createGroup(composite, IPreferenceMessageConstants.PORT_TITLE_DATA_PORT);
-		DigitAlphabetStringFieldEditor dataPortNameEditor = 
+		DigitAlphabetStringFieldEditor dataPortNameEditor =
 			new DigitAlphabetStringFieldEditor(ComponentPreferenceManager.Generate_DataPort_Name,
-					IMessageConstants.DATAPORT_LBL_PORTNAME, dataportGroup);
+					Messages.getString("IMC.DATAPORT_LBL_DESCRIPTION"), dataportGroup);
 		addField(dataPortNameEditor);
-		StringFieldEditor dataPortTypeEditor = 
+		StringFieldEditor dataPortTypeEditor =
 			new StringFieldEditor(ComponentPreferenceManager.Generate_DataPort_Type,
-					IMessageConstants.DATAPORT_LBL_PORTTYPE, dataportGroup);
+					Messages.getString("IMC.DATAPORT_LBL_PORTTYPE"), dataportGroup);
 		addField(dataPortTypeEditor);
-		DigitAlphabetStringFieldEditor dataPortVarNameEditor = 
+		DigitAlphabetStringFieldEditor dataPortVarNameEditor =
 			new DigitAlphabetStringFieldEditor(ComponentPreferenceManager.Generate_DataPort_VarName,
-					IMessageConstants.DATAPORT_TBLLBL_VARNAME, dataportGroup);
+					Messages.getString("IMC.DATAPORT_TBLLBL_VARNAME"), dataportGroup);
 		addField(dataPortVarNameEditor);
-		StringFieldEditor dataPortPrefixEditor = 
+		StringFieldEditor dataPortPrefixEditor =
 			new StringFieldEditor(ComponentPreferenceManager.Generate_DataPort_Prefix,
 				IPreferenceMessageConstants.PORT_LBL_PREFIX, dataportGroup);
 		addField(dataPortPrefixEditor);
-		StringFieldEditor dataPortSuffixEditor = 
+		StringFieldEditor dataPortSuffixEditor =
 			new StringFieldEditor(ComponentPreferenceManager.Generate_DataPort_Suffix,
 				IPreferenceMessageConstants.PORT_LBL_SUFFIX, dataportGroup);
 		addField(dataPortSuffixEditor);
 	}
-	
+
 	private void storeServiceINterfaceInitialSetting(IPreferenceStore store) {
 		store.setDefault(ComponentPreferenceManager.Generate_ServiceIF_Name, ComponentPreferenceManager.DEFAULT_SERVICEIF_NAME);
 		store.setDefault(ComponentPreferenceManager.Generate_ServiceIF_InstanceName, ComponentPreferenceManager.DEFAULT_SERVICEIF_INSTANCENAME);
