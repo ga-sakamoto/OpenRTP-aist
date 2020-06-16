@@ -97,6 +97,7 @@ public class ServicePortTest extends TestBase {
         ServicePortInterfaceParam int1 = new ServicePortInterfaceParam(service1, "if_name", "", "",
                 "C:\\Program Files\\OpenRTM-aist\\1.2.0\\rtm\\idl\\ManipulatorCommonInterface_Common.idl",
                 "JARA_ARM::ManipulatorCommonInterface_Common",
+                "C:\\Program Files\\OpenRTM-aist\\1.2.0\\rtm\\idl",
                 0);
         srvinterts.add(int1);
         service1.getServicePortInterfaces().addAll(srvinterts);
