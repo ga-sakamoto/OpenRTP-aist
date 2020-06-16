@@ -27,19 +27,19 @@ ${sharp} configuration.active_config: mode0
 ${sharp} Configuration-set example
 ${sharp}
 #if( ${rtcParam.configParams.size()} > 0 )
-#foreach($configParam in ${rtcParam.configParams})  
+#foreach($configParam in ${rtcParam.configParams})
 ${sharp} conf.default.${configParam.name}: ${configParam.defaultVal}
 #end
 ${sharp}
 ${sharp} Additional configuration-set example named "mode0"
 ${sharp}
-#foreach($configParam in ${rtcParam.configParams})  
+#foreach($configParam in ${rtcParam.configParams})
 ${sharp} conf.mode0.${configParam.name}: ${configParam.defaultVal}
 #end
 ${sharp}
 ${sharp} Other configuration set named "mode1"
 ${sharp}
-#foreach($configParam in ${rtcParam.configParams})  
+#foreach($configParam in ${rtcParam.configParams})
 ${sharp} conf.mode1.${configParam.name}: ${configParam.defaultVal}
 #end
 #else
@@ -89,7 +89,7 @@ ${sharp}${sharp} Available GUI control options [__widget__]:
 ${sharp}${sharp}
 ${sharp}${sharp} - text:          text box [default].
 ${sharp}${sharp} - slider.<step>: Horizontal slider. <step> is step for the slider.
-${sharp}${sharp}                  A range constraints option is required. 
+${sharp}${sharp}                  A range constraints option is required.
 ${sharp}${sharp} - spin:          Spin button. A range constraitns option is required.
 ${sharp}${sharp} - radio:         Radio button. An enumeration constraints is required.
 ${sharp}${sharp} - checkbox:      Checkbox control. An enumeration constraints is
@@ -169,11 +169,7 @@ ${sharp}${sharp}                            RT-preemptive pathed kernel.
 ${sharp}${sharp} - ArtExecutionContext:     Real-time execution context for ARTLinux
 ${sharp}${sharp}                            (http://sourceforge.net/projects/art-linux/)
 ${sharp}${sharp}
-#if(${tmpltHelper.checkPeriodicType(${rtcParam})})
-exec_cxt.periodic.type:${tmpltHelper.getPeriodicTypeValue(${rtcParam})}
-#else
 ${sharp} exec_cxt.periodic.type: PeriodicExecutionContext
-#end
 
 ${sharp}${sharp}
 ${sharp}${sharp} The execution cycle of ExecutionContext
@@ -181,12 +177,4 @@ ${sharp}${sharp}
 #if(${rtcParam.executionRate}>0)exec_cxt.periodic.rate:${rtcParam.executionRate}
 #else
 ${sharp} exec_cxt.periodic.rate: 1000
-#end
-
-#if( ${rtcParam.configParameterParams.size()} > 0 )
-#foreach($parameterParam in ${rtcParam.configParameterParams})  
-#if(${tmpltHelper.checkNotPeriodicTypeParam(${parameterParam})})
-${parameterParam.configName}:${parameterParam.defaultVal}
-#end
-#end
 #end

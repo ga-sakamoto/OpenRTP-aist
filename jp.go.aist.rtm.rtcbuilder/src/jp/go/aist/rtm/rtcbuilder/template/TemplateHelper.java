@@ -1,15 +1,53 @@
 package jp.go.aist.rtm.rtcbuilder.template;
 
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DEFAULT_SVC_IMPL_SUFFIX;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DEFAULT_SVC_SKEL_SUFFIX;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DEFAULT_SVC_STUB_SUFFIX;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_AUTHOR_OFFSET;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_CONSTRAINT_OFFSET;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_CONSTRAINT_PREFIX;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_CYCLE_OFFSET;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_CYCLE_PREFIX;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_DEFAULT_OFFSET;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_DEFAULT_PREFIX;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_DEFAULT_WIDTH;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_DESC_OFFSET;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_DESC_PREFIX;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_INTERFACE_DETAIL_OFFSET;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_INTERFACE_DETAIL_PREFIX;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_INTERFACE_OFFSET;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_INTERFACE_PREFIX;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_NUMBER_OFFSET;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_NUMBER_PREFIX;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_POST_OFFSET;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_PRE_OFFSET;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_RANGE_OFFSET;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_RANGE_PREFIX;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_README_ACTIVITY_OFFSET;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_README_ACTIVITY_PREFIX;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_README_COPYRIGHT_PREFIX;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_README_INTERFACE_OFFSET;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_README_INTERFACE_PREFIX;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_README_MODULE_OFFSET;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_README_MODULE_PREFIX;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_README_PORT_DETAIL_OFFSET;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_README_PORT_DETAIL_PREFIX;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_README_PORT_OFFSET;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_README_PORT_PREFIX;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_README_PREFIX;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_SEMANTICS_OFFSET;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_SEMANTICS_PREFIX;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_UNIT_OFFSET;
+import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_UNIT_PREFIX;
+import static jp.go.aist.rtm.rtcbuilder.util.StringUtil.splitString;
+
 import java.io.File;
 
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
-import jp.go.aist.rtm.rtcbuilder.generator.param.ConfigParameterParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.ConfigSetParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.idl.IdlFileParam;
 import jp.go.aist.rtm.rtcbuilder.util.RTCUtil;
-import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.*;
-import static jp.go.aist.rtm.rtcbuilder.util.StringUtil.*;
 
 /**
  * テンプレートを出力する際に使用されるヘルパー
@@ -18,7 +56,7 @@ public class TemplateHelper {
 
 	/**
 	 * ベース名を取得する
-	 * 
+	 *
 	 * @param fullName
 	 * @return
 	 */
@@ -35,7 +73,7 @@ public class TemplateHelper {
 	}
 	/**
 	 * ファイル名を取得する
-	 * 
+	 *
 	 * @param fullPath
 	 * @return
 	 */
@@ -48,7 +86,7 @@ public class TemplateHelper {
 
 	/**
 	 * 拡張子無しファイル名を取得する
-	 * 
+	 *
 	 * @param fullPath
 	 * @return
 	 */
@@ -65,7 +103,7 @@ public class TemplateHelper {
 
 	public static String getIDLFilesforIDLCMake(RtcParam source) {
 		StringBuilder builder = new StringBuilder();
-		
+
 		for(IdlFileParam target : source.getProviderIdlPathes() ) {
 			if(RTCUtil.checkDefault(target.getIdlPath(), source.getParent().getDataTypeParams())) continue;
 			builder.append("${CMAKE_CURRENT_SOURCE_DIR}/");
@@ -86,7 +124,7 @@ public class TemplateHelper {
 		}
 		return builder.toString();
 	}
-	
+
 	public static String toSvcImpl(String fullPath) {
 		String name = getFilenameNoExt(fullPath);
 		if (name.isEmpty()) {
@@ -122,7 +160,7 @@ public class TemplateHelper {
 	public boolean isCpp(RtcParam source) {
 		return source.getLangList().contains(IRtcBuilderConstants.LANG_CPP);
 	}
-	
+
 	public static String getServiceImplSuffix() {
 		return DEFAULT_SVC_IMPL_SUFFIX;
 	}
@@ -277,7 +315,7 @@ public class TemplateHelper {
 		String[] vers = ver.split("\\.");
 		return (vers.length > 2) ? vers[2] : "0";
 	}
-	
+
 	public static String convFormatted(String source, int len) {
 		int clen = source.length();
 		StringBuilder builder = new StringBuilder();
@@ -287,33 +325,7 @@ public class TemplateHelper {
 		}
 		return builder.toString();
 	}
-	
-	//ConfigParameterのチェック
-	public boolean checkPeriodicType(RtcParam param) {
-		for( ConfigParameterParam target : param.getConfigParameterParams() ) {
-			if( target.getConfigName().trim().equals("exec_cxt.periodic.type") ) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public boolean checkNotPeriodicTypeParam(ConfigParameterParam param) {
-		if( param.getConfigName().trim().equals("exec_cxt.periodic.type") ) {
-			return false;
-		}
-		return true;
-	}
-	
-	public String getPeriodicTypeValue(RtcParam param) {
-		for( ConfigParameterParam target : param.getConfigParameterParams() ) {
-			if( target.getConfigName().trim().equals("exec_cxt.periodic.type") ) {
-				return target.getDefaultVal();
-			}
-		}
-		return "";
-	}
-	
+
 	public boolean checkNotWidget(RtcParam param) {
 		for(ConfigSetParam target : param.getConfigParams()) {
 			if( target.getWidget()!=null && 0<target.getWidget().length() ) {
@@ -322,7 +334,7 @@ public class TemplateHelper {
 		}
 		return true;
 	}
-	
+
 	public boolean checkNotConstraint(RtcParam param) {
 		for(ConfigSetParam target : param.getConfigParams()) {
 			if( target.getConstraint()!=null && 0<target.getConstraint().length() ) {
@@ -331,13 +343,13 @@ public class TemplateHelper {
 		}
 		return true;
 	}
-	
+
 	public boolean checkDetailContent(int index, RtcParam param) {
 		if(param.getDetailContent(index)==null || param.getDetailContent(index).length()==0)
 			return false;
 		return true;
 	}
-	
+
 	public boolean checkContents(String target) {
 		if( target==null || target.length()==0 )
 			return false;

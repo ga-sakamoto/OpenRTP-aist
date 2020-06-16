@@ -44,7 +44,7 @@ public class ${rtcParam.name}Test implements RtcNewFunc, RtcDeleteFunc, Register
     	    "lang_type",         "compile",
 #if( ${rtcParam.configParams.size()} > 0 )
             // Configuration variables
-#foreach($configParam in ${rtcParam.configParams})  
+#foreach($configParam in ${rtcParam.configParams})
             "conf.default.${configParam.name}", "${configParam.defaultVal}",
 #end
 
@@ -65,14 +65,6 @@ public class ${rtcParam.name}Test implements RtcNewFunc, RtcDeleteFunc, Register
             "conf.__type__.${configParam.name}", "${configParam.type}",
 #end
 
-#end
-#if( ${rtcParam.configParameterParams.size()} > 0 )
-            // System Configuration
-#foreach($parameterParam in ${rtcParam.configParameterParams})  
-#if( ${parameterParam.isNonPeriodic()} )
-            "${parameterParam.configName}", "${parameterParam.defaultVal}",
-#end
-#end
 #end
     	    ""
             };

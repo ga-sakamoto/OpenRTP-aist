@@ -56,20 +56,20 @@ RTC::ReturnCode_t test::onInitialize()
   // <rtc-template block="registration">
   // Set InPort buffers
   addInPort("InP1", m_InP1In);
-  
+
   // Set OutPort buffer
-  
+
   // Set service provider to Ports
-  
+
   // Set service consumers to Ports
-  
+
   // Set CORBA Service Ports
-  
+
   // </rtc-template>
 
   // <rtc-template block="bind_config">
   // </rtc-template>
-  
+
   return RTC::RTC_OK;
 }
 
@@ -154,7 +154,7 @@ RTC::ReturnCode_t test::onRateChanged(RTC::UniqueId ec_id)
 
 extern "C"
 {
- 
+
   void testInit(RTC::Manager* manager)
   {
     coil::Properties profile(test_spec);
@@ -162,7 +162,7 @@ extern "C"
                              RTC::Create<test>,
                              RTC::Delete<test>);
   }
-  
+
 };
 
 

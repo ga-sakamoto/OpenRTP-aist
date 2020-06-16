@@ -26,7 +26,7 @@ static const char* ${rtcParam.name.toLowerCase()}_spec[] =
     "lang_type",         "compile",
 #if( ${rtcParam.configParams.size()} > 0 )
     // Configuration variables
-#foreach($configParam in ${rtcParam.configParams})  
+#foreach($configParam in ${rtcParam.configParams})
     "conf.default.${configParam.name}", "${configParam.defaultVal}",
 #end
 
@@ -47,14 +47,6 @@ static const char* ${rtcParam.name.toLowerCase()}_spec[] =
     "conf.__type__.${configParam.name}", "${configParam.type}",
 #end
 
-#end
-#if( ${rtcParam.configParameterParams.size()} > 0 )
-    // System Configuration
-#foreach($parameterParam in ${rtcParam.configParameterParams})  
-#if( ${parameterParam.isNonPeriodic()} )
-    "${parameterParam.configName}", "${parameterParam.defaultVal}",
-#end
-#end
 #end
     ""
   };
@@ -102,13 +94,13 @@ RTC::ReturnCode_t ${rtcParam.name}Test::onInitialize()
 #if(${port.type}!="")  addInPort("${port.name}", ${rtcParam.commonPrefix}${rtcParam.dataPortPrefix}${port.tmplVarName}In${rtcParam.dataPortSuffix}${rtcParam.commonSuffix});
 #end
 #end
-  
+
   // Set OutPort buffer
 #foreach($port in ${rtcParam.inports})
 #if(${port.type}!="")  addOutPort("${port.name}", ${rtcParam.commonPrefix}${rtcParam.dataPortPrefix}${port.tmplVarName}Out${rtcParam.dataPortSuffix}${rtcParam.commonSuffix});
 #end
 #end
-  
+
   // Set service provider to Ports
 #if(${rtcParam.servicePorts.size()}>0)
 #foreach($servicePort in ${rtcParam.servicePorts})
@@ -117,7 +109,7 @@ RTC::ReturnCode_t ${rtcParam.name}Test::onInitialize()
 #if(${serviceInterface.index}==1)
   ${rtcParam.commonPrefix}${rtcParam.servicePortPrefix}${servicePort.name}Port${rtcParam.servicePortSuffix}${rtcParam.commonSuffix}.registerProvider("${serviceInterface.name}", "${serviceInterface.interfaceType}", ${rtcParam.commonPrefix}${rtcParam.serviceIFPrefix}${serviceInterface.tmplVarName}${rtcParam.serviceIFSuffix}${rtcParam.commonSuffix});
 #end#end#end#end#end
-  
+
   // Set service consumers to Ports
 #if(${rtcParam.servicePorts.size()}>0)
 #foreach($servicePort in ${rtcParam.servicePorts})
@@ -126,27 +118,27 @@ RTC::ReturnCode_t ${rtcParam.name}Test::onInitialize()
 #if(${serviceInterface.index}==0)
   ${rtcParam.commonPrefix}${rtcParam.servicePortPrefix}${servicePort.name}Port${rtcParam.servicePortSuffix}${rtcParam.commonSuffix}.registerConsumer("${serviceInterface.name}", "${serviceInterface.interfaceType}", ${rtcParam.commonPrefix}${rtcParam.serviceIFPrefix}${serviceInterface.tmplVarName}${rtcParam.serviceIFSuffix}${rtcParam.commonSuffix});
 #end#end#end#end#end
-  
+
   // Set CORBA Service Ports
 #if(${rtcParam.servicePorts.size()}>0)
 #foreach($servicePort in ${rtcParam.servicePorts})
 #if(${servicePort.servicePortInterfaces.size()}>0)
   addPort(${rtcParam.commonPrefix}${rtcParam.servicePortPrefix}${servicePort.name}Port${rtcParam.servicePortSuffix}${rtcParam.commonSuffix});
 #end#end#end
-  
+
   // </rtc-template>
 
   // <rtc-template block="bind_config">
 #if(${rtcParam.configParams.size()}>0)
   // Bind variables and configuration variable
-#foreach($configParam in ${rtcParam.configParams})  
+#foreach($configParam in ${rtcParam.configParams})
   bindParameter("${configParam.name}", ${rtcParam.commonPrefix}${rtcParam.configurationPrefix}${configParam.tmplVarName}${rtcParam.configurationSuffix}${rtcParam.commonSuffix}, "${configParam.defaultVal}");
 #end
 #end
   // </rtc-template>
 #if(${tmpltHelper.checkDetailContent(0,${rtcParam})})${rtcParam.getDetailContent(0)}
 #end
-  
+
   return RTC::RTC_OK;
 }
 #if(${rtcParam.configParams.size()}==0 && ${rtcParam.IsNotImplemented(0)} && ${rtcParam.inports.size()}==0 && ${rtcParam.outports.size()}==0 && ${rtcParam.servicePorts.size()}==0)*/
@@ -327,7 +319,7 @@ RTC::ReturnCode_t ${rtcParam.name}Test::onRateChanged(RTC::UniqueId ec_id)
 
 extern "C"
 {
- 
+
   void ${rtcParam.name}TestInit(RTC::Manager* manager)
   {
     coil::Properties profile(${rtcParam.name.toLowerCase()}_spec);
@@ -335,7 +327,7 @@ extern "C"
                              RTC::Create<${rtcParam.name}Test>,
                              RTC::Delete<${rtcParam.name}Test>);
   }
-  
+
 };
 
 

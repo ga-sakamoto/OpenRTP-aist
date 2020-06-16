@@ -220,7 +220,6 @@ public class ParamUtil {
 		if( profile.getConfigurationSet() != null ) {
 			createConfigParam(profile.getConfigurationSet().getConfiguration(), rtcParam);
 		}
-		convertFromModuleParameter(profile, rtcParam);
 		convertFromModuleLanguage(profile, managerList, rtcParam);
 		convertFromModuleLanguage(profile, rtcParam);
 		//
@@ -315,16 +314,6 @@ public class ParamUtil {
 					rtcParam.getTargetEnvs().add(env);
 				}
 			}
-		}
-	}
-
-	private void convertFromModuleParameter(RtcProfile profile, RtcParam rtcParam) {
-		for( Object paramObj : profile.getParameters() ) {
-			Parameter param = (Parameter)paramObj;
-			ConfigParameterParam paramp = new ConfigParameterParam();
-			paramp.setConfigName(param.getName());
-			paramp.setDefaultVal(param.getDefaultValue());
-			rtcParam.getConfigParameterParams().add(paramp);
 		}
 	}
 
@@ -582,7 +571,6 @@ public class ParamUtil {
 			profile.getServicePorts().add(serviceport);
 		}
 		convertToModuleConfiguration(target, factory, profile);
-		convertToModuleParameter(target, factory, profile);
 		convertToModuleLanguage(managerList, target, factory, profile);
 
 		deleteInapplicableItem(profile, managerList);
@@ -632,15 +620,6 @@ public class ParamUtil {
 				language.getTargets().add(env);
 			}
 			profile.setLanguage(language);
-		}
-	}
-
-	private void convertToModuleParameter(RtcParam rtcParam, ObjectFactory factory, RtcProfile profile) {
-		for( ConfigParameterParam configp : rtcParam.getConfigParameterParams() ) {
-			Parameter param = factory.createParameter();
-			param.setName(configp.getConfigName());
-			param.setDefaultValue(configp.getDefaultVal());
-			profile.getParameters().add(param);
 		}
 	}
 

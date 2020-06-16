@@ -58,20 +58,20 @@ RTC::ReturnCode_t foo::onInitialize()
   // Set InPort buffers
   addInPort("InP1", m_InP1In);
   addInPort("InP2", m_InP2In);
-  
+
   // Set OutPort buffer
-  
+
   // Set service provider to Ports
-  
+
   // Set service consumers to Ports
-  
+
   // Set CORBA Service Ports
-  
+
   // </rtc-template>
 
   // <rtc-template block="bind_config">
   // </rtc-template>
-  
+
   return RTC::RTC_OK;
 }
 
@@ -156,7 +156,7 @@ RTC::ReturnCode_t foo::onRateChanged(RTC::UniqueId ec_id)
 
 extern "C"
 {
- 
+
   void fooInit(RTC::Manager* manager)
   {
     coil::Properties profile(foo_spec);
@@ -164,7 +164,7 @@ extern "C"
                              RTC::Create<foo>,
                              RTC::Delete<foo>);
   }
-  
+
 };
 
 

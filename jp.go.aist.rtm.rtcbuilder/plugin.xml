@@ -16,10 +16,10 @@
   <extension-point id="importExtension" name="Import Extension" schema="schema/importExtension.exsd"/>
 
   <extension point="org.eclipse.emf.ecore.generated_package">
-    <package 
-       uri = "http:///jp/go/aist/rtm/rtcbuilder/model/component.ecore" 
+    <package
+       uri = "http:///jp/go/aist/rtm/rtcbuilder/model/component.ecore"
        class = "jp.go.aist.rtm.rtcbuilder.model.component.ComponentPackage"
-       genModel = "src/jp/go/aist/rtm/rtcbuilder/model/RTC.genmodel" /> 
+       genModel = "src/jp/go/aist/rtm/rtcbuilder/model/RTC.genmodel" />
   </extension>
   <extension
         point="org.eclipse.ui.editors">
@@ -38,20 +38,20 @@
            id="jp.go.aist.rtm.rtcbuilder.ui.actionSet"
            label="RTCBuilder Actions">
 			<action
-				id="jp.go.aist.rtm.rtcbuilder.ui.action.NewRtcBuilderEditorAction" 
+				id="jp.go.aist.rtm.rtcbuilder.ui.action.NewRtcBuilderEditorAction"
 				label="%NewRtcBuilderEditorActionLabel"
-				menubarPath="file/RtcBuilderGroup" 
+				menubarPath="file/RtcBuilderGroup"
 				toolbarPath="RtcBuilder"
-				icon="icons/RtcBuilderL.png" 
-				tooltip="%NewRtcBuilderEditorActionToolTip" 
-				class="jp.go.aist.rtm.rtcbuilder.ui.action.NewRtcBuilderEditorAction"> 
+				icon="icons/RtcBuilderL.png"
+				tooltip="%NewRtcBuilderEditorActionToolTip"
+				class="jp.go.aist.rtm.rtcbuilder.ui.action.NewRtcBuilderEditorAction">
 			</action>
 		</actionSet>
   </extension>
   <extension
         point="org.eclipse.ui.perspectiveExtensions">
     <perspectiveExtension targetID="jp.go.aist.rtm.rtclink.ui.perspective.RtcLinkPerspective">
-		<actionSet id="jp.go.aist.rtm.rtcbuilder.ui.actionSet"/> 
+		<actionSet id="jp.go.aist.rtm.rtcbuilder.ui.actionSet"/>
 	</perspectiveExtension>
   </extension>
   <extension
@@ -99,11 +99,6 @@
            class="jp.go.aist.rtm.rtcbuilder.ui.preference.CodeGeneratePreferencePage"
            id="jp.go.aist.rtm.rtcbuilder.ui.preferencePage.codeGenerate"
            name="%preferecePagesCodeGenerateName"/>
-     <page
-           category="jp.go.aist.rtm.rtcbuilder.ui.preferencePage.codeGenerate"
-           class="jp.go.aist.rtm.rtcbuilder.ui.preference.ConfigPreferencePage"
-           id="jp.go.aist.rtm.rtcbuilder.ui.preferencePage.codeGenerate.Configuration"
-           name="%preferecePagesConfigurationName"/>
      <page
            category="jp.go.aist.rtm.rtcbuilder.ui.preferencePage.codeGenerate"
            class="jp.go.aist.rtm.rtcbuilder.ui.preference.CodeGeneratePortPreferencePage"

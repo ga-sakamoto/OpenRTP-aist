@@ -70,28 +70,28 @@ RTC::ReturnCode_t foo::onInitialize()
   // Set InPort buffers
   addInPort("InP1", p_InP1In);
   addInPort("InP2", p_InP2In);
-  
+
   // Set OutPort buffer
   addOutPort("OutP1", p_OutP1Out);
   addOutPort("OutP2", p_OutP2Out);
-  
+
   // Set service provider to Ports
   p_svPortPort.registerProvider("acc", "MyService", p_acc);
-  
+
   // Set service consumers to Ports
   p_cmPortPort.registerConsumer("rate", "DAQService", p_rate);
-  
+
   // Set CORBA Service Ports
   addPort(p_svPortPort);
   addPort(p_cmPortPort);
-  
+
   // </rtc-template>
 
   // <rtc-template block="bind_config">
   // Bind variables and configuration variable
   bindParameter("int_param0", p_int_param0, "0");
   // </rtc-template>
-  
+
   return RTC::RTC_OK;
 }
 
@@ -176,7 +176,7 @@ RTC::ReturnCode_t foo::onRateChanged(RTC::UniqueId ec_id)
 
 extern "C"
 {
- 
+
   void fooInit(RTC::Manager* manager)
   {
     coil::Properties profile(foo_spec);
@@ -184,7 +184,7 @@ extern "C"
                              RTC::Create<foo>,
                              RTC::Delete<foo>);
   }
-  
+
 };
 
 

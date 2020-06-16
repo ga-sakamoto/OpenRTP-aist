@@ -55,22 +55,22 @@ RTC::ReturnCode_t test::onInitialize()
   // Registration: InPort/OutPort/Service
   // <rtc-template block="registration">
   // Set InPort buffers
-  
+
   // Set OutPort buffer
-  
+
   // Set service provider to Ports
   m_MySVProPort.registerProvider("myservice", "MyService", m_myservice);
-  
+
   // Set service consumers to Ports
-  
+
   // Set CORBA Service Ports
   addPort(m_MySVProPort);
-  
+
   // </rtc-template>
 
   // <rtc-template block="bind_config">
   // </rtc-template>
-  
+
   return RTC::RTC_OK;
 }
 
@@ -155,7 +155,7 @@ RTC::ReturnCode_t test::onRateChanged(RTC::UniqueId ec_id)
 
 extern "C"
 {
- 
+
   void testInit(RTC::Manager* manager)
   {
     coil::Properties profile(test_spec);
@@ -163,7 +163,7 @@ extern "C"
                              RTC::Create<test>,
                              RTC::Delete<test>);
   }
-  
+
 };
 
 

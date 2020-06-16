@@ -55,22 +55,22 @@ RTC::ReturnCode_t Sample::onInitialize()
   // Registration: InPort/OutPort/Service
   // <rtc-template block="registration">
   // Set InPort buffers
-  
+
   // Set OutPort buffer
-  
+
   // Set service provider to Ports
   m_SamplePort.registerProvider("SampleIF", "MyModule::MyInterface", m_SampleIF);
-  
+
   // Set service consumers to Ports
-  
+
   // Set CORBA Service Ports
   addPort(m_SamplePort);
-  
+
   // </rtc-template>
 
   // <rtc-template block="bind_config">
   // </rtc-template>
-  
+
   return RTC::RTC_OK;
 }
 
@@ -152,7 +152,7 @@ RTC::ReturnCode_t Sample::onRateChanged(RTC::UniqueId ec_id)
 
 extern "C"
 {
- 
+
   void SampleInit(RTC::Manager* manager)
   {
     coil::Properties profile(sample_spec);
@@ -160,7 +160,7 @@ extern "C"
                              RTC::Create<Sample>,
                              RTC::Delete<Sample>);
   }
-  
+
 };
 
 

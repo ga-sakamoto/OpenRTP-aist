@@ -70,15 +70,15 @@ RTC::ReturnCode_t foo::onInitialize()
   // Registration: InPort/OutPort/Service
   // <rtc-template block="registration">
   // Set InPort buffers
-  
+
   // Set OutPort buffer
-  
+
   // Set service provider to Ports
-  
+
   // Set service consumers to Ports
-  
+
   // Set CORBA Service Ports
-  
+
   // </rtc-template>
 
   // <rtc-template block="bind_config">
@@ -89,7 +89,7 @@ RTC::ReturnCode_t foo::onInitialize()
   bindParameter("str_param0", m_str_param0, "hoge");
   bindParameter("str_param1", m_str_param1, "dara");
   // </rtc-template>
-  
+
   return RTC::RTC_OK;
 }
 
@@ -174,7 +174,7 @@ RTC::ReturnCode_t foo::onRateChanged(RTC::UniqueId ec_id)
 
 extern "C"
 {
- 
+
   void fooInit(RTC::Manager* manager)
   {
     coil::Properties profile(foo_spec);
@@ -182,7 +182,7 @@ extern "C"
                              RTC::Create<foo>,
                              RTC::Delete<foo>);
   }
-  
+
 };
 
 
