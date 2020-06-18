@@ -108,7 +108,11 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 		super(editor, "id", Messages.getString("IMessageConstants.DATAPORT_SECTION"));
 		//
 		preSelection = null;
-		updateDefaultValue();
+
+		IPreferenceStore store = RtcBuilderPlugin.getDefault().getPreferenceStore();
+		defaultPortName = ComponentPreferenceManager.getInstance().getDataPort_Name();
+		defaultPortType = store.getString(ComponentPreferenceManager.Generate_DataPort_Type);
+		defaultPortVarName = store.getString(ComponentPreferenceManager.Generate_DataPort_VarName);
 	}
 
 	public void updateDefaultValue() {
