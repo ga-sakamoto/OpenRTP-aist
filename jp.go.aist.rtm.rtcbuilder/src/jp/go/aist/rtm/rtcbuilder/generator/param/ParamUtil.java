@@ -468,9 +468,8 @@ public class ParamUtil {
 				serviceIF.setName(serviceIfDoc.getName());
 				serviceIF.setDirection(serviceIfDoc.getDirection());
 				serviceIF.setInstanceName(serviceIfDoc.getInstanceName());
-				serviceIF.setIdlFile(serviceIfDoc.getIdlFile());
+				serviceIF.setIdlDispFile(serviceIfDoc.getIdlFile());
 				serviceIF.setInterfaceType(serviceIfDoc.getType());
-				serviceIF.setIdlSearchPath(serviceIfDoc.getPath());
 				if( docSrv!=null ) {
 					serviceIF.setDocDescription(docSrv.getDescription());
 					serviceIF.setDocArgument(docSrv.getDocArgument());
@@ -508,7 +507,7 @@ public class ParamUtil {
 			dataportp.setDataFlowType(dataPortBasic.getDataflowType());
 			dataportp.setInterfaceType(dataPortBasic.getInterfaceType());
 			dataportp.setSubscriptionType(dataPortBasic.getSubscriptionType());
-			dataportp.setIdlFile(dataPortBasic.getIdlFile());
+			dataportp.setDispIdlFile(dataPortBasic.getIdlFile());
 			dataportp.setUnit(dataPortBasic.getUnit());
 			if( dataPortBasic.getConstraint()!=null )
 				dataportp.setConstraint(XmlHandler.restoreConstraint(dataPortBasic.getConstraint()));
@@ -754,7 +753,7 @@ public class ParamUtil {
 		dataport.setType(dataportp.getType());
 		dataport.setVariableName(dataportp.getVarName());
 		dataport.setPosition(Position.fromValue(dataportp.getPosition().toUpperCase()));
-		dataport.setIdlFile(dataportp.getIdlFile());
+		dataport.setIdlFile(dataportp.getDispIdlFile());
 		dataport.setDataflowType(dataportp.getDataFlowType());
 		dataport.setInterfaceType(dataportp.getInterfaceType());
 		dataport.setSubscriptionType(dataportp.getSubscriptionType());
@@ -818,9 +817,8 @@ public class ParamUtil {
 			serviceIF.setDirection(serviceinterfacep.getDirection());
 			serviceIF.setInstanceName(serviceinterfacep.getInstanceName());
 			serviceIF.setVariableName(serviceinterfacep.getVarName());
-			serviceIF.setIdlFile(serviceinterfacep.getIdlFile());
+			serviceIF.setIdlFile(serviceinterfacep.getIdlDispFile());
 			serviceIF.setType(serviceinterfacep.getInterfaceType());
-			serviceIF.setPath(serviceinterfacep.getIdlSearchPath());
 			//
 			DocServiceinterface docserviceIF = factory.createDocServiceinterface();
 			docserviceIF.setDescription(serviceinterfacep.getDocDescription());

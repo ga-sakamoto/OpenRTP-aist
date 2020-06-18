@@ -127,7 +127,9 @@ public class Generator {
 				String idlContent = FileUtil.readFile(targetIDL);
 				if (idlContent == null) continue;
 				List<String> idlSearchDirs = new ArrayList<String>();
-				idlSearchDirs.add(serviceInterfaces.getIdlSearchPath());
+				for(IdlPathParam path : rtcParam.getIdlSearchPathList()) {
+					idlSearchDirs.add(path.getPath());
+				}
 				if(idlDir!=null){
 					for(IdlPathParam each : idlDir) {
 						idlSearchDirs.add(each.getPath());
@@ -166,6 +168,7 @@ public class Generator {
 		}
 		rtcParam.checkAndSetParameter();
 		rtcParam.getIdlPathes().clear();
+		rtcParam.getIdlPathes().addAll(rtcParam.getIdlSearchPathList());
 		//
 		for( DataPortParam outport : rtcParam.getOutports() ) {
 			if(0<outport.getIdlFile().length()) {
@@ -191,20 +194,7 @@ public class Generator {
 				if( !IDLPathes.contains(serviceInterfaces.getIdlFullPath()) ) {
 					IDLPathes.add(serviceInterfaces.getIdlFullPath());
                     IDLPathParams.add(
-                            new ServiceClassParam(serviceInterfaces.getIdlFullPath(), serviceInterfaces.getIdlFullPath(),
-															 serviceInterfaces.getIdlSearchPath()));
-				}
-				if( 0<serviceInterfaces.getIdlSearchPath().length()) {
-					boolean existed = false;
-					for(IdlPathParam exist : rtcParam.getIdlPathes()) {
-						if(exist.getPath().equals(serviceInterfaces.getIdlSearchPath())) {
-							existed = true;
-							break;
-						}
-					}
-					if(existed==false) {
-						rtcParam.getIdlPathes().add(new IdlPathParam(serviceInterfaces.getIdlSearchPath(), false));
-					}
+                            new ServiceClassParam(serviceInterfaces.getIdlFullPath(), serviceInterfaces.getIdlFullPath(), ""));
 				}
 			}
 		}
@@ -307,7 +297,7 @@ public class Generator {
 		List<String> serviceInterfaceNames = new ArrayList<String>();
 		for( ServicePortParam servicePort : rtcParam.getServicePorts() ) {
 			for( ServicePortInterfaceParam serviceInterface : servicePort.getServicePortInterfaces() ) {
-				String result = ValidationUtil.validateServiceInterface(serviceInterface);
+				String result = ValidationUtil.validateServiceInterface(serviceInterface, rtcParam.getOutputProject());
 				if( result!=null ) 	throw new RuntimeException(result + " : " + rtcParam.getName());
 				if (serviceInterfaceNames.contains(serviceInterface.getTmplVarName()))
 					throw new RuntimeException(IRTCBMessageConstants.VALIDATE_ERROR_INTERFACESAMENAME + rtcParam.getName());
@@ -377,7 +367,9 @@ public class Generator {
 				String idlContent = FileUtil.readFile(sv.getName());
 				if (idlContent == null) continue;
 				List<String> pathList = new ArrayList<String>();
-				pathList.add(sv.getIdlPath());
+				for(IdlPathParam path : rtcParam.getIdlSearchPathList()) {
+					pathList.add(path.getPath());
+				}
 				if(idlDir!=null) {
 					for(IdlPathParam each : idlDir) {
 						pathList.add(each.getPath());

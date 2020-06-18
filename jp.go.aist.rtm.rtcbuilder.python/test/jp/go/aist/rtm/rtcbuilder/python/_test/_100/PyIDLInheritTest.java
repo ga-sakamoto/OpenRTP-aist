@@ -10,6 +10,7 @@ import jp.go.aist.rtm.rtcbuilder.generator.param.GeneratorParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.ServicePortInterfaceParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.ServicePortParam;
+import jp.go.aist.rtm.rtcbuilder.generator.param.idl.IdlPathParam;
 import jp.go.aist.rtm.rtcbuilder.python.IRtcBuilderConstantsPython;
 import jp.go.aist.rtm.rtcbuilder.python._test.TestBase;
 import jp.go.aist.rtm.rtcbuilder.python.manager.PythonCMakeGenerateManager;
@@ -52,6 +53,7 @@ public class PyIDLInheritTest extends TestBase {
 
 	public void testInherit1() throws Exception {
 		String name = "idlinherit/inherit1";
+		rtcParam.getIdlSearchPathList().add(new IdlPathParam(fixturePath(name), false));
 
 		List<ServicePortParam> svports = new ArrayList<ServicePortParam>();
 
@@ -59,8 +61,7 @@ public class PyIDLInheritTest extends TestBase {
 		List<ServicePortInterfaceParam> iflist = new ArrayList<ServicePortInterfaceParam>();
 		ServicePortInterfaceParam sif1 = new ServicePortInterfaceParam(sv1,
 				"MyServiceProvider", "", "", fixturePath(name)
-						+ "/MyServiceChildMulti.idl", "MyServiceChild",
-				fixturePath(name), 0);
+						+ "/MyServiceChildMulti.idl", "MyServiceChild", 0);
 		iflist.add(sif1);
 		sv1.getServicePortInterfaces().addAll(iflist);
 		svports.add(sv1);
@@ -69,8 +70,7 @@ public class PyIDLInheritTest extends TestBase {
 		iflist = new ArrayList<ServicePortInterfaceParam>();
 		ServicePortInterfaceParam sif2 = new ServicePortInterfaceParam(sv2,
 				"MyServiceRequire", "", "", fixturePath(name)
-						+ "/MyServiceChildMulti.idl", "MyServiceChild",
-				fixturePath(name), 1);
+						+ "/MyServiceChildMulti.idl", "MyServiceChild", 1);
 		iflist.add(sif2);
 		sv2.getServicePortInterfaces().addAll(iflist);
 		svports.add(sv2);
@@ -90,6 +90,7 @@ public class PyIDLInheritTest extends TestBase {
 
 	public void testInherit2() throws Exception {
 		String name = "idlinherit/inherit2";
+		rtcParam.getIdlSearchPathList().add(new IdlPathParam(fixturePath(name), false));
 
 		List<ServicePortParam> svports = new ArrayList<ServicePortParam>();
 
@@ -97,13 +98,12 @@ public class PyIDLInheritTest extends TestBase {
 		List<ServicePortInterfaceParam> iflist = new ArrayList<ServicePortInterfaceParam>();
 		ServicePortInterfaceParam sif1 = new ServicePortInterfaceParam(sv1,
 				"MyServiceProvider", "", "", fixturePath(name)
-						+ "/MyServiceChildMulti.idl", "MyServiceChild",
-				fixturePath(name), 0);
+						+ "/MyServiceChildMulti.idl", "MyServiceChild", 0);
 		iflist.add(sif1);
 		ServicePortInterfaceParam sif2 = new ServicePortInterfaceParam(sv1,
 				"MyServiceProvider2", "", "", fixturePath(name)
 						+ "/MyServiceChildWithType.idl",
-				"MyServiceWithTypeChild", fixturePath(name), 0);
+				"MyServiceWithTypeChild", 0);
 		iflist.add(sif2);
 		sv1.getServicePortInterfaces().addAll(iflist);
 		svports.add(sv1);
@@ -112,13 +112,12 @@ public class PyIDLInheritTest extends TestBase {
 		iflist = new ArrayList<ServicePortInterfaceParam>();
 		ServicePortInterfaceParam sif3 = new ServicePortInterfaceParam(sv2,
 				"MyServiceRequire", "", "", fixturePath(name)
-						+ "/MyServiceChildMulti.idl", "MyServiceChild",
-				fixturePath(name), 1);
+						+ "/MyServiceChildMulti.idl", "MyServiceChild", 1);
 		iflist.add(sif3);
 		ServicePortInterfaceParam sif4 = new ServicePortInterfaceParam(sv2,
 				"MyServiceRequire2", "", "", fixturePath(name)
 						+ "/MyServiceChildWithType.idl",
-				"MyServiceWithTypeChild", fixturePath(name), 1);
+				"MyServiceWithTypeChild", 1);
 		iflist.add(sif4);
 		sv2.getServicePortInterfaces().addAll(iflist);
 		svports.add(sv2);
