@@ -50,18 +50,18 @@ public class PrefixSuffixTest extends TestBase {
 
 		////
 		ServicePortParam service1 = new ServicePortParam("svPort",0);
-		List<ServicePortInterfaceParam> srvinterts = new ArrayList<ServicePortInterfaceParam>(); 
-		ServicePortInterfaceParam int1 = new ServicePortInterfaceParam(service1, "acc", "", "", 
-				rootPath + "/resource/MyService.idl", "MyService", "", 0);
+		List<ServicePortInterfaceParam> srvinterts = new ArrayList<ServicePortInterfaceParam>();
+		ServicePortInterfaceParam int1 = new ServicePortInterfaceParam(service1, "acc", "", "",
+				rootPath + "/resource/MyService.idl", "MyService", 0);
 		srvinterts.add(int1);
 		service1.getServicePortInterfaces().addAll(srvinterts);
 		List<ServicePortParam> srvports = new ArrayList<ServicePortParam>();
 		srvports.add(service1);
 
 		ServicePortParam service2 = new ServicePortParam("cmPort",0);
-		List<ServicePortInterfaceParam> srvinterts2 = new ArrayList<ServicePortInterfaceParam>(); 
-		ServicePortInterfaceParam int2 = new ServicePortInterfaceParam(service2, "rate", "", "", 
-				rootPath + "/resource/DAQService.idl", "DAQService", "", 1);
+		List<ServicePortInterfaceParam> srvinterts2 = new ArrayList<ServicePortInterfaceParam>();
+		ServicePortInterfaceParam int2 = new ServicePortInterfaceParam(service2, "rate", "", "",
+				rootPath + "/resource/DAQService.idl", "DAQService", 1);
 		srvinterts2.add(int2);
 		service2.getServicePortInterfaces().addAll(srvinterts2);
 		srvports.add(service2);
@@ -157,7 +157,7 @@ public class PrefixSuffixTest extends TestBase {
 		String resourceDir = rootPath +  "/resource/100/CXX/PrefixSuffix/svsuffix/";
 		checkResults(result, resourceDir);
 	}
-	
+
 	public void testPrefixService() throws Exception {
 		rtcParam.setCommonPrefix("p_");
 		rtcParam.setCommonSuffix("_s");
@@ -171,7 +171,7 @@ public class PrefixSuffixTest extends TestBase {
 		String resourceDir = rootPath +  "/resource/100/CXX/PrefixSuffix/svprefix/";
 		checkResults(result, resourceDir);
 	}
-	
+
 	public void testSuffixData() throws Exception {
 		rtcParam.setCommonPrefix("p_");
 		rtcParam.setCommonSuffix("_s");
@@ -184,7 +184,7 @@ public class PrefixSuffixTest extends TestBase {
 		String resourceDir = rootPath +  "/resource/100/CXX/PrefixSuffix/dtsuffix/";
 		checkResults(result, resourceDir);
 	}
-	
+
 	public void testPrefixData() throws Exception{
 		rtcParam.setCommonPrefix("p_");
 		rtcParam.setCommonSuffix("_s");
@@ -196,7 +196,7 @@ public class PrefixSuffixTest extends TestBase {
 		String resourceDir = rootPath +  "/resource/100/CXX/PrefixSuffix/dtprefix/";
 		checkResults(result, resourceDir);
 	}
-	
+
 	public void testSuffixCommon() throws Exception{
 		rtcParam.setCommonPrefix("p_");
 		rtcParam.setCommonSuffix("_s");

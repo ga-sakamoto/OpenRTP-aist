@@ -46,8 +46,6 @@ public class CodeGeneratePreferencePage extends AbstarctFieldEditorPreferencePag
 	public void init(IWorkbench workbench) {
 		IPreferenceStore store = RtcBuilderPlugin.getDefault().getPreferenceStore();
 		storeComponentInitialSetting(store);
-		storeConfigurationSetInitialSetting(store);
-		storeBackupInitialSetting(store);
 	}
 
 	@Override
@@ -162,21 +160,6 @@ public class CodeGeneratePreferencePage extends AbstarctFieldEditorPreferencePag
 			new StringFieldEditor(ComponentPreferenceManager.Generate_Basic_Suffix,
 					IPreferenceMessageConstants.PORT_LBL_SUFFIX, basicGroup);
 		addField(commonSuffixEditor);
-	}
-
-	private void storeBackupInitialSetting(IPreferenceStore store) {
-		store.setDefault(ComponentPreferenceManager.Generate_Backup_Num, ComponentPreferenceManager.DEFAULT_BACKUP_NUM);
-	}
-
-	private void storeConfigurationSetInitialSetting(IPreferenceStore store) {
-		store.setDefault(ComponentPreferenceManager.Generate_Configuration_Name, ComponentPreferenceManager.DEFAULT_CONFIGURATION_NAME);
-		store.setDefault(ComponentPreferenceManager.Generate_Configuration_Type, ComponentPreferenceManager.DEFAULT_CONFIGURATION_TYPE);
-		store.setDefault(ComponentPreferenceManager.Generate_Configuration_VarName, ComponentPreferenceManager.DEFAULT_CONFIGURATION_VARNAME);
-		store.setDefault(ComponentPreferenceManager.Generate_Configuration_Default, ComponentPreferenceManager.DEFAULT_CONFIGURATION_DEFAULT);
-		store.setDefault(ComponentPreferenceManager.Generate_Configuration_Constraint, ComponentPreferenceManager.DEFAULT_CONFIGURATION_CONSTRAINT);
-		store.setDefault(ComponentPreferenceManager.Generate_Configuration_Unit, ComponentPreferenceManager.DEFAULT_CONFIGURATION_UNIT);
-		store.setDefault(ComponentPreferenceManager.Generate_Configuration_Prefix, ComponentPreferenceManager.DEFAULT_CONFIGURATION_PREFIX);
-		store.setDefault(ComponentPreferenceManager.Generate_Configuration_Suffix, ComponentPreferenceManager.DEFAULT_CONFIGURATION_SUFFIX);
 	}
 
 	private void storeComponentInitialSetting(IPreferenceStore store) {

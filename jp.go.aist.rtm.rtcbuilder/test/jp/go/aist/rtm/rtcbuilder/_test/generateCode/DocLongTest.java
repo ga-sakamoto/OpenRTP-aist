@@ -96,7 +96,7 @@ public class DocLongTest extends TestBase {
 		rtcParam.setDocActionPreCondition(ACTIVITY_RATE_CHANGED, "on_rate_changed事前条件1234567890123456789012345678901234567890123456789012345678901234567890");
 		rtcParam.setDocActionPostCondition(ACTIVITY_RATE_CHANGED, "on_rate_changed事後条件1234567890123456789012345678901234567890123456789012345678901234567890");
 		//
-		List<DataPortParam> dataport = new ArrayList<DataPortParam>(); 
+		List<DataPortParam> dataport = new ArrayList<DataPortParam>();
 
 		DataPortParam datap1 = new DataPortParam("InP1", "RTC::TimedShort", "InName1", 0);
 		datap1.setDocDescription("InPort1の概要1234567890123456789012345678901234567890123456789012345678901234567890");
@@ -117,10 +117,10 @@ public class DocLongTest extends TestBase {
 		datap2.setDocOccurrence("InPort2のデータの発生頻度1234567890123456789012345678901234567890123456789012345678901234567890");
 		datap2.setDocOperation("InPort2のデータの処理周期1234567890123456789012345678901234567890123456789012345678901234567890");
 		dataport.add(datap2);
-		
+
 		rtcParam.getInports().addAll(dataport);
 		//
-		List<DataPortParam> outport = new ArrayList<DataPortParam>(); 
+		List<DataPortParam> outport = new ArrayList<DataPortParam>();
 
 		DataPortParam datap3 = new DataPortParam("OutP1", "RTC::TimedLong", "OutName1", 0);
 		datap3.setDocDescription("OutPort1の概要1234567890123456789012345678901234567890123456789012345678901234567890");
@@ -147,9 +147,9 @@ public class DocLongTest extends TestBase {
 		ServicePortParam service1 = new ServicePortParam("svPort",0);
 		service1.setDocDescription("ServicePort1の概要1234567890123456789012345678901234567890123456789012345678901234567890");
 		service1.setDocIfDescription("ServicePort1のインターフェースの概要1234567890123456789012345678901234567890123456789012345678901234567890");
-		List<ServicePortInterfaceParam> srvinterts = new ArrayList<ServicePortInterfaceParam>(); 
-		ServicePortInterfaceParam int1 = new ServicePortInterfaceParam(service1, "acc", "", "", 
-				rootPath + "/resource/MyService.idl", "MyService", "", 0);
+		List<ServicePortInterfaceParam> srvinterts = new ArrayList<ServicePortInterfaceParam>();
+		ServicePortInterfaceParam int1 = new ServicePortInterfaceParam(service1, "acc", "", "",
+				rootPath + "/resource/MyService.idl", "MyService", 0);
 		int1.setDocDescription("ServiceIF1の概要説明1234567890123456789012345678901234567890123456789012345678901234567890");
 		int1.setDocArgument("ServiceIF1の引数1234567890123456789012345678901234567890123456789012345678901234567890");
 		int1.setDocReturn("ServiceIF1の返値1234567890123456789012345678901234567890123456789012345678901234567890");
@@ -160,13 +160,13 @@ public class DocLongTest extends TestBase {
 		service1.getServicePortInterfaces().addAll(srvinterts);
 		List<ServicePortParam> srvports = new ArrayList<ServicePortParam>();
 		srvports.add(service1);
-		
+
 		ServicePortParam service2 = new ServicePortParam("cmPort",0);
 		service2.setDocDescription("ServicePort2の概要1234567890123456789012345678901234567890123456789012345678901234567890");
 		service2.setDocIfDescription("ServicePort2のインターフェースの概要1234567890123456789012345678901234567890123456789012345678901234567890");
-		List<ServicePortInterfaceParam> srvinterts2 = new ArrayList<ServicePortInterfaceParam>(); 
-		ServicePortInterfaceParam int2 = new ServicePortInterfaceParam(service2, "rate", "", "", 
-				rootPath + "/resource/DAQService.idl", "DAQService", "", 1);
+		List<ServicePortInterfaceParam> srvinterts2 = new ArrayList<ServicePortInterfaceParam>();
+		ServicePortInterfaceParam int2 = new ServicePortInterfaceParam(service2, "rate", "", "",
+				rootPath + "/resource/DAQService.idl", "DAQService", 1);
 		int2.setDocDescription("ServiceIF2の概要説明1234567890123456789012345678901234567890123456789012345678901234567890");
 		int2.setDocArgument("ServiceIF2の引数1234567890123456789012345678901234567890123456789012345678901234567890");
 		int2.setDocReturn("ServiceIF2の返値1234567890123456789012345678901234567890123456789012345678901234567890");
@@ -176,8 +176,8 @@ public class DocLongTest extends TestBase {
 		srvinterts2.add(int2);
 		service2.getServicePortInterfaces().addAll(srvinterts2);
 		srvports.add(service2);
-		
-		List<ConfigSetParam> configset = new ArrayList<ConfigSetParam>(); 
+
+		List<ConfigSetParam> configset = new ArrayList<ConfigSetParam>();
 		ConfigSetParam config1 = new ConfigSetParam("int_param0","int","", "0");
 		config1.setDocDataName("Config1の名前");
 		config1.setDocDescription("０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９０１２３４５６７８９");

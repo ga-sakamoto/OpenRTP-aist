@@ -284,6 +284,7 @@ public class ConfigurationEditorFormPage extends AbstractEditorFormPage {
 			@SuppressWarnings("unchecked")
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				String selected = typeCombo.getText();
 				updateDefaultValue();
 				String confNum = Integer.valueOf(((List) configSetTableViewer.getInput()).size()).toString();
 				ConfigSetParam selectParam = new ConfigSetParam(defaultConfigName + confNum, defaultConfigType, defaultConfigVarName, defaultConfigDefault, defaultConfigConstraint, defaultConfigUnit);
@@ -291,6 +292,7 @@ public class ConfigurationEditorFormPage extends AbstractEditorFormPage {
 				configSetTableViewer.refresh();
 				update();
 				configSetTableViewer.setSelection(new StructuredSelection(selectParam), true);
+				typeCombo.setText(selected);
 			}
 		});
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
