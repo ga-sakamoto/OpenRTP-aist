@@ -55,22 +55,22 @@ RTC::ReturnCode_t TestModule::onInitialize()
   // Registration: InPort/OutPort/Service
   // <rtc-template block="registration">
   // Set InPort buffers
-  
+
   // Set OutPort buffer
-  
+
   // Set service provider to Ports
   m_svcPortPort.registerProvider("inf0", "ysuga_net::Hoge", m_inf0);
-  
+
   // Set service consumers to Ports
-  
+
   // Set CORBA Service Ports
   addPort(m_svcPortPort);
-  
+
   // </rtc-template>
 
   // <rtc-template block="bind_config">
   // </rtc-template>
-  
+
   return RTC::RTC_OK;
 }
 
@@ -155,7 +155,7 @@ RTC::ReturnCode_t TestModule::onRateChanged(RTC::UniqueId ec_id)
 
 extern "C"
 {
- 
+
   void TestModuleInit(RTC::Manager* manager)
   {
     coil::Properties profile(testmodule_spec);
@@ -163,7 +163,7 @@ extern "C"
                              RTC::Create<TestModule>,
                              RTC::Delete<TestModule>);
   }
-  
+
 };
 
 

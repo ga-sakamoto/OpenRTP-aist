@@ -13,7 +13,7 @@ import jp.go.aist.rtm.RTC.RegisterModuleFunc;
 import jp.go.aist.rtm.RTC.util.Properties;
 /**
  * ModuleName
- * <p> 
+ * <p>
  * ModuleDescription
  */
 public class ModuleName implements RtcNewFunc, RtcDeleteFunc, RegisterModuleFunc {

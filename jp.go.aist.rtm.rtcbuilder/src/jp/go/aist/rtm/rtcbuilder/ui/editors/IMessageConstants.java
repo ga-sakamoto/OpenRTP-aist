@@ -130,7 +130,6 @@ public interface IMessageConstants {
 	public static final String BASIC_VALIDATE_ECRATE1 = Messages.getString("IMessageConstants.BASIC_VALIDATE_ECRATE1"); //$NON-NLS-1$
 	public static final String BASIC_VALIDATE_ECRATE2 = Messages.getString("IMessageConstants.BASIC_VALIDATE_ECRATE2"); //$NON-NLS-1$
 
-
 	public static final String DATAPORT_DOCUMENT_EXPL = StringUtil.connectMessageWithSepalator( new String[]{
 			Messages.getString("IMC.DATAPORT_DOCUMENT_EXPL_P1"),
 			Messages.getString("IMC.DATAPORT_DOCUMENT_EXPL_P2")
@@ -161,11 +160,7 @@ public interface IMessageConstants {
 			Messages.getString("IMC.DATAPORT_HINT_DATATYPE_DESC_P2"),
 			Messages.getString("IMC.DATAPORT_HINT_DATATYPE_DESC_P3"),
 			Messages.getString("IMC.DATAPORT_HINT_DATATYPE_DESC_P4"),
-			Messages.getString("IMC.DATAPORT_HINT_DATATYPE_DESC_P5"),
-			Messages.getString("IMC.DATAPORT_HINT_DATATYPE_DESC_P6"),
-			Messages.getString("IMC.DATAPORT_HINT_DATATYPE_DESC_P7"),
-			Messages.getString("IMC.DATAPORT_HINT_DATATYPE_DESC_P8"),
-			Messages.getString("IMC.DATAPORT_HINT_DATATYPE_DESC_P9")
+			Messages.getString("IMC.DATAPORT_HINT_DATATYPE_DESC_P5")
 	});
 	public static final String DATAPORT_HINT_VARNAME_DESC = StringUtil.connectMessageWithSepalator( new String[]{
 			Messages.getString("IMC.DATAPORT_HINT_VARNAME_DESC_P1"),
@@ -175,20 +170,12 @@ public interface IMessageConstants {
 			Messages.getString("IMC.DATAPORT_HINT_POSITION_DESC_P1"),
 			Messages.getString("IMC.DATAPORT_HINT_POSITION_DESC_P2")
 	});
-	public static final String DATAPORT_HINT_OCCUR_DESC = StringUtil.connectMessageWithSepalator( new String[]{
-			Messages.getString("IMC.DATAPORT_HINT_DOC_OCCUR_P1"),
-			Messages.getString("IMC.DATAPORT_HINT_DOC_OCCUR_P2")
-	});
-	public static final String DATAPORT_HINT_OPERAT_DESC = StringUtil.connectMessageWithSepalator( new String[]{
-			Messages.getString("IMC.DATAPORT_HINT_DOC_OPERAT_P1"),
-			Messages.getString("IMC.DATAPORT_HINT_DOC_OPERAT_P2")
-	});
 
-	public static final String DATAPORT_TBLLBL_INPORTNAME = Messages.getString("IMessageConstants.DATAPORT_TBLLBL_INPORTNAME"); //$NON-NLS-1$
-	public static final String DATAPORT_TBLLBL_OUTPORTNAME = Messages.getString("IMessageConstants.DATAPORT_TBLLBL_OUTPORTNAME"); //$NON-NLS-1$
-	public static final String DATAPORT_TBLLBL_DATATYPE = Messages.getString("IMessageConstants.DATAPORT_TBLLBL_DATATYPE"); //$NON-NLS-1$
-	public static final String DATAPORT_TBLLBL_VARNAME = Messages.getString("IMessageConstants.DATAPORT_TBLLBL_VARNAME"); //$NON-NLS-1$
-	public static final String DATAPORT_TBLLBL_POSITION = Messages.getString("IMessageConstants.DATAPORT_TBLLBL_POSITION"); //$NON-NLS-1$
+	public static final String DATAPORT_HINT_DOC_DATANUM = StringUtil.connectMessageWithSepalator( new String[]{
+			Messages.getString("IMC.DATAPORT_HINT_DOC_DATANUM_P1"),
+			Messages.getString("IMC.DATAPORT_HINT_DOC_DATANUM_P2"),
+			Messages.getString("IMC.DATAPORT_HINT_DOC_DATANUM_P3")
+	});
 
 	public static final String DATAPORT_VALIDATE_PORTNAME1 = Messages.getString("IMessageConstants.DATAPORT_VALIDATE_PORTNAME1"); //$NON-NLS-1$
 	public static final String DATAPORT_VALIDATE_PORTNAME2 = Messages.getString("IMessageConstants.DATAPORT_VALIDATE_PORTNAME2"); //$NON-NLS-1$
@@ -210,143 +197,126 @@ public interface IMessageConstants {
 	public static final String SERVICEPORT_VALIDATE_IFTYPE2 = Messages.getString("IMessageConstants.SERVICEPORT_VALIDATE_IFTYPE2"); //$NON-NLS-1$
 	public static final String SERVICEPORT_VALIDATE_VARNAME = Messages.getString("IMessageConstants.SERVICEPORT_VALIDATE_VARNAME"); //$NON-NLS-1$
 
-
+	public static final String SERVIVEPORT_HINT_PORT_TITLE = Messages.getString("IMC.SERVICEPORT_HINT_PORT_TITLE"); //$NON-NLS-1$
 	public static final String SERVIVEPORT_HINT_PORT_NAME_DESC = StringUtil.connectMessageWithSepalator( new String[]{
 			Messages.getString("IMC.SERVIVEPORT_HINT_PORT_NAME_DESC_P1"),
 			Messages.getString("IMC.SERVIVEPORT_HINT_PORT_NAME_DESC_P2"),
 			Messages.getString("IMC.SERVIVEPORT_HINT_PORT_NAME_DESC_P3"),
 			Messages.getString("IMC.SERVIVEPORT_HINT_PORT_NAME_DESC_P4"),
-			Messages.getString("IMC.SERVIVEPORT_HINT_PORT_NAME_DESC_P5")});
+			Messages.getString("IMC.SERVIVEPORT_HINT_PORT_NAME_DESC_P5")
+			});
+	public static final String SERVIVEPORT_HINT_PORT_POSITION_DESC = Messages.getString("IMC.SERVIVEPORT_HINT_PORT_POSITION_DESC"); //$NON-NLS-1$
+	public static final String SERVIVEPORT_HINT_PORT_DESCRIPTION_DESC = Messages.getString("IMC.SERVIVEPORT_HINT_PORT_DESCRIPTION_DESC"); //$NON-NLS-1$
+	public static final String SERVIVEPORT_HINT_PORT_IFDESCRIPTION_DESC = Messages.getString("IMC.SERVIVEPORT_HINT_PORT_IFDESCRIPTION_DESC"); //$NON-NLS-1$
 
+	public static final String SERVIVEPORT_HINT_INTERFACE_TITLE = Messages.getString("IMC.SERVICEPORT_HINT_INTERFACE_TITLE"); //$NON-NLS-1$
 	public static final String SERVIVEPORT_HINT_IF_NAME_DESC = StringUtil.connectMessageWithSepalator( new String[]{
 			Messages.getString("IMC.SERVIVEPORT_HINT_IF_NAME_DESC_P1"),
 			Messages.getString("IMC.SERVIVEPORT_HINT_IF_NAME_DESC_P2"),
-			Messages.getString("IMC.SERVIVEPORT_HINT_IF_NAME_DESC_P3")});
-
+			Messages.getString("IMC.SERVIVEPORT_HINT_IF_NAME_DESC_P3")
+			});
 	public static final String SERVIVEPORT_HINT_IF_DIRECTION_DESC = StringUtil.connectMessageWithSepalator( new String[]{
 			Messages.getString("IMC.SERVIVEPORT_HINT_IF_DIRECTION_DESC_P1"),
 			Messages.getString("IMC.SERVIVEPORT_HINT_IF_DIRECTION_DESC_P2"),
-			Messages.getString("IMC.SERVIVEPORT_HINT_IF_DIRECTION_DESC_P3")});
-
+			Messages.getString("IMC.SERVIVEPORT_HINT_IF_DIRECTION_DESC_P3")
+			});
 	public static final String SERVIVEPORT_HINT_IF_INSTANCE_DESC = StringUtil.connectMessageWithSepalator( new String[]{
 			Messages.getString("IMC.SERVIVEPORT_HINT_IF_INSTANCE_DESC_P1"),
-			Messages.getString("IMC.SERVIVEPORT_HINT_IF_INSTANCE_DESC_P2")});
-
+			Messages.getString("IMC.SERVIVEPORT_HINT_IF_INSTANCE_DESC_P2")
+			});
 	public static final String SERVIVEPORT_HINT_IF_VARNAME_DESC = StringUtil.connectMessageWithSepalator( new String[]{
-			Messages.getString("IMC.SERVIVEPORT_HINT_IF_VARNAME_DESC_P1"),
-			Messages.getString("IMC.SERVIVEPORT_HINT_IF_VARNAME_DESC_P2")});
-
+			Messages.getString("IMC.SERVIVEPORT_HINT_IF_INSTANCE_DESC_P1"),
+			Messages.getString("IMC.SERVIVEPORT_HINT_IF_INSTANCE_DESC_P2")
+			});
 	public static final String SERVIVEPORT_HINT_IFTYPE_DESC = StringUtil.connectMessageWithSepalator( new String[]{
 			Messages.getString("IMC.SERVIVEPORT_HINT_IFTYPE_DESC_P1"),
 			Messages.getString("IMC.SERVIVEPORT_HINT_IFTYPE_DESC_P2"),
 			Messages.getString("IMC.SERVIVEPORT_HINT_IFTYPE_DESC_P3"),
 			Messages.getString("IMC.SERVIVEPORT_HINT_IFTYPE_DESC_P4"),
-			Messages.getString("IMC.SERVIVEPORT_HINT_IFTYPE_DESC_P5")});
-
+			Messages.getString("IMC.SERVIVEPORT_HINT_IFTYPE_DESC_P5")
+			});
 	public static final String SERVICEPORT_HINT_IDLFILE_DESC = StringUtil.connectMessageWithSepalator( new String[]{
 			Messages.getString("IMC.SERVIVEPORT_HINT_IDLFILE_DESC_P1"),
-			Messages.getString("IMC.SERVIVEPORT_HINT_IDLFILE_DESC_P2")});
-	
-	public static final String SERVIVEPORT_HINT_ARGUMENT_DESC = StringUtil.connectMessageWithSepalator( new String[]{
+			Messages.getString("IMC.SERVIVEPORT_HINT_IDLFILE_DESC_P2")
+			});
+
+	public static final String SERVICEPORT_HINT_ARGUMENT_DESC = StringUtil.connectMessageWithSepalator( new String[]{
 			Messages.getString("IMC.SERVIVEPORT_HINT_ARGUMEN_DESC_P1"),
 			Messages.getString("IMC.SERVIVEPORT_HINT_ARGUMEN_DESC_P2"),
-			Messages.getString("IMC.SERVIVEPORT_HINT_ARGUMEN_DESC_P3")});
-
-	public static final String SERVIVEPORT_HINT_RETURN_DESC = StringUtil.connectMessageWithSepalator( new String[]{
+			Messages.getString("IMC.SERVIVEPORT_HINT_ARGUMEN_DESC_P3")
+			});
+	public static final String SERVICEPORT_HINT_RETURN_DESC = StringUtil.connectMessageWithSepalator( new String[]{
 			Messages.getString("IMC.SERVIVEPORT_HINT_RETURN_DESC_P1"),
 			Messages.getString("IMC.SERVIVEPORT_HINT_RETURN_DESC_P2"),
-			Messages.getString("IMC.SERVIVEPORT_HINT_RETURN_DESC_P3")});
-
-	public static final String SERVIVEPORT_HINT_EXCEPTION_DESC = StringUtil.connectMessageWithSepalator( new String[]{
+			Messages.getString("IMC.SERVIVEPORT_HINT_RETURN_DESC_P3")
+			});
+	public static final String SERVICEPORT_HINT_EXCEPTION_DESC = StringUtil.connectMessageWithSepalator( new String[]{
 			Messages.getString("IMC.SERVIVEPORT_HINT_EXCEPTION_DESC_P1"),
 			Messages.getString("IMC.SERVIVEPORT_HINT_EXCEPTION_DESC_P2"),
-			Messages.getString("IMC.SERVIVEPORT_HINT_EXCEPTION_DESC_P3")});
+			Messages.getString("IMC.SERVIVEPORT_HINT_EXCEPTION_DESC_P3")
+			});
 
 	public static final String SERVIVEPORT_HINT_PRE_CONDITION_DESC = StringUtil.connectMessageWithSepalator( new String[]{
 			Messages.getString("IMC.SERVIVEPORT_HINT_PRE_CONDITION_DESC_P1"),
-			Messages.getString("IMC.SERVIVEPORT_HINT_PRE_CONDITION_DESC_P2")});
-
+			Messages.getString("IMC.SERVIVEPORT_HINT_PRE_CONDITION_DESC_P2")
+			});
 	public static final String SERVIVEPORT_HINT_POST_CONDITION_DESC = StringUtil.connectMessageWithSepalator( new String[]{
 			Messages.getString("IMC.SERVIVEPORT_HINT_POST_CONDITION_DESC_P1"),
-			Messages.getString("IMC.SERVIVEPORT_HINT_POST_CONDITION_DESC_P2")});
-
-	public static final String CONFIGURATION_SECTION = Messages.getString("IMessageConstants.CONFIGURATION_SECTION"); //$NON-NLS-1$
-	public static final String CONFIGURATION_SECTION_TITLE = Messages.getString("IMessageConstants.CONFIGURATION_SECTION_TITLE"); //$NON-NLS-1$
-	public static final String CONFIGURATION_SET_TITLE = Messages.getString("IMessageConstants.CONFIGURATION_SET_TITLE"); //$NON-NLS-1$
-	public static final String CONFIGURATION_PARAMETER_TITLE = Messages.getString("IMessageConstants.CONFIGURATION_PARAMETER_TITLE"); //$NON-NLS-1$
-
-	public static final String CONFIGURATION_SET_EXPL = Messages.getString("IMessageConstants.CONFIGURATION_SET_EXPL"); //$NON-NLS-1$
-	public static final String CONFIGURATION_PARAMETER_EXPL = Messages.getString("IMessageConstants.CONFIGURATION_PARAMETER_EXPL"); //$NON-NLS-1$
-	public static final String CONFIGURATION_DETAIL_EXPL = Messages.getString("IMessageConstants.CONFIGURATION_DETAIL_EXPL"); //$NON-NLS-1$
-	public static final String CONFIGURATION_DOCUMENT_EXPL_P1 = Messages.getString("IMessageConstants.CONFIGURATION_DOCUMENT_EXPL_P1"); //$NON-NLS-1$
-	public static final String CONFIGURATION_DOCUMENT_EXPL_P2 = Messages.getString("IMessageConstants.CONFIGURATION_DOCUMENT_EXPL_P2"); //$NON-NLS-1$
-	public static final String CONFIGURATION_DOCUMENT_EXPL_P3 = Messages.getString("IMessageConstants.CONFIGURATION_DOCUMENT_EXPL_P3"); //$NON-NLS-1$
-	public static final String CONFIGURATION_DOCUMENT_EXPL = StringUtil.connectMessageWithSepalator( new String[]{CONFIGURATION_DOCUMENT_EXPL_P1, CONFIGURATION_DOCUMENT_EXPL_P2, CONFIGURATION_DOCUMENT_EXPL_P3});
-
-	public static final String CONFIGURATION_HINT_COFIGPARAM_TITLE = Messages.getString("IMessageConstants.CONFIGURATION_HINT_COFIGPARAM_TITLE"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_COFIGPARAM_DESC_P1 = Messages.getString("IMessageConstants.CONFIGURATION_HINT_COFIGPARAM_DESC_P1"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_COFIGPARAM_DESC_P2 = Messages.getString("IMessageConstants.CONFIGURATION_HINT_COFIGPARAM_DESC_P2"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_COFIGPARAM_DESC_P3 = Messages.getString("IMessageConstants.CONFIGURATION_HINT_COFIGPARAM_DESC_P3"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_COFIGPARAM_DESC_P4 = Messages.getString("IMessageConstants.CONFIGURATION_HINT_COFIGPARAM_DESC_P4"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_COFIGPARAM_DESC_P5 = Messages.getString("IMessageConstants.CONFIGURATION_HINT_COFIGPARAM_DESC_P5"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_COFIGPARAM_DESC_P6 = Messages.getString("IMessageConstants.CONFIGURATION_HINT_COFIGPARAM_DESC_P6"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_COFIGPARAM_DESC = StringUtil.connectMessageWithSepalator( new String[]{CONFIGURATION_HINT_COFIGPARAM_DESC_P1, CONFIGURATION_HINT_COFIGPARAM_DESC_P2, CONFIGURATION_HINT_COFIGPARAM_DESC_P3, CONFIGURATION_HINT_COFIGPARAM_DESC_P4, CONFIGURATION_HINT_COFIGPARAM_DESC_P5, CONFIGURATION_HINT_COFIGPARAM_DESC_P6});
-	public static final String CONFIGURATION_HINT_PARAMNAME_TITLE = Messages.getString("IMessageConstants.CONFIGURATION_HINT_PARAMNAME_TITLE"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_PARAMNAME_DESC_P1 = Messages.getString("IMessageConstants.CONFIGURATION_HINT_PARAMNAME_DESC_P1"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_PARAMNAME_DESC_P2 = Messages.getString("IMessageConstants.CONFIGURATION_HINT_PARAMNAME_DESC_P2"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_PARAMNAME_DESC_P3 = Messages.getString("IMessageConstants.CONFIGURATION_HINT_PARAMNAME_DESC_P3"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_PARAMNAME_DESC = StringUtil.connectMessageWithSepalator( new String[]{CONFIGURATION_HINT_PARAMNAME_DESC_P1, CONFIGURATION_HINT_PARAMNAME_DESC_P2, CONFIGURATION_HINT_PARAMNAME_DESC_P3});
-	public static final String CONFIGURATION_HINT_PARAMTYPE_TITLE = Messages.getString("IMessageConstants.CONFIGURATION_HINT_PARAMTYPE_TITLE"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_PARAMTYPE_DESC_P1 = Messages.getString("IMessageConstants.CONFIGURATION_HINT_PARAMTYPE_DESC_P1"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_PARAMTYPE_DESC_P2 = Messages.getString("IMessageConstants.CONFIGURATION_HINT_PARAMTYPE_DESC_P2"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_PARAMTYPE_DESC = StringUtil.connectMessageWithSepalator( new String[]{CONFIGURATION_HINT_PARAMTYPE_DESC_P1, CONFIGURATION_HINT_PARAMTYPE_DESC_P2});
-	public static final String CONFIGURATION_HINT_VARNAME_TITLE = Messages.getString("IMessageConstants.CONFIGURATION_HINT_VARNAME_TITLE"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_VARNAME_DESC_P1 = Messages.getString("IMessageConstants.CONFIGURATION_HINT_VARNAME_DESC_P1"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_VARNAME_DESC_P2 = Messages.getString("IMessageConstants.CONFIGURATION_HINT_VARNAME_DESC_P2"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_VARNAME_DESC = StringUtil.connectMessageWithSepalator( new String[]{CONFIGURATION_HINT_VARNAME_DESC_P1, CONFIGURATION_HINT_VARNAME_DESC_P2});
-	public static final String CONFIGURATION_HINT_DEFAULT_TITLE = Messages.getString("IMessageConstants.CONFIGURATION_HINT_DEFAULT_TITLE"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_DEFAULT_DESC_P1 = Messages.getString("IMessageConstants.CONFIGURATION_HINT_DEFAULT_DESC_P1"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_DEFAULT_DESC_P2 = Messages.getString("IMessageConstants.CONFIGURATION_HINT_DEFAULT_DESC_P2"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_DEFAULT_DESC_P3 = Messages.getString("IMessageConstants.CONFIGURATION_HINT_DEFAULT_DESC_P3"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_DEFAULT_DESC = StringUtil.connectMessageWithSepalator( new String[]{CONFIGURATION_HINT_DEFAULT_DESC_P1, CONFIGURATION_HINT_DEFAULT_DESC_P2, CONFIGURATION_HINT_DEFAULT_DESC_P3});
-	public static final String CONFIGURATION_HINT_CONSTRAINT_TITLE = Messages.getString("IMessageConstants.CONFIGURATION_HINT_CONSTRAINT_TITLE"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_CONSTRAINT_DESC_P1 = Messages.getString("IMessageConstants.CONFIGURATION_HINT_CONSTRAINT_DESC_P1"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_CONSTRAINT_DESC_P2 = Messages.getString("IMessageConstants.CONFIGURATION_HINT_CONSTRAINT_DESC_P2"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_CONSTRAINT_DESC_P3 = Messages.getString("IMessageConstants.CONFIGURATION_HINT_CONSTRAINT_DESC_P3"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_CONSTRAINT_DESC_P4 = Messages.getString("IMessageConstants.CONFIGURATION_HINT_CONSTRAINT_DESC_P4"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_CONSTRAINT_DESC_P5 = Messages.getString("IMessageConstants.CONFIGURATION_HINT_CONSTRAINT_DESC_P5"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_CONSTRAINT_DESC_P6 = Messages.getString("IMessageConstants.CONFIGURATION_HINT_CONSTRAINT_DESC_P6"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_CONSTRAINT_DESC_P7 = Messages.getString("IMessageConstants.CONFIGURATION_HINT_CONSTRAINT_DESC_P7"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_CONSTRAINT_DESC = StringUtil.connectMessageWithSepalator( new String[]{CONFIGURATION_HINT_CONSTRAINT_DESC_P1, CONFIGURATION_HINT_CONSTRAINT_DESC_P2, CONFIGURATION_HINT_CONSTRAINT_DESC_P3, CONFIGURATION_HINT_CONSTRAINT_DESC_P4, CONFIGURATION_HINT_CONSTRAINT_DESC_P5, CONFIGURATION_HINT_CONSTRAINT_DESC_P6, CONFIGURATION_HINT_CONSTRAINT_DESC_P7});
-	public static final String CONFIGURATION_HINT_UNIT_TITLE = Messages.getString("IMessageConstants.CONFIGURATION_HINT_UNIT_TITLE"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_UNIT_DESC = Messages.getString("IMessageConstants.CONFIGURATION_HINT_UNIT_DESC"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_WIDGET_TITLE = Messages.getString("IMessageConstants.CONFIGURATION_HINT_WIDGET_TITLE"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_WIDGET_DESC_P1 = Messages.getString("IMessageConstants.CONFIGURATION_HINT_WIDGET_DESC_P1"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_WIDGET_DESC_P2 = Messages.getString("IMessageConstants.CONFIGURATION_HINT_WIDGET_DESC_P2"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_WIDGET_DESC = StringUtil.connectMessageWithSepalator( new String[]{CONFIGURATION_HINT_WIDGET_DESC_P1, CONFIGURATION_HINT_WIDGET_DESC_P2});
-	public static final String CONFIGURATION_HINT_STEP_TITLE = Messages.getString("IMessageConstants.CONFIGURATION_HINT_STEP_TITLE"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_STEP_DESC_P1 = Messages.getString("IMessageConstants.CONFIGURATION_HINT_STEP_DESC_P1"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_STEP_DESC_P2 = Messages.getString("IMessageConstants.CONFIGURATION_HINT_STEP_DESC_P2"); //$NON-NLS-1$
-	public static final String CONFIGURATION_HINT_STEP_DESC = StringUtil.connectMessageWithSepalator( new String[]{CONFIGURATION_HINT_STEP_DESC_P1, CONFIGURATION_HINT_STEP_DESC_P2});
-
-	public static final String CONFIGURATION_LBL_VARNAME = Messages.getString("IMessageConstants.CONFIGURATION_LBL_VARNAME"); //$NON-NLS-1$
-	public static final String CONFIGURATION_LBL_PARAMNAME = Messages.getString("IMessageConstants.CONFIGURATION_LBL_PARAMNAME"); //$NON-NLS-1$
-	public static final String CONFIGURATION_LBL_DATANAME = Messages.getString("IMessageConstants.CONFIGURATION_LBL_DATANAME"); //$NON-NLS-1$
-	public static final String CONFIGURATION_LBL_DEFAULT = Messages.getString("IMessageConstants.CONFIGURATION_LBL_DEFAULT"); //$NON-NLS-1$
-	public static final String CONFIGURATION_LBL_DESCRIPTION = Messages.getString("IMessageConstants.CONFIGURATION_LBL_DESCRIPTION"); //$NON-NLS-1$
-	public static final String CONFIGURATION_LBL_UNIT = Messages.getString("IMessageConstants.CONFIGURATION_LBL_UNIT"); //$NON-NLS-1$
-	public static final String CONFIGURATION_LBL_RANGE = Messages.getString("IMessageConstants.CONFIGURATION_LBL_RANGE"); //$NON-NLS-1$
-	public static final String CONFIGURATION_LBL_CONSTRAINT = Messages.getString("IMessageConstants.CONFIGURATION_LBL_CONSTRAINT"); //$NON-NLS-1$
-	public static final String CONFIGURATION_LBL_WIDGET = Messages.getString("IMessageConstants.CONFIGURATION_LBL_WIDGET"); //$NON-NLS-1$
-	public static final String CONFIGURATION_LBL_STEP = Messages.getString("IMessageConstants.CONFIGURATION_LBL_STEP"); //$NON-NLS-1$
-
-	public static final String CONFIGURATION_TBLLBL_NAME = Messages.getString("IMessageConstants.CONFIGURATION_TBLLBL_NAME"); //$NON-NLS-1$
-	public static final String CONFIGURATION_TBLLBL_TYPE = Messages.getString("IMessageConstants.CONFIGURATION_TBLLBL_TYPE"); //$NON-NLS-1$
-	public static final String CONFIGURATION_TBLLBL_VARNAME = Messages.getString("IMessageConstants.CONFIGURATION_TBLLBL_VARNAME"); //$NON-NLS-1$
-	public static final String CONFIGURATION_TBLLBL_DEFAULTVAL = Messages.getString("IMessageConstants.CONFIGURATION_TBLLBL_DEFAULTVAL"); //$NON-NLS-1$
-	public static final String CONFIGURATION_TBLLBL_CONSTRAINT = Messages.getString("IMessageConstants.CONFIGURATION_TBLLBL_CONSTRAINT"); //$NON-NLS-1$
-	public static final String CONFIGURATION_TBLLBL_UNIT = Messages.getString("IMessageConstants.CONFIGURATION_TBLLBL_UNIT"); //$NON-NLS-1$
-	public static final String CONFIGURATION_TBLLBL_CONFIGURATION = Messages.getString("IMessageConstants.CONFIGURATION_TBLLBL_CONFIGURATION"); //$NON-NLS-1$
+			Messages.getString("IMC.SERVIVEPORT_HINT_POST_CONDITION_DESC_P2")
+			});
+	//
+	public static final String CONFIGURATION_HINT_COFIGPARAM_DESC = StringUtil.connectMessageWithSepalator( new String[]{
+			Messages.getString("IMC.CONFIGURATION_HINT_COFIGPARAM_DESC_P1"),
+			Messages.getString("IMC.CONFIGURATION_HINT_COFIGPARAM_DESC_P2"),
+			Messages.getString("IMC.CONFIGURATION_HINT_COFIGPARAM_DESC_P3"),
+			Messages.getString("IMC.CONFIGURATION_HINT_COFIGPARAM_DESC_P4"),
+			Messages.getString("IMC.CONFIGURATION_HINT_COFIGPARAM_DESC_P5"),
+			Messages.getString("IMC.CONFIGURATION_HINT_COFIGPARAM_DESC_P6")
+	});
+	public static final String CONFIGURATION_HINT_PARAMNAME_DESC = StringUtil.connectMessageWithSepalator( new String[]{
+			Messages.getString("IMC.CONFIGURATION_HINT_PARAMNAME_DESC_P1"),
+			Messages.getString("IMC.CONFIGURATION_HINT_PARAMNAME_DESC_P2"),
+			Messages.getString("IMC.CONFIGURATION_HINT_PARAMNAME_DESC_P3")
+	});
+	public static final String CONFIGURATION_HINT_PARAMTYPE_DESC = StringUtil.connectMessageWithSepalator( new String[]{
+			Messages.getString("IMC.CONFIGURATION_HINT_PARAMTYPE_DESC_P1"),
+			Messages.getString("IMC.CONFIGURATION_HINT_PARAMTYPE_DESC_P2")
+	});
+	public static final String CONFIGURATION_HINT_VARNAME_DESC = StringUtil.connectMessageWithSepalator( new String[]{
+			Messages.getString("IMC.CONFIGURATION_HINT_VARNAME_DESC_P1"),
+			Messages.getString("IMC.CONFIGURATION_HINT_VARNAME_DESC_P2")
+	});
+	public static final String CONFIGURATION_HINT_DEFAULT_DESC = StringUtil.connectMessageWithSepalator( new String[]{
+			Messages.getString("IMC.CONFIGURATION_HINT_DEFAULT_DESC_P1"),
+			Messages.getString("IMC.CONFIGURATION_HINT_DEFAULT_DESC_P2"),
+			Messages.getString("IMC.CONFIGURATION_HINT_DEFAULT_DESC_P3")
+	});
+	public static final String CONFIGURATION_HINT_CONSTRAINT_DESC = StringUtil.connectMessageWithSepalator( new String[]{
+			Messages.getString("IMC.CONFIGURATION_HINT_CONSTRAINT_DESC_P1"),
+			Messages.getString("IMC.CONFIGURATION_HINT_CONSTRAINT_DESC_P2"),
+			Messages.getString("IMC.CONFIGURATION_HINT_CONSTRAINT_DESC_P3"),
+			Messages.getString("IMC.CONFIGURATION_HINT_CONSTRAINT_DESC_P4"),
+			Messages.getString("IMC.CONFIGURATION_HINT_CONSTRAINT_DESC_P5"),
+			Messages.getString("IMC.CONFIGURATION_HINT_CONSTRAINT_DESC_P6"),
+			Messages.getString("IMC.CONFIGURATION_HINT_CONSTRAINT_DESC_P7")
+	});
+	public static final String CONFIGURATION_HINT_WIDGET_DESC = StringUtil.connectMessageWithSepalator( new String[]{
+		Messages.getString("IMC.CONFIGURATION_HINT_WIDGET_DESC_P1"),
+		Messages.getString("IMC.CONFIGURATION_HINT_WIDGET_DESC_P2"),
+		Messages.getString("IMC.CONFIGURATION_HINT_WIDGET_DESC_P3")
+	});
+	public static final String CONFIGURATION_HINT_STEP_DESC = StringUtil.connectMessageWithSepalator( new String[]{
+			Messages.getString("IMC.CONFIGURATION_HINT_STEP_DESC_P1"),
+			Messages.getString("IMC.CONFIGURATION_HINT_STEP_DESC_P2")
+	});
+	public static final String CONFIGURATION_HINT_DOC_RANGE = StringUtil.connectMessageWithSepalator( new String[]{
+			Messages.getString("IMC.CONFIGURATION_HINT_DOC_RANGE_DESC_P1"),
+			Messages.getString("IMC.CONFIGURATION_HINT_DOC_RANGE_DESC_P2")
+	});
+	public static final String CONFIGURATION_HINT_DOC_CONSTRAINT = StringUtil.connectMessageWithSepalator( new String[]{
+			Messages.getString("IMC.CONFIGURATION_HINT_DOC_CONTRAINT_DESC_P1"),
+			Messages.getString("IMC.CONFIGURATION_HINT_DOC_CONTRAINT_DESC_P2")
+	});
 
 	public static final String CONFIGURATION_VALIDATE_NAME1 = Messages.getString("IMessageConstants.CONFIGURATION_VALIDATE_NAME1"); //$NON-NLS-1$
 	public static final String CONFIGURATION_VALIDATE_NAME2 = Messages.getString("IMessageConstants.CONFIGURATION_VALIDATE_NAME2"); //$NON-NLS-1$

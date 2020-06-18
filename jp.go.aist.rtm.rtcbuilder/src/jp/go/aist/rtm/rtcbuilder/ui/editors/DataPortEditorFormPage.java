@@ -1,15 +1,9 @@
 package jp.go.aist.rtm.rtcbuilder.ui.editors;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -57,8 +51,6 @@ import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
 import jp.go.aist.rtm.rtcbuilder.nl.Messages;
 import jp.go.aist.rtm.rtcbuilder.ui.StringUtil;
 import jp.go.aist.rtm.rtcbuilder.ui.preference.ComponentPreferenceManager;
-import jp.go.aist.rtm.rtcbuilder.ui.preference.RTCBuilderPreferenceManager;
-import jp.go.aist.rtm.rtcbuilder.util.FileUtil;
 import jp.go.aist.rtm.rtcbuilder.util.ValidationUtil;
 
 /**
@@ -105,7 +97,7 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 	 *            親のエディタ
 	 */
 	public DataPortEditorFormPage(RtcBuilderEditor editor) {
-		super(editor, "id", Messages.getString("IMessageConstants.DATAPORT_SECTION"));
+		super(editor, "id", Messages.getString("IMC.DATAPORT_SECTION"));
 		//
 		preSelection = null;
 
@@ -128,17 +120,16 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 	 * {@inheritDoc}
 	 */
 	protected void createFormContent(IManagedForm managedForm) {
-		ScrolledForm form = super.createBase(managedForm, Messages.getString("IMessageConstants.DATAPORT_SECTION"));
+		ScrolledForm form = super.createBase(managedForm, Messages.getString("IMC.DATAPORT_SECTION"));
 		FormToolkit toolkit = managedForm.getToolkit();
 		//
 		final Composite composite = createSectionBaseWithLabel(toolkit, form,
-				Messages.getString("IMessageConstants.DATAPORT_TITLE"),
-				Messages.getString("IMessageConstants.DATAPORT_EXPL"), 4);
+				Messages.getString("IMC.DATAPORT_TITLE"), Messages.getString("IMC.DATAPORT_EXPL"), 4);
 		inportTableViewer = createPortSection(toolkit, composite,
-				IMessageConstants.REQUIRED + IMessageConstants.DATAPORT_TBLLBL_INPORTNAME, 0, true);
+				IMessageConstants.REQUIRED + Messages.getString("IMC.DATAPORT_TBLLBL_INPORTNAME"), 0, true);
 		createHintSection(toolkit, form);
 		outportTableViewer = createPortSection(toolkit, composite,
-				IMessageConstants.REQUIRED + IMessageConstants.DATAPORT_TBLLBL_OUTPORTNAME, 1, false);
+				IMessageConstants.REQUIRED + Messages.getString("IMC.DATAPORT_TBLLBL_OUTPORTNAME"), 1, false);
 
 		createDetailSection(toolkit, form);
 		//
@@ -164,10 +155,10 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 		createHintLabel(Messages.getString("IMC.DATAPORT_LBL_DESCRIPTION"), Messages.getString("IMC.DATAPORT_HINT_DOC_OVERVIEW"), toolkit, composite);
 		createHintLabel(Messages.getString("IMC.DATAPORT_LBL_SEMANTICS"), Messages.getString("IMC.DATAPORT_HINT_DOC_DETAIL"), toolkit, composite);
 		createHintLabel(Messages.getString("IMC.DATAPORT_LBL_PORTTYPE"), Messages.getString("IMC.DATAPORT_HINT_DOC_DATATYPE"), toolkit, composite);
-		createHintLabel(Messages.getString("IMC.DATAPORT_LBL_DATANUM"), Messages.getString("IMC.DATAPORT_HINT_DOC_DATANUM"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.DATAPORT_LBL_DATANUM"), IMessageConstants.DATAPORT_HINT_DOC_DATANUM, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.DATAPORT_LBL_UNIT"), Messages.getString("IMC.DATAPORT_HINT_DOC_UNIT"), toolkit, composite);
-		createHintLabel(Messages.getString("IMC.DATAPORT_LBL_OCCUR"), IMessageConstants.DATAPORT_HINT_OCCUR_DESC, toolkit, composite);
-		createHintLabel(Messages.getString("IMC.DATAPORT_LBL_OPERAT"), IMessageConstants.DATAPORT_HINT_OPERAT_DESC, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.DATAPORT_LBL_OCCUR"), Messages.getString("IMC.DATAPORT_HINT_DOC_OCCUR"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.DATAPORT_LBL_OPERAT"), Messages.getString("IMC.DATAPORT_HINT_DOC_OPERAT"), toolkit, composite);
 	}
 
 	private void createDetailSection(FormToolkit toolkit, ScrolledForm form) {
@@ -175,8 +166,10 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 		Composite composite = createSectionBaseWithLabel(toolkit, form,
 				"Detail", IMessageConstants.DATAPORT_DOCUMENT_EXPL, 2);
 		//
-		portNameText = createLabelAndRefText(toolkit, composite,
-				Messages.getString("IMC.DATAPORT_LBL_PORTNAME"), SWT.BORDER, 1);
+		portNameText = createLabelAndText(toolkit, composite,
+				Messages.getString("IMC.DATAPORT_LBL_PORTNAME"), SWT.BORDER);
+		portNameText.setEditable(false);
+		portNameText.setBackground(getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 		//
 		Group detailGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
 		detailGroup.setLayout(new GridLayout(3, false));
@@ -184,7 +177,7 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 		gd.horizontalSpan = 2;
 		detailGroup.setLayoutData(gd);
 		//
-		Label label = toolkit.createLabel(detailGroup, IMessageConstants.REQUIRED + IMessageConstants.DATAPORT_TBLLBL_DATATYPE);
+		Label label = toolkit.createLabel(detailGroup, IMessageConstants.REQUIRED + Messages.getString("IMC.DATAPORT_TBLLBL_DATATYPE"));
 		label.setForeground(getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_RED));
 		typeCombo = new Combo(detailGroup, SWT.DROP_DOWN);
 		/////
@@ -266,11 +259,11 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 		idlFileText = createLabelAndRefText(toolkit, detailGroup,
 				Messages.getString("IMC.SERVICEPORT_LBL_IDLFILE"), SWT.BORDER, 2);
 		//
-		varNameText = createLabelAndText(toolkit, detailGroup, IMessageConstants.DATAPORT_TBLLBL_VARNAME, SWT.BORDER);
+		varNameText = createLabelAndText(toolkit, detailGroup, Messages.getString("IMC.DATAPORT_TBLLBL_VARNAME"), SWT.BORDER);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 2;
 		varNameText.setLayoutData(gd);
-		positionCombo = createLabelAndCombo(toolkit, detailGroup, IMessageConstants.DATAPORT_TBLLBL_POSITION, DataPortParam.COMBO_ITEM);
+		positionCombo = createLabelAndCombo(toolkit, detailGroup, Messages.getString("IMC.DATAPORT_TBLLBL_POSITION"), DataPortParam.COMBO_ITEM);
 		gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 2;
 		positionCombo.setLayoutData(gd);

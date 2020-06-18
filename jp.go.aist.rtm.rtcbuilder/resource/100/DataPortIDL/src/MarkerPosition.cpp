@@ -57,21 +57,21 @@ RTC::ReturnCode_t MarkerPosition::onInitialize()
   // <rtc-template block="registration">
   // Set InPort buffers
   addInPort("arUcoPoint2D", m_arUcoPoint2DIn);
-  
+
   // Set OutPort buffer
   addOutPort("CenterPosition", m_CenterPositionOut);
-  
+
   // Set service provider to Ports
-  
+
   // Set service consumers to Ports
-  
+
   // Set CORBA Service Ports
-  
+
   // </rtc-template>
 
   // <rtc-template block="bind_config">
   // </rtc-template>
-  
+
   return RTC::RTC_OK;
 }
 
@@ -153,7 +153,7 @@ RTC::ReturnCode_t MarkerPosition::onRateChanged(RTC::UniqueId ec_id)
 
 extern "C"
 {
- 
+
   void MarkerPositionInit(RTC::Manager* manager)
   {
     coil::Properties profile(markerposition_spec);
@@ -161,7 +161,7 @@ extern "C"
                              RTC::Create<MarkerPosition>,
                              RTC::Delete<MarkerPosition>);
   }
-  
+
 };
 
 

@@ -56,26 +56,26 @@ RTC::ReturnCode_t foo::onInitialize()
   // Registration: InPort/OutPort/Service
   // <rtc-template block="registration">
   // Set InPort buffers
-  
+
   // Set OutPort buffer
-  
+
   // Set service provider to Ports
   m_MyServiceProviderPort.registerProvider("MyServiceProvider", "MyServiceChild", m_MyServiceProvider);
   m_MyServiceProviderPort.registerProvider("MyServiceProvider2", "MyServiceWithTypeChild", m_MyServiceProvider2);
-  
+
   // Set service consumers to Ports
   m_MyServiceRequirePort.registerConsumer("MyServiceRequire", "MyServiceChild", m_MyServiceRequire);
   m_MyServiceRequirePort.registerConsumer("MyServiceRequire2", "MyServiceWithTypeChild", m_MyServiceRequire2);
-  
+
   // Set CORBA Service Ports
   addPort(m_MyServiceProviderPort);
   addPort(m_MyServiceRequirePort);
-  
+
   // </rtc-template>
 
   // <rtc-template block="bind_config">
   // </rtc-template>
-  
+
   return RTC::RTC_OK;
 }
 
@@ -160,7 +160,7 @@ RTC::ReturnCode_t foo::onRateChanged(RTC::UniqueId ec_id)
 
 extern "C"
 {
- 
+
   void fooInit(RTC::Manager* manager)
   {
     coil::Properties profile(foo_spec);
@@ -168,7 +168,7 @@ extern "C"
                              RTC::Create<foo>,
                              RTC::Delete<foo>);
   }
-  
+
 };
 
 

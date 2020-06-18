@@ -55,22 +55,22 @@ RTC::ReturnCode_t ModuleName::onInitialize()
   // Registration: InPort/OutPort/Service
   // <rtc-template block="registration">
   // Set InPort buffers
-  
+
   // Set OutPort buffer
-  
+
   // Set service provider to Ports
   m_sV1Port.registerProvider("sIF1", "ComFk", m_sIFv);
-  
+
   // Set service consumers to Ports
-  
+
   // Set CORBA Service Ports
   addPort(m_sV1Port);
-  
+
   // </rtc-template>
 
   // <rtc-template block="bind_config">
   // </rtc-template>
-  
+
   return RTC::RTC_OK;
 }
 
@@ -155,7 +155,7 @@ RTC::ReturnCode_t ModuleName::onRateChanged(RTC::UniqueId ec_id)
 
 extern "C"
 {
- 
+
   void ModuleNameInit(RTC::Manager* manager)
   {
     coil::Properties profile(modulename_spec);
@@ -163,7 +163,7 @@ extern "C"
                              RTC::Create<ModuleName>,
                              RTC::Delete<ModuleName>);
   }
-  
+
 };
 
 

@@ -12,6 +12,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import jp.go.aist.rtm.rtcbuilder.RtcBuilderPlugin;
+import jp.go.aist.rtm.rtcbuilder.nl.Messages;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.IMessageConstants;
 
 public class CodeGeneratePreferencePage extends AbstarctFieldEditorPreferencePage implements
@@ -55,6 +56,52 @@ public class CodeGeneratePreferencePage extends AbstarctFieldEditorPreferencePag
 		gd.grabExcessHorizontalSpace = true;
 		composite.setLayoutData(gd);
 		createComponentPart(composite);
+		createConfigurationSetParts(composite);
+		createBackupParts(composite);
+	}
+
+	private void createBackupParts(Composite composite) {
+		Composite backupGroup = createGroup(composite, IPreferenceMessageConstants.CODE_GEN_TITLE_BACKUP);
+		IntegerFieldEditor moduleMaxInstanceTextEditor = new IntegerFieldEditor(ComponentPreferenceManager.Generate_Backup_Num,
+				IMessageConstants.BACKUP_FILE_NUM, backupGroup);
+		addField(moduleMaxInstanceTextEditor);
+	}
+
+	private void createConfigurationSetParts(Composite composite) {
+		Composite configGroup = createGroup(composite, IPreferenceMessageConstants.CODE_GEN_TITLE_CONFIG);
+		DigitAlphabetStringFieldEditor configurationNameEditor =
+			new DigitAlphabetStringFieldEditor(ComponentPreferenceManager.Generate_Configuration_Name,
+					Messages.getString("IMC.CONFIGURATION_TBLLBL_NAME"), configGroup);
+		addField(configurationNameEditor);
+		StringFieldEditor configurationTypeEditor =
+			new StringFieldEditor(ComponentPreferenceManager.Generate_Configuration_Type,
+					Messages.getString("IMC.CONFIGURATION_TBLLBL_TYPE"), configGroup);
+		addField(configurationTypeEditor);
+		StringFieldEditor configurationVarNameEditor =
+			new StringFieldEditor(ComponentPreferenceManager.Generate_Configuration_VarName,
+					Messages.getString("IMC.CONFIGURATION_LBL_VARNAME"), configGroup);
+		addField(configurationVarNameEditor);
+		DigitAlphabetStringFieldEditor configurationDefaultEditor =
+			new DigitAlphabetStringFieldEditor(ComponentPreferenceManager.Generate_Configuration_Default,
+					Messages.getString("IMC.CONFIGURATION_TBLLBL_DEFAULTVAL"), configGroup);
+		addField(configurationDefaultEditor);
+		StringFieldEditor configurationConstraintEditor =
+			new StringFieldEditor(ComponentPreferenceManager.Generate_Configuration_Constraint,
+					Messages.getString("IMC.CONFIGURATION_LBL_CONSTRAINT"), configGroup);
+		addField(configurationConstraintEditor);
+		StringFieldEditor configurationUnitEditor =
+			new StringFieldEditor(ComponentPreferenceManager.Generate_Configuration_Unit,
+					Messages.getString("IMC.CONFIGURATION_LBL_UNIT"), configGroup);
+		addField(configurationUnitEditor);
+		//
+		StringFieldEditor configurationPrefixEditor =
+			new StringFieldEditor(ComponentPreferenceManager.Generate_Configuration_Prefix,
+					IPreferenceMessageConstants.PORT_LBL_PREFIX, configGroup);
+		addField(configurationPrefixEditor);
+		StringFieldEditor configurationSuffixEditor =
+			new StringFieldEditor(ComponentPreferenceManager.Generate_Configuration_Suffix,
+					IPreferenceMessageConstants.PORT_LBL_SUFFIX, configGroup);
+		addField(configurationSuffixEditor);
 	}
 
 	private void createComponentPart(Composite composite) {

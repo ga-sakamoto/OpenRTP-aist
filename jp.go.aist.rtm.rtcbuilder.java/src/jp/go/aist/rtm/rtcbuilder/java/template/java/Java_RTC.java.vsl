@@ -25,7 +25,7 @@ import jp.go.aist.rtm.RTC.util.Properties;
 
 /**
  * ${rtcParam.name}
- * <p> 
+ * <p>
  * ${rtcParam.description}
  */
 public class ${rtcParam.name} implements RtcNewFunc, RtcDeleteFunc, RegisterModuleFunc {
@@ -45,7 +45,7 @@ public class ${rtcParam.name} implements RtcNewFunc, RtcDeleteFunc, RegisterModu
             "lang_type",         "compile",
 #if( ${rtcParam.configParams.size()} > 0 )
             // Configuration variables
-#foreach($configParam in ${rtcParam.configParams})  
+#foreach($configParam in ${rtcParam.configParams})
             "conf.default.${configParam.name}", "${configParam.defaultVal}",
 #end
 
@@ -66,14 +66,6 @@ public class ${rtcParam.name} implements RtcNewFunc, RtcDeleteFunc, RegisterModu
             "conf.__type__.${configParam.name}", "${configParam.type}",
 #end
 
-#end
-#if( ${rtcParam.configParameterParams.size()} > 0 )
-            // System Configuration
-#foreach($parameterParam in ${rtcParam.configParameterParams})  
-#if( ${parameterParam.isNonPeriodic()} )
-            "${parameterParam.configName}", "${parameterParam.defaultVal}",
-#end
-#end
 #end
     	    ""
             };

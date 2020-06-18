@@ -82,7 +82,7 @@ public class CodeGeneratePortPreferencePage extends AbstarctFieldEditorPreferenc
 		Composite dataportGroup = createGroup(composite, IPreferenceMessageConstants.PORT_TITLE_DATA_PORT);
 		DigitAlphabetStringFieldEditor dataPortNameEditor =
 			new DigitAlphabetStringFieldEditor(ComponentPreferenceManager.Generate_DataPort_Name,
-					Messages.getString("IMC.DATAPORT_LBL_PORTNAME"), dataportGroup);
+					Messages.getString("IMC.DATAPORT_LBL_DESCRIPTION"), dataportGroup);
 		addField(dataPortNameEditor);
 		StringFieldEditor dataPortTypeEditor =
 			new StringFieldEditor(ComponentPreferenceManager.Generate_DataPort_Type,
@@ -90,7 +90,7 @@ public class CodeGeneratePortPreferencePage extends AbstarctFieldEditorPreferenc
 		addField(dataPortTypeEditor);
 		DigitAlphabetStringFieldEditor dataPortVarNameEditor =
 			new DigitAlphabetStringFieldEditor(ComponentPreferenceManager.Generate_DataPort_VarName,
-					IMessageConstants.DATAPORT_TBLLBL_VARNAME, dataportGroup);
+					Messages.getString("IMC.DATAPORT_TBLLBL_VARNAME"), dataportGroup);
 		addField(dataPortVarNameEditor);
 		StringFieldEditor dataPortPrefixEditor =
 			new StringFieldEditor(ComponentPreferenceManager.Generate_DataPort_Prefix,
