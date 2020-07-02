@@ -37,12 +37,12 @@
 	</extension>
 
     <extension point="org.eclipse.ui.perspectives">
-        <perspective 
-            id="jp.go.aist.rtm.systemeditor.ui.perspective.RtcLinkPerspective" 
-            name="%RT_System_Editor" 
-            class="jp.go.aist.rtm.toolscommon.ui.perspective.RtcLinkPerspective" 
-            icon="icons/RT.png"> 
-        </perspective> 
+        <perspective
+            id="jp.go.aist.rtm.systemeditor.ui.perspective.RtcLinkPerspective"
+            name="%RT_System_Editor"
+            class="jp.go.aist.rtm.toolscommon.ui.perspective.RtcLinkPerspective"
+            icon="icons/RT.png">
+        </perspective>
     </extension>
 
 	<extension
@@ -118,7 +118,7 @@
 	<extension
 		point="org.eclipse.ui.popupMenus">
 		<viewerContribution
-			id="jp.go.aist.rtm.systemeditor.ui.editor.SystemDiagramEditor.combine" 
+			id="jp.go.aist.rtm.systemeditor.ui.editor.SystemDiagramEditor.combine"
 			targetID="jp.go.aist.rtm.systemeditor.ui.editor.SystemDiagramEditor">
 			<visibility>
 				<objectClass name="java.lang.Object"/>
@@ -152,7 +152,7 @@
      </action>
   </viewerContribution>
 		<viewerContribution
-			id="jp.go.aist.rtm.systemeditor.ui.editor.OfflineSystemDiagramEditor.combine" 
+			id="jp.go.aist.rtm.systemeditor.ui.editor.OfflineSystemDiagramEditor.combine"
 			targetID="jp.go.aist.rtm.systemeditor.ui.editor.OfflineSystemDiagramEditor">
 			<visibility>
 				<objectClass name="java.lang.Object"/>
@@ -171,13 +171,13 @@
 		</viewerContribution>
 		<!--
 		<viewerContribution
-			id="jp.go.aist.rtm.systemeditor.ui.editor.OfflineSystemDiagramEditor.Refresh" 
+			id="jp.go.aist.rtm.systemeditor.ui.editor.OfflineSystemDiagramEditor.Refresh"
 			targetID="jp.go.aist.rtm.systemeditor.ui.editor.OfflineSystemDiagramEditor">
-			<action id="jp.go.aist.rtm.systemeditor.ui.action.AllComponentActionDelegate.AllStop" 
-				label="Refresh Offline System Editor" 
-				menubarPath="all" 
+			<action id="jp.go.aist.rtm.systemeditor.ui.action.AllComponentActionDelegate.AllStop"
+				label="Refresh Offline System Editor"
+				menubarPath="all"
 				icon="icons/Refresh.png"
-				class="jp.go.aist.rtm.systemeditor.ui.editor.action.RefreshOfflineSystemDiagramEditorAction"> 
+				class="jp.go.aist.rtm.systemeditor.ui.editor.action.RefreshOfflineSystemDiagramEditorAction">
 			</action>
 		</viewerContribution>
 		-->
@@ -268,27 +268,27 @@
 		</objectContribution>
 	</extension>
 
-	<extension point = "org.eclipse.ui.actionSets"> 
+	<extension point = "org.eclipse.ui.actionSets">
 		<actionSet
-			id="jp.go.aist.rtm.systemeditor.ui.actionSet" 
-			label="%RT_System_Editor_Actions"> 
+			id="jp.go.aist.rtm.systemeditor.ui.actionSet"
+			label="%RT_System_Editor_Actions">
 			<action
-				id="jp.go.aist.rtm.systemeditor.ui.action.NewOfflineSystemDiagramEditorAction" 
+				id="jp.go.aist.rtm.systemeditor.ui.action.NewOfflineSystemDiagramEditorAction"
 				label="%Open_New_Offline_System_Editor"
-				menubarPath="file/RTSEGroup" 
+				menubarPath="file/RTSEGroup"
 				toolbarPath="RTSE"
-				icon="icons/off.png" 
-				tooltip="%Open_New_Offline_System_Editor_Label" 
-				class="jp.go.aist.rtm.systemeditor.ui.action.NewOfflineSystemDiagramEditorAction"> 
+				icon="icons/off.png"
+				tooltip="%Open_New_Offline_System_Editor_Label"
+				class="jp.go.aist.rtm.systemeditor.ui.action.NewOfflineSystemDiagramEditorAction">
 			</action>
 			<action
-				id="jp.go.aist.rtm.systemeditor.ui.action.NewSystemDiagramEditorAction" 
+				id="jp.go.aist.rtm.systemeditor.ui.action.NewSystemDiagramEditorAction"
 				label="%Open_New_System_Editor"
-				menubarPath="file/RTSEGroup" 
+				menubarPath="file/RTSEGroup"
 				toolbarPath="RTSE"
-				icon="icons/on.png" 
-				tooltip="%Open_New_System_Editor_Label" 
-				class="jp.go.aist.rtm.systemeditor.ui.action.NewSystemDiagramEditorAction"> 
+				icon="icons/on.png"
+				tooltip="%Open_New_System_Editor_Label"
+				class="jp.go.aist.rtm.systemeditor.ui.action.NewSystemDiagramEditorAction">
 			</action>
 		</actionSet>
 	</extension>
@@ -683,7 +683,7 @@
 		point="org.eclipse.ui.menus">
 		<menuContribution
 			allPopups="false"
-			locationURI="toolbar:org.eclipse.ui.main.toolbar?additions">
+			locationURI="toolbar:org.eclipse.ui.main.toolbar?after=jp.go.aist.rtm.systemeditor.ui.actionSet">
 			<toolbar
 				id="rtse.menus.toolbar.ec"
 				label="EC">
@@ -1113,7 +1113,7 @@
 			<viewShortcut id="jp.go.aist.rtm.systemeditor.ui.views.actionorderview.ActionOrderView"/>
 		</perspectiveExtension>
 	</extension>
-	
+
 	<extension
 		point = "org.eclipse.ui.preferencePages">
 		<page
@@ -1152,11 +1152,11 @@
 			category="jp.go.aist.rtm.systemeditor.ui.preference.MainPreferencePage">
 		</page>
 	</extension>
-	
-   <extension 
+
+   <extension
       point = "org.eclipse.emf.ecore.extension_parser">
-      <parser 
-      		type="xml" 
+      <parser
+      		type="xml"
       		class="org.eclipse.emf.ecore.xmi.impl.XMLResourceFactoryImpl"/>
    </extension>
 
