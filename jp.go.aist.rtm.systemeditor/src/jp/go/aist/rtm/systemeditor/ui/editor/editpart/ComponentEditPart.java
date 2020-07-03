@@ -24,6 +24,7 @@ import jp.go.aist.rtm.systemeditor.ui.editor.editpolicy.NameDirectEditPolicy;
 import jp.go.aist.rtm.systemeditor.ui.editor.figure.ComponentLayout;
 import jp.go.aist.rtm.systemeditor.ui.editor.figure.PortFigure;
 import jp.go.aist.rtm.systemeditor.ui.handler.ChangeDirectionCommandHandler;
+import jp.go.aist.rtm.systemeditor.ui.util.ComponentActionDelegate;
 import jp.go.aist.rtm.systemeditor.ui.util.ComponentUtil;
 import jp.go.aist.rtm.systemeditor.ui.util.Draw2dUtil;
 import jp.go.aist.rtm.toolscommon.model.component.Component;
@@ -57,6 +58,8 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -686,6 +689,26 @@ public class ComponentEditPart extends AbstractEditPart {
 						((OpenCompositeComponentAction) action).getParentSystemDiagramEditor());
 				openAction.setCompositeComponent(getModel());
 				openAction.run();
+			} else {
+				CorbaComponent component = (CorbaComponent) getModel();
+				List<CorbaComponent> components = new ArrayList<>();
+				components.add(component);
+
+				IWorkbenchWindow activeWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+				IWorkbenchPart activePart = activeWindow.getActivePage().getActivePart();
+
+				int status = component.getComponentState();
+				List<ComponentActionDelegate.Command> commands = new ArrayList<>();
+				if (status == ExecutionContext.RTC_INACTIVE) {
+					commands = ComponentActionDelegate.commandOf_ACTIVATE(LOGGER, components);
+				} else if (status == ExecutionContext.RTC_ACTIVE) {
+					commands = ComponentActionDelegate.commandOf_DEACTIVATE(LOGGER, components);
+				} else if (status == ExecutionContext.RTC_ERROR) {
+					commands = ComponentActionDelegate.commandOf_RESET(LOGGER, components);
+				}
+				ComponentActionDelegate actionDelegate = new ComponentActionDelegate();
+				actionDelegate.setActivePart(null, activePart);
+				actionDelegate.run(commands);
 			}
 		}
 		// オフラインエディタの場合はインスタンス名の直接編集可
