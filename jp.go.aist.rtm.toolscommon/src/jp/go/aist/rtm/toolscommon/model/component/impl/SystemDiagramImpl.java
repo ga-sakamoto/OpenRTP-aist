@@ -8,6 +8,8 @@ package jp.go.aist.rtm.toolscommon.model.component.impl;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -27,6 +29,7 @@ import jp.go.aist.rtm.toolscommon.model.component.util.CorbaObserverStore;
 import jp.go.aist.rtm.toolscommon.model.component.util.PropertyMap;
 import jp.go.aist.rtm.toolscommon.model.core.Point;
 import jp.go.aist.rtm.toolscommon.model.core.impl.ModelElementImpl;
+import jp.go.aist.rtm.toolscommon.nl.Messages;
 import jp.go.aist.rtm.toolscommon.synchronizationframework.RefreshThread;
 import jp.go.aist.rtm.toolscommon.synchronizationframework.SynchronizationSupport;
 import jp.go.aist.rtm.toolscommon.ui.propertysource.SystemDiagramPropertySource;
@@ -39,6 +42,9 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.views.properties.IPropertySource;
 import org.openrtp.namespaces.rts.version02.RtsProfileExt;
 
@@ -95,6 +101,8 @@ public class SystemDiagramImpl extends ModelElementImpl implements
 	protected SystemDiagramKind kind = KIND_EDEFAULT;
 
 	protected IPropertyMap properties;
+
+	private String currentIP = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -564,7 +572,7 @@ public class SystemDiagramImpl extends ModelElementImpl implements
 	 * <!-- begin-user-doc -->
 	 * コンポーネンツ変更の通知を行うリスナを登録する
 	 * @param listener
-	 * 
+	 *
 	 * <!-- end-user-doc -->
 	 * @generated NOT
 	 */
@@ -577,7 +585,7 @@ public class SystemDiagramImpl extends ModelElementImpl implements
 	 * <!-- begin-user-doc -->
 	 * コンポーネンツ変更の通知を行うリスナを取得する
 	 * @param listener
-	 * 
+	 *
 	 * <!-- end-user-doc -->
 	 * @generated NOT
 	 */
@@ -589,7 +597,7 @@ public class SystemDiagramImpl extends ModelElementImpl implements
 	 * <!-- begin-user-doc -->
 	 * コンポーネンツ変更の通知を行うリスナを削除する
 	 * @param listener
-	 * 
+	 *
 	 * <!-- end-user-doc -->
 	 * @generated NOT
 	 */
@@ -876,6 +884,31 @@ public class SystemDiagramImpl extends ModelElementImpl implements
 
 	void synchronizeRemote() {
 		if (getParentSystemDiagram() == null) {
+			try {
+				InetAddress addr = InetAddress.getLocalHost();
+				String address = addr.getHostAddress();
+				if(currentIP==null) {
+					currentIP = address;
+				} else {
+					if(currentIP.equals(address)==false) {
+						String oldAddress = currentIP;
+						currentIP = address;
+						if( 0 < PlatformUI.getWorkbench().getWorkbenchWindowCount() ) {
+							Shell shell = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getShell();
+							shell.getDisplay().asyncExec(new Runnable() {
+							    public void run() {
+						            MessageDialog.openError(shell,
+						            		Messages.getString("IPCaution.title"),
+						            		Messages.getString("IPCaution.message") + " (" + oldAddress + " -> " + currentIP + ")");
+							    }
+							});
+						}
+					}
+				}
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			}
+
 			for (Component component : getUnmodifiedComponents()) {
 				if (component instanceof CorbaComponentImpl) {
 					CorbaComponentImpl corbaComp = (CorbaComponentImpl) component;
