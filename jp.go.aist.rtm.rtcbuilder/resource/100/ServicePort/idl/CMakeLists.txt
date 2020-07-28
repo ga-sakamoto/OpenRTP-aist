@@ -1,4 +1,4 @@
-set(idls ${CMAKE_CURRENT_SOURCE_DIR}/CalibrationService.idl )
+set(idls ${CMAKE_CURRENT_SOURCE_DIR}/CalibrationService.idl ${CMAKE_CURRENT_SOURCE_DIR}/InterfaceDataTypes.idl ${CMAKE_CURRENT_SOURCE_DIR}/BasicDataType.idl ${CMAKE_CURRENT_SOURCE_DIR}/ExtendedDataTypes.idl )
 
 macro(_IDL_OUTPUTS _idl _dir _result)
     set(${_result} ${_dir}/${_idl}Skel.cpp ${_dir}/${_idl}Skel.h)
