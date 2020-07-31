@@ -279,7 +279,7 @@ ${sharp} Configuration sets GUI settings for RTSystemEditor
 ${sharp}
 ${sharp}   Configuration parameters can be operated by GUI widgets on
 ${sharp}   RTSystemEditor's configuration-set dialog. Normally, when designing
-${sharp}   RTC with RTCBuilder, you can specify what kind of GUI widget is
+${sharp}   RTC with RTCBuilder, you can specify what kind of the GUI widget is
 ${sharp}   assigned to each parameter, but you can also specify GUI widget
 ${sharp}   assignment from component.conf.
 ${sharp}
@@ -299,7 +299,7 @@ ${sharp} - text:          text box [default].
 ${sharp} - slider.<step>: Horizontal slider. <step> is step for the slider.
 ${sharp}                  A range constraints option is required. 
 ${sharp} - spin:          Spin button. A range constraitns option is required.
-${sharp} - radio:         Radio button. An enumeration constraints is required.
+${sharp} - radio:         Radio button. An enumeration constraint is required.
 ${sharp} - checkbox:      Checkbox control. An enumeration constraints is
 ${sharp}                  required. The parameter has to be able to accept a
 ${sharp}                  comma separated list.
@@ -333,9 +333,9 @@ ${sharp}
 ${sharp} available constraints:
 ${sharp} - none:         blank
 ${sharp} - direct value: 100 (constant value)
-${sharp} - range:        <, >, <=, >= can be used.
+${sharp} - range:        <, >, <=, >= and variable "x" can be used.
 ${sharp} - enumeration:  (enum0, enum1, ...)
-${sharp} - array:        <constraints0>, ,constraints1>, ... for only array value
+${sharp} - array:        <constraints0>, <constraints1>, ... for only array value
 ${sharp} - hash:         {key0: value0, key1:, value0, ...}
 ${sharp}
 ${sharp} available constraint formats (substitute variable name: "x"):
@@ -344,7 +344,7 @@ ${sharp} - Direct                     : 100 (read only)
 ${sharp} - 100 or over                : x >= 100
 ${sharp} - 100 or less                : x <= 100
 ${sharp} - Over 100                   : x > 100
-${sharp} - Less 100                   : x < 0
+${sharp} - Less 100                   : x < 100
 ${sharp} - 100 or over and 200 or less: 100 <= x <= 200
 ${sharp} - Over 100 and less 200      : 100 < x < 200
 ${sharp} - Enumeration                : (9600, 19200, 115200)
