@@ -67,7 +67,7 @@ public class ServicePortTest extends TestBase {
 	}
 
 	public void testServicePort() throws Exception {
-		rtcParam.getIdlSearchPathList().add(new IdlPathParam("C:\\Program Files\\OpenRTM-aist\\1.2.0\\rtm\\idl", false));
+		rtcParam.getIdlSearchPathList().add(new IdlPathParam("C:\\Program Files\\OpenRTM-aist\\1.2.1\\rtm\\idl", false));
 
 		ServicePortParam service1 = new ServicePortParam("sv_name",0);
 		List<ServicePortInterfaceParam> srvinterts = new ArrayList<ServicePortInterfaceParam>();
@@ -94,12 +94,12 @@ public class ServicePortTest extends TestBase {
 	}
 
     public void testServicePortJARA() throws Exception {
-		rtcParam.getIdlSearchPathList().add(new IdlPathParam("C:\\Program Files\\OpenRTM-aist\\1.2.0\\rtm\\idl", false));
+		rtcParam.getIdlSearchPathList().add(new IdlPathParam("C:\\Program Files\\OpenRTM-aist\\1.2.1\\rtm\\idl", false));
 
         ServicePortParam service1 = new ServicePortParam("sv_name",0);
         List<ServicePortInterfaceParam> srvinterts = new ArrayList<ServicePortInterfaceParam>();
         ServicePortInterfaceParam int1 = new ServicePortInterfaceParam(service1, "if_name", "", "",
-                "C:\\Program Files\\OpenRTM-aist\\1.2.0\\rtm\\idl\\ManipulatorCommonInterface_Common.idl",
+                "C:\\Program Files\\OpenRTM-aist\\1.2.1\\rtm\\idl\\ManipulatorCommonInterface_Common.idl",
                 "JARA_ARM::ManipulatorCommonInterface_Common",
                 0);
         srvinterts.add(int1);
