@@ -214,6 +214,7 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 					}
 				}
 				Collections.sort(currentList, new DataParamComparator());
+				typeCombo.removeAll();
 				for(DataParam item : currentList) {
 					typeCombo.add(item.typeName);
 				}
@@ -522,7 +523,7 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 		}
 		checkVarSet.add(dataport.getTmplVarName());
 		//型存在チェック
-		if(Arrays.asList(defaultTypeList).contains(dataport.getType())==false) {
+		if(Arrays.asList(defaultTypeList).contains(dataport.getType().trim())==false) {
 			return IMessageConstants.DATAPORT_VALIDATE_PORTTYPE_INVALID;
 		}
 		return null;
