@@ -105,6 +105,8 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 		defaultPortName = ComponentPreferenceManager.getInstance().getDataPort_Name();
 		defaultPortType = store.getString(ComponentPreferenceManager.Generate_DataPort_Type);
 		defaultPortVarName = store.getString(ComponentPreferenceManager.Generate_DataPort_VarName);
+		
+		defaultTypeList = super.extractDataTypes();
 	}
 
 	public void updateDefaultValue() {
