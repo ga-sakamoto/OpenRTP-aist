@@ -43,7 +43,7 @@ public class OutPortEditPart extends PortEditPartBase {
 	 * {@inheritDoc}
 	 */
 	protected void refreshVisuals() {
-		OutPortFigure outport = (OutPortFigure)getFigure();
+		OutPortBaseFigure outport = (OutPortBaseFigure)getFigure();
 		originalChildren = outport.getParent().getChildren();
 		super.refreshVisuals();
 	}
