@@ -1,3 +1,10 @@
+openrtp (1.2.2-1) experimental; urgency=low
+
+  * SWT_GTK3 environment variable has been set to zero.
+  * Updated doxyfile.in.
+
+ -- Noriaki Ando <n-ando@aist.go.jp>  Mon, 30 Nov 2020 11:16:08 +0900
+
 openrtp (1.2.2-0) experimental; urgency=low
 
   * 1.2.2-0 (1.2.2-RELEASE). OpenRTP-1.2.2-RELEASE
