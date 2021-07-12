@@ -503,10 +503,10 @@ public class SystemDiagramImpl extends ModelElementImpl implements
 
 	@Override
 	public synchronized void addComponent(int pos, Component component) {
-		addObserver(component);
-		for (Component comp : component.getComponents()) {
-			addObserver(comp);
-		}
+//		addObserver(component);
+//		for (Component comp : component.getComponents()) {
+//			addObserver(comp);
+//		}
 		//
 		if (pos == -1) {
 			getComponents().add(component);
