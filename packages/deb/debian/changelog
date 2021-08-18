@@ -1,3 +1,9 @@
+openrtp (1.2.2-2) experimental; urgency=low
+
+  * Modified to not use observer.
+
+ -- Noriaki Ando <n-ando@aist.go.jp>  Tue, 20 Jul 2021 10:27:12 +0900
+
 openrtp (1.2.2-1) experimental; urgency=low
 
   * SWT_GTK3 environment variable has been set to zero.
