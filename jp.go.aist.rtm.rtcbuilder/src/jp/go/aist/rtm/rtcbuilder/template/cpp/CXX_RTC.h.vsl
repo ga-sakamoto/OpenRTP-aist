@@ -76,16 +76,17 @@ class ${rtcParam.name}
 #foreach($publicAttribute in ${rtcParam.publicAttributes})
   ${publicAttribute}
 #end
-  
+
   // </rtc-template>
 
   // <rtc-template block="public_operation">
 #foreach($publicOperation in ${rtcParam.publicOperations})
   ${publicOperation}
 #end
-  
+
   // </rtc-template>
 
+  // <rtc-template block="activity">
   /***
 #if(${rtcParam.getDocActionOverView(0).length()}>0)   * ${tmpltHelper.convertDescDoc(${rtcParam.getDocActionOverView(0)})}
 #end
@@ -93,12 +94,12 @@ class ${rtcParam.name}
    * The initialize action (on CREATED->ALIVE transition)
    *
    * @return RTC::ReturnCode_t
-   * 
+   *
 #if(${rtcParam.getDocActionPreCondition(0).length()}>0)   * @pre ${tmpltHelper.convertPreDoc(${rtcParam.getDocActionPreCondition(0)})}
 #end
 #if(${rtcParam.getDocActionPostCondition(0).length()}>0)   * @post ${tmpltHelper.convertPostDoc(${rtcParam.getDocActionPostCondition(0)})}
 #end
-   * 
+   *
    */
   #if(${rtcParam.configParams.size()}==0 && ${rtcParam.IsNotImplemented(0)} && ${rtcParam.inports.size()}==0 && ${rtcParam.outports.size()}==0 && ${rtcParam.servicePorts.size()}==0)//#end virtual RTC::ReturnCode_t onInitialize();
 
@@ -109,12 +110,12 @@ class ${rtcParam.name}
    * The finalize action (on ALIVE->END transition)
    *
    * @return RTC::ReturnCode_t
-   * 
+   *
 #if(${rtcParam.getDocActionPreCondition(1).length()}>0)   * @pre ${tmpltHelper.convertPreDoc(${rtcParam.getDocActionPreCondition(1)})}
 #end
 #if(${rtcParam.getDocActionPostCondition(1).length()}>0)   * @post ${tmpltHelper.convertPostDoc(${rtcParam.getDocActionPostCondition(1)})}
 #end
-   * 
+   *
    */
   #if(${rtcParam.IsNotImplemented(1)})//#end virtual RTC::ReturnCode_t onFinalize();
 
@@ -127,12 +128,12 @@ class ${rtcParam.name}
    * @param ec_id target ExecutionContext Id
    *
    * @return RTC::ReturnCode_t
-   * 
+   *
 #if(${rtcParam.getDocActionPreCondition(2).length()}>0)   * @pre ${tmpltHelper.convertPreDoc(${rtcParam.getDocActionPreCondition(2)})}
 #end
 #if(${rtcParam.getDocActionPostCondition(2).length()}>0)   * @post ${tmpltHelper.convertPostDoc(${rtcParam.getDocActionPostCondition(2)})}
 #end
-   * 
+   *
    */
   #if(${rtcParam.IsNotImplemented(2)})//#end virtual RTC::ReturnCode_t onStartup(RTC::UniqueId ec_id);
 
@@ -145,12 +146,12 @@ class ${rtcParam.name}
    * @param ec_id target ExecutionContext Id
    *
    * @return RTC::ReturnCode_t
-   * 
+   *
 #if(${rtcParam.getDocActionPreCondition(3).length()}>0)   * @pre ${tmpltHelper.convertPreDoc(${rtcParam.getDocActionPreCondition(3)})}
 #end
 #if(${rtcParam.getDocActionPostCondition(3).length()}>0)   * @post ${tmpltHelper.convertPostDoc(${rtcParam.getDocActionPostCondition(3)})}
 #end
-   * 
+   *
    */
   #if(${rtcParam.IsNotImplemented(3)})//#end virtual RTC::ReturnCode_t onShutdown(RTC::UniqueId ec_id);
 
@@ -163,12 +164,12 @@ class ${rtcParam.name}
    * @param ec_id target ExecutionContext Id
    *
    * @return RTC::ReturnCode_t
-   * 
+   *
 #if(${rtcParam.getDocActionPreCondition(4).length()}>0)   * @pre ${tmpltHelper.convertPreDoc(${rtcParam.getDocActionPreCondition(4)})}
 #end
 #if(${rtcParam.getDocActionPostCondition(4).length()}>0)   * @post ${tmpltHelper.convertPostDoc(${rtcParam.getDocActionPostCondition(4)})}
 #end
-   * 
+   *
    */
   #if(${rtcParam.IsNotImplemented(4)})//#end virtual RTC::ReturnCode_t onActivated(RTC::UniqueId ec_id);
 
@@ -181,12 +182,12 @@ class ${rtcParam.name}
    * @param ec_id target ExecutionContext Id
    *
    * @return RTC::ReturnCode_t
-   * 
+   *
 #if(${rtcParam.getDocActionPreCondition(5).length()}>0)   * @pre ${tmpltHelper.convertPreDoc(${rtcParam.getDocActionPreCondition(5)})}
 #end
 #if(${rtcParam.getDocActionPostCondition(5).length()}>0)   * @post ${tmpltHelper.convertPostDoc(${rtcParam.getDocActionPostCondition(5)})}
 #end
-   * 
+   *
    */
   #if(${rtcParam.IsNotImplemented(5)})//#end virtual RTC::ReturnCode_t onDeactivated(RTC::UniqueId ec_id);
 
@@ -199,12 +200,12 @@ class ${rtcParam.name}
    * @param ec_id target ExecutionContext Id
    *
    * @return RTC::ReturnCode_t
-   * 
+   *
 #if(${rtcParam.getDocActionPreCondition(9).length()}>0)   * @pre ${tmpltHelper.convertPreDoc(${rtcParam.getDocActionPreCondition(9)})}
 #end
 #if(${rtcParam.getDocActionPostCondition(9).length()}>0)   * @post ${tmpltHelper.convertPostDoc(${rtcParam.getDocActionPostCondition(9)})}
 #end
-   * 
+   *
    */
   #if(${rtcParam.IsNotImplemented(9)})//#end virtual RTC::ReturnCode_t onExecute(RTC::UniqueId ec_id);
 
@@ -217,12 +218,12 @@ class ${rtcParam.name}
    * @param ec_id target ExecutionContext Id
    *
    * @return RTC::ReturnCode_t
-   * 
+   *
 #if(${rtcParam.getDocActionPreCondition(6).length()}>0)   * @pre ${tmpltHelper.convertPreDoc(${rtcParam.getDocActionPreCondition(6)})}
 #end
 #if(${rtcParam.getDocActionPostCondition(6).length()}>0)   * @post ${tmpltHelper.convertPostDoc(${rtcParam.getDocActionPostCondition(6)})}
 #end
-   * 
+   *
    */
   #if(${rtcParam.IsNotImplemented(6)})//#end virtual RTC::ReturnCode_t onAborting(RTC::UniqueId ec_id);
 
@@ -235,12 +236,12 @@ class ${rtcParam.name}
    * @param ec_id target ExecutionContext Id
    *
    * @return RTC::ReturnCode_t
-   * 
+   *
 #if(${rtcParam.getDocActionPreCondition(7).length()}>0)   * @pre ${tmpltHelper.convertPreDoc(${rtcParam.getDocActionPreCondition(7)})}
 #end
 #if(${rtcParam.getDocActionPostCondition(7).length()}>0)   * @post ${tmpltHelper.convertPostDoc(${rtcParam.getDocActionPostCondition(7)})}
 #end
-   * 
+   *
    */
   #if(${rtcParam.IsNotImplemented(7)})//#end virtual RTC::ReturnCode_t onError(RTC::UniqueId ec_id);
 
@@ -253,15 +254,15 @@ class ${rtcParam.name}
    * @param ec_id target ExecutionContext Id
    *
    * @return RTC::ReturnCode_t
-   * 
+   *
 #if(${rtcParam.getDocActionPreCondition(8).length()}>0)   * @pre ${tmpltHelper.convertPreDoc(${rtcParam.getDocActionPreCondition(8)})}
 #end
 #if(${rtcParam.getDocActionPostCondition(8).length()}>0)   * @post ${tmpltHelper.convertPostDoc(${rtcParam.getDocActionPostCondition(8)})}
 #end
-   * 
+   *
    */
   #if(${rtcParam.IsNotImplemented(8)})//#end virtual RTC::ReturnCode_t onReset(RTC::UniqueId ec_id);
-  
+
   /***
 #if(${rtcParam.getDocActionOverView(10).length()}>0)   * ${tmpltHelper.convertDescDoc(${rtcParam.getDocActionOverView(10)})}
 #end
@@ -271,12 +272,12 @@ class ${rtcParam.name}
    * @param ec_id target ExecutionContext Id
    *
    * @return RTC::ReturnCode_t
-   * 
+   *
 #if(${rtcParam.getDocActionPreCondition(10).length()}>0)   * @pre ${tmpltHelper.convertPreDoc(${rtcParam.getDocActionPreCondition(10)})}
 #end
 #if(${rtcParam.getDocActionPostCondition(10).length()}>0)   * @post ${tmpltHelper.convertPostDoc(${rtcParam.getDocActionPostCondition(10)})}
 #end
-   * 
+   *
    */
   #if(${rtcParam.IsNotImplemented(10)})//#end virtual RTC::ReturnCode_t onStateUpdate(RTC::UniqueId ec_id);
 
@@ -289,14 +290,15 @@ class ${rtcParam.name}
    * @param ec_id target ExecutionContext Id
    *
    * @return RTC::ReturnCode_t
-   * 
+   *
 #if(${rtcParam.getDocActionPreCondition(11).length()}>0)   * @pre ${tmpltHelper.convertPreDoc(${rtcParam.getDocActionPreCondition(11)})}
 #end
 #if(${rtcParam.getDocActionPostCondition(11).length()}>0)   * @post ${tmpltHelper.convertPostDoc(${rtcParam.getDocActionPostCondition(11)})}
 #end
-   * 
+   *
    */
   #if(${rtcParam.IsNotImplemented(11)})//#end virtual RTC::ReturnCode_t onRateChanged(RTC::UniqueId ec_id);
+  // </rtc-template>
 
 
  protected:
@@ -304,14 +306,14 @@ class ${rtcParam.name}
 #foreach($protectedAttribute in ${rtcParam.protectedAttributes})
   ${protectedAttribute}
 #end
-  
+
   // </rtc-template>
 
   // <rtc-template block="protected_operation">
 #foreach($protectedOperation in ${rtcParam.protectedOperations})
   ${protectedOperation}
 #end
-  
+
   // </rtc-template>
 
   // Configuration variable declaration
@@ -358,7 +360,7 @@ class ${rtcParam.name}
   RTC::InPort<${port.type}> ${rtcParam.commonPrefix}${rtcParam.dataPortPrefix}${port.tmplVarName}In${rtcParam.dataPortSuffix}${rtcParam.commonSuffix};
 #end
 #end
-  
+
   // </rtc-template>
 
 
@@ -385,7 +387,7 @@ class ${rtcParam.name}
   RTC::OutPort<${port.type}> ${rtcParam.commonPrefix}${rtcParam.dataPortPrefix}${port.tmplVarName}Out${rtcParam.dataPortSuffix}${rtcParam.commonSuffix};
 #end
 #end
-  
+
   // </rtc-template>
 
   // CORBA Port declaration
@@ -401,7 +403,7 @@ class ${rtcParam.name}
    */
   RTC::CorbaPort ${rtcParam.commonPrefix}${rtcParam.servicePortPrefix}${servicePort.name}Port${rtcParam.servicePortSuffix}${rtcParam.commonSuffix};
 #end#end#end
-  
+
   // </rtc-template>
 
   // Service declaration
@@ -427,7 +429,7 @@ class ${rtcParam.name}
    */
   ${tmpltHelper.getBasename2(${serviceInterface.interfaceType})}${tmpltHelper.serviceImplSuffix} ${rtcParam.commonPrefix}${rtcParam.serviceIFPrefix}${serviceInterface.tmplVarName}${rtcParam.serviceIFSuffix}${rtcParam.commonSuffix};
 #end#end#end#end#end
-  
+
   // </rtc-template>
 
   // Consumer declaration
@@ -453,7 +455,7 @@ class ${rtcParam.name}
    */
   RTC::CorbaConsumer<${serviceInterface.interfaceType}> ${rtcParam.commonPrefix}${rtcParam.serviceIFPrefix}${serviceInterface.tmplVarName}${rtcParam.serviceIFSuffix}${rtcParam.commonSuffix};
 #end#end#end#end#end
-  
+
   // </rtc-template>
 
  private:
@@ -461,14 +463,14 @@ class ${rtcParam.name}
 #foreach($privateAttribute in ${rtcParam.privateAttributes})
   ${privateAttribute}
 #end
-  
+
   // </rtc-template>
 
   // <rtc-template block="private_operation">
 #foreach($privateOperation in ${rtcParam.privateOperations})
   ${privateOperation}
 #end
-  
+
   // </rtc-template>
 
 };
