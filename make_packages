@@ -93,7 +93,7 @@ ECLIPSE_DIRS="$HOME/eclipse $HOME ../ ../../ ../..//usr/lib/ /usr/share"
 #true ${ECLIPSE_VERSION:="R-4.4.2-201502041700"}
 true ${ECLIPSE_VERSION:="R-4.7.3-201803010715"}
 #true ${DOWNLOAD_SITE:="http://ftp.jaist.ac.jp/pub/eclipse/eclipse/downloads/drops/${ECLIPSE_VERSION}"}
-true ${DOWNLOAD_SITE:="file:///home/openrtm/public_html/pub/eclipse/packages/"}
+true ${DOWNLOAD_SITE:="file://$HOME/public_html/pub/eclipse/packages/"}
 ECLIPSE_SHORTVER=`echo $ECLIPSE_VERSION | awk 'BEGIN{FS="-";}{print $2;}'`
 ECLIPSE_WIN32_32="${DOWNLOAD_SITE}/eclipse-SDK-${ECLIPSE_SHORTVER}-win32.zip"
 ECLIPSE_WIN32_64="${DOWNLOAD_SITE}/eclipse-SDK-${ECLIPSE_SHORTVER}-win32-x86_64.zip"
@@ -104,7 +104,7 @@ ECLIPSE_MACOS_64="${DOWNLOAD_SITE}/eclipse-SDK-${ECLIPSE_SHORTVER}-macosx-cocoa-
 
 # Eclipse plugins information
 #true ${REPOSITORY:="file:///home/openrtm/public_html/pub/eclipse/projects/luna,http://download.eclipse.org/releases/luna"}
-true ${REPOSITORY:="file:///home/openrtm/public_html/pub/eclipse/projects/oxygen,http://download.eclipse.org/releases/oxygen"}
+true ${REPOSITORY:="file://$HOME/public_html/pub/eclipse/projects/oxygen,http://download.eclipse.org/releases/oxygen"}
 PLUGINS="org.eclipse.emf.sdk.feature.group
          org.eclipse.emf.ecore.xcore.sdk.feature.group
          org.eclipse.gef.sdk.feature.group
