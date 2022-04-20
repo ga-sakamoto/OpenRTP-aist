@@ -1,3 +1,9 @@
+openrtp (1.2.2-4) experimental; urgency=low
+
+  * Updated openrtp startup script.
+
+ -- Noriaki Ando <n-ando@aist.go.jp>  Tue, 19 Apr 2022 13:53:28 +0900
+
 openrtp (1.2.2-3) experimental; urgency=low
 
   * Changed Java dependency of deb package to JDK8 only.
