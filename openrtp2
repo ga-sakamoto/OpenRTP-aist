@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# RTM_ROOT
+#
+# This is used to find IDL files. Default IDL file directory is
+# $RTM_ROOT/rtm/idl (in Windows)
+# In the generic Linux environment, IDL directory is
+# $prefix/include/openrtm-x.y/rtm/idl
+# Therefore RTM_ROOT should be $prefix/include/openrtm-x.y
+#
+
 cd $(cd $(dirname $(readlink -f $0 || echo $0));pwd -P)
 
 debug_echo () {
@@ -46,6 +55,99 @@ done
 debug_echo "Debug mode enable."
 debug_echo "ECLIPSE_ARGS: $ECLIPSE_ARGS"
 
+#------------------------------------------------------------
+# set_RTM_ROOT
+#
+# This functions set RTM_ROOT environmental variable
+# 1. If RTM_ROOT is set, it checks RTM_ROOT validity.
+# 2. If it is not set, find IDL file by using rtm-config
+#    and set valid RTM_ROOT.
+#------------------------------------------------------------
+set_RTM_ROOT()
+{
+    if test "x$RTM_ROOT" = "x"; then
+        debug_echo "RTM_ROOT is not set."
+        find_RTM_ROOT
+        if test "x$RTM_ROOT" = "x" ; then
+            debug_echo "No OpenRTM-aist (C++) installed found."
+            debug_echo ""
+            return 1
+        fi
+    fi
+
+    # Now RTM_ROOT is set
+    check_RTM_ROOT
+    if test $? != 0 ; then
+        debug_echo ""
+        debug_echo "WARNING: Invalid RTM_ROOT"
+        debug_echo "    Environmental variable RTM_ROOT = $RTM_ROOT is invalid."
+        debug_echo "    Please check OpenRTM-aist C++ installation."
+        debug_echo "  ex."
+        debug_echo "    If BasicDataType.idl exists under:"
+        debug_echo "                       /usr/include/openrtm-2.0/rtm/idl/"
+        debug_echo "    RTM_ROOT should be /usr/include/openrtm-2.0"
+        debug_echo ""
+        return 1
+    fi
+    debug_echo "Result: RTM_ROOT = " $RTM_ROOT
+    export RTM_ROOT=$RTM_ROOT
+}
+
+#------------------------------------------------------------
+# find_RTM_ROOT
+#------------------------------------------------------------
+find_RTM_ROOT()
+{
+    debug_echo "TRACE: find_RTM_ROOT"
+    # find RTM_ROOT by rtm2-config
+    rtm_config=`which rtm2-config`
+    if test "x$rtm_config" = "x" ; then
+        # rtm2-config not found
+        return 1
+    fi
+    debug_echo "rtm2_config: " $rtm_config
+
+    # check rtm-config version
+    ver=`grep rtm-idldir $rtm_config`
+    if test "x$var" = "x" ; then
+        # old version: no --rtm-idldir option
+        RTM_ROOT=`rtm2-config --cflags | sed -e 's/.*\-I\(\/.*\)\/rtm\/idl/\1/'`
+        debug_echo "RTM_ROOT: " $RTM_ROOT
+        return 0
+    else
+        # new version: --rtm-idldir available
+        RTM_ROOT=`rtm2-config --rtm-idldir | sed -e 's/\/rtm\/idl$//'`
+        debug_echo "RTM_ROOT: " $RTM_ROOT
+        return 0
+    fi
+}
+
+#------------------------------------------------------------
+# check_RTM_ROOT
+#
+# This function check if RTM_ROOT environmental variable is valid.
+#
+#------------------------------------------------------------
+check_RTM_ROOT()
+{
+    debug_echo "TRACE: check_RTM_ROOT"
+    idl_files="BasicDataType.idl ExtendedDataTypes.idl InterfaceDataTypes.idl"
+    idl_dir=$RTM_ROOT/
+
+    debug_echo "Finding IDL files under: " $idl_dir
+    for idl in $idl_files; do
+        idl_path=`find $RTM_ROOT -name $idl`
+        debug_echo "idl_path: " $idl_path
+        if test "x$idl_path" = "x" ; then
+            debug_echo "IDL file: " $idl " not found under \$RTM_ROOT"
+            debug_echo "\$RTM_ROOT = " $RTM_ROOT
+            return 1
+        fi
+    done
+    return 0
+}
+
+
 find_OPENRTP_DIR()
 {
     openrtp_dir=`find /usr/lib /usr/lib64 -name 'openrtp'  2>/dev/null`
@@ -73,6 +175,17 @@ find_OPENRTP_DIR()
 #------------------------------
 # main
 #------------------------------
+
+set_RTM_ROOT
+if test $? != 0 ; then
+    echo "WARNING: RTM_ROOT not set."
+    echo "    This might cause failure of data type acquisition for"
+    echo "    data ports definition in RTCBuilder."
+    echo "    If you want use RTCBuilder, please install C++ version"
+    echo "    of OpenRTM-aist on this system."
+else
+    debug_echo "  RTM_ROOT     : " $RTM_ROOT
+fi
 
 find_OPENRTP_DIR
 
