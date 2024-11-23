@@ -425,7 +425,8 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 				generatorParam.getRtcParam().getServiceClassParams().clear();
 				setPrefixSuffix(generatorParam.getRtcParam());
 				RTCUtil.getIDLPathes(editor.getRtcParam());
-				if (rtcBuilder.doGenerateWrite(generatorParam, editor.getRtcParam().getIdlSearchPathList(), !isDynamicFSM)) {
+				String genTime = DATE_FORMAT.format(new GregorianCalendar().getTime());
+				if (rtcBuilder.doGenerateWrite(generatorParam, editor.getRtcParam().getIdlSearchPathList(), !isDynamicFSM, genTime)) {
 					LanguageProperty langProp = LanguageProperty.checkPlugin(editor.getRtcParam());
 					if(langProp != null) {
 						try {
@@ -445,7 +446,7 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 						}
 					}
 					//
-					saveRtcProfile(project);
+					saveRtcProfile(project, genTime);
 					switchPerspective();
 	        		editor.getRtcParam().resetUpdated();
 	        		editor.updateDirty();
@@ -501,7 +502,8 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 					generatorParam.setRtcParam(targetFsm);
 					//
 					RTCUtil.getIDLPathes(editor.getRtcParam());
-					if (rtcBuilder.doGenerateWrite(generatorParam, editor.getRtcParam().getIdlSearchPathList(), false)) {
+					String genTime = DATE_FORMAT.format(new GregorianCalendar().getTime());
+					if (rtcBuilder.doGenerateWrite(generatorParam, editor.getRtcParam().getIdlSearchPathList(), false, genTime)) {
 						LanguageProperty langProp = LanguageProperty.checkPlugin(editor.getRtcParam());
 						if(langProp != null) {
 							try {
@@ -521,7 +523,7 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 							}
 						}
 					}
-					saveRtcProfile(project);
+					saveRtcProfile(project, genTime);
 				}
         		editor.getRtcParam().resetUpdated();
         		editor.updateDirty();
@@ -563,7 +565,7 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 				return targetRtc;
 			}
 			// Profileを保存
-			private void saveRtcProfile(IProject project) {
+			private void saveRtcProfile(IProject project, String genTime) {
 				ProfileHandler handler = new ProfileHandler();
 				try {
 					ExportCreator export = new ExportCreator();
@@ -606,7 +608,7 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 
 					IFile orgRtcxml = project.getFile(IRtcBuilderConstants.DEFAULT_RTC_XML);
 					if (orgRtcxml.exists()) {
-						IFile renameFile = project.getFile(IRtcBuilderConstants.DEFAULT_RTC_XML + DATE_FORMAT.format(new GregorianCalendar().getTime()) );
+						IFile renameFile = project.getFile(IRtcBuilderConstants.DEFAULT_RTC_XML + genTime);
 						orgRtcxml.move(renameFile.getFullPath(), true, null);
 						//バックアップ最大数以上のファイルは削除
 						FileUtil.removeBackupFiles(project.getLocation().toOSString(), IRtcBuilderConstants.DEFAULT_RTC_XML);
@@ -786,13 +788,13 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 		profileLoadButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ImportExtension extension = getTargetImportExtension();
+					ImportExtension extension = getTargetImportExtension();
 				FileDialog dialog = new FileDialog(getSite().getShell(),SWT.OPEN);
 		        dialog.setText(Messages.getString("IMC.BASIC_BTN_IMPORT"));
 
 				String[] names = extension == null ? new String[] { IMessageConstants.FILETYPE_XML,IMessageConstants.FILETYPE_YAML }
 				  					: extension.getFileDialogFilterNames();
-				String[] exts = extension == null ? new String[] { "*.xml","*.yaml" }
+				String[] exts = extension == null	 ? new String[] { "*.xml","*.yaml" }
 				 					: extension.getFileDialogFilterExtensions();
 				dialog.setFilterNames(names);
 				dialog.setFilterExtensions(exts);
