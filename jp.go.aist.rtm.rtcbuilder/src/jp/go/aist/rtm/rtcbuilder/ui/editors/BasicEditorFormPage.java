@@ -112,11 +112,13 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 	private List<Button> buttonList = new ArrayList<Button>();
 	
 	private Button generateButton;
+	private Button codeRestoreButton;
 
 	private Button profileLoadButton;
 	private Button profileSaveButton;
 
 	private Composite generateSection;
+	private Composite codeRestoreSection;
 	private Composite outputProjectSection;
 	private Composite profileSection;
 	
@@ -163,6 +165,7 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 		createHintSection(toolkit, form);
 		createLanguageSection(toolkit, form);
 		createGenerateSection(toolkit, form);
+		createCodeRestoreSection(toolkit, form);
 		createExportImportSection(toolkit, form);
 		//
 		managerList = RtcBuilderPlugin.getDefault().getLoader()
@@ -323,7 +326,7 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 	}
 
 	private void createHintSection(FormToolkit toolkit, ScrolledForm form) {
-		Composite composite = createHintSectionBase(toolkit, form, 4);
+		Composite composite = createHintSectionBase(toolkit, form, 5);
 		//
 		createHintLabel(Messages.getString("IMC.BASIC_HINT_MODULENAME_TITLE"), IMessageConstants.BASIC_HINT_MODULENAME_DESC, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.BASIC_HINT_DESCRIPTION_TITLE"), IMessageConstants.BASIC_HINT_DESCRIPTION_DESC, toolkit, composite);
@@ -343,7 +346,14 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 		//
 		createHintSpace(toolkit, composite);
 		createHintSpace(toolkit, composite);
+		createHintSpace(toolkit, composite);
 		createHintLabel(Messages.getString("IMC.BASIC_HINT_GENERATE_TITLE"), Messages.getString("IMC.BASIC_HINT_GENERATE_DESC"), toolkit, composite);
+		//
+		createHintSpace(toolkit, composite);
+		createHintSpace(toolkit, composite);
+		createHintSpace(toolkit, composite);
+		//
+		createHintLabel(Messages.getString("IMC.BASIC_HINT_CODE_RESTORE_TITLE"), Messages.getString("IMC.BASIC_HINT_CODE_RESTORE_DESC"), toolkit, composite);
 		//
 		createHintSpace(toolkit, composite);
 		createHintSpace(toolkit, composite);
@@ -691,6 +701,21 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 			}
 		}
 		return null;
+	}
+
+	private void createCodeRestoreSection(FormToolkit toolkit, ScrolledForm form) {
+		codeRestoreSection = createSectionBaseWithLabel(toolkit, form,
+				Messages.getString("IMC.BASIC_CODE_RESTORE_TITLE"), Messages.getString("IMC.BASIC_CODE_RESTORE_EXPL"), 2);
+		createCodeRestoreButton(toolkit);
+	}
+	private void createCodeRestoreButton(FormToolkit toolkit) {
+		codeRestoreButton = toolkit.createButton(codeRestoreSection,
+				Messages.getString("IMC.BASIC_BTN_CODE_RESTORE"), SWT.NONE);
+		codeRestoreButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+			}
+		});
 	}
 
 	private void createExportImportSection(FormToolkit toolkit, ScrolledForm form) {
