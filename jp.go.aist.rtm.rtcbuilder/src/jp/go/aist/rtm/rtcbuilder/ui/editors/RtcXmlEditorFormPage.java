@@ -184,7 +184,10 @@ public class RtcXmlEditorFormPage extends AbstractEditorFormPage {
 						target.setCanMerge(false);
 						//
 						CompareResultDialog dialog = new CompareResultDialog(
-								getSite().getShell(), target, true, "Current");
+								getSite().getShell(),
+								target,
+								CompareResultDialog.MODE_OK_CANCEL,
+								"Current");
 						
 //						ProfileCompareDialog dialog = new ProfileCompareDialog(getSite().getShell());
 //						dialog.setOldProfile(handler.restorefromXML(originalContent));
