@@ -86,6 +86,7 @@ public class TestComp extends TestBase {
 		checkCode(result, resourceDir, "README.md");
 		checkCode(result, resourceDir, "rtc.conf");
 		checkCode(result, resourceDir, "XXX.conf");
+		checkCode(result, resourceDir, "CMakeLists.txt");
 		
 		checkCode(result, resourceDir, "cmake/CMakeLists.txt");
 		checkCode(result, resourceDir, "cmake/cpack_options.cmake.in");
@@ -160,6 +161,7 @@ public class TestComp extends TestBase {
 		checkCode(result, resourceDir, "README.md");
 		checkCode(result, resourceDir, "rtc.conf");
 		checkCode(result, resourceDir, "YYY.conf");
+		checkCode(result, resourceDir, "CMakeLists.txt");
 		
 		checkCode(result, resourceDir, "cmake/CMakeLists.txt");
 		checkCode(result, resourceDir, "cmake/cpack_options.cmake.in");
