@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5.1)
+cmake_minimum_required(VERSION 3.16)
 
 project(${rtcParam.name})
 string(TOLOWER ${dol}{PROJECT_NAME} PROJECT_NAME_LOWER)
@@ -111,6 +111,12 @@ if(WIN32)
 else()
    set(OPENRTM_SHARE_PREFIX "share/openrtm-${dol}{OPENRTM_VERSION_MAJOR}.${dol}{OPENRTM_VERSION_MINOR}")
    set(INSTALL_PREFIX "${dol}{OPENRTM_SHARE_PREFIX}/components/${dol}{PROJECT_TYPE}/${dol}{PROJECT_NAME}")
+endif()
+
+if(${dol}{CMAKE_SYSTEM_PROCESSOR} MATCHES "AMD64")
+  set(CPACK_ARCH "x86_64")
+else()
+  set(CPACK_ARCH "arm64")
 endif()
 
 install(FILES ${dol}{EXEC_FILES} DESTINATION "${dol}{INSTALL_PREFIX}"
