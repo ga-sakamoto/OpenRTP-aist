@@ -39,7 +39,8 @@ public class BuildTest extends TestBase {
 	}
 
 	String fixturePath(String name) {
-		return rootPath + "resource/100/" + name;
+//		return rootPath + "resource/100/" + name;
+		return "resource/100/" + name;
 	}
 
 	public void testCMake1() throws Exception {
@@ -160,7 +161,7 @@ public class BuildTest extends TestBase {
 		checkCode(result, resourceDir, "foo.sh", "\n");
 		checkCode(result, resourceDir, "foo.bat");
 		//
-//		checkCode(result, resourceDir, "build_foo.xml");
+		checkCode(result, resourceDir, "build_foo.xml");
 	}
 
 }

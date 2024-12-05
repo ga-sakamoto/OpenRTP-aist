@@ -48,7 +48,8 @@ public class JavaIDLInheritTest extends TestBase {
 	}
 
 	String fixturePath(String name) {
-		return rootPath + "resource/100/" + name;
+//		return rootPath + "resource/100/" + name;
+		return "resource/100/" + name;
 	}
 
 	public void testInherit1() throws Exception {
@@ -90,7 +91,7 @@ public class JavaIDLInheritTest extends TestBase {
 		checkCode(result, resourceDir, "src/MyServiceSVC_impl.java");
 		checkCode(result, resourceDir, "src/MyService2SVC_impl.java");
 		//
-//		checkCode(result, resourceDir, "build_foo.xml");
+		checkCode(result, resourceDir, "build_foo.xml");
 	}
 
 	public void testInherit2() throws Exception {
@@ -145,7 +146,7 @@ public class JavaIDLInheritTest extends TestBase {
 				"src/MyServiceWithTypeChildSVC_impl.java");
 		checkCode(result, resourceDir, "src/MyServiceWithTypeSVC_impl.java");
 		//
-//		checkCode(result, resourceDir, "build_foo.xml");
+		checkCode(result, resourceDir, "build_foo.xml");
 	}
 
 }
