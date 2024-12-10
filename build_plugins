@@ -1,4 +1,4 @@
-﻿#!/bin/sh
+#!/bin/sh
 #
 # @file build_plugins
 # @brief rtmtools plugins build script
