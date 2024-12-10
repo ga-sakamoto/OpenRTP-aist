@@ -720,85 +720,72 @@ public abstract class AbstractSystemDiagramEditor extends GraphicalEditor {
 
 	private void saveTeardownScript(String systemName, java.nio.file.Path targetDir) {
 		StringBuilder builder = new StringBuilder();
-		builder.append("rtteardown ").append(systemName).append(".xml");
-		builder.append(System.getProperty("line.separator"));
+		builder.append("rtteardown ").append(systemName).append(".xml").append("\r\n");
 		String teardownBat = targetDir.toString() + FS + "Teardown_" + systemName + ".bat";
 		writeFile(teardownBat, builder.toString());
 
 		StringBuilder builderSh = new StringBuilder();
 		builderSh.append("#!/usr/bin/env bash​​");
-		builderSh.append(System.getProperty("line.separator"));
-		builderSh.append(System.getProperty("line.separator"));
-		builderSh.append(builder);
+		builderSh.append("\n").append("\n");
+		builderSh.append("rtteardown ").append(systemName).append(".xml").append("\n");
 		String teardownSh = targetDir.toString() + FS + "Teardown_" + systemName + ".sh";
 		writeFile(teardownSh, builderSh.toString());
 	}
 
 	private void saveDeactivateScript(String systemName, java.nio.file.Path targetDir) {
 		StringBuilder builder = new StringBuilder();
-		builder.append("rtstop ").append(systemName).append(".xml");
-		builder.append(System.getProperty("line.separator"));
+		builder.append("rtstop ").append(systemName).append(".xml").append("\r\n");
 		String deactivateBat = targetDir.toString() + FS + "Deactivate_" + systemName + ".bat";
 		writeFile(deactivateBat, builder.toString());
 
 		StringBuilder builderSh = new StringBuilder();
 		builderSh.append("#!/usr/bin/env bash​​");
-		builderSh.append(System.getProperty("line.separator"));
-		builderSh.append(System.getProperty("line.separator"));
-		builderSh.append(builder);
+		builderSh.append("\n").append("\n");
+		builderSh.append("rtstop ").append(systemName).append(".xml").append("\n");
 		String deactivateSh = targetDir.toString() + FS + "Deactivate_" + systemName + ".sh";
 		writeFile(deactivateSh, builderSh.toString());
 	}
 
 	private void saveRunScript(String systemName, java.nio.file.Path targetDir) {
 		StringBuilder builder = new StringBuilder();
-		builder.append("cmd /c Resurrect_").append(systemName).append(".bat");
-		builder.append(System.getProperty("line.separator"));
-		builder.append("cmd /c Start_").append(systemName).append(".bat");
-		builder.append(System.getProperty("line.separator"));
+		builder.append("cmd /c Resurrect_").append(systemName).append(".bat").append("\r\n");
+		builder.append("cmd /c Activate_").append(systemName).append(".bat").append("\r\n");
 		String runBat = targetDir.toString() + FS + "Run_" + systemName + ".bat";
 		writeFile(runBat, builder.toString());
 		
 		StringBuilder builderSh = new StringBuilder();
 		builderSh.append("#!/usr/bin/env bash​​");
-		builderSh.append(System.getProperty("line.separator"));
-		builderSh.append(System.getProperty("line.separator"));
-		builderSh.append("Resurrect_").append(systemName).append(".sh");
-		builderSh.append(System.getProperty("line.separator"));
-		builderSh.append("Start_").append(systemName).append(".sh");
-		builderSh.append(System.getProperty("line.separator"));
+		builderSh.append("\n").append("\n");
+		builderSh.append("Resurrect_").append(systemName).append(".sh").append("\n");
+		builderSh.append("Activate_").append(systemName).append(".sh").append("\n");
 		String runSh = targetDir.toString() + FS + "Run_" + systemName + ".sh";
 		writeFile(runSh, builderSh.toString());
 	}
 
 	private void saveActivateScript(String systemName, java.nio.file.Path targetDir) {
 		StringBuilder builder = new StringBuilder();
-		builder.append("rtstart ").append(systemName).append(".xml");
-		builder.append(System.getProperty("line.separator"));
+		builder.append("rtstart ").append(systemName).append(".xml").append("\r\n");
 		String activateBat = targetDir.toString() + FS + "Activate_" + systemName + ".bat";
 		writeFile(activateBat, builder.toString());
 
 		StringBuilder builderSh = new StringBuilder();
 		builderSh.append("#!/usr/bin/env bash​​");
-		builderSh.append(System.getProperty("line.separator"));
-		builderSh.append(System.getProperty("line.separator"));
-		builderSh.append(builder);
+		builderSh.append("\n").append("\n");
+		builderSh.append("rtstart ").append(systemName).append(".xml").append("\n");
 		String activateSh = targetDir.toString() + FS + "Activate_" + systemName + ".sh";
 		writeFile(activateSh, builderSh.toString());
 	}
 
 	private void saveResurrectScript(String systemName, java.nio.file.Path targetDir) {
 		StringBuilder builder = new StringBuilder();
-		builder.append("rtresurrect ").append(systemName).append(".xml");
-		builder.append(System.getProperty("line.separator"));
+		builder.append("rtresurrect ").append(systemName).append(".xml").append("\r\n");
 		String resurrectBat = targetDir.toString() + FS + "Resurrect_" + systemName + ".bat";
 		writeFile(resurrectBat, builder.toString());
 		
 		StringBuilder builderSh = new StringBuilder();
 		builderSh.append("#!/usr/bin/env bash​​");
-		builderSh.append(System.getProperty("line.separator"));
-		builderSh.append(System.getProperty("line.separator"));
-		builderSh.append(builder);
+		builderSh.append("\n").append("\n");
+		builderSh.append("rtresurrect ").append(systemName).append(".xml").append("\n");
 		String resurrectSh = targetDir.toString() + FS + "Resurrect_" + systemName + ".sh";
 		writeFile(resurrectSh, builderSh.toString());
 	}
@@ -812,18 +799,17 @@ public abstract class AbstractSystemDiagramEditor extends GraphicalEditor {
 			} else {
 				builder.append(each.getPathUri());
 			}
-			builder.append(System.getProperty("line.separator"));
+			builder.append("\r\n");
 		}
 		String exitBat = targetDir.toString() + FS + "Exit_" + systemName + ".bat";
 		writeFile(exitBat, builder.toString());
 
 		StringBuilder builderSh = new StringBuilder();
 		builderSh.append("#!/usr/bin/env bash​​");
-		builderSh.append(System.getProperty("line.separator"));
-		builderSh.append(System.getProperty("line.separator"));
+		builderSh.append("\n").append("\n");
 		builderSh.append(builder);
 		String exitSh = targetDir.toString() + FS + "Exit_" + systemName + ".sh";
-		writeFile(exitSh, builderSh.toString());
+		writeFile(exitSh, builderSh.toString().replace("\r\n", "\n"));
 	}
 	
 	private void writeFile(String fileName, String contents) {
