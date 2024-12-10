@@ -3,6 +3,7 @@ package jp.go.aist.rtm.systemeditor.ui.editor;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 import org.openrtp.namespaces.rts.version02.DataportConnector;
+import org.openrtp.namespaces.rts.version02.Path;
 import org.openrtp.namespaces.rts.version02.Property;
 import org.openrtp.namespaces.rts.version02.RtsProfileExt;
 import org.openrtp.namespaces.rts.version02.ServiceportConnector;
@@ -113,6 +115,9 @@ public class SystemDiagramEditor extends AbstractSystemDiagramEditor {
 			try {
 				RtsProfileHandler handler = new RtsProfileHandler();
 				RtsProfileExt profile = handler.load(strPath);
+				
+				java.nio.file.Path basePath = Paths.get(strPath);
+				loadSubSystem(handler, profile, basePath, profile);
 
 				// STEP2: 拡張ポイント (ダイアグラム生成前)
 				ProfileLoader creator = new ProfileLoader();
@@ -250,6 +255,30 @@ public class SystemDiagramEditor extends AbstractSystemDiagramEditor {
 		} catch (Exception e) {
 			throw new PartInitException(
 					Messages.getString("SystemDiagramEditor.9"), e);
+		}
+	}
+
+	private void loadSubSystem(RtsProfileHandler handler, RtsProfileExt profile, java.nio.file.Path basePath, RtsProfileExt rootProfile)
+			throws Exception {
+		if(profile.getSystems() != null) {
+			for(Path sub : profile.getSystems()) {
+				String strSub = sub.getPath();
+				java.nio.file.Path p1 = Paths.get(strSub);
+				if(p1.isAbsolute() == false) {
+					strSub = basePath.getParent().toString() + System.getProperty("file.separator") + strSub; 
+				}
+				RtsProfileExt subProfile = handler.load(strSub);
+				if( subProfile.getComponents() != null) {
+					rootProfile.getComponents().addAll(subProfile.getComponents());
+				}
+				if( subProfile.getDataPortConnectors() != null) {
+					rootProfile.getDataPortConnectors().addAll(subProfile.getDataPortConnectors());
+				}
+				if( subProfile.getServicePortConnectors() != null) {
+					rootProfile.getServicePortConnectors().addAll(subProfile.getServicePortConnectors());
+				}
+				loadSubSystem(handler, subProfile, basePath, rootProfile);
+			}
 		}
 	}
 
