@@ -781,6 +781,8 @@ public class RtcParam extends AbstractRecordedParam implements Serializable {
 			for( IdlFileParam idlParam : providerIdlParams ) {
 				if( serviceInterface.getIdlFullPath().trim().equals(idlParam.getIdlPath().trim()) ) {
 					for(IdlPathParam path : this.idlSearchPathList) {
+						if(path.isDefault()) continue;
+						if(idlParam.getIdlSearchPathes().contains(path.getPath())) continue;
 						idlParam.getIdlSearchPathes().add(path.getPath());
 					}
 					break;
@@ -789,6 +791,8 @@ public class RtcParam extends AbstractRecordedParam implements Serializable {
 			for( IdlFileParam idlParam : consumerIdlParams ) {
 				if( serviceInterface.getIdlFullPath().trim().equals(idlParam.getIdlPath().trim()) ) {
 					for(IdlPathParam path : this.idlSearchPathList) {
+						if(path.isDefault()) continue;
+						if(idlParam.getIdlSearchPathes().contains(path.getPath())) continue;
 						idlParam.getIdlSearchPathes().add(path.getPath());
 					}
 					break;

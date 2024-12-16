@@ -81,9 +81,9 @@ public class RTCUtil {
 				IProject project = workspaceHandle.getProject(target.getOutputProject());
 				IFolder path = project.getFolder("idl");
 				if(path!=null && path.exists()) {
-					if(added.contains(path.getLocation().toOSString())==false) {
-						target.getIdlSearchPathList().add(new IdlPathParam(path.getLocation().toOSString(), "idl", false));
-						added.add(path.getLocation().toOSString());
+					if(added.contains("idl")==false) {
+						target.getIdlSearchPathList().add(new IdlPathParam("idl", "idl", false));
+						added.add("idl");
 					}
 				}
 			} catch (Exception ex) {

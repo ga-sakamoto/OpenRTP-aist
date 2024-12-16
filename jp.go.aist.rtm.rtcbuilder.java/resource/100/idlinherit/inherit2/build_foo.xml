@@ -6,29 +6,49 @@
 #
 # $Id$
  -->
-<project name="foo" default="compile">
+<project name="foo" default="generatedoc">
 	<property name="source" value="src" />
 	<property name="dest" value="bin" />
+	<property name="doc" value="doc" />
+	<property name="testsource" value="test/src" />
 	<property environment="env" />
+	<condition property="isWindows">
+		<os family="windows" />
+	</condition>
+	<condition property="isUnix">
+		<os family="unix" />
+	</condition>
+	<target name="setWindows" if="isWindows">
+		<property name="idlj.path" value="${env.JAVA_HOME}/bin/idlj" />
+		<property name="rtm.idl.path" value="${env.RTM_IDL_DIR}" />
+	</target>
+	<target name="setUnix" if="isUnix">
+		<property name="idlj.path" value="${java.home}/../bin/idlj" />
+		<property name="rtm.idl.path" value="${env.RTM_IDL_DIR2}" />
+	</target>
 	<target name="mkdir">
 		<mkdir dir="${dest}" />
+		<mkdir dir="src/temp" />
 	</target>
-	<target name="idlcompile"  depends="mkdir">
-		<exec executable="${java.home}/../bin/idlj">
-			<arg line="-td 'src' -i 'D:\GlobalAssist\EclipseAISTRep\jp.go.aist.rtm.rtcbuilder.java\resource/100/idlinherit/inherit2' -i 'D:\GlobalAssist\EclipseAISTRep\jp.go.aist.rtm.rtcbuilder.java\resource/100/idlinherit/inherit2' -fall 'idl/MyServiceChildMulti.idl'"/>
+	<target name="idlcompile"  depends="mkdir, setWindows, setUnix">
+		<echo message="idlj.path : ${idlj.path}"/>
+		<exec executable="${idlj.path}">
+			<arg line="-td 'src/temp' -i '${rtm.idl.path}' -i 'resource/100/idlinherit/inherit2' -fall 'idl/MyServiceChildMulti.idl'"/>
 		</exec>
-		<exec executable="${java.home}/../bin/idlj">
-			<arg line="-td 'src' -i 'D:\GlobalAssist\EclipseAISTRep\jp.go.aist.rtm.rtcbuilder.java\resource/100/idlinherit/inherit2' -i 'D:\GlobalAssist\EclipseAISTRep\jp.go.aist.rtm.rtcbuilder.java\resource/100/idlinherit/inherit2' -fall 'idl/MyServiceParent1.idl'"/>
+		<exec executable="${idlj.path}">
+			<arg line="-td 'src/temp' -i '${rtm.idl.path}' -i 'resource/100/idlinherit/inherit2' -fall 'idl/MyServiceParent1.idl'"/>
 		</exec>
-		<exec executable="${java.home}/../bin/idlj">
-			<arg line="-td 'src' -i 'D:\GlobalAssist\EclipseAISTRep\jp.go.aist.rtm.rtcbuilder.java\resource/100/idlinherit/inherit2' -i 'D:\GlobalAssist\EclipseAISTRep\jp.go.aist.rtm.rtcbuilder.java\resource/100/idlinherit/inherit2' -fall 'idl/MyServiceParent2.idl'"/>
+		<exec executable="${idlj.path}">
+			<arg line="-td 'src/temp' -i '${rtm.idl.path}' -i 'resource/100/idlinherit/inherit2' -fall 'idl/MyServiceParent2.idl'"/>
 		</exec>
-		<exec executable="${java.home}/../bin/idlj">
-			<arg line="-td 'src' -i 'D:\GlobalAssist\EclipseAISTRep\jp.go.aist.rtm.rtcbuilder.java\resource/100/idlinherit/inherit2' -i 'D:\GlobalAssist\EclipseAISTRep\jp.go.aist.rtm.rtcbuilder.java\resource/100/idlinherit/inherit2' -fall 'idl/MyServiceChildWithType.idl'"/>
+		<exec executable="${idlj.path}">
+			<arg line="-td 'src/temp' -i '${rtm.idl.path}' -i 'resource/100/idlinherit/inherit2' -fall 'idl/MyServiceChildWithType.idl'"/>
 		</exec>
-		<exec executable="${java.home}/../bin/idlj">
-			<arg line="-td 'src' -i 'D:\GlobalAssist\EclipseAISTRep\jp.go.aist.rtm.rtcbuilder.java\resource/100/idlinherit/inherit2' -i 'D:\GlobalAssist\EclipseAISTRep\jp.go.aist.rtm.rtcbuilder.java\resource/100/idlinherit/inherit2' -fall 'idl/MyServiceParentWithType.idl'"/>
+		<exec executable="${idlj.path}">
+			<arg line="-td 'src/temp' -i '${rtm.idl.path}' -i 'resource/100/idlinherit/inherit2' -fall 'idl/MyServiceParentWithType.idl'"/>
 		</exec>
+		<native2ascii src="src/temp" dest="src"/>
+		<delete dir="src/temp"/>
 	</target>
 	<target name="compile" depends="idlcompile">
 		<javac includeantruntime="false" srcdir="${source}" destdir="${dest}">
@@ -38,5 +58,35 @@
 				</fileset>
 			</classpath>
 		</javac>
+		<javac includeantruntime="false" srcdir="${testsource}" destdir="${dest}">
+			<classpath>
+				<fileset dir="${env.RTM_JAVA_ROOT}/jar">
+					<include name="*.jar"/>
+				</fileset>
+                        </classpath>
+                </javac>
+	</target>
+	<target name="generatedoc" depends="compile">
+		<javadoc 
+                        Locale="ja_JP"
+                        destdir="${doc}"
+                        docencoding="UTF-8"
+			author="true" doctitle="foo" 
+			nodeprecated="false" nodeprecatedlist="false" 
+                        noindex="false" nonavbar="false" notree="false" 
+			package="yes" splitindex="true" 
+                        use="true" version="true" charset="UTF-8" 
+                        >
+			<classpath>
+				<fileset dir="${env.RTM_JAVA_ROOT}/jar">
+					<include name="*.jar"/>
+				</fileset>
+			</classpath>
+			<sourcefiles>
+				<fileset dir="${source}">
+					<include name="**/*.java"/>
+				</fileset>
+                	</sourcefiles>
+                </javadoc>
 	</target>
 </project>
