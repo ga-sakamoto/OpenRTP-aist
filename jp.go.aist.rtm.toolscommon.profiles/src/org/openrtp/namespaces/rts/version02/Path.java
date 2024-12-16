@@ -4,20 +4,19 @@ package org.openrtp.namespaces.rts.version02;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for dataport complex type.
+ * <p>Java class for path complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="dataport">
+ * &lt;complexType name="path">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;attribute name="name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="path" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -26,37 +25,34 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "dataport")
-@XmlSeeAlso({
-    DataportExt.class
-})
-public class Dataport {
+@XmlType(name = "path", namespace = "http://www.openrtp.org/namespaces/rts_ext")
+public class Path {
 
-    @XmlAttribute(name = "name", namespace = "http://www.openrtp.org/namespaces/rts", required = true)
-    protected String name;
+    @XmlAttribute(name = "path", namespace = "http://www.openrtp.org/namespaces/rts_ext", required = true)
+    protected String path;
 
     /**
-     * Gets the value of the name property.
+     * Gets the value of the path property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getName() {
-        return name;
+    public String getPath() {
+        return path;
     }
 
     /**
-     * Sets the value of the name property.
+     * Sets the value of the path property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setName(String value) {
-        this.name = value;
+    public void setPath(String value) {
+        this.path = value;
     }
 
 }

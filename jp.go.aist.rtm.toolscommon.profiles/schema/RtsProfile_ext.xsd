@@ -14,6 +14,7 @@
 				<xsd:sequence>
 					<xsd:element name="VersionUpLogs" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
 					<xsd:element name="Properties" type="rtsExt:property" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="Systems" type="rtsExt:path" minOccurs="0" maxOccurs="unbounded"/>
 				</xsd:sequence>
 				<xsd:attribute name="comment" type="xsd:string" use="optional"/>
 			</xsd:extension>
@@ -141,6 +142,10 @@
 	<xsd:complexType name="property">
 		<xsd:attribute name="name" type="xsd:string" use="required"/>
 		<xsd:attribute name="value" type="xsd:string" use="optional"/>
+	</xsd:complexType>
+
+	<xsd:complexType name="path">
+		<xsd:attribute name="path" type="xsd:string" use="required"/>
 	</xsd:complexType>
 
 </xsd:schema>
