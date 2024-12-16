@@ -1,9 +1,11 @@
 package jp.go.aist.rtm.rtcbuilder.ui.editors;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.file.FileSystems;
@@ -26,6 +28,7 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
@@ -55,6 +58,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jp.go.aist.rtm.rtcbuilder.Generator.MergeHandler;
 import jp.go.aist.rtm.rtcbuilder.GuiRtcBuilder;
 import jp.go.aist.rtm.rtcbuilder.IRTCBMessageConstants;
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
@@ -70,6 +74,9 @@ import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
 import jp.go.aist.rtm.rtcbuilder.manager.GenerateManager;
 import jp.go.aist.rtm.rtcbuilder.nl.Messages;
 import jp.go.aist.rtm.rtcbuilder.ui.Perspective.LanguageProperty;
+import jp.go.aist.rtm.rtcbuilder.ui.compare.CompareResultDialog;
+import jp.go.aist.rtm.rtcbuilder.ui.compare.CompareTarget;
+import jp.go.aist.rtm.rtcbuilder.ui.dialog.RestoreDialog;
 import jp.go.aist.rtm.rtcbuilder.ui.preference.ComponentPreferenceManager;
 import jp.go.aist.rtm.rtcbuilder.ui.preference.DocumentPreferenceManager;
 import jp.go.aist.rtm.rtcbuilder.util.FileUtil;
@@ -112,11 +119,13 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 	private List<Button> buttonList = new ArrayList<Button>();
 	
 	private Button generateButton;
+	private Button codeRestoreButton;
 
 	private Button profileLoadButton;
 	private Button profileSaveButton;
 
 	private Composite generateSection;
+	private Composite codeRestoreSection;
 	private Composite outputProjectSection;
 	private Composite profileSection;
 	
@@ -163,6 +172,7 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 		createHintSection(toolkit, form);
 		createLanguageSection(toolkit, form);
 		createGenerateSection(toolkit, form);
+		createCodeRestoreSection(toolkit, form);
 		createExportImportSection(toolkit, form);
 		//
 		managerList = RtcBuilderPlugin.getDefault().getLoader()
@@ -323,7 +333,7 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 	}
 
 	private void createHintSection(FormToolkit toolkit, ScrolledForm form) {
-		Composite composite = createHintSectionBase(toolkit, form, 4);
+		Composite composite = createHintSectionBase(toolkit, form, 5);
 		//
 		createHintLabel(Messages.getString("IMC.BASIC_HINT_MODULENAME_TITLE"), IMessageConstants.BASIC_HINT_MODULENAME_DESC, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.BASIC_HINT_DESCRIPTION_TITLE"), IMessageConstants.BASIC_HINT_DESCRIPTION_DESC, toolkit, composite);
@@ -343,7 +353,14 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 		//
 		createHintSpace(toolkit, composite);
 		createHintSpace(toolkit, composite);
+		createHintSpace(toolkit, composite);
 		createHintLabel(Messages.getString("IMC.BASIC_HINT_GENERATE_TITLE"), Messages.getString("IMC.BASIC_HINT_GENERATE_DESC"), toolkit, composite);
+		//
+		createHintSpace(toolkit, composite);
+		createHintSpace(toolkit, composite);
+		createHintSpace(toolkit, composite);
+		//
+		createHintLabel(Messages.getString("IMC.BASIC_HINT_CODE_RESTORE_TITLE"), Messages.getString("IMC.BASIC_HINT_CODE_RESTORE_DESC"), toolkit, composite);
 		//
 		createHintSpace(toolkit, composite);
 		createHintSpace(toolkit, composite);
@@ -691,6 +708,111 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 			}
 		}
 		return null;
+	}
+
+	private void createCodeRestoreSection(FormToolkit toolkit, ScrolledForm form) {
+		codeRestoreSection = createSectionBaseWithLabel(toolkit, form,
+				Messages.getString("IMC.BASIC_CODE_RESTORE_TITLE"), Messages.getString("IMC.BASIC_CODE_RESTORE_EXPL"), 2);
+		createCodeRestoreButton(toolkit);
+	}
+	private void createCodeRestoreButton(FormToolkit toolkit) {
+		codeRestoreButton = toolkit.createButton(codeRestoreSection,
+				Messages.getString("IMC.BASIC_BTN_CODE_RESTORE"), SWT.NONE);
+		codeRestoreButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				RestoreDialog dialog = new RestoreDialog(getSite().getShell());
+				dialog.setTargetProject(editor.getRtcParam().getOutputProject());
+				int ret = dialog.open();
+				if(ret != IDialogConstants.OK_ID) return;
+				
+				String targetTimeStamp = dialog.getTimeStamp();
+				IWorkspaceRoot workspaceHandle = ResourcesPlugin.getWorkspace().getRoot();
+				IProject project = workspaceHandle.getProject(editor.getRtcParam().getOutputProject());
+				File dir = new File(project.getLocation().toOSString());
+				List<File> targetList = parseDirectory(dir, targetTimeStamp);
+				boolean isRestore = false;
+				String currentTime = DATE_FORMAT.format(new GregorianCalendar().getTime());
+				for(File each : targetList) {
+					String currentFileStr = each.getPath().substring(0, each.getPath().length() - 14);
+					File currentFile = new File(currentFileStr);
+					if(currentFile.exists() == false) continue;
+					
+					String currentContents = readFileContents(currentFile);
+					String targetContents = readFileContents(each);
+					if(currentContents.equals(targetContents)) continue;
+					
+					CompareTarget cmpTarget = new CompareTarget();
+					cmpTarget.setTargetName(currentFile.getPath());
+					cmpTarget.setOriginalSrc(currentContents);
+					cmpTarget.setGenerateSrc(targetContents);
+					cmpTarget.setCanMerge(false);
+					
+					CompareResultDialog cmpDialog = new CompareResultDialog(getSite().getShell(),
+																			cmpTarget,
+																			CompareResultDialog.MODE_RESTORE,
+																			"Restore Target");
+					int cmpRet = cmpDialog.open();
+					if(cmpRet == MergeHandler.PROCESS_GENERATE_ID) {
+						isRestore = true;
+						//TODO ファイルのバックアップ，コピー
+						File renameFileBk = new File(currentFile.getPath());
+						File renameFileCur = new File(currentFile.getPath() + currentTime);
+						currentFile.renameTo(renameFileCur);
+						each.renameTo(renameFileBk);
+					}
+				}
+				if(isRestore) {
+					//RTC.xmlのバックアップ
+					IFile orgRtcxml = project.getFile(IRtcBuilderConstants.DEFAULT_RTC_XML);
+					IFile bkRtcxml = project.getFile(IRtcBuilderConstants.DEFAULT_RTC_XML + targetTimeStamp);
+
+					IFile renameFileBk = project.getFile(IRtcBuilderConstants.DEFAULT_RTC_XML);
+					IFile renameFileCur = project.getFile(IRtcBuilderConstants.DEFAULT_RTC_XML + currentTime);
+					
+					try {
+						orgRtcxml.move(renameFileCur.getFullPath(), true, null);
+						bkRtcxml.move(renameFileBk.getFullPath(), true, null);
+					} catch (CoreException e1) {
+					}
+					
+					MessageDialog.openInformation(getSite().getShell(), "Information", "Restore success.");
+				}
+				try {
+					project.refreshLocal(IResource.DEPTH_INFINITE, null);
+				} catch (CoreException e1) {
+				}
+			}
+		});
+	}
+	
+	private String readFileContents(File target) {
+		StringBuilder builder = new StringBuilder();
+		try (BufferedReader br = new BufferedReader(new FileReader(target))) {
+			String text;
+			while ((text = br.readLine()) != null) {
+				builder.append(text).append(System.getProperty("line.separator"));
+			}
+		} catch (IOException e) {
+		}		
+		return builder.toString();
+	}
+	
+	private List<File> parseDirectory(File targetDir, String timeStamp) {
+		List<File> result = new ArrayList<File>();
+
+		File[] files = targetDir.listFiles();
+		for(File target : files) {
+			if(target.isDirectory()) {
+				result.addAll(parseDirectory(target, timeStamp));
+			} else {
+				if(target.getName().endsWith(timeStamp)) {
+					result.add(target);
+				}
+			}
+		}
+
+		return result;
 	}
 
 	private void createExportImportSection(FormToolkit toolkit, ScrolledForm form) {
