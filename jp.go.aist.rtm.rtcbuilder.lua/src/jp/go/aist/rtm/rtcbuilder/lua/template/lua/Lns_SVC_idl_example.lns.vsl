@@ -1,0 +1,51 @@
+import openrtm_lns;
+
+
+/*
+//!  @file ${idlFileParam.idlFileNoExt}_idl_examplefile.py
+//!  @brief Lua example implementations generated from ${idlFileParam.idlFile}
+#set( $Date$ = "dummy" )
+//!  @date \$Date$
+
+#if( ${rtcParam.docCreator.length()} > 0 )
+//!  @author ${tmpltHelperLua.convertAuthorDocLua(${rtcParam.docCreator})}
+#end
+#if( ${rtcParam.docLicense.length()} > 0 )
+
+//!  ${tmpltHelperLua.convertDocLua(${rtcParam.docLicense})}
+#end
+
+*/
+
+
+
+
+#foreach($serviceClassParam in ${idlFileParam.serviceClassParams})
+
+pub class ${tmpltHelper.getBasename(${serviceClassParam.name})}_i extend (openrtm_lns.CorbaProvider_lns)
+{
+    pub fn __init( ) {
+    }
+    /*
+      @class ${tmpltHelper.getBasename(${serviceClassParam.name})}_i
+      Example class implementing IDL interface ${tmpltHelper.convFormat(${serviceClassParam.name})}
+    */
+
+    /*
+      @brief standard constructor
+      Initialise member variables here
+    */
+
+#foreach($serviceMethodParam in ${serviceClassParam.methods})
+    // ${luaConv.convCORBA2LuaArg(${serviceMethodParam.type})} ${serviceMethodParam.name}(#foreach($serviceArgumentParam in ${serviceMethodParam.arguments})#if($velocityCount > 1), #end${serviceArgumentParam.direction} ${luaConv.convCORBA2LuaArg(${serviceArgumentParam.type})} ${serviceArgumentParam.name}#end)
+    pub fn ${serviceMethodParam.name}(#foreach($serviceArgumentParam in ${serviceMethodParam.arguments})#if($velocityCount > 1), #end  ${serviceArgumentParam.name}:${luaConv.convCORBA2LuaArg(${serviceArgumentParam.type})}#end ) mut :${luaConv.convCORBA2LuaArg(${serviceMethodParam.type})} {
+            //error(openrtm_lns.Manager.getORB().newexcept{"CORBA::NO_IMPLEMENT",
+            //  minor:0,
+            //  completed:openrtm_lns.Manager.getORB().types.lookup("::CORBA::CompletionStatus").labelvalue.COMPLETED_NO})
+    }
+
+#end
+}
+
+#end
+

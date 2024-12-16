@@ -1,0 +1,35 @@
+package = "${rtcParam.name}"
+version = "${rtcParam.version}-1"
+source = {
+   url = ""
+}
+
+description = {
+   summary = "${rtcParam.description}",
+   detailed = [[
+
+   ]],
+   homepage = "",
+   license = ""
+}
+
+dependencies = {
+   "openrtm >= 0.0"
+}
+
+build = {
+    type = "builtin",
+    modules = {
+      ["${rtcParam.name}"] = "${rtcParam.name}.lua",
+#foreach($providerIdlFile in ${rtcParam.providerIdlPathes})
+      ["${tmpltHelper.getFilenameNoExt(${providerIdlFile.idlFile})}_idl_example"] = "${tmpltHelper.getFilenameNoExt(${providerIdlFile.idlFile})}_idl_example.lua"
+#end
+    },
+    install = {
+      lua = {
+#foreach($IdlFile in ${allIdlFileParam})
+      ["idl.${tmpltHelper.getFilenameNoExt(${tmpltHelper.getFileName(${IdlFile.IdlFile})})}"] = "idl/${tmpltHelper.getFileName(${IdlFile.IdlFile})}",
+#end
+    }
+  }
+}

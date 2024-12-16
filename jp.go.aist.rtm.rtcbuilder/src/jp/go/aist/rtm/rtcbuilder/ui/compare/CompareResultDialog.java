@@ -70,6 +70,10 @@ public class CompareResultDialog extends Dialog {
 	 */
 	public static final String MERGE_LAGEL = "Merge";
 
+	public static final int MODE_GENERATED_COMPARE = 1;
+	public static final int MODE_OK_CANCEL = 2;
+	public static final int MODE_RESTORE = 3;
+
 	protected Rectangle fNewBounds;
 
 	private String mOriginal;
@@ -77,7 +81,7 @@ public class CompareResultDialog extends Dialog {
 	private String mcompareName;
 
 	private boolean canMerge;
-	private boolean isOkCancel;
+	private int mode;
 	private String rightLabel;
 
 	private TextMergeViewer fViewer;
@@ -101,7 +105,7 @@ public class CompareResultDialog extends Dialog {
 	 *            比較対象の情報
 	 */
 	public CompareResultDialog(Shell parentShell, CompareTarget target,
-									boolean isOkCancel, String rightLbl) {
+									int mode, String rightLbl) {
 		super(parentShell);
 		fgThis = this;
 		setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
@@ -109,12 +113,12 @@ public class CompareResultDialog extends Dialog {
 		this.mOriginal = target.getOriginalSrc();
 		this.mGenerate = target.getGenerateSrc();
 		this.canMerge = target.canMerge();
-		this.isOkCancel = isOkCancel;
+		this.mode = mode;
 		this.rightLabel = rightLbl;
 		computePrefixSuffix();
 	}
 	public CompareResultDialog(Shell parentShell, CompareTarget target) {
-		this(parentShell, target, false, "Generate");
+		this(parentShell, target, MODE_GENERATED_COMPARE, "Generate");
 
 	}
 
@@ -130,15 +134,23 @@ public class CompareResultDialog extends Dialog {
 	 * {@inheritDoc}
 	 */
 	protected void createButtonsForButtonBar(Composite parent) {
-		if( isOkCancel ) {
+		if( mode==MODE_OK_CANCEL ) {
 			createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, false);
 
 		} else {
-			createButton(parent, MergeHandler.PROCESS_ORIGINAL_ID, ORIGINAL_LABEL, false);
+			if(mode==MODE_RESTORE) {
+				createButton(parent, MergeHandler.PROCESS_ORIGINAL_ID, "Not Restore", false);
+			} else {
+				createButton(parent, MergeHandler.PROCESS_ORIGINAL_ID, ORIGINAL_LABEL, false);
+			}
 			if (canMerge) {
 				createButton(parent, MergeHandler.PROCESS_MERGE_ID, MERGE_LAGEL, false);
 			}
-			createButton(parent, MergeHandler.PROCESS_GENERATE_ID, GENERATE_LABEL, true);
+			if(mode==MODE_RESTORE) {
+				createButton(parent, MergeHandler.PROCESS_GENERATE_ID, "Restore", true);
+			} else {
+				createButton(parent, MergeHandler.PROCESS_GENERATE_ID, GENERATE_LABEL, true);
+			}
 			GridLayout layout = (GridLayout) parent.getLayout();
 			layout.horizontalSpacing = 100;
 			parent.setLayout(layout);
@@ -454,9 +466,4 @@ public class CompareResultDialog extends Dialog {
 			saveBounds(fNewBounds);
 		close();
 	}
-
-	public void setOkCancel(boolean isOkCancel) {
-		this.isOkCancel = isOkCancel;
-	}
-
 }
