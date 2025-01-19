@@ -79,8 +79,9 @@ public class ServiceConnectorCreaterDialog extends ConnectorDialogBase {
 
 	private Combo directionCombo;
 	private Label directionLabel;
-	private String firstPortIP;
-	private String secondPortIP;
+
+	private String firstPort2secondPort;
+	private String secondPort2firstPort;
 
 	private Composite detailComposite;
 
@@ -302,6 +303,7 @@ public class ServiceConnectorCreaterDialog extends ConnectorDialogBase {
 			directionCombo.add(firstItem);
 			directionCombo.add(secondItem);
 		}
+		
 		directionCombo.select(0);
 		directionCombo.addSelectionListener(new SelectionListener() {
 			@Override
@@ -309,31 +311,15 @@ public class ServiceConnectorCreaterDialog extends ConnectorDialogBase {
 				int selected = directionCombo.getSelectionIndex();
 				if(selected == 0) {
 					if(connectorProfile.isIsReverse()) {
-						directionLabel.setText(Messages.getString("ServiceConnectorCreaterDialog.label.direction1_1")
-												+ secondPortIP
-												+ Messages.getString("ServiceConnectorCreaterDialog.label.direction1_2")
-												+ firstPortIP
-												+ Messages.getString("ServiceConnectorCreaterDialog.label.direction1_3"));
+						directionLabel.setText(secondPort2firstPort);
 					} else {
-						directionLabel.setText(Messages.getString("DataConnectorCreaterDialog.label.direction2_1")
-												+ firstPortIP
-												+ Messages.getString("ServiceConnectorCreaterDialog.label.direction2_2")
-												+ secondPortIP
-												+ Messages.getString("ServiceConnectorCreaterDialog.label.direction2_3"));
+						directionLabel.setText(firstPort2secondPort);
 					}
 				} else {
 					if(connectorProfile.isIsReverse()) {
-						directionLabel.setText(Messages.getString("ServiceConnectorCreaterDialog.label.direction2_1")
-								+ firstPortIP
-								+ Messages.getString("ServiceConnectorCreaterDialog.label.direction2_2")
-								+ secondPortIP
-								+ Messages.getString("ServiceConnectorCreaterDialog.label.direction2_3"));
+						directionLabel.setText(firstPort2secondPort);
 					} else {
-						directionLabel.setText(Messages.getString("ServiceConnectorCreaterDialog.label.direction1_1")
-								+ secondPortIP
-								+ Messages.getString("ServiceConnectorCreaterDialog.label.direction1_2")
-								+ firstPortIP
-								+ Messages.getString("ServiceConnectorCreaterDialog.label.direction1_3"));
+						directionLabel.setText(secondPort2firstPort);
 					}
 				}
 			}
@@ -345,22 +331,27 @@ public class ServiceConnectorCreaterDialog extends ConnectorDialogBase {
 		//
 		createLabel(portProfileEditComposite, "");
 		
-		firstPortIP = getPortIndo(first);
-		secondPortIP = getPortIndo(second);
+		String firstPortIP = getPortIndo(first, false);
+		String secondPortIP = getPortIndo(second, false);
+		String firstPortIPPort = getPortIndo(first, true);
+		String secondPortIPPort = getPortIndo(second, true);
 		
+		firstPort2secondPort = Messages.getString("ServiceConnectorCreaterDialog.label.direction2_1")
+								+ firstPortIP
+								+ Messages.getString("ServiceConnectorCreaterDialog.label.direction2_2")
+								+ secondPortIPPort
+								+ Messages.getString("ServiceConnectorCreaterDialog.label.direction2_3");
+		secondPort2firstPort = Messages.getString("ServiceConnectorCreaterDialog.label.direction1_1")
+								+ secondPortIP
+								+ Messages.getString("ServiceConnectorCreaterDialog.label.direction1_2")
+								+ firstPortIPPort
+								+ Messages.getString("ServiceConnectorCreaterDialog.label.direction1_3");
+
 		directionLabel = new Label(portProfileEditComposite, SWT.WRAP);
 		if(connectorProfile.isIsReverse()) {
-			directionLabel.setText(Messages.getString("ServiceConnectorCreaterDialog.label.direction1_1")
-					+ secondPortIP
-					+ Messages.getString("ServiceConnectorCreaterDialog.label.direction1_2")
-					+ firstPortIP
-					+ Messages.getString("ServiceConnectorCreaterDialog.label.direction1_3"));
+			directionLabel.setText(secondPort2firstPort);
 		} else {
-			directionLabel.setText(Messages.getString("ServiceConnectorCreaterDialog.label.direction2_1")
-					+ firstPortIP
-					+ Messages.getString("ServiceConnectorCreaterDialog.label.direction2_2")
-					+ secondPortIP
-					+ Messages.getString("ServiceConnectorCreaterDialog.label.direction2_3"));
+			directionLabel.setText(firstPort2secondPort);
 		}
 		gd = new GridData();
 		gd.horizontalAlignment = GridData.FILL;

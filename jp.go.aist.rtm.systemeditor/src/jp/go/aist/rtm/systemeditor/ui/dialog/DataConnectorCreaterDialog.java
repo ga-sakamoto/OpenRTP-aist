@@ -82,8 +82,10 @@ public class DataConnectorCreaterDialog extends ConnectorDialogBase {
 	
 	private Combo directionCombo;
 	private Label directionLabel;
-	private String outportIP;
-	private String inportIP;
+	private Label directionLabel2;
+
+	private String outport2inPort;
+	private String inport2outPort;
 
 	private ScrolledComposite propertyScrollArea;
 	
@@ -370,6 +372,31 @@ public class DataConnectorCreaterDialog extends ConnectorDialogBase {
 				notifyModified();
 			}
 		});
+		dataflowTypeCombo.addSelectionListener(new SelectionListener() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				int selected = dataflowTypeCombo.getSelectionIndex();
+				int selectedDir = directionCombo.getSelectionIndex();
+				directionLabel2.setText("");
+				if(selected == 0) {
+					if((selectedDir == 0 && connectorProfile.isIsReverse())
+							|| (selectedDir == 1 && connectorProfile.isIsReverse() == false)) {
+						directionLabel2.setText(outport2inPort);
+					}
+				} else {
+					if((selectedDir == 1 && connectorProfile.isIsReverse())
+							|| (selectedDir == 0 && connectorProfile.isIsReverse() == false)) {
+						directionLabel2.setText(inport2outPort);
+					}
+				}
+				directionLabel2.pack();
+				portProfileEditComposite.layout();
+				
+			}
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+		});
 		Label dataflowTypeFooterLabel = new Label(portProfileEditComposite,
 				SWT.NONE);
 		dataflowTypeFooterLabel.setText(ConnectorUtil
@@ -531,45 +558,32 @@ public class DataConnectorCreaterDialog extends ConnectorDialogBase {
 				int selected = directionCombo.getSelectionIndex();
 				if(selected == 0) {
 					if(connectorProfile.isIsReverse()) {
-						directionLabel.setText(Messages.getString("DataConnectorCreaterDialog.label.direction1_1")
-												+ " "
-												+ inportIP
-												+ " "
-												+ Messages.getString("DataConnectorCreaterDialog.label.direction1_2")
-												+ " "
-												+ outportIP
-												+ " "
-												+ Messages.getString("DataConnectorCreaterDialog.label.direction1_3"));
+						directionLabel.setText(inport2outPort);
+						if(dataflowTypeCombo.getSelectionIndex() == 0) {
+							directionLabel2.setText(outport2inPort);
+						} else {
+							directionLabel2.setText("");
+						}
+						directionLabel2.pack();
+						portProfileEditComposite.layout();
 					} else {
-						directionLabel.setText(Messages.getString("DataConnectorCreaterDialog.label.direction2_1")
-												+ " "
-												+ outportIP
-												+ " "
-												+ Messages.getString("DataConnectorCreaterDialog.label.direction2_2")
-												+ " "
-												+ inportIP
-												+ " "
-												+ Messages.getString("DataConnectorCreaterDialog.label.direction2_3"));
+						directionLabel.setText(outport2inPort);
+						directionLabel2.setText("");
 					}
 				} else {
 					if(connectorProfile.isIsReverse()) {
-						directionLabel.setText(Messages.getString("DataConnectorCreaterDialog.label.direction2_1")
-								+ " "
-								+ outportIP
-								+ " "
-								+ Messages.getString("DataConnectorCreaterDialog.label.direction2_2")
-								+ inportIP
-								+ " "
-								+ Messages.getString("DataConnectorCreaterDialog.label.direction2_3"));
+						directionLabel.setText(outport2inPort);
+						directionLabel2.setText("");
+
 					} else {
-						directionLabel.setText(Messages.getString("DataConnectorCreaterDialog.label.direction1_1")
-								+ " "
-								+ inportIP
-								+ " "
-								+ Messages.getString("DataConnectorCreaterDialog.label.direction1_2")
-								+ outportIP
-								+ " "
-								+ Messages.getString("DataConnectorCreaterDialog.label.direction1_3"));
+						directionLabel.setText(inport2outPort);
+						if(dataflowTypeCombo.getSelectionIndex() == 0) {
+							directionLabel2.setText(outport2inPort);
+						} else {
+							directionLabel2.setText("");
+						}
+						directionLabel2.pack();
+						portProfileEditComposite.layout();
 					}
 				}
 			}
@@ -579,36 +593,52 @@ public class DataConnectorCreaterDialog extends ConnectorDialogBase {
 		});
 		createLabel(portProfileEditComposite, "");
 		//
+		String outportIP = getPortIndo(outport, false);
+		String inportIP = getPortIndo(inport, false);
+		String outportIPPort = getPortIndo(outport, true);
+		String inportIPPort = getPortIndo(inport,true);
+		
+		outport2inPort = Messages.getString("DataConnectorCreaterDialog.label.direction2_1")
+				+ " "
+				+ outportIP
+				+ " "
+				+ Messages.getString("DataConnectorCreaterDialog.label.direction2_2")
+				+ inportIPPort
+				+ " "
+				+ Messages.getString("DataConnectorCreaterDialog.label.direction2_3");
+		inport2outPort = Messages.getString("DataConnectorCreaterDialog.label.direction1_1")
+				+ " "
+				+ inportIP
+				+ " "
+				+ Messages.getString("DataConnectorCreaterDialog.label.direction1_2")
+				+ outportIPPort
+				+ " "
+				+ Messages.getString("DataConnectorCreaterDialog.label.direction1_3"); 
+		
 		createLabel(portProfileEditComposite, "");
-		
-		outportIP = getPortIndo(outport);
-		inportIP = getPortIndo(inport);
-		
 		directionLabel = new Label(portProfileEditComposite, SWT.WRAP);
 		if(connectorProfile.isIsReverse()) {
-			directionLabel.setText(Messages.getString("DataConnectorCreaterDialog.label.direction1_1")
-					+ " "
-					+ inportIP
-					+ " "
-					+ Messages.getString("DataConnectorCreaterDialog.label.direction1_2")
-					+ outportIP
-					+ " "
-					+ Messages.getString("DataConnectorCreaterDialog.label.direction1_3"));
+			directionLabel.setText(inport2outPort);
 		} else {
-			directionLabel.setText(Messages.getString("DataConnectorCreaterDialog.label.direction2_1")
-					+ " "
-					+ outportIP
-					+ " "
-					+ Messages.getString("DataConnectorCreaterDialog.label.direction2_2")
-					+ inportIP
-					+ " "
-					+ Messages.getString("DataConnectorCreaterDialog.label.direction2_3"));
+			directionLabel.setText(outport2inPort);
 		}
 		gd = new GridData();
 		gd.horizontalAlignment = GridData.FILL;
 		gd.grabExcessHorizontalSpace = true;
 		gd.horizontalSpan = 2;
 		directionLabel.setLayoutData(gd);
+		
+		createLabel(portProfileEditComposite, "");
+		directionLabel2 = new Label(portProfileEditComposite, SWT.WRAP);
+		if(connectorProfile.isIsReverse()) {
+			directionLabel2.setText(outport2inPort);
+		}
+		gd = new GridData();
+		gd.horizontalAlignment = GridData.FILL;
+		gd.grabExcessHorizontalSpace = true;
+		gd.horizontalSpan = 2;
+		directionLabel2.setLayoutData(gd);
+
 		
 		return portProfileEditComposite;
 	}
@@ -1853,7 +1883,7 @@ public class DataConnectorCreaterDialog extends ConnectorDialogBase {
 
 	@Override
 	protected Point getInitialSize() {
-		int height = 530;
+		int height = 580;
 		int width = 560;
 		if(existIFOpt) {
 			height = 830;

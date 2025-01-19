@@ -155,10 +155,10 @@ public class ConnectorDialogBase extends TitleAreaDialog {
 		return true;
 	}
 	
-	protected String getPortIndo(Port source) {
+	protected String getPortIndo(Port source, boolean witPort) {
 		StringBuilder builder = new StringBuilder();
 		
-		String ip = getPortAddress(source);
+		String ip = getPortAddress(source, witPort);
 		if(ip.length() == 0) return "";
 		
 		builder.append("(");
@@ -170,14 +170,18 @@ public class ConnectorDialogBase extends TitleAreaDialog {
 		return builder.toString();
 	}
 	
-	protected String getPortAddress(Port source) {
+	protected String getPortAddress(Port source, boolean witPort) {
 		Component component = (Component) source.eContainer();
 		Object first = component.getSynchronizationSupport().getRemoteObjects()[0];
 		if(first instanceof org.omg.CORBA.Object) {
 			org.omg.CORBA.Object corbaObj = (org.omg.CORBA.Object)first;
 			CorbaUtil.IORInfo info = CorbaUtil.getIORInfo(corbaObj);
 			if( 0<info.taggedProfiles.size() ) {
-				return info.taggedProfiles.get(0).host;
+				if(witPort) {
+					return info.taggedProfiles.get(0).host + " : " + info.taggedProfiles.get(0).port;
+				} else {
+					return info.taggedProfiles.get(0).host;
+				}
 			}
 		}
 		return "";
