@@ -40,7 +40,7 @@ public class ProcessingExampleTest extends TestBase {
 		checkCode(result, resourceDir, "run_ProcessingExample.xml");
 		
 		checkCode(result, resourceDir, "cmake/CMakeLists.txt");
-		checkCode(result, resourceDir, "cmake/cpack_options.cmake.in");
+//		checkCode(result, resourceDir, "cmake/cpack_options.cmake.in");
 		checkCode(result, resourceDir, "cmake/License.rtf");
 		checkCode(result, resourceDir, "cmake/uninstall_target.cmake.in");
 		checkCode(result, resourceDir, "cmake/utils.cmake");

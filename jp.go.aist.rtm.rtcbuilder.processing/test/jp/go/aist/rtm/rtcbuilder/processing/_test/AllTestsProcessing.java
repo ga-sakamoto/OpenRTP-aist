@@ -12,6 +12,7 @@ public class AllTestsProcessing {
 		suite.addTestSuite(ProcessingExampleTest.class);
 		suite.addTestSuite(ProcessingExampleTest2.class);
 		suite.addTestSuite(ProcessingExampleTest3.class);
+		suite.addTestSuite(FSMTest.class);
 		//$JUnit-END$
 		return suite;
 	}
