@@ -593,10 +593,10 @@ public class DataConnectorCreaterDialog extends ConnectorDialogBase {
 		});
 		createLabel(portProfileEditComposite, "");
 		//
-		String outportIP = getPortIndo(outport, false);
-		String inportIP = getPortIndo(inport, false);
-		String outportIPPort = getPortIndo(outport, true);
-		String inportIPPort = getPortIndo(inport,true);
+		String outportIP = getPortInfo(outport, false);
+		String inportIP = getPortInfo(inport, false);
+		String outportIPPort = getPortInfo(outport, true);
+		String inportIPPort = getPortInfo(inport,true);
 		
 		outport2inPort = Messages.getString("DataConnectorCreaterDialog.label.direction2_1")
 				+ " "

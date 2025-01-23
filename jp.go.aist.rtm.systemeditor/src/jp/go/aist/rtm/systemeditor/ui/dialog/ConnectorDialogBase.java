@@ -155,10 +155,10 @@ public class ConnectorDialogBase extends TitleAreaDialog {
 		return true;
 	}
 	
-	protected String getPortIndo(Port source, boolean witPort) {
+	protected String getPortInfo(Port source, boolean withPort) {
 		StringBuilder builder = new StringBuilder();
 		
-		String ip = getPortAddress(source, witPort);
+		String ip = getPortAddress(source, withPort);
 		if(ip.length() == 0) return "";
 		
 		builder.append("(");

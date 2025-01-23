@@ -45,6 +45,7 @@ import jp.go.aist.rtm.systemeditor.nl.Messages;
 import jp.go.aist.rtm.toolscommon.model.component.Component;
 import jp.go.aist.rtm.toolscommon.model.component.ComponentFactory;
 import jp.go.aist.rtm.toolscommon.model.component.ConnectorProfile;
+import jp.go.aist.rtm.toolscommon.model.component.Port;
 import jp.go.aist.rtm.toolscommon.model.component.PortInterfaceProfile;
 import jp.go.aist.rtm.toolscommon.model.component.ServicePort;
 
@@ -79,6 +80,7 @@ public class ServiceConnectorCreaterDialog extends ConnectorDialogBase {
 
 	private Combo directionCombo;
 	private Label directionLabel;
+	private Label directionLabel2;
 
 	private String firstPort2secondPort;
 	private String secondPort2firstPort;
@@ -308,20 +310,37 @@ public class ServiceConnectorCreaterDialog extends ConnectorDialogBase {
 		directionCombo.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				directionLabel2.setText("");
 				int selected = directionCombo.getSelectionIndex();
 				if(selected == 0) {
+					boolean disp2 = checkInterface(first, second);
 					if(connectorProfile.isIsReverse()) {
 						directionLabel.setText(secondPort2firstPort);
+						if(disp2) {
+							directionLabel2.setText(firstPort2secondPort);
+						}
 					} else {
 						directionLabel.setText(firstPort2secondPort);
+						if(disp2) {
+							directionLabel2.setText(secondPort2firstPort);
+						}
 					}
 				} else {
+					boolean disp2 = checkInterface(second, first);
 					if(connectorProfile.isIsReverse()) {
 						directionLabel.setText(firstPort2secondPort);
+						if(disp2) {
+							directionLabel2.setText(secondPort2firstPort);
+						}
 					} else {
 						directionLabel.setText(secondPort2firstPort);
+						if(disp2) {
+							directionLabel2.setText(firstPort2secondPort);
+						}
 					}
 				}
+				directionLabel2.pack();
+				mainComposite.layout();
 			}
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
@@ -331,10 +350,10 @@ public class ServiceConnectorCreaterDialog extends ConnectorDialogBase {
 		//
 		createLabel(portProfileEditComposite, "");
 		
-		String firstPortIP = getPortIndo(first, false);
-		String secondPortIP = getPortIndo(second, false);
-		String firstPortIPPort = getPortIndo(first, true);
-		String secondPortIPPort = getPortIndo(second, true);
+		String firstPortIP = getPortInfo(first, false);
+		String secondPortIP = getPortInfo(second, false);
+		String firstPortIPPort = getPortInfo(first, true);
+		String secondPortIPPort = getPortInfo(second, true);
 		
 		firstPort2secondPort = Messages.getString("ServiceConnectorCreaterDialog.label.direction2_1")
 								+ firstPortIP
@@ -358,6 +377,21 @@ public class ServiceConnectorCreaterDialog extends ConnectorDialogBase {
 		gd.grabExcessHorizontalSpace = true;
 		gd.horizontalSpan = 2;
 		directionLabel.setLayoutData(gd);
+		//
+		createLabel(portProfileEditComposite, "");
+		directionLabel2 = new Label(portProfileEditComposite, SWT.WRAP);
+		if(checkInterface(first, second)) {
+			if(connectorProfile.isIsReverse()) {
+				directionLabel2.setText(firstPort2secondPort);
+			} else {
+				directionLabel2.setText(secondPort2firstPort);
+			}
+		}
+		gd = new GridData();
+		gd.horizontalAlignment = GridData.FILL;
+		gd.grabExcessHorizontalSpace = true;
+		gd.horizontalSpan = 2;
+		directionLabel2.setLayoutData(gd);
 		//
 		final Button detailCheck = new Button(portProfileEditComposite,
 				SWT.CHECK);
@@ -386,11 +420,24 @@ public class ServiceConnectorCreaterDialog extends ConnectorDialogBase {
 
 		loadData();
 	}
+	
+	private boolean checkInterface(Port first, Port second) {
+		for(PortInterfaceProfile eachSecond : second.getInterfaces()) {
+			if(eachSecond.getPolarity().equals("REQUIRED") == false ) continue;
+			String ifName = eachSecond.getTypeName();
+			for(PortInterfaceProfile eachFirst : first.getInterfaces()) {
+				if(eachFirst.getPolarity().equals("PROVIDED") == false ) continue;
+				if(eachFirst.getTypeName().equals(ifName) == false) continue;
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * 詳細設定の表示部を作成する
 	 */
-	Composite createDetailComposite(Composite parent) {
+	private Composite createDetailComposite(Composite parent) {
 		GridLayout gl;
 		GridData gd;
 
@@ -710,7 +757,7 @@ public class ServiceConnectorCreaterDialog extends ConnectorDialogBase {
 	@Override
 	protected Point getInitialSize() {
 		int width = 600;
-		int height = 280;
+		int height = 330;
 		return getShell().computeSize(width, height, true);
 	}
 
