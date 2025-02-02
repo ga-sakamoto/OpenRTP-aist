@@ -350,10 +350,10 @@ public class ServiceConnectorCreaterDialog extends ConnectorDialogBase {
 		//
 		createLabel(portProfileEditComposite, "");
 		
-		String firstPortIP = getPortInfo(first, false);
-		String secondPortIP = getPortInfo(second, false);
-		String firstPortIPPort = getPortInfo(first, true);
-		String secondPortIPPort = getPortInfo(second, true);
+		String firstPortIP = getPortInfo(first, true, false);
+		String secondPortIP = getPortInfo(second, true, false);
+		String firstPortIPPort = getPortInfo(first, true, true);
+		String secondPortIPPort = getPortInfo(second, true, true);
 		
 		firstPort2secondPort = Messages.getString("ServiceConnectorCreaterDialog.label.direction2_1")
 								+ firstPortIP

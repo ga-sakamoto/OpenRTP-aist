@@ -155,15 +155,17 @@ public class ConnectorDialogBase extends TitleAreaDialog {
 		return true;
 	}
 	
-	protected String getPortInfo(Port source, boolean withPort) {
+	protected String getPortInfo(Port source, boolean withComp, boolean withPort) {
 		StringBuilder builder = new StringBuilder();
 		
 		String ip = getPortAddress(source, withPort);
 		if(ip.length() == 0) return "";
 		
+		if(withComp) {
+			builder.append(source.getNameL());
+			builder.append(":");
+		}
 		builder.append("(");
-		builder.append(source.getNameL());
-		builder.append(":");
 		builder.append(ip);
 		builder.append(")");
 		
