@@ -270,7 +270,7 @@ public class LogView extends ViewPart {
 		
 		Button btnStart = new Button(composite, SWT.TOGGLE);
 		gd = new GridData();
-		gd.widthHint = 80;
+		gd.widthHint = 120;
 		btnStart.setLayoutData(gd);
 		btnStart.setText(Messages.getString("LogView.btnStart"));
 		btnStart.addSelectionListener(new SelectionAdapter() {
