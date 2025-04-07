@@ -431,4 +431,9 @@ public class ProcessingExampleImpl extends DataFlowComponentBase {
             }
         }
     }
+    void setPApplet(PApplet applet) {
+      m_applet = applet;
+    }
+    
+    private PApplet m_applet;
 }
