@@ -730,4 +730,10 @@ public class ${rtcParam.name}Impl extends DataFlowComponentBase {
         }
     }
 #end
+
+    void setPApplet(PApplet applet) {
+      m_applet = applet;
+    }
+    
+    private PApplet m_applet;
 }
