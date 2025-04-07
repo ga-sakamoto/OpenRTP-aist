@@ -236,4 +236,9 @@ public class ModuleNameImpl extends DataFlowComponentBase {
     // <rtc-template block="consumer_declare">
     
     // </rtc-template>
+    void setPApplet(PApplet applet) {
+      m_applet = applet;
+    }
+    
+    private PApplet m_applet;
 }
