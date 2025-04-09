@@ -20,7 +20,7 @@ public void setup() {
   manager.runManager(true);
   
   CorbaConsumer<ExtTrigExecutionContextService> ec0c = new CorbaConsumer<ExtTrigExecutionContextService>(ExtTrigExecutionContextService.class);
-  ProcessingExampleImpl comp = (drawGraphImpl)manager.getComponent("ProcessingExample0");
+  ProcessingExampleImpl comp = (ProcessingExampleImpl)manager.getComponent("ProcessingExample0");
   ExecutionContext ec0 =  comp.getExecutionContext(0);
   ec0c.setObject(ec0);
   ec0Ref = ec0c._ptr();
