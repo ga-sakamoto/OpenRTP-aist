@@ -20,9 +20,11 @@ public void setup() {
   manager.runManager(true);
   
   CorbaConsumer<ExtTrigExecutionContextService> ec0c = new CorbaConsumer<ExtTrigExecutionContextService>(ExtTrigExecutionContextService.class);
-  ExecutionContext ec0 =  manager.getComponent("${rtcParam.name}0").getExecutionContext(0);
+  ${rtcParam.name}Impl comp = (${rtcParam.name}Impl)manager.getComponent("${rtcParam.name}0");
+  ExecutionContext ec0 =  comp.getExecutionContext(0);
   ec0c.setObject(ec0);
   ec0Ref = ec0c._ptr();
+  comp.setPApplet(this);
 
 }
 
