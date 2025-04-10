@@ -53,6 +53,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jp.go.aist.rtm.systemeditor.nl.Messages;
@@ -170,12 +171,17 @@ public class LogView extends ViewPart {
 					try {
 						File file = new File(loadFile);
 						BufferedReader br = new BufferedReader(new FileReader(file));
+						StringBuilder builder = new StringBuilder();
 						String str;
 						while((str = br.readLine()) != null){
-							LogParam info = mapper.readValue(str, LogParam.class);
-							logList.add(info);
+							builder.append(str);
 						}
 					  	br.close();
+
+					  	List<LogParam> paramList = mapper.readValue(builder.toString(), new TypeReference<List<LogParam>>() {});
+						int a = 0;
+						logList.addAll(paramList);
+
 					}catch(FileNotFoundException e1){
 					}catch(IOException e2){
 					}
@@ -217,19 +223,18 @@ public class LogView extends ViewPart {
 				} else {
 					StringBuilder builder = new StringBuilder();
 					ObjectMapper mapper = new ObjectMapper();
+					List<LogParam> logList = new ArrayList<LogParam>();
 					for(int index=0; index<rtclogTable.getItemCount(); index++) {
 						TableItem item = rtclogTable.getItem(index);
 						LogParam param = (LogParam)item.getData();
-						 try {
-							String strLog = mapper.writeValueAsString(param);
-							builder.append(strLog).append(System.lineSeparator());
-						} catch (JsonProcessingException e1) {
-						}
+						logList.add(param);
 					}
 					try{
+						String strLog = mapper.writeValueAsString(logList);
+						
 						File file = new File(saveFile);
 						FileWriter filewriter = new FileWriter(file);
-						filewriter.write(builder.toString());
+						filewriter.write(strLog);
 						filewriter.close();
 					} catch (IOException ex) {
 					}
