@@ -24,27 +24,29 @@ public class LoggerHandler {
 	
 	ForwardCallback callback = ForwardCallback.ofSyncConsumer(
 	  stream -> {
-    	  ObjectMapper mapper = new ObjectMapper();
-		  for (EventEntry entry : stream.getEntries()) {
-			  String rawData = entry.getRecord().toString();
-	          try {
-	        	  LogParam info = mapper.readValue(rawData, LogParam.class);
-			      PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							logList.add(info);
-							logTable.refresh();
-							if(autoScroll) {
-								int itemNum = logTable.getTable().getItemCount();
-								if(0 < itemNum) {
-									logTable.getTable().setTopIndex(itemNum-1);
+		  CompletableFuture.runAsync(() -> {
+	    	  ObjectMapper mapper = new ObjectMapper();
+			  for (EventEntry entry : stream.getEntries()) {
+				  String rawData = entry.getRecord().toString();
+		          try {
+		        	  LogParam info = mapper.readValue(rawData, LogParam.class);
+				      PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+							public void run() {
+								logList.add(info);
+								logTable.refresh();
+								if(autoScroll) {
+									int itemNum = logTable.getTable().getItemCount();
+									if(0 < itemNum) {
+										logTable.getTable().setTopIndex(itemNum-1);
+									}
 								}
 							}
-						}
-					});
-	          } catch (IOException e) {
-	              e.printStackTrace();
-	          }		    	  
-		    }				  
+						});
+		          } catch (IOException e) {
+		              e.printStackTrace();
+		          }		    	  
+			    }				  
+		  });
 	  },
 	  Executors.newFixedThreadPool(1)
 	);
