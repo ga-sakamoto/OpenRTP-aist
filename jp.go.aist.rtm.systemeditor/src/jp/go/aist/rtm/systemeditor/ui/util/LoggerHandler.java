@@ -35,19 +35,23 @@ public class LoggerHandler {
 							public void run() {
 								if(isStarted == false) return;
 								logList.add(info);
-								logTable.refresh();
-								if(autoScroll) {
-									int itemNum = logTable.getTable().getItemCount();
-									if(0 < itemNum) {
-										logTable.getTable().setTopIndex(itemNum-1);
-									}
-								}
 							}
 						});
 		          } catch (IOException e) {
 		              e.printStackTrace();
-		          }		    	  
-			    }				  
+		          }
+			  }
+		      PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						logTable.refresh();
+						if(autoScroll) {
+							int itemNum = logTable.getTable().getItemCount();
+							if(0 < itemNum) {
+								logTable.getTable().setTopIndex(itemNum-1);
+							}
+						}
+					}
+		      });
 		  });
 	  },
 	  Executors.newFixedThreadPool(1)
