@@ -21,6 +21,7 @@ public class LoggerHandler {
 	private List<LogParam> logList;
 	private TableViewer logTable;
 	private boolean autoScroll = true;
+	private boolean isStarted = false;
 	
 	ForwardCallback callback = ForwardCallback.ofSyncConsumer(
 	  stream -> {
@@ -32,6 +33,7 @@ public class LoggerHandler {
 		        	  LogParam info = mapper.readValue(rawData, LogParam.class);
 				      PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 							public void run() {
+								if(isStarted == false) return;
 								logList.add(info);
 								logTable.refresh();
 								if(autoScroll) {
@@ -59,9 +61,11 @@ public class LoggerHandler {
 				  .localAddress(portNo)
 				  .build();
 		logServer.start();
+		isStarted = true;
 	}
 	
 	public void stopServer() {
+		isStarted = false;
 		CompletableFuture<Void> stopping = logServer.shutdown();
 		try {
 			stopping.get();
