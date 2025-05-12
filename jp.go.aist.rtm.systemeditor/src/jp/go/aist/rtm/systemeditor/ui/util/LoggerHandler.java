@@ -20,24 +20,39 @@ public class LoggerHandler {
 	private ForwardServer logServer;
 	private List<LogParam> logList;
 	private TableViewer logTable;
+	private boolean autoScroll = true;
+	private boolean isStarted = false;
 	
 	ForwardCallback callback = ForwardCallback.ofSyncConsumer(
 	  stream -> {
-    	  ObjectMapper mapper = new ObjectMapper();
-		  for (EventEntry entry : stream.getEntries()) {
-			  String rawData = entry.getRecord().toString();
-	          try {
-	        	  LogParam info = mapper.readValue(rawData, LogParam.class);
-			      PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							logList.add(info);
-							logTable.refresh();
+		  CompletableFuture.runAsync(() -> {
+	    	  ObjectMapper mapper = new ObjectMapper();
+			  for (EventEntry entry : stream.getEntries()) {
+				  String rawData = entry.getRecord().toString();
+		          try {
+		        	  LogParam info = mapper.readValue(rawData, LogParam.class);
+				      PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+							public void run() {
+								if(isStarted == false) return;
+								logList.add(info);
+							}
+						});
+		          } catch (IOException e) {
+		              e.printStackTrace();
+		          }
+			  }
+		      PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						logTable.refresh();
+						if(autoScroll) {
+							int itemNum = logTable.getTable().getItemCount();
+							if(0 < itemNum) {
+								logTable.getTable().setTopIndex(itemNum-1);
+							}
 						}
-					});
-	          } catch (IOException e) {
-	              e.printStackTrace();
-	          }		    	  
-		    }				  
+					}
+		      });
+		  });
 	  },
 	  Executors.newFixedThreadPool(1)
 	);
@@ -50,9 +65,11 @@ public class LoggerHandler {
 				  .localAddress(portNo)
 				  .build();
 		logServer.start();
+		isStarted = true;
 	}
 	
 	public void stopServer() {
+		isStarted = false;
 		CompletableFuture<Void> stopping = logServer.shutdown();
 		try {
 			stopping.get();
@@ -60,5 +77,9 @@ public class LoggerHandler {
 			e.printStackTrace();
 		}
 		logServer = null;
+	}
+	
+	public void setAutoScroll(boolean source) {
+		this.autoScroll = source;
 	}
 }
