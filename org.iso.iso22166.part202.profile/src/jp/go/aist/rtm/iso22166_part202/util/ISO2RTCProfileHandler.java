@@ -1,0 +1,1019 @@
+package jp.go.aist.rtm.iso22166_part202.util;
+
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.math.BigInteger;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import org.iso.iso22166.part202.profile.ArgSpec;
+import org.iso.iso22166.part202.profile.Communication;
+import org.iso.iso22166.part202.profile.CompilerType;
+import org.iso.iso22166.part202.profile.CyberSecurity;
+import org.iso.iso22166.part202.profile.DataBus;
+import org.iso.iso22166.part202.profile.ExeForm;
+import org.iso.iso22166.part202.profile.ExecutableForm;
+import org.iso.iso22166.part202.profile.ExecutionType;
+import org.iso.iso22166.part202.profile.IDnType;
+import org.iso.iso22166.part202.profile.IOVariables;
+import org.iso.iso22166.part202.profile.InfraType;
+import org.iso.iso22166.part202.profile.Infrastructure;
+import org.iso.iso22166.part202.profile.Libraries;
+import org.iso.iso22166.part202.profile.Library;
+import org.iso.iso22166.part202.profile.ModelCase;
+import org.iso.iso22166.part202.profile.Modelling;
+import org.iso.iso22166.part202.profile.ModuleID;
+import org.iso.iso22166.part202.profile.NVList;
+import org.iso.iso22166.part202.profile.NameValue;
+import org.iso.iso22166.part202.profile.Properties;
+import org.iso.iso22166.part202.profile.RangeString;
+import org.iso.iso22166.part202.profile.SIM;
+import org.iso.iso22166.part202.profile.SafeSecure;
+import org.iso.iso22166.part202.profile.SafetyFunction;
+import org.iso.iso22166.part202.profile.ServiceMethod;
+import org.iso.iso22166.part202.profile.ServiceProfile;
+import org.iso.iso22166.part202.profile.Services;
+import org.iso.iso22166.part202.profile.Status;
+import org.iso.iso22166.part202.profile.Variable;
+import org.openrtp.namespaces.rtc.version03.ActionStatus;
+import org.openrtp.namespaces.rtc.version03.ActionStatusDoc;
+import org.openrtp.namespaces.rtc.version02.ConstraintType;
+import org.openrtp.namespaces.rtc.version03.Actions;
+import org.openrtp.namespaces.rtc.version03.BasicInfoExt;
+import org.openrtp.namespaces.rtc.version03.ConfigurationExt;
+import org.openrtp.namespaces.rtc.version03.ConfigurationSet;
+import org.openrtp.namespaces.rtc.version03.DataportExt;
+import org.openrtp.namespaces.rtc.version03.DocAction;
+import org.openrtp.namespaces.rtc.version03.DocBasic;
+import org.openrtp.namespaces.rtc.version03.DocConfiguration;
+import org.openrtp.namespaces.rtc.version03.DocDataport;
+import org.openrtp.namespaces.rtc.version03.DocServiceinterface;
+import org.openrtp.namespaces.rtc.version03.DocServiceport;
+import org.openrtp.namespaces.rtc.version03.LanguageExt;
+import org.openrtp.namespaces.rtc.version03.ObjectFactory;
+import org.openrtp.namespaces.rtc.version03.Position;
+import org.openrtp.namespaces.rtc.version03.Property;
+import org.openrtp.namespaces.rtc.version03.RtcProfile;
+import org.openrtp.namespaces.rtc.version03.ServiceinterfaceExt;
+import org.openrtp.namespaces.rtc.version03.ServiceportExt;
+import org.openrtp.namespaces.rtc.version03.TargetEnvironment;
+import org.openrtp.namespaces.rtc.version03.TransmissionMethod;
+import org.xml.sax.InputSource;
+import org.xml.sax.helpers.DefaultHandler;
+
+import jp.go.aist.rtm.toolscommon.profiles.util.XmlHandler;
+
+public class ISO2RTCProfileHandler {
+	final private String ELEM_DELIMITOR = ":";
+
+	public RtcProfile convertIso2Rtc(SIM source) {
+		ObjectFactory factory = new ObjectFactory();
+		
+		RtcProfile result = factory.createRtcProfile();
+		result.setVersion("0.3");
+		BasicInfoExt basic = factory.createBasicInfoExt();
+		result.setBasicInfo(basic);
+		List<Property> basicProp = basic.getProperties();
+		DocBasic docBasic = factory.createDocBasic();
+		basic.setDoc(docBasic);
+		
+		LanguageExt lang = factory.createLanguageExt();
+		result.setLanguage(lang);
+		TargetEnvironment env = factory.createTargetEnvironment();
+		lang.getTargets().add(env);
+		/////
+		basic.setName(source.getModuleName());
+		basic.setDescription(source.getDescription());
+		basic.setVendor(source.getManufacturer());
+		createProperty(factory, "examples", source.getExamples(), basicProp);
+		
+		convertIDnType(source, factory, basic);
+		convertProperties(source, factory, result);
+		convertIOVariables(source, factory, result);
+		convertStatus(source, factory, basicProp);
+		convertServices(source, factory, result);
+		convertInfrastructure(source, factory, basicProp);
+		convertSafeSecure(source, factory, basicProp);
+		convertModelling(source, factory, basicProp);
+		convertExecutableForm(source, factory, basicProp);
+		convertNVList(source, factory, result);
+		
+		StringBuilder builder = new StringBuilder();
+		builder.append("RTC:");
+		builder.append(basic.getVendor()).append(":");
+		builder.append(basic.getCategory()).append(":");
+		builder.append(basic.getName()).append(":");
+		builder.append(basic.getVersion());
+		result.setId(builder.toString());
+		
+		return result;
+	}
+
+	private void convertIDnType(SIM source, ObjectFactory factory, BasicInfoExt basic) {
+		List<Property> basicProp = basic.getProperties();
+		
+		IDnType idnType = source.getIdnType();
+		if(idnType == null) return;
+		
+		//TODO moduleID
+		basic.setVersion(idnType.getInformationModelVersion());
+		
+		if(idnType.getSwAspects() == null) return;
+		
+		for(ModuleID each : idnType.getSwAspects()) {
+			String mId = bytesListToHexString(each.getMID());
+			String iId = bytesToHexString(each.getIID());
+			createProperty(factory, "swAspects", mId + ELEM_DELIMITOR + iId, basicProp);
+		}
+	}
+
+	private void convertProperties(SIM source, ObjectFactory factory, RtcProfile result) {
+		LanguageExt lang = (LanguageExt)result.getLanguage();
+		TargetEnvironment env = lang.getTargets().get(0);
+		
+		Properties properties =source.getProperties();
+		if(properties == null) return;
+		
+		Libraries libs = properties.getLibs();
+		if(libs!=null) {
+			for(Library each : libs.getLibraries()) {
+				org.openrtp.namespaces.rtc.version03.Library newLib = factory.createLibrary();
+				newLib.setName(each.getName());
+				newLib.setVersion(each.getVersion());
+				NVList libNv =  each.getAdditionalInfo();
+				if(libNv!=null) {
+					newLib.setOther(getTargetNVValue("other", libNv.getNv()));
+				}
+				env.getLibraries().add(newLib);
+			}
+		}
+		
+		CompilerType compiler = properties.getCompiler();
+		if(compiler!=null) {
+			lang.setKind(compiler.getCompilerName());
+			RangeString verRangeCompiler = compiler.getVerRangeCompiler();
+			if(verRangeCompiler!=null) {
+				env.setLangVersion(verRangeCompiler.getMin() + ELEM_DELIMITOR + verRangeCompiler.getMax());
+			}
+			NVList compilerNv =  compiler.getAdditionalInfo();
+			if(compilerNv!=null) {
+				env.setOther(getTargetNVValue("targetOther", compilerNv.getNv()));
+			}
+		}
+		
+		//TODO –¢‘Î‰ž
+		List<ExecutionType> exeType = properties.getExeType();
+		
+		List<org.iso.iso22166.part202.profile.Property> propList = properties.getProperty();
+		if(propList != null && 0 < propList.size()) {
+			ConfigurationSet configSet = factory.createConfigurationSet();
+			result.setConfigurationSet(configSet);
+			for(org.iso.iso22166.part202.profile.Property each : properties.getProperty() ) {
+				ConfigurationExt config = factory.createConfigurationExt();
+				DocConfiguration docConfig = factory.createDocConfiguration();
+				config.setDoc(docConfig);
+				configSet.getConfiguration().add(config);
+				
+				config.setDefaultValue(each.getVallue());
+				createProperty(factory, "immutable", Boolean.valueOf(each.isImmutable()).toString(), config.getProperties());
+				docConfig.setDescription(each.getDescription());
+				config.setName(each.getName());
+				config.setType(each.getType());
+				config.setUnit(each.getUnit());
+				
+				NVList nvList = each.getAdditionalInfo();
+				if(nvList!=null) {
+					List<NameValue> nvs = nvList.getNv();
+					List<String> definedList = Arrays.asList("constraint",
+															 "docDataname", "docDefaultValue", "docUnit", "docRange", "docConstraint",
+															 "comment", "variableName");
+					
+					String constraintStr = getTargetNVValue("constraint", nvs);
+					try {
+						ConstraintType constraint = XmlHandler.convertToXmlConstraint(constraintStr);
+						config.setConstraint(constraint);
+					} catch (Exception e) {
+					}
+					docConfig.setDataname(getTargetNVValue("docDataname", nvs));
+					docConfig.setDefaultValue(getTargetNVValue("docDefaultValue", nvs));
+					docConfig.setUnit(getTargetNVValue("docUnit", nvs));
+					docConfig.setRange(getTargetNVValue("docRange", nvs));
+					docConfig.setConstraint(getTargetNVValue("docConstraint", nvs));
+					
+					config.setComment(getTargetNVValue("comment", nvs));
+					config.setVariableName(getTargetNVValue("variableName", nvs));
+
+					for(NameValue nv : nvList.getNv()) {
+						if(definedList.contains(nv.getName())) continue;
+						createProperty(factory, nv.getName(), nv.getValue(), config.getProperties());
+					}
+				}
+			}
+		}
+	}
+	
+	private void convertIOVariables(SIM source, ObjectFactory factory, RtcProfile result) {
+		IOVariables iOVariables = source.getIoVariables();
+		if(iOVariables==null) return;
+		
+		List<Variable> varList = iOVariables.getVariable();
+		if(varList != null && 0<varList.size()) {
+			for(Variable each : varList) {
+				DataportExt dataPort = factory.createDataportExt();
+				DocDataport docPort = factory.createDocDataport();
+				dataPort.setDoc(docPort);
+				result.getDataPorts().add(dataPort);
+
+				createProperty(factory, "value", each.getValue(), dataPort.getProperties());
+				docPort.setDescription(each.getDescription());
+				dataPort.setName(each.getName());
+				dataPort.setType(each.getType());
+				dataPort.setUnit(each.getUnit());
+				if(each.getIoType() != null) {
+					dataPort.setPortType(each.getIoType().toString());
+				}
+				
+				NVList nvList = each.getAdditionalInfo();
+				if(nvList!=null) {
+					List<NameValue> nvs = nvList.getNv();
+					List<String> definedList = Arrays.asList("idlFile", "interfaceType", "dataflowType", "subscriptionType",
+															 "type", "number", "semantics", "unit",
+															 "occurrence", "operation",
+															 "comment", "variableName", "position"); 
+					dataPort.setIdlFile(getTargetNVValue("idlFile", nvs));
+					dataPort.setInterfaceType(getTargetNVValue("interfaceType", nvs));
+					dataPort.setDataflowType(getTargetNVValue("dataflowType", nvs));
+					dataPort.setSubscriptionType(getTargetNVValue("subscriptionType", nvs));
+					
+					docPort.setType(getTargetNVValue("type", nvs));
+					docPort.setNumber(getTargetNVValue("number", nvs));
+					docPort.setSemantics(getTargetNVValue("semantics", nvs));
+					docPort.setUnit(getTargetNVValue("unit", nvs));
+					docPort.setOccerrence(getTargetNVValue("occurrence", nvs));
+					docPort.setOperation(getTargetNVValue("operation", nvs));
+					
+					dataPort.setComment(getTargetNVValue("comment", nvs));
+					dataPort.setVariableName(getTargetNVValue("variableName", nvs));
+					try {
+						dataPort.setPosition(Position.valueOf(getTargetNVValue("position", nvs)));
+					} catch (Exception e) {
+					}
+
+					for(NameValue nv : nvList.getNv()) {
+						if(definedList.contains(nv.getName())) continue;
+						createProperty(factory, nv.getName(), nv.getValue(), dataPort.getProperties());
+					}
+				}
+			}
+		}
+	}
+
+	private void convertStatus(SIM source, ObjectFactory factory, List<Property> basicProp) {
+		Status status = source.getStatus();
+		if(status==null) return;
+		
+		if(status.getExecutionStatus() != null) {
+			createProperty(factory, "executionStatus", status.getExecutionStatus().toString(), basicProp);
+		}
+		if(status.getErrorType() != null) {
+			createProperty(factory, "errorType", status.getErrorType().toString(), basicProp);
+		}
+	}
+	
+	private void convertServices(SIM source, ObjectFactory factory, RtcProfile result) {
+		Services services = source.getServices();
+		if(services==null) return;
+		
+		for(ServiceProfile each : services.getSeviceProfile()) {
+			ServiceportExt servicePort = factory.createServiceportExt();
+			result.getServicePorts().add(servicePort);
+			DocServiceport docPort = factory.createDocServiceport();
+			servicePort.setDoc(docPort);
+			
+			servicePort.setName(each.getId());
+			createProperty(factory, "ifURL", each.getIfURL(), servicePort.getProperties());
+			if(each.getPvType() != null) {
+				createProperty(factory, "pvType", each.getPvType().toString(), servicePort.getProperties());
+			}
+			if(each.getMoType() != null) {
+				createProperty(factory, "moType", each.getMoType().toString(), servicePort.getProperties());
+			}
+			
+			
+			NVList nvList = each.getAdditionalInfo();
+			if(nvList!=null) {
+				List<NameValue> nvs = nvList.getNv();
+				List<String> definedList = Arrays.asList("description", "ifdescription",
+														 "comment", "position",
+														 "kind"); 
+
+				docPort.setDescription(getTargetNVValue("description", nvs));
+				docPort.setIfdescription(getTargetNVValue("ifdescription", nvs));
+				
+				servicePort.setComment(getTargetNVValue("comment", nvs));
+				try {
+					servicePort.setPosition(Position.valueOf(getTargetNVValue("position", nvs)));
+				} catch (Exception e) {
+				}
+
+				List<NameValue> kinds = getTargetNV("kind", nvs);
+				for(NameValue elem : kinds) {
+					TransmissionMethod tm = factory.createTransmissionMethod();
+					tm.setKind(elem.getValue());
+					servicePort.getTransMethods().add(tm);
+				}
+				
+				for(NameValue nv : nvList.getNv()) {
+					if(definedList.contains(nv.getName())) continue;
+					createProperty(factory, nv.getName(), nv.getValue(), servicePort.getProperties());
+				}
+			}
+			
+			for(ServiceMethod eachIf : each.getMethodList()) {
+				ServiceinterfaceExt serviceIf = factory.createServiceinterfaceExt();
+				servicePort.getServiceInterface().add(serviceIf);
+				DocServiceinterface docIf = factory.createDocServiceinterface();
+				serviceIf.setDoc(docIf);
+				
+				serviceIf.setName(eachIf.getMethodName());
+				serviceIf.setType(eachIf.getRetType());
+				if(eachIf.getMoType() != null) {
+					createProperty(factory, "moType", eachIf.getMoType().toString(), serviceIf.getProperties());
+				}
+				serviceIf.setDirection(eachIf.getReqProvType().toString());
+				
+				NVList nvListIf = eachIf.getAdditionalInfo();
+				if(nvListIf!=null) {
+					List<NameValue> nvs = nvListIf.getNv();
+					List<String> definedList = Arrays.asList("instanceName", "idlFile", "path",
+															 "description", "docArgument", "docReturn", "docException", "docPreCondition",
+															 "docPostCondition",
+															 "comment", "variableName"); 
+
+					serviceIf.setInstanceName(getTargetNVValue("instanceName", nvs));
+					String fileName = getTargetNVValue("idlFile", nvs);
+					String pathName = getTargetNVValue("path", nvs);
+					serviceIf.setIdlFile(pathName + System.getProperty("file.separator") + fileName);
+					
+					docIf.setDescription(getTargetNVValue("description", nvs));
+					docIf.setDocArgument(getTargetNVValue("docArgument", nvs));
+					docIf.setDocReturn(getTargetNVValue("docReturn", nvs));
+					docIf.setDocException(getTargetNVValue("docException", nvs));
+					docIf.setDocPreCondition(getTargetNVValue("docPreCondition", nvs));
+					docIf.setDocPostCondition(getTargetNVValue("docPostCondition", nvs));
+
+					serviceIf.setComment(getTargetNVValue("comment", nvs));
+					serviceIf.setVariableName(getTargetNVValue("variableName", nvs));
+
+					for(NameValue nv : nvListIf.getNv()) {
+						if(definedList.contains(nv.getName())) continue;
+						createProperty(factory, nv.getName(), nv.getValue(), serviceIf.getProperties());
+					}
+				}
+				
+				for(ArgSpec eachArg : eachIf.getArgType()) {
+					String argName = eachArg.getValueName();
+					createProperty(factory, "argType_valueName", argName, serviceIf.getProperties());
+					createProperty(factory, "argType_" + argName + "_type", eachArg.getType(), serviceIf.getProperties());
+					if(eachArg.getInout() != null) {
+						createProperty(factory, "argType_" + argName + "_inout", eachArg.getInout().toString(), serviceIf.getProperties());
+					}
+
+					NVList nvListArg = eachArg.getAdditionalInfo();
+					if(nvListArg!=null) {
+						for(NameValue nv : nvListArg.getNv()) {
+							createProperty(factory, 
+											"argType_" + argName + "_add_" + nv.getName(),
+											nv.getValue(),
+											serviceIf.getProperties());
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private void convertInfrastructure(SIM source, ObjectFactory factory, List<Property> basicProp) {
+		Infrastructure infra = source.getInfra();
+		if(infra== null) return;
+		
+		NVList nvList = infra.getAdditionalInfo();
+		if(nvList!=null) {
+			for(NameValue nv : nvList.getNv()) {
+				createProperty(factory, "infra_add_" + nv.getName(), nv.getValue(), basicProp);
+			}
+		}
+		
+		for(InfraType each : infra.getDatabase()) {
+			String name = each.getName();
+			String min = "";
+			String max = "";
+			if(each.getVersion() != null) {
+				min = each.getVersion().getMin();
+				max = each.getVersion().getMax();
+			}
+			createProperty(factory, "infra_database", name + ELEM_DELIMITOR + min + ELEM_DELIMITOR + max, basicProp);
+		}
+		
+		String commsPre = "infra_comms_";
+		for(int index=0; index<infra.getComms().size(); index++) {
+			Communication comm = infra.getComms().get(index);
+			String strIndex = Integer.valueOf(index + 1).toString();
+			for(InfraType each : comm.getMostTopProtocol()) {
+				String name = each.getName();
+				String min = "";
+				String max = "";
+				if(each.getVersion() != null) {
+					min = each.getVersion().getMin();
+					max = each.getVersion().getMax();
+				}
+				createProperty(factory,
+								commsPre + "mostTop_" + strIndex,
+								name + ELEM_DELIMITOR + min + ELEM_DELIMITOR + max,
+								basicProp);
+			}
+			DataBus underlayingProtocol = comm.getUnderlyingProrocol();
+			if(underlayingProtocol!=null) {
+				String underlayingPre = commsPre + "underlaying_" + strIndex;
+
+				createProperty(factory, underlayingPre + "_connectionType", underlayingProtocol.getConnectionType(), basicProp);
+				createProperty(factory, underlayingPre + "_typePhyMac", underlayingProtocol.getTypePhyMac(), basicProp);
+				
+				String typeNetTrans = String.join(",", underlayingProtocol.getTypeNetTrans());
+				createProperty(factory, underlayingPre + "_typeNetTrans", typeNetTrans, basicProp);
+				
+				String typeApp = String.join(",", underlayingProtocol.getTypeApp());
+				createProperty(factory, underlayingPre + "_typeApp", typeApp, basicProp);
+
+				createProperty(factory, underlayingPre + "_speed", Double.valueOf(underlayingProtocol.getSpeed()).toString(), basicProp);
+				
+				NVList nvListCom = underlayingProtocol.getAdditionalInfo();
+				if(nvListCom!=null) {
+					for(NameValue nv : nvListCom.getNv()) {
+						createProperty(factory, underlayingPre + "_add_" + nv.getName(), nv.getValue(), basicProp);
+					}
+				}
+			}
+		}
+		
+		for(InfraType each : infra.getMiddleware()) {
+			String name = each.getName();
+			String min = "";
+			String max = "";
+			if(each.getVersion() != null) {
+				min = each.getVersion().getMin();
+				max = each.getVersion().getMax();
+			}
+			createProperty(factory, "infra_middleware", name + ELEM_DELIMITOR + min + ELEM_DELIMITOR + max, basicProp);
+		}
+	}
+	
+	private void convertSafeSecure(SIM source, ObjectFactory factory, List<Property> basicProp) {
+		SafeSecure safeSecure = source.getSafeSecure();
+		if(safeSecure!=null) {
+			createProperty(factory, "safeSecure_overallValidSafetyLevelType", safeSecure.getOverallvalidSafetyLevelType().toString(), basicProp);
+			createProperty(factory, "safeSecure_overallSafetyLevelPL", safeSecure.getOverallSafetyLevelPL().toString(), basicProp);
+			createProperty(factory, "safeSecure_overallSafetyLevelSIL", safeSecure.getOverallSafetyLevelSIL().toString(), basicProp);
+			createProperty(factory, "safeSecure_overallPhySecurityLevel", safeSecure.getOverallPhySecurityLevel(), basicProp);
+			createProperty(factory, "safeSecure_overallCybSecurityLevel", safeSecure.getOverallCybSecurityLevel(), basicProp);
+			
+			List<SafetyFunction> inSafetyLevel = safeSecure.getInSafetyLevel();
+			for(int index=0;index<inSafetyLevel.size(); index++) {
+				SafetyFunction each = inSafetyLevel.get(index);
+				String strIndex = Integer.valueOf(index + 1).toString();
+				String inSafetyLevelPre = "safeSecure_inSafetyLevel_" + strIndex;
+
+				createProperty(factory, inSafetyLevelPre + "_safetyFunctionType", each.getSafetyFunctionType().toString(), basicProp);
+				createProperty(factory, inSafetyLevelPre + "_validSafetyLevelType", each.getValidSafetyLevelType().toString(), basicProp);
+				createProperty(factory, inSafetyLevelPre + "_eachSafetyLevelPL", each.getEachSafetyLevelPL().toString(), basicProp);
+				createProperty(factory, inSafetyLevelPre + "_eachSafetyLevelSIL", each.getEachSafetyLevelSIL().toString(), basicProp);
+			}
+
+			List<CyberSecurity> inCybSecurityLevel = safeSecure.getInCybSecurityLevel();
+			for(int index=0;index<inCybSecurityLevel.size(); index++) {
+				CyberSecurity each = inCybSecurityLevel.get(index);
+				String strIndex = Integer.valueOf(index + 1).toString();
+				String inCybSecurityLevelPre = "safeSecure_inCybSecurityLevel_" + strIndex;
+
+				createProperty(factory, inCybSecurityLevelPre + "_securityType", each.getSecurityType().toString(), basicProp);
+				createProperty(factory, inCybSecurityLevelPre + "_eachSecurityLevel", each.getSecurityLevel().toString(), basicProp);
+			}
+
+			NVList nvList = safeSecure.getAdditionalInfo();
+			if(nvList!=null) {
+				for(NameValue nv : nvList.getNv()) {
+					createProperty(factory,
+							"safeSecure_add_" + nv.getName(), nv.getValue(), basicProp);
+				}
+			}
+		}
+	}
+
+	private void convertModelling(SIM source, ObjectFactory factory, List<Property> basicProp) {
+		Modelling modelling = source.getModelling();
+		if(modelling!=null) {
+			List<ModelCase> simulationModel = modelling.getSimulationModel();
+			for(int index=0;index<simulationModel.size(); index++) {
+				ModelCase each = simulationModel.get(index);
+				String strIndex = Integer.valueOf(index + 1).toString();
+				String modellingPre = "modelling_" + strIndex;
+
+				createProperty(factory, modellingPre + "_simulator", each.getSimulator(), basicProp);
+				String mdfs = String.join(",", each.getMdf());
+				createProperty(factory, modellingPre + "_mdf", mdfs, basicProp);
+				
+				for(String eachLib :each.getLibraries() ) {
+					createProperty(factory, modellingPre + "_lib", eachLib, basicProp);
+				}
+				
+				List<ExeForm> dynamicSW = each.getDynamicSW();
+				for(int idxDyn=0;idxDyn<dynamicSW.size(); idxDyn++) {
+					ExeForm eachExe = dynamicSW.get(idxDyn);
+					String strIdxExe = Integer.valueOf(idxDyn + 1).toString();
+					String dynamicSWPre = modellingPre + "_dynamicSW_" + strIdxExe;
+
+					createProperty(factory, dynamicSWPre + "_exeFileURL", eachExe.getExeFileURL(), basicProp);
+					createProperty(factory, dynamicSWPre + "_shellCmd", eachExe.getShellCmd(), basicProp);
+					
+					List<org.iso.iso22166.part202.profile.Property> exePros = eachExe.getProperties();
+					for(int idxProp=0; idxProp<exePros.size();idxProp++) {
+						org.iso.iso22166.part202.profile.Property eachProp = exePros.get(idxProp);
+						String strIdxProp = Integer.valueOf(idxProp + 1).toString();
+						String propertyPre = dynamicSWPre + "_property_" + strIdxProp;
+
+						createProperty(factory, propertyPre + "_value", eachProp.getVallue(), basicProp);
+						createProperty(factory, propertyPre + "_immutable", Boolean.valueOf(eachProp.isImmutable()).toString(), basicProp);
+						createProperty(factory, propertyPre + "_description", eachProp.getDescription(), basicProp);
+						createProperty(factory, propertyPre + "_name", eachProp.getName(), basicProp);
+						createProperty(factory, propertyPre + "_type", eachProp.getType(), basicProp);
+						createProperty(factory, propertyPre + "_unit", eachProp.getUnit(), basicProp);
+					}
+					
+					NVList nvList = eachExe.getAdditionalInfo();
+					if(nvList!=null) {
+						for(NameValue nv : nvList.getNv()) {
+							createProperty(factory, dynamicSWPre + "_add_" + nv.getName(), nv.getValue(), basicProp);
+						}
+					}
+				}
+				NVList nvListMod = each.getAdditionalInfo();
+				if(nvListMod!=null) {
+					for(NameValue nv : nvListMod.getNv()) {
+						createProperty(factory, modellingPre + "_add_" + nv.getName(), nv.getValue(), basicProp);
+					}
+				}
+			}
+		}
+	}
+	
+	private void convertExecutableForm(SIM source, ObjectFactory factory, List<Property> basicProp) {
+		ExecutableForm exeForms = source.getExecForm();
+		if(exeForms!=null) {
+			for(String each : exeForms.getLibraryURL()) {
+				createProperty(factory, "exeForm_LibraryURL", each, basicProp);
+			}
+			List<ExeForm> exeForm = exeForms.getExeForm();
+			for(int index=0;index<exeForm.size(); index++) {
+				ExeForm eachExe = exeForm.get(index);
+				String strIndex = Integer.valueOf(index + 1).toString();
+				String exeFormPre = "exeForm_exeForm_" + strIndex;
+
+				createProperty(factory, exeFormPre + "_exeFileURL", eachExe.getExeFileURL(), basicProp);
+				createProperty(factory, exeFormPre + "_shellCmd", eachExe.getShellCmd(), basicProp);
+				
+				List<org.iso.iso22166.part202.profile.Property> exePros = eachExe.getProperties();
+				for(int idxProp=0; idxProp<exePros.size();idxProp++) {
+					org.iso.iso22166.part202.profile.Property eachProp = exePros.get(idxProp);
+					String strIdxProp = Integer.valueOf(idxProp + 1).toString();
+					String propertyPre = exeFormPre + "_property_" + strIdxProp;
+
+					createProperty(factory, propertyPre + "_value", eachProp.getVallue(), basicProp);
+					createProperty(factory, propertyPre + "_immutable", Boolean.valueOf(eachProp.isImmutable()).toString(), basicProp);
+					createProperty(factory, propertyPre + "_description", eachProp.getDescription(), basicProp);
+					createProperty(factory, propertyPre + "_name", eachProp.getName(), basicProp);
+					createProperty(factory, propertyPre + "_type", eachProp.getType(), basicProp);
+					createProperty(factory, propertyPre + "_unit", eachProp.getUnit(), basicProp);
+				}
+				
+				NVList nvList = eachExe.getAdditionalInfo();
+				if(nvList!=null) {
+					for(NameValue nv : nvList.getNv()) {
+						createProperty(factory, exeFormPre + "_add_" + nv.getName(), nv.getValue(), basicProp);
+					}
+				}
+			}
+		}
+	}
+	
+	private void convertNVList(SIM source, ObjectFactory factory, RtcProfile result) {
+		if(source.getAdditionalInfo() == null) return;
+		
+		BasicInfoExt basic = (BasicInfoExt)result.getBasicInfo();
+		DocBasic docBasic = basic.getDoc();
+		List<String> definedList = Arrays.asList("profileVersion", "activityType", "rtcType", "category", "maxInstances",
+												 "abstract", "creationDate", "updateDate", "componentKind",
+												 "docAlgorithm", "docDescription", "docInout", "docCreator", "docLicense",
+												 "docReference",
+												 "extComment", "extSaveProject", "extVersionUpLog",
+												 "onInitialize", "onInitializeDocDescription", "onInitializeDocPreCondition", "onInitializeDocPostCondition",
+												 "onFinalize", "onFinalizeDocDescription", "onFinalizeDocPreCondition", "onFinalizeDocPostCondition",
+												 "onStartup", "onStartupDocDescription", "onStartupDocPreCondition", "onStartupDocPostCondition",
+												 "onShutdown", "onShutdownDocDescription", "onShutdownDocPreCondition", "onShutdownDocPostCondition",
+												 "onActivated", "onActivatedDocDescription", "onActivatedDocPreCondition", "onActivatedDocPostCondition",
+												 "onDeactivated", "onDeactivatedDocDescription", "onDeactivatedDocPreCondition", "onDeactivatedDocPostCondition",
+												 "onAborting", "onAbortingDocDescription", "onAbortingDocPreCondition", "onAbortingDocPostCondition",
+												 "onError", "onErrorDocDescription", "onErrorDocPreCondition", "onErrorDocPostCondition",
+												 "onReset", "onResetDocDescription", "onResetDocPreCondition", "onResetDocPostCondition",
+												 "onExecute", "onExecuteDocDescription", "onExecuteDocPreCondition", "onExecuteDocPostCondition",
+												 "onStateUpdate", "onStateUpdateDocDescription", "onStateUpdateDocPreCondition", "onStateUpdateDocPostCondition",
+												 "onRateChanged", "onRateChangedDocDescription", "onRateChangedDocPreCondition", "onRateChangedDocPostCondition",
+												 "onAction", "onActionDocDescription", "onActionDocPreCondition", "onActionDocPostCondition",
+												 "onModeChanged", "onModeChangedDocDescription", "onModeChangedDocPreCondition", "onModeChangedDocPostCondition"); 
+		
+		List<NameValue> nvList = source.getAdditionalInfo().getNv();
+		result.setVersion(getTargetNVValue("profileVersion", nvList));
+		
+		basic.setActivityType(getTargetNVValue("activityType", nvList));
+		basic.setRtcType(getTargetNVValue("rtcType", nvList));
+		basic.setCategory(getTargetNVValue("category", nvList));
+		basic.setMaxInstances(getTargetNVValueBigInteger("maxInstances", nvList));
+		basic.setAbstract(getTargetNVValue("abstract", nvList));
+		basic.setHardwareProfile(getTargetNVValue("hardwareProfile", nvList));
+		basic.setCreationDate(getTargetNVValueCalendar("creationDate", nvList));
+		basic.setUpdateDate(getTargetNVValueCalendar("updateDate", nvList));
+		
+		docBasic.setAlgorithm(getTargetNVValue("docAlgorithm", nvList));
+		docBasic.setDescription(getTargetNVValue("docDescription", nvList));
+		docBasic.setInout(getTargetNVValue("docInout", nvList));
+		docBasic.setCreator(getTargetNVValue("docCreator", nvList));
+		docBasic.setLicense(getTargetNVValue("docLicense", nvList));
+		docBasic.setReference(getTargetNVValue("docReference", nvList));
+		
+		basic.setComment(getTargetNVValue("extComment", nvList));
+		basic.setSaveProject(getTargetNVValue("extSaveProject", nvList));
+		basic.setVersionUpLogs(getTargetNVValueList("extVersionUpLog", nvList));
+		/////
+		Actions actions = factory.createActions();
+		result.setActions(actions);
+		
+		List<NameValue> onInitializes = getTargetStartNV("onInitialize", nvList);
+		if(0 < onInitializes.size()) {
+			ActionStatusDoc onInitialize = factory.createActionStatusDoc();
+			actions.setOnInitialize(onInitialize);
+			DocAction docInitialize = factory.createDocAction();
+			onInitialize.setDoc(docInitialize);
+			
+			onInitialize.setImplementedbln(getTargetNVValueBoolean("onInitialize", nvList));
+			docInitialize.setDescription(getTargetNVValue("onInitializeDocDescription", nvList));
+			docInitialize.setPreCondition(getTargetNVValue("onInitializeDocPreCondition", nvList));
+			docInitialize.setPostCondition(getTargetNVValue("onInitializeDocPostCondition", nvList));
+		}
+		//
+		List<NameValue> onFinalizes = getTargetStartNV("onFinalize", nvList);
+		if(0 < onFinalizes.size()) {
+			ActionStatusDoc onFinalize = factory.createActionStatusDoc();
+			actions.setOnFinalize(onFinalize);
+			DocAction docFinalize = factory.createDocAction();
+			onFinalize.setDoc(docFinalize);
+			
+			onFinalize.setImplementedbln(getTargetNVValueBoolean("onFinalize", nvList));
+			docFinalize.setDescription(getTargetNVValue("onFinalizeDocDescription", nvList));
+			docFinalize.setPreCondition(getTargetNVValue("onFinalizeDocPreCondition", nvList));
+			docFinalize.setPostCondition(getTargetNVValue("onFinalizeDocPostCondition", nvList));
+		}
+		//
+		List<NameValue> onStartups = getTargetStartNV("onStartup", nvList);
+		if(0 < onStartups.size()) {
+			ActionStatusDoc onStartup = factory.createActionStatusDoc();
+			actions.setOnStartup(onStartup);
+			DocAction docStartup = factory.createDocAction();
+			onStartup.setDoc(docStartup);
+			
+			onStartup.setImplementedbln(getTargetNVValueBoolean("onStartup", nvList));
+			docStartup.setDescription(getTargetNVValue("onStartupDocDescription", nvList));
+			docStartup.setPreCondition(getTargetNVValue("onStartupDocPreCondition", nvList));
+			docStartup.setPostCondition(getTargetNVValue("onStartupDocPostCondition", nvList));
+		}
+		//
+		List<NameValue> onShutdowns = getTargetStartNV("onShutdown", nvList);
+		if(0 < onShutdowns.size()) {
+			ActionStatusDoc onShutdown = factory.createActionStatusDoc();
+			actions.setOnShutdown(onShutdown);
+			DocAction docShutdown = factory.createDocAction();
+			onShutdown.setDoc(docShutdown);
+			
+			onShutdown.setImplementedbln(getTargetNVValueBoolean("onShutdown", nvList));
+			docShutdown.setDescription(getTargetNVValue("onShutdownDocDescription", nvList));
+			docShutdown.setPreCondition(getTargetNVValue("onShutdownDocPreCondition", nvList));
+			docShutdown.setPostCondition(getTargetNVValue("onShutdownDocPostCondition", nvList));
+		}
+		//
+		List<NameValue> onActivateds = getTargetStartNV("onActivated", nvList);
+		if(0 < onActivateds.size()) {
+			ActionStatusDoc onActivated = factory.createActionStatusDoc();
+			actions.setOnActivated(onActivated);
+			DocAction docActivated = factory.createDocAction();
+			onActivated.setDoc(docActivated);
+			
+			onActivated.setImplementedbln(getTargetNVValueBoolean("onActivated", nvList));
+			docActivated.setDescription(getTargetNVValue("onActivatedDocDescription", nvList));
+			docActivated.setPreCondition(getTargetNVValue("onActivatedDocPreCondition", nvList));
+			docActivated.setPostCondition(getTargetNVValue("onActivatedDocPostCondition", nvList));
+		}
+		//
+		List<NameValue> onDeactivateds = getTargetStartNV("onDeactivated", nvList);
+		if(0 < onDeactivateds.size()) {
+			ActionStatusDoc onDeactivated = factory.createActionStatusDoc();
+			actions.setOnDeactivated(onDeactivated);
+			DocAction docDeactivated = factory.createDocAction();
+			onDeactivated.setDoc(docDeactivated);
+			
+			onDeactivated.setImplementedbln(getTargetNVValueBoolean("onDeactivated", nvList));
+			docDeactivated.setDescription(getTargetNVValue("onDeactivatedDocDescription", nvList));
+			docDeactivated.setPreCondition(getTargetNVValue("onDeactivatedDocPreCondition", nvList));
+			docDeactivated.setPostCondition(getTargetNVValue("onDeactivatedDocPostCondition", nvList));
+		}
+		//
+		List<NameValue> onAbortings = getTargetStartNV("onAborting", nvList);
+		if(0 < onAbortings.size()) {
+			ActionStatusDoc onAborting = factory.createActionStatusDoc();
+			actions.setOnAborting(onAborting);
+			DocAction docAborting = factory.createDocAction();
+			onAborting.setDoc(docAborting);
+			
+			onAborting.setImplementedbln(getTargetNVValueBoolean("onAborting", nvList));
+			docAborting.setDescription(getTargetNVValue("onAbortingDocDescription", nvList));
+			docAborting.setPreCondition(getTargetNVValue("onAbortingDocPreCondition", nvList));
+			docAborting.setPostCondition(getTargetNVValue("onAbortingDocPostCondition", nvList));
+		}
+		//
+		List<NameValue> onErrors = getTargetStartNV("onError", nvList);
+		if(0 < onErrors.size()) {
+			ActionStatusDoc onError = factory.createActionStatusDoc();
+			actions.setOnError(onError);
+			DocAction docError = factory.createDocAction();
+			onError.setDoc(docError);
+			
+			onError.setImplementedbln(getTargetNVValueBoolean("onError", nvList));
+			docError.setDescription(getTargetNVValue("onErrorDocDescription", nvList));
+			docError.setPreCondition(getTargetNVValue("onErrorDocPreCondition", nvList));
+			docError.setPostCondition(getTargetNVValue("onErrorDocPostCondition", nvList));
+		}
+		//
+		List<NameValue> onResets = getTargetStartNV("onReset", nvList);
+		if(0 < onResets.size()) {
+			ActionStatusDoc onReset = factory.createActionStatusDoc();
+			actions.setOnReset(onReset);
+			DocAction docReset = factory.createDocAction();
+			onReset.setDoc(docReset);
+			
+			onReset.setImplementedbln(getTargetNVValueBoolean("onReset", nvList));
+			docReset.setDescription(getTargetNVValue("onResetDocDescription", nvList));
+			docReset.setPreCondition(getTargetNVValue("onResetDocPreCondition", nvList));
+			docReset.setPostCondition(getTargetNVValue("onResetDocPostCondition", nvList));
+		}
+		//
+		List<NameValue> onExecutes = getTargetStartNV("onStateUpdate", nvList);
+		if(0 < onExecutes.size()) {
+			ActionStatusDoc onExecute = factory.createActionStatusDoc();
+			actions.setOnExecute(onExecute);
+			DocAction docExecute = factory.createDocAction();
+			onExecute.setDoc(docExecute);
+			
+			onExecute.setImplementedbln(getTargetNVValueBoolean("onExecute", nvList));
+			docExecute.setDescription(getTargetNVValue("onExecuteDocDescription", nvList));
+			docExecute.setPreCondition(getTargetNVValue("onExecuteDocPreCondition", nvList));
+			docExecute.setPostCondition(getTargetNVValue("onExecuteDocPostCondition", nvList));
+		}
+		//
+		List<NameValue> onStateUpdates = getTargetStartNV("onStateUpdate", nvList);
+		if(0 < onStateUpdates.size()) {
+			ActionStatusDoc onStateUpdate = factory.createActionStatusDoc();
+			actions.setOnStateUpdate(onStateUpdate);
+			DocAction docStateUpdate = factory.createDocAction();
+			onStateUpdate.setDoc(docStateUpdate);
+			
+			onStateUpdate.setImplementedbln(getTargetNVValueBoolean("onStateUpdate", nvList));
+			docStateUpdate.setDescription(getTargetNVValue("onStateUpdateDocDescription", nvList));
+			docStateUpdate.setPreCondition(getTargetNVValue("onStateUpdateDocPreCondition", nvList));
+			docStateUpdate.setPostCondition(getTargetNVValue("onStateUpdateDocPostCondition", nvList));
+		}
+		//
+		List<NameValue> onRateChangeds = getTargetStartNV("onRateChanged", nvList);
+		if(0 < onRateChangeds.size()) {
+			ActionStatusDoc onRateChanged = factory.createActionStatusDoc();
+			actions.setOnRateChanged(onRateChanged);
+			DocAction docRateChanged = factory.createDocAction();
+			onRateChanged.setDoc(docRateChanged);
+			
+			onRateChanged.setImplementedbln(getTargetNVValueBoolean("onRateChanged", nvList));
+			docRateChanged.setDescription(getTargetNVValue("onRateChangedDocDescription", nvList));
+			docRateChanged.setPreCondition(getTargetNVValue("onRateChangedDocPreCondition", nvList));
+			docRateChanged.setPostCondition(getTargetNVValue("onRateChangedDocPostCondition", nvList));
+		}
+		//
+		List<NameValue> onActions = getTargetStartNV("onAction", nvList);
+		if(0 < onActions.size()) {
+			ActionStatusDoc onAction = factory.createActionStatusDoc();
+			actions.setOnAction(onAction);
+			DocAction docAction = factory.createDocAction();
+			onAction.setDoc(docAction);
+			
+			onAction.setImplementedbln(getTargetNVValueBoolean("onAction", nvList));
+			docAction.setDescription(getTargetNVValue("onActionDocDescription", nvList));
+			docAction.setPreCondition(getTargetNVValue("onActionDocPreCondition", nvList));
+			docAction.setPostCondition(getTargetNVValue("onActionDocPostCondition", nvList));
+		}
+		//
+		List<NameValue> onModeChangeds = getTargetStartNV("onModeChanged", nvList);
+		if(0 < onModeChangeds.size()) {
+			ActionStatusDoc onModeChanged = factory.createActionStatusDoc();
+			actions.setOnModeChanged(onModeChanged);
+			DocAction docModeChanged = factory.createDocAction();
+			onModeChanged.setDoc(docModeChanged);
+			
+			onModeChanged.setImplementedbln(getTargetNVValueBoolean("onModeChanged", nvList));
+			docModeChanged.setDescription(getTargetNVValue("onModeChangedDocDescription", nvList));
+			docModeChanged.setPreCondition(getTargetNVValue("onModeChangedDocPreCondition", nvList));
+			docModeChanged.setPostCondition(getTargetNVValue("onModeChangedDocPostCondition", nvList));
+		}
+
+		
+		for(NameValue nv : nvList) {
+			if(definedList.contains(nv.getName())) continue;
+			createProperty(factory, nv.getName(), nv.getValue(), basic.getProperties());
+		}
+	}
+
+	//////////
+	private List<String> getTargetNVValueList(String key, List<NameValue> nvList) {
+		String temp = getTargetNVValue(key, nvList);
+		try {
+			List<String> result = Arrays.asList(temp.split(","));
+			return result;
+		} catch (Exception ex){
+			return null;
+		}
+	}
+	
+	private XMLGregorianCalendar getTargetNVValueCalendar(String key, List<NameValue> nvList) {
+		String temp = getTargetNVValue(key, nvList);
+		try {
+			XMLGregorianCalendar val = XmlHandler.createXMLGregorianCalendar(temp);
+			return val;
+		} catch (Exception ex){
+			return null;
+		}
+	}
+
+	private BigInteger getTargetNVValueBigInteger(String key, List<NameValue> nvList) {
+		String temp = getTargetNVValue(key, nvList);
+		try {
+			BigInteger val = new BigInteger(temp);
+			return val;
+		} catch (Exception ex){
+			return null;
+		}
+	}
+	
+	private Boolean getTargetNVValueBoolean(String key, List<NameValue> nvList) {
+		String temp = getTargetNVValue(key, nvList);
+		try {
+			Boolean val = Boolean.valueOf(temp);
+			return val;
+		} catch (Exception ex){
+			return null;
+		}
+	}
+
+	private String getTargetNVValue(String key, List<NameValue> nvList) {
+		List<NameValue> filtered = nvList.stream()
+									.filter(p -> p.getName().equals(key))
+									.collect(Collectors.toList());
+		if(filtered != null && 0 < filtered.size() ) {
+			return filtered.get(0).getValue();
+		}
+		return "";
+	}
+
+	private List<NameValue> getTargetNV(String key, List<NameValue> nvList) {
+		List<NameValue> filtered = nvList.stream()
+									.filter(p -> p.getName().equals(key))
+									.collect(Collectors.toList());
+		return filtered;
+	}
+
+	private List<NameValue> getTargetStartNV(String key, List<NameValue> nvList) {
+		List<NameValue> filtered = nvList.stream()
+									.filter(p -> p.getName().startsWith(key))
+									.collect(Collectors.toList());
+		return filtered;
+	}
+
+	private void createProperty(ObjectFactory factory, String name, String value, List<Property> propList) {
+		if(value==null || value.length() == 0) return;
+		
+		Property prop = factory.createProperty();
+		prop.setName(name);
+		prop.setValue(value);
+		propList.add(prop);
+	}
+	
+	private String bytesToHexString(byte[] bytes) {
+	    if (bytes == null) return null;
+
+	    StringBuilder sb = new StringBuilder(bytes.length * 2);
+	    for (byte b : bytes) {
+	        sb.append(String.format("%02x", b & 0xFF));
+	    }
+	    return sb.toString();
+	}
+
+	private String bytesListToHexString(List<byte[]> list) {
+	    if (list == null) return null;
+
+	    StringBuilder sb = new StringBuilder();
+
+	    for (byte[] bytes : list) {
+	        if (bytes == null) continue;
+	        for (byte b : bytes) {
+	            sb.append(String.format("%02x", b & 0xFF));
+	        }
+	    }
+	    return sb.toString();
+	}
+	//////////
+	public boolean saveXmlRtc(RtcProfile rtcProfile, String targetFile) throws Exception {
+		XmlHandler handlerRtc = new XmlHandler();
+		
+		String xmlString = handlerRtc.convertToXmlRtc(rtcProfile);
+
+		String lineSeparator = System.getProperty( "line.separator" );
+		if( lineSeparator==null || lineSeparator.equals("") ) lineSeparator = "\n";
+		String xmlSplit[] = xmlString.split(lineSeparator);
+
+		try(BufferedWriter outputFile = new BufferedWriter(
+					new OutputStreamWriter(new FileOutputStream(targetFile), "UTF-8")) ) {
+			for(int intIdx=0;intIdx<xmlSplit.length;intIdx++) {
+				outputFile.write(xmlSplit[intIdx]);
+				outputFile.newLine();
+			}
+		}
+		return true;
+	}
+
+	public String convertToXmlRtc(SIM profile) throws Exception {
+		String xmlString = "";
+		try {
+			JAXBContext jaxbContext = JAXBContext.newInstance("org.openrtp.namespaces.rtc.version03");
+			Marshaller marshaller = jaxbContext.createMarshaller();
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+			marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper",
+					new NamespacePrefixMapperImpl("http://www.openrtp.org/namespaces/rtc"));
+			StringWriter xmlFileWriter = new StringWriter();
+			marshaller.marshal(profile, xmlFileWriter);
+			xmlString = xmlFileWriter.toString();
+		} catch (JAXBException exception) {
+			throw new Exception("XML Transformation Failed.", exception);
+		}
+		return xmlString;
+	}
+	
+	public SIM restoreFromXmlIso(String targetXML) throws Exception {
+		SIM result = null;
+	    SAXParserFactory spfactory = SAXParserFactory.newInstance();
+	    SAXParser parser = spfactory.newSAXParser();
+	    DefaultHandler xmlParser = new DefaultHandler();
+	    StringReader xmlReader = new StringReader(targetXML);
+	    parser.parse(new InputSource(xmlReader), xmlParser);
+	    String targetClass =  "org.iso.iso22166.part202.profile";
+
+		JAXBContext jc = JAXBContext.newInstance(targetClass);
+		Unmarshaller unmarshaller = jc.createUnmarshaller();
+		unmarshaller.setEventHandler(new javax.xml.bind.helpers.DefaultValidationEventHandler());
+	    xmlReader = new StringReader(targetXML);
+	    Object profile = ((JAXBElement<?>)unmarshaller.unmarshal(xmlReader)).getValue();
+	    //
+    	result = (SIM)profile;
+
+	    return result;
+	}
+
+
+}

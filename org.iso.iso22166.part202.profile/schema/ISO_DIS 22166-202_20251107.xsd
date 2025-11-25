@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<xs:element name="NVList" type="NVList"/>
+	<xs:complexType name="NVList">
+		<xs:sequence>
+			<xs:element name="nv" type="NameValue" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="NameValue" type="NameValue"/>
+	<xs:complexType name="NameValue">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="value" type="xs:string" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+
+    <!-- IDnType -->
+	<xs:element name="ModuleID" type="ModuleID"/>
+	<xs:complexType name="ModuleID">
+		<xs:sequence>
+			<xs:element name="mID" type="xs:hexBinary" minOccurs="31" maxOccurs="31"/>
+			<xs:element name="iID" type="xs:hexBinary" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="IDnType" type="IDnType"/>
+	<xs:complexType name="IDnType">
+		<xs:sequence>
+			<xs:element name="moduleID" type="ModuleID" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="informationModelVersion" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="swAspects" type="ModuleID" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+    <!-- Properties -->
+	<xs:simpleType name="NoBit">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="BIT16"/>
+			<xs:enumeration value="BIT32"/>
+			<xs:enumeration value="BIT64"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="DependencyType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="OWNER"/>
+			<xs:enumeration value="OWNED"/>
+			<xs:enumeration value="OWNEROWNED"/>
+			<xs:enumeration value="NONE"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="OpTypes">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="PERIODIC"/>
+			<xs:enumeration value="EVENTDRIVEN"/>
+			<xs:enumeration value="NONRT"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="InstanceType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Singleton"/>
+			<xs:enumeration value="MultitonStatic"/>
+			<xs:enumeration value="MultitonComm"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="RangeString" type="RangeString"/>
+	<xs:complexType name="RangeString">
+		<xs:sequence>
+			<xs:element name="min" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="max" type="xs:string" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="DataProfile" type="DataProfile"/>
+	<xs:complexType name="DataProfile">
+		<xs:sequence>
+			<xs:element name="description" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="type" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="unit" type="xs:string" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Property" type="Property"/>
+	<xs:complexType name="Property">
+		<xs:complexContent>
+			<xs:extension base="DataProfile">
+				<xs:sequence>
+					<xs:element name="immutable" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="vallue" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="additionalInfo" type="NVList" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="OStype" type="OStype"/>
+	<xs:complexType name="OStype">
+		<xs:sequence>
+			<xs:element name="type" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="bit" type="NoBit" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="version" type="xs:string" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="OrgMemberType" type="OrgMemberType"/>
+	<xs:complexType name="OrgMemberType">
+		<xs:sequence>
+			<xs:element name="member" type="ModuleID" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="dependency" type="DependencyType" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Organization" type="Organization"/>
+	<xs:complexType name="Organization">
+		<xs:sequence>
+			<xs:element name="owner" type="ModuleID" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="dependency" type="DependencyType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="member" type="OrgMemberType" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="additionalinfo" type="NVList" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="ExecutionType" type="ExecutionType"/>
+	<xs:complexType name="ExecutionType">
+		<xs:sequence>
+			<xs:element name="opType" type="OpTypes" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="hardRT" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="timeConstraint" type="xs:double" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="priority" type="xs:hexBinary" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="instanceType" type="InstanceType" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="CompilerType" type="CompilerType"/>
+	<xs:complexType name="CompilerType">
+		<xs:sequence>
+			<xs:element name="osName" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="verRangeOS" type="RangeString" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="compilerName" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="verRangeCompiler" type="RangeString" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="bitnCPUarch" type="xs:string" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Library" type="Library"/>
+	<xs:complexType name="Library">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="version" type="xs:string" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Libraries" type="Libraries"/>
+	<xs:complexType name="Libraries">
+		<xs:sequence>
+			<xs:element name="libraries" type="Library" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Properties" type="Properties"/>
+	<xs:complexType name="Properties">
+		<xs:sequence>
+			<xs:element name="osType" type="OStype" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="libs" type="Libraries" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="organizations" type="Organization" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="compiler" type="CompilerType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="exeType" type="ExecutionType" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="property" type="Property" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+    <!-- IOVariables -->
+	<xs:simpleType name="InOutType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="IN"/>
+			<xs:enumeration value="OUT"/>
+			<xs:enumeration value="INOUT"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="VariableProfile" type="VariableProfile"/>
+	<xs:complexType name="VariableProfile">
+		<xs:complexContent>
+			<xs:extension base="DataProfile">
+				<xs:sequence>
+					<xs:element name="ioType" type="InOutType" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="additionalInfo" type="NVList" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="Variable" type="Variable"/>
+	<xs:complexType name="Variable">
+		<xs:complexContent>
+			<xs:extension base="VariableProfile">
+				<xs:sequence>
+					<xs:element name="value" type="xs:string" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="moduleID" type="ModuleID" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="IOVariables" type="IOVariables"/>
+	<xs:complexType name="IOVariables">
+		<xs:sequence>
+			<xs:element name="variable" type="Variable" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+    <!-- Status -->
+	<xs:simpleType name="ExeStatus">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="CREATE"/>
+			<xs:enumeration value="IDLE"/>
+			<xs:enumeration value="EXECUTING"/>
+			<xs:enumeration value="DESTRUCTED"/>
+			<xs:enumeration value="ERROR"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="Status" type="Status"/>
+	<xs:complexType name="Status">
+		<xs:sequence>
+			<xs:element name="executionStatus" type="ExeStatus" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="errorType" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+
+    <!-- Services -->
+	<xs:simpleType name="MOType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="MANDATORY"/>
+			<xs:enumeration value="OPTIONAL"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PhysicalVirtual ">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Physical"/>
+			<xs:enumeration value="Virtual"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ReqProvType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="REQUIRED"/>
+			<xs:enumeration value="PROVIDED"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ServiceDescriptionType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="IDL"/>
+			<xs:enumeration value="XML"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="ArgSepc" type="ArgSepc"/>
+	<xs:complexType name="ArgSepc">
+		<xs:sequence>
+			<xs:element name="type" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="valueName" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="inout" type="InOutType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="additionalInfo" type="NVList" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="ServiceMethod" type="ServiceMethod"/>
+	<xs:complexType name="ServiceMethod">
+		<xs:sequence>
+			<xs:element name="methodName" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="argType" type="ArgSepc" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="retType" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="moType" type="MOType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="reqProvType" type="ReqProvType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="additionalInfo" type="NVList" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="ServiceProfile" type="ServiceProfile"/>
+	<xs:complexType name="ServiceProfile">
+		<xs:sequence>
+			<xs:element name="id" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="ifURL" type="xs:string" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="methodList" type="ServiceMethod" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="pvType" type="PhysicalVirtual " minOccurs="1" maxOccurs="1"/>
+			<xs:element name="moType" type="MOType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="moduleID" type="ModuleID" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="additionalInfo" type="NVList" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="descriptionType" type="ServiceDescriptionType" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Services" type="Services"/>
+	<xs:complexType name="Services">
+		<xs:sequence>
+			<xs:element name="NoOfBasicService" type="xs:nonNegativeInteger" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="NoOfOptionalService" type="xs:nonNegativeInteger" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="seviceProfile" type="ServiceProfile" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+    <!-- Infrastructure -->
+	<xs:element name="DataBus" type="DataBus"/>
+	<xs:complexType name="DataBus">
+		<xs:sequence>
+			<xs:element name="connectionType" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="typePhyMac" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="typeNetTrans" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="typeApp" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="speed" type="xs:double" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="additionalInfo" type="NVList" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Power" type="Power"/>
+	<xs:complexType name="Power">
+		<xs:sequence>
+			<xs:element name="ratedPower" type="xs:double" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="maxPower" type="xs:double" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="additionalInfo" type="NVList" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="InfraType" type="InfraType"/>
+	<xs:complexType name="InfraType">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="version" type="RangeString" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Communication" type="Communication"/>
+	<xs:complexType name="Communication">
+		<xs:sequence>
+			<xs:element name="mostTopProtocol" type="InfraType" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="underlyingProrocol" type="DataBus" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Infrastructure" type="Infrastructure"/>
+	<xs:complexType name="Infrastructure">
+		<xs:sequence>
+			<xs:element name="power" type="Power" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="noBuses" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="dataBus" type="DataBus" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="dbType" type="xs:string" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="ipCode" type="xs:string" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="additionalInfo" type="NVList" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="comms" type="Communication" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="database" type="InfraType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="middleware" type="InfraType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+    <!-- SafeSecure -->
+	<xs:simpleType name="SafeytLevelPL">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="n"/>
+			<xs:enumeration value="a"/>
+			<xs:enumeration value="b"/>
+			<xs:enumeration value="c"/>
+			<xs:enumeration value="d"/>
+			<xs:enumeration value="e"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SafeytLevelSIL">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="0"/>
+			<xs:enumeration value="1"/>
+			<xs:enumeration value="2"/>
+			<xs:enumeration value="3"/>
+			<xs:enumeration value="4"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SafetyType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ESTOP"/>
+			<xs:enumeration value="PSTOP"/>
+			<xs:enumeration value="LIMWS"/>
+			<xs:enumeration value="SRSC"/>
+			<xs:enumeration value="SRFC"/>
+			<xs:enumeration value="HCOLA"/>
+			<xs:enumeration value="STCON"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PLSILType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="PL"/>
+			<xs:enumeration value="SIL"/>
+			<xs:enumeration value="BOTH"/>
+			<xs:enumeration value="NONE"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SecurityLevel">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="0"/>
+			<xs:enumeration value="1"/>
+			<xs:enumeration value="2"/>
+			<xs:enumeration value="3"/>
+			<xs:enumeration value="4"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SecurityType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="HU_IA"/>
+			<xs:enumeration value="SD_IA"/>
+			<xs:enumeration value="ACNT_MGT"/>
+			<xs:enumeration value="ID_MGT"/>
+			<xs:enumeration value="AUTH_MGT"/>
+			<xs:enumeration value="WIRELEE_MGT"/>
+			<xs:enumeration value="PW_AUTH"/>
+			<xs:enumeration value="PK_CERT"/>
+			<xs:enumeration value="STR_PK_AUTH"/>
+			<xs:enumeration value="LOGIN_NO"/>
+			<xs:enumeration value="ACC_UNTRUST_NET"/>
+			<xs:enumeration value="AUTHORIZE"/>
+			<xs:enumeration value="WIRELESS_USE"/>
+			<xs:enumeration value="SESS_LOCK"/>
+			<xs:enumeration value="SESS_TERM"/>
+			<xs:enumeration value="SECC_CNTR"/>
+			<xs:enumeration value="AUDT_EVT"/>
+			<xs:enumeration value="TIMESTM"/>
+			<xs:enumeration value="NON_REP"/>
+			<xs:enumeration value="COMM_INTG"/>
+			<xs:enumeration value="PROT_MALI_CODE"/>
+			<xs:enumeration value="SECUR_VERIFY"/>
+			<xs:enumeration value="SW_INTGT"/>
+			<xs:enumeration value="INPUT_VALD"/>
+			<xs:enumeration value="DET_OUT"/>
+			<xs:enumeration value="ERR_HNDL"/>
+			<xs:enumeration value="SESS_ INTGT"/>
+			<xs:enumeration value="INFO_CONFI"/>
+			<xs:enumeration value="INFO_PERS"/>
+			<xs:enumeration value="CRYTO"/>
+			<xs:enumeration value="RSTIC_FLOW"/>
+			<xs:enumeration value="DoS"/>
+			<xs:enumeration value="RESOU_MGT"/>
+			<xs:enumeration value="CNTR_RECOV_RECON"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="SafetyFunction" type="SafetyFunction"/>
+	<xs:complexType name="SafetyFunction">
+		<xs:sequence>
+			<xs:element name="safetyFunctionType" type="SafetyType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="validSafetyLevelType" type="PLSILType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="eachSafetyLevelPL" type="SafeytLevelPL" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="eachSafetyLevelSIL" type="SafeytLevelSIL" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="CyberSecurity" type="CyberSecurity"/>
+	<xs:complexType name="CyberSecurity">
+		<xs:sequence>
+			<xs:element name="securityType" type="SecurityType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="securityLevel" type="SecurityLevel" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="SafeSecure" type="SafeSecure"/>
+	<xs:complexType name="SafeSecure">
+		<xs:sequence>
+			<xs:element name="overallvalidSafetyLevelType" type="PLSILType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="overallSafetyLevelPL" type="SafeytLevelPL" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="overallSafetyLevelSIL" type="SafeytLevelSIL" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="overallPhySecurityLevel" type="SecurityLevel" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="overallCybSecurityLevel" type="SecurityLevel" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="inSafetyLevel" type="SafetyFunction" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="inCybSecurityLevel" type="CyberSecurity" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="additionalInfo" type="NVList" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+
+    <!-- Modelling -->
+	<xs:element name="ModelCase" type="ModelCase"/>
+	<xs:complexType name="ModelCase">
+		<xs:sequence>
+			<xs:element name="simulator" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="mdf" type="xs:string" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="libraries" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="dynamicSW" type="ExeForm" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="additionalInfo" type="NVList" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="Modelling" type="Modelling"/>
+	<xs:complexType name="Modelling">
+		<xs:sequence>
+			<xs:element name="simulationModel" type="ModelCase" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+    <!-- ExecutableForm -->
+	<xs:element name="ExeForm" type="ExeForm"/>
+	<xs:complexType name="ExeForm">
+		<xs:sequence>
+			<xs:element name="exeFileURL" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="shellCmd" type="xs:string" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="properties" type="Property" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="additionalInfo" type="NVList" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="ExecutableForm" type="ExecutableForm"/>
+	<xs:complexType name="ExecutableForm">
+		<xs:sequence>
+			<xs:element name="exeForm" type="ExeForm" minOccurs="1" maxOccurs="unbounded"/>
+			<xs:element name="libraryURL" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+    <!-- Software information model(SIM) -->
+	<xs:element name="SIM" type="SIM"/>
+	<xs:complexType name="SIM">
+		<xs:sequence>
+			<xs:element name="moduleName" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="description" type="xs:string" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="manufacturer" type="xs:string" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="examples" type="xs:string" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="idnType" type="IDnType" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="properties" type="Properties" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="ioVariables" type="IOVariables" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="status" type="Status" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="services" type="Services" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="infra" type="Infrastructure" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="safeSecure" type="SafeSecure" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="modelling" type="Modelling" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="execForm" type="ExecutableForm" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="additionalInfo" type="NVList" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

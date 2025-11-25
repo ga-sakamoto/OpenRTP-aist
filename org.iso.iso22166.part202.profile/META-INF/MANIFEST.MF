@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.iso.iso22166.part202.profile;singleton:=true
+Bundle-Version: 1.0.0
+Automatic-Module-Name: org.iso.iso22166.part202.profile
+Bundle-Vendor: %providerName
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .,
+ lib/jaxb-impl.jar
+Export-Package: jp.go.aist.rtm.iso22166_part202.util,
+ org.iso.iso22166.part202.profile
+Require-Bundle: jp.go.aist.rtm.toolscommon.profiles;bundle-version="2.0.0"

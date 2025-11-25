@@ -48,7 +48,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.ide,
  org.eclipse.jdt.ui,
  jp.go.aist.rtm.toolscommon.profiles;visibility:=reexport,
- jp.go.aist.rtm.toolscommon;bundle-version="1.2.0"
+ jp.go.aist.rtm.toolscommon;bundle-version="1.2.0",
+ org.iso.iso22166.part202.profile;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: jp.go.aist.rtm.rtcbuilder.RtcBuilderPlugin
 Eclipse-BuddyPolicy: registered

@@ -55,9 +55,12 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.iso.iso22166.part202.profile.SIM;
+import org.openrtp.namespaces.rtc.version03.RtcProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jp.go.aist.rtm.iso22166_part202.util.RTC2ISOProfileHandler;
 import jp.go.aist.rtm.rtcbuilder.Generator.MergeHandler;
 import jp.go.aist.rtm.rtcbuilder.GuiRtcBuilder;
 import jp.go.aist.rtm.rtcbuilder.IRTCBMessageConstants;
@@ -836,7 +839,21 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 					MessageDialog.openError(getSite().getShell(), "Error", validateRtcParam);
 					return;
 				}
+				///////////
+        		try {
+            		ProfileHandler handlerTemp = new ProfileHandler();
+					RtcProfile profile = handlerTemp.convert2XMLProfile(editor.getGeneratorParam().getRtcParam());
 
+					RTC2ISOProfileHandler handler202 = new RTC2ISOProfileHandler();
+					SIM result = handler202.convertRtc2Iso(profile);
+					handler202.saveXmlIso(result, "aaa.xml");
+				} catch (Exception e3) {
+					// TODO Auto-generated catch block
+					e3.printStackTrace();
+					return;
+				}
+				///////////
+				
 				String selectedFileName;
         		ExportCreator export = new ExportCreator();
         		if(!export.canCreateProfileName(editor)) {
