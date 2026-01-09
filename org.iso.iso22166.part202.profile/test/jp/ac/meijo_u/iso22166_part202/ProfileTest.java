@@ -1,4 +1,4 @@
-package jp.go.aist.rtm.iso22166_part202;
+package jp.ac.meijo_u.iso22166_part202;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -58,8 +58,8 @@ import org.iso.iso22166.part202.profile.Status;
 import org.iso.iso22166.part202.profile.Variable;
 import org.openrtp.namespaces.rtc.version03.RtcProfile;
 
-import jp.go.aist.rtm.iso22166_part202.util.ISO2RTCProfileHandler;
-import jp.go.aist.rtm.iso22166_part202.util.RTC2ISOProfileHandler;
+import jp.ac.meijo_u.iso22166_part202.util.ISO2RTCProfileHandler;
+import jp.ac.meijo_u.iso22166_part202.util.RTC2ISOProfileHandler;
 import jp.go.aist.rtm.toolscommon.profiles.util.XmlHandler;	
 
 public class ProfileTest {
@@ -177,7 +177,7 @@ public class ProfileTest {
 			prop01.setDescription("prop01Desc");
 			prop01.setType("String");
 			prop01.setUnit("prop01Unit");
-			prop01.setVallue("Val01");
+			prop01.setValue("Val01");
 			prop01.setImmutable(false);
 			properties.getProperty().add(prop01);
 			
@@ -186,7 +186,7 @@ public class ProfileTest {
 			prop02.setDescription("prop02Desc");
 			prop02.setType("int");
 			prop02.setUnit("prop02Unit");
-			prop02.setVallue("Val02");
+			prop02.setValue("Val02");
 			prop02.setImmutable(true);
 			properties.getProperty().add(prop02);
 			
@@ -195,7 +195,7 @@ public class ProfileTest {
 			prop03.setDescription("prop03Desc");
 			prop03.setType("float");
 			prop03.setUnit("prop03Unit");
-			prop03.setVallue("Val03");
+			prop03.setValue("Val03");
 			prop03.setImmutable(true);
 			properties.getProperty().add(prop03);
 		}
@@ -269,7 +269,7 @@ public class ProfileTest {
 			sv01.setIfURL("xxx.idl");
 			sv01.setPvType(PhysicalVirtual_0020.PHYSICAL);
 			sv01.setMoType(MOType.MANDATORY);
-			services.getSeviceProfile().add(sv01);
+			services.getServiceProfile().add(sv01);
 			
 			NVList nv = factory.createNVList();
 			sv01.setAdditionalInfo(nv);
@@ -378,7 +378,7 @@ public class ProfileTest {
 			sv02.setIfURL("yyy.idl");
 			sv02.setPvType(PhysicalVirtual_0020.PHYSICAL);
 			sv02.setMoType(MOType.MANDATORY);
-			services.getSeviceProfile().add(sv02);
+			services.getServiceProfile().add(sv02);
 			
 			ServiceMethod sm02 = factory.createServiceMethod();
 			sm02.setMethodName("method02");
@@ -392,7 +392,7 @@ public class ProfileTest {
 			sv03.setIfURL("zzz.idl");
 			sv03.setPvType(PhysicalVirtual_0020.VIRTUAL);
 			sv03.setMoType(MOType.OPTIONAL);
-			services.getSeviceProfile().add(sv03);
+			services.getServiceProfile().add(sv03);
 			
 			ServiceMethod sm03 = factory.createServiceMethod();
 			sm03.setMethodName("method03");
@@ -482,7 +482,7 @@ public class ProfileTest {
 			com01.getMostTopProtocol().add(mt03);
 			
 			DataBus up = factory.createDataBus();
-			com01.setUnderlyingProrocol(up);
+			com01.setUnderlyingProtocol(up);
 			up.setConnectionType("USB-A");
 			up.setTypePhyMac("USB");
 			up.getTypeNetTrans().add("TCP/IP");
@@ -522,7 +522,7 @@ public class ProfileTest {
 			com02.getMostTopProtocol().add(mt201);
 			
 			DataBus up2 = factory.createDataBus();
-			com02.setUnderlyingProrocol(up2);
+			com02.setUnderlyingProtocol(up2);
 			up2.setConnectionType("USB-C");
 			up2.setTypePhyMac("USB2");
 			up2.getTypeNetTrans().add("IP");
@@ -541,7 +541,7 @@ public class ProfileTest {
 			com03.getMostTopProtocol().add(mt301);
 			
 			DataBus up3 = factory.createDataBus();
-			com03.setUnderlyingProrocol(up3);
+			com03.setUnderlyingProtocol(up3);
 			up3.setConnectionType("RJ45");
 			up3.setTypePhyMac("EtherCAT");
 			up3.getTypeNetTrans().add("TCP");
@@ -553,7 +553,7 @@ public class ProfileTest {
 			SafeSecure safeSecure = factory.createSafeSecure();
 			sim.setSafeSecure(safeSecure);
 			
-			safeSecure.setOverallvalidSafetyLevelType(PLSILType.PL);
+			safeSecure.setOverallValidSafetyLevelType(PLSILType.PL);
 			safeSecure.setOverallSafetyLevelPL(SafeytLevelPL.C);
 			safeSecure.setOverallSafetyLevelSIL("3");
 			safeSecure.setOverallPhySecurityLevel("4");
@@ -582,17 +582,17 @@ public class ProfileTest {
 			
 			CyberSecurity cs01 = factory.createCyberSecurity();
 			cs01.setSecurityType(SecurityType.CRYTO);
-			cs01.setSecurityLevel("2");
+			cs01.setEachSecurityLevel("2");
 			safeSecure.getInCybSecurityLevel().add(cs01);
 			
 			CyberSecurity cs02 = factory.createCyberSecurity();
 			cs02.setSecurityType(SecurityType.ACC_UNTRUST_NET);
-			cs02.setSecurityLevel("2");
+			cs02.setEachSecurityLevel("2");
 			safeSecure.getInCybSecurityLevel().add(cs02);
 			
 			CyberSecurity cs03 = factory.createCyberSecurity();
 			cs03.setSecurityType(SecurityType.DO_S);
-			cs03.setSecurityLevel("5");
+			cs03.setEachSecurityLevel("5");
 			safeSecure.getInCybSecurityLevel().add(cs03);
 			
 			NVList nvd = factory.createNVList();
@@ -668,7 +668,7 @@ public class ProfileTest {
 		
 		{
 			ExecutableForm exeForm = factory.createExecutableForm();
-			sim.setExecForm(exeForm);
+			sim.setExeForm(exeForm);
 			exeForm.getLibraryURL().add("aaa");
 			exeForm.getLibraryURL().add("bbb");
 			exeForm.getLibraryURL().add("ccc");
@@ -765,12 +765,12 @@ public class ProfileTest {
 //		test.makeIsoProfile();
 		
 		//RTC - ISO - RTC 
-//		test.convertRtc2IsoProfile("\\resource\\RTC_Base.xml", "\\resource\\ISO.xml");
-//		test.convertIso2RtcProfile("\\resource\\ISO.xml", "\\resource\\RTC.xml");
+		test.convertRtc2IsoProfile("\\resource\\RTC_Base.xml", "\\resource\\ISO.xml");
+		test.convertIso2RtcProfile("\\resource\\ISO.xml", "\\resource\\RTC.xml");
 
 		//ISO - RTC - ISO 
 //		test.convertIso2RtcProfile("\\resource\\ISO_Base.xml", "\\resource\\RTC_Conv.xml");
-		test.convertRtc2IsoProfile("\\resource\\RTC_Conv.xml", "\\resource\\ISO_Conv.xml");
+//		test.convertRtc2IsoProfile("\\resource\\RTC_Conv.xml", "\\resource\\ISO_Conv.xml");
 
 
 	}

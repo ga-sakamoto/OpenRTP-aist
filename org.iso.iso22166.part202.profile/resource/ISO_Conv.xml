@@ -20,13 +20,31 @@
         </swAspects>
     </idnType>
     <properties>
+        <libs>
+            <libraries>
+                <name>xxx</name>
+                <version>1.2.3</version>
+            </libraries>
+            <libraries>
+                <name>yyy</name>
+                <version>4.5.6</version>
+            </libraries>
+            <libraries>
+                <name>zzz</name>
+                <version>7.8.9</version>
+            </libraries>
+        </libs>
         <compiler>
             <compilerName>VisualStudio</compilerName>
+            <verRangeCompiler>
+                <min>3.4.5</min>
+                <max>5.6.7</max>
+            </verRangeCompiler>
         </compiler>
         <exeType>
             <opType>PERIODIC</opType>
             <hardRT>false</hardRT>
-            <timeConstraint>0.0</timeConstraint>
+            <timeConstraint>0.5</timeConstraint>
             <instanceType>Singleton</instanceType>
         </exeType>
         <property>
@@ -35,7 +53,7 @@
             <type>String</type>
             <unit>prop01Unit</unit>
             <immutable>false</immutable>
-            <vallue>Val01</vallue>
+            <value>Val01</value>
         </property>
         <property>
             <description>prop02Desc</description>
@@ -43,7 +61,7 @@
             <type>int</type>
             <unit>prop02Unit</unit>
             <immutable>true</immutable>
-            <vallue>Val02</vallue>
+            <value>Val02</value>
         </property>
         <property>
             <description>prop03Desc</description>
@@ -51,7 +69,7 @@
             <type>float</type>
             <unit>prop03Unit</unit>
             <immutable>true</immutable>
-            <vallue>Val03</vallue>
+            <value>Val03</value>
         </property>
     </properties>
     <ioVariables>
@@ -101,7 +119,7 @@
     <services>
         <NoOfBasicService>3</NoOfBasicService>
         <NoOfOptionalService>0</NoOfOptionalService>
-        <seviceProfile>
+        <serviceProfile>
             <id>sv01</id>
             <ifURL>xxx.idl</ifURL>
             <methodList>
@@ -191,8 +209,8 @@
                     <value>svVl03</value>
                 </nv>
             </additionalInfo>
-        </seviceProfile>
-        <seviceProfile>
+        </serviceProfile>
+        <serviceProfile>
             <id>sv02</id>
             <ifURL>yyy.idl</ifURL>
             <methodList>
@@ -203,8 +221,8 @@
             </methodList>
             <pvType>Physical</pvType>
             <moType>MANDATORY</moType>
-        </seviceProfile>
-        <seviceProfile>
+        </serviceProfile>
+        <serviceProfile>
             <id>sv03</id>
             <ifURL>zzz.idl</ifURL>
             <methodList>
@@ -215,7 +233,7 @@
             </methodList>
             <pvType>Virtual</pvType>
             <moType>OPTIONAL</moType>
-        </seviceProfile>
+        </serviceProfile>
     </services>
     <infra>
         <comms>
@@ -240,7 +258,7 @@
                     <max>2.7</max>
                 </version>
             </mostTopProtocol>
-            <underlyingProrocol>
+            <underlyingProtocol>
                 <connectionType>USB-A</connectionType>
                 <typePhyMac>USB</typePhyMac>
                 <typeNetTrans>TCP/IP</typeNetTrans>
@@ -264,7 +282,7 @@
                         <value>val03</value>
                     </nv>
                 </additionalInfo>
-            </underlyingProrocol>
+            </underlyingProtocol>
         </comms>
         <comms>
             <mostTopProtocol>
@@ -274,13 +292,13 @@
                     <max>6.4</max>
                 </version>
             </mostTopProtocol>
-            <underlyingProrocol>
+            <underlyingProtocol>
                 <connectionType>USB-C</connectionType>
                 <typePhyMac>USB2</typePhyMac>
                 <typeNetTrans>IP</typeNetTrans>
                 <typeApp>BOOTP</typeApp>
                 <speed>4.1</speed>
-            </underlyingProrocol>
+            </underlyingProtocol>
         </comms>
         <comms>
             <mostTopProtocol>
@@ -290,13 +308,13 @@
                     <max>8.7</max>
                 </version>
             </mostTopProtocol>
-            <underlyingProrocol>
+            <underlyingProtocol>
                 <connectionType>RJ45</connectionType>
                 <typePhyMac>EtherCAT</typePhyMac>
                 <typeNetTrans>TCP</typeNetTrans>
                 <typeApp>XXX</typeApp>
                 <speed>4.1</speed>
-            </underlyingProrocol>
+            </underlyingProtocol>
         </comms>
         <database>
             <name>db01</name>
@@ -342,7 +360,7 @@
         </middleware>
     </infra>
     <safeSecure>
-        <overallvalidSafetyLevelType>PL</overallvalidSafetyLevelType>
+        <overallValidSafetyLevelType>PL</overallValidSafetyLevelType>
         <overallSafetyLevelPL>c</overallSafetyLevelPL>
         <overallSafetyLevelSIL>3</overallSafetyLevelSIL>
         <overallPhySecurityLevel>4</overallPhySecurityLevel>
@@ -367,15 +385,15 @@
         </inSafetyLevel>
         <inCybSecurityLevel>
             <securityType>CRYTO</securityType>
-            <securityLevel>2</securityLevel>
+            <eachSecurityLevel>2</eachSecurityLevel>
         </inCybSecurityLevel>
         <inCybSecurityLevel>
             <securityType>ACC_UNTRUST_NET</securityType>
-            <securityLevel>2</securityLevel>
+            <eachSecurityLevel>2</eachSecurityLevel>
         </inCybSecurityLevel>
         <inCybSecurityLevel>
             <securityType>DoS</securityType>
-            <securityLevel>5</securityLevel>
+            <eachSecurityLevel>5</eachSecurityLevel>
         </inCybSecurityLevel>
         <additionalInfo>
             <nv>
@@ -433,7 +451,7 @@
             </dynamicSW>
         </simulationModel>
     </modelling>
-    <execForm>
+    <exeForm>
         <exeForm>
             <exeFileURL>ef01</exeFileURL>
             <shellCmd>scm01</shellCmd>
@@ -449,10 +467,10 @@
         <libraryURL>aaa</libraryURL>
         <libraryURL>bbb</libraryURL>
         <libraryURL>ccc</libraryURL>
-    </execForm>
+    </exeForm>
     <additionalInfo>
         <nv>
-            <name>profileVersion</name>
+            <name>__iso__profileVersion</name>
             <value>0.3</value>
         </nv>
     </additionalInfo>

@@ -2,7 +2,7 @@
 // このファイルは、JavaTM Architecture for XML Binding(JAXB) Reference Implementation、v2.2.8-b130911.1802によって生成されました 
 // <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a>を参照してください 
 // ソース・スキーマの再コンパイル時にこのファイルの変更は失われます。 
-// 生成日: 2025.11.18 時間 11:14:52 AM JST 
+// 生成日: 2025.12.27 時間 01:27:43 PM JST 
 //
 
 
@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="NoOfBasicService" type="{http://www.w3.org/2001/XMLSchema}nonNegativeInteger"/>
  *         &lt;element name="NoOfOptionalService" type="{http://www.w3.org/2001/XMLSchema}nonNegativeInteger"/>
- *         &lt;element name="seviceProfile" type="{}ServiceProfile" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="serviceProfile" type="{}ServiceProfile" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -43,7 +43,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "Services", propOrder = {
     "noOfBasicService",
     "noOfOptionalService",
-    "seviceProfile"
+    "serviceProfile"
 })
 public class Services {
 
@@ -53,7 +53,7 @@ public class Services {
     @XmlElement(name = "NoOfOptionalService", required = true)
     @XmlSchemaType(name = "nonNegativeInteger")
     protected BigInteger noOfOptionalService;
-    protected List<ServiceProfile> seviceProfile;
+    protected List<ServiceProfile> serviceProfile;
 
     /**
      * noOfBasicServiceプロパティの値を取得します。
@@ -104,18 +104,18 @@ public class Services {
     }
 
     /**
-     * Gets the value of the seviceProfile property.
+     * Gets the value of the serviceProfile property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the seviceProfile property.
+     * This is why there is not a <CODE>set</CODE> method for the serviceProfile property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getSeviceProfile().add(newItem);
+     *    getServiceProfile().add(newItem);
      * </pre>
      * 
      * 
@@ -125,11 +125,11 @@ public class Services {
      * 
      * 
      */
-    public List<ServiceProfile> getSeviceProfile() {
-        if (seviceProfile == null) {
-            seviceProfile = new ArrayList<ServiceProfile>();
+    public List<ServiceProfile> getServiceProfile() {
+        if (serviceProfile == null) {
+            serviceProfile = new ArrayList<ServiceProfile>();
         }
-        return this.seviceProfile;
+        return this.serviceProfile;
     }
 
 }

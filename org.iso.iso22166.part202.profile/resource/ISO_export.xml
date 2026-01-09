@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <SIM>
-    <moduleName>ModuleName222</moduleName>
+    <moduleName>ModuleName</moduleName>
     <description>ModuleDescription</description>
     <manufacturer>VenderName</manufacturer>
     <examples></examples>
@@ -26,35 +26,35 @@
             <value>10</value>
             <additionalInfo>
                 <nv>
-                    <name>__iso__constraint</name>
+                    <name>constraint</name>
                     <value>const1</value>
                 </nv>
                 <nv>
-                    <name>__iso__docDataname</name>
+                    <name>docDataname</name>
                     <value>name1 doc</value>
                 </nv>
                 <nv>
-                    <name>__iso__docDefaultValue</name>
+                    <name>docDefaultValue</name>
                     <value>def1 doc</value>
                 </nv>
                 <nv>
-                    <name>__iso__docUnit</name>
+                    <name>docUnit</name>
                     <value>unit1 doc</value>
                 </nv>
                 <nv>
-                    <name>__iso__docRange</name>
+                    <name>docRange</name>
                     <value>range1 doc</value>
                 </nv>
                 <nv>
-                    <name>__iso__docConstraint</name>
+                    <name>docConstraint</name>
                     <value>const1 doc</value>
                 </nv>
                 <nv>
-                    <name>__iso__variableName</name>
+                    <name>variableName</name>
                     <value>vconf1</value>
                 </nv>
                 <nv>
-                    <name>__iso____widget__</name>
+                    <name>__widget__</name>
                     <value>text</value>
                 </nv>
             </additionalInfo>
@@ -68,35 +68,35 @@
             <value>1.23</value>
             <additionalInfo>
                 <nv>
-                    <name>__iso__constraint</name>
+                    <name>constraint</name>
                     <value>const2</value>
                 </nv>
                 <nv>
-                    <name>__iso__docDataname</name>
+                    <name>docDataname</name>
                     <value>name2 doc</value>
                 </nv>
                 <nv>
-                    <name>__iso__docDefaultValue</name>
+                    <name>docDefaultValue</name>
                     <value>def2 doc</value>
                 </nv>
                 <nv>
-                    <name>__iso__docUnit</name>
+                    <name>docUnit</name>
                     <value>unit2 doc</value>
                 </nv>
                 <nv>
-                    <name>__iso__docRange</name>
+                    <name>docRange</name>
                     <value>range2 doc</value>
                 </nv>
                 <nv>
-                    <name>__iso__docConstraint</name>
+                    <name>docConstraint</name>
                     <value>const2 doc</value>
                 </nv>
                 <nv>
-                    <name>__iso__variableName</name>
+                    <name>variableName</name>
                     <value>vconf2</value>
                 </nv>
                 <nv>
-                    <name>__iso____widget__</name>
+                    <name>__widget__</name>
                     <value>slider.3</value>
                 </nv>
             </additionalInfo>
@@ -106,44 +106,44 @@
         <variable>
             <description>In1 over</description>
             <name>InPort1</name>
-            <type>Test::MyData</type>
+            <type>RTC::TimedLong</type>
             <unit></unit>
             <ioType>IN</ioType>
             <additionalInfo>
                 <nv>
-                    <name>__iso__idlFile</name>
-                    <value>idl\MyData.idl</value>
+                    <name>idlFile</name>
+                    <value>&lt;RTM_ROOT&gt;\rtm\idl\BasicDataType.idl</value>
                 </nv>
                 <nv>
-                    <name>__iso__type</name>
+                    <name>type</name>
                     <value>In1 Type</value>
                 </nv>
                 <nv>
-                    <name>__iso__number</name>
+                    <name>number</name>
                     <value>In1 Num</value>
                 </nv>
                 <nv>
-                    <name>__iso__semantics</name>
+                    <name>semantics</name>
                     <value>In1 Detail</value>
                 </nv>
                 <nv>
-                    <name>__iso__unit</name>
+                    <name>unit</name>
                     <value>In1 Unit</value>
                 </nv>
                 <nv>
-                    <name>__iso__occurrence</name>
+                    <name>occurrence</name>
                     <value>In1 Occ</value>
                 </nv>
                 <nv>
-                    <name>__iso__operation</name>
+                    <name>operation</name>
                     <value>In1 Freq</value>
                 </nv>
                 <nv>
-                    <name>__iso__variableName</name>
+                    <name>variableName</name>
                     <value>InVar1</value>
                 </nv>
                 <nv>
-                    <name>__iso__position</name>
+                    <name>position</name>
                     <value>LEFT</value>
                 </nv>
             </additionalInfo>
@@ -156,39 +156,39 @@
             <ioType>IN</ioType>
             <additionalInfo>
                 <nv>
-                    <name>__iso__idlFile</name>
+                    <name>idlFile</name>
                     <value>&lt;RTM_ROOT&gt;\rtm\idl\BasicDataType.idl</value>
                 </nv>
                 <nv>
-                    <name>__iso__type</name>
+                    <name>type</name>
                     <value>In2 type</value>
                 </nv>
                 <nv>
-                    <name>__iso__number</name>
+                    <name>number</name>
                     <value>in2 num</value>
                 </nv>
                 <nv>
-                    <name>__iso__semantics</name>
+                    <name>semantics</name>
                     <value>In2 detail</value>
                 </nv>
                 <nv>
-                    <name>__iso__unit</name>
+                    <name>unit</name>
                     <value>in2 unit</value>
                 </nv>
                 <nv>
-                    <name>__iso__occurrence</name>
+                    <name>occurrence</name>
                     <value>in2 occ</value>
                 </nv>
                 <nv>
-                    <name>__iso__operation</name>
+                    <name>operation</name>
                     <value>in2 freq</value>
                 </nv>
                 <nv>
-                    <name>__iso__variableName</name>
+                    <name>variableName</name>
                     <value>in2Var</value>
                 </nv>
                 <nv>
-                    <name>__iso__position</name>
+                    <name>position</name>
                     <value>LEFT</value>
                 </nv>
             </additionalInfo>
@@ -201,39 +201,39 @@
             <ioType>OUT</ioType>
             <additionalInfo>
                 <nv>
-                    <name>__iso__idlFile</name>
+                    <name>idlFile</name>
                     <value>&lt;RTM_ROOT&gt;\rtm\idl\BasicDataType.idl</value>
                 </nv>
                 <nv>
-                    <name>__iso__type</name>
+                    <name>type</name>
                     <value>out1 type</value>
                 </nv>
                 <nv>
-                    <name>__iso__number</name>
+                    <name>number</name>
                     <value>out1 num</value>
                 </nv>
                 <nv>
-                    <name>__iso__semantics</name>
+                    <name>semantics</name>
                     <value>out1 detail</value>
                 </nv>
                 <nv>
-                    <name>__iso__unit</name>
+                    <name>unit</name>
                     <value>out1 unit</value>
                 </nv>
                 <nv>
-                    <name>__iso__occurrence</name>
+                    <name>occurrence</name>
                     <value>out1 occ</value>
                 </nv>
                 <nv>
-                    <name>__iso__operation</name>
+                    <name>operation</name>
                     <value>out1 freq</value>
                 </nv>
                 <nv>
-                    <name>__iso__variableName</name>
+                    <name>variableName</name>
                     <value>out1Var</value>
                 </nv>
                 <nv>
-                    <name>__iso__position</name>
+                    <name>position</name>
                     <value>RIGHT</value>
                 </nv>
             </additionalInfo>
@@ -241,44 +241,44 @@
         <variable>
             <description>out2 over</description>
             <name>OutPort2</name>
-            <type>Test::MyData</type>
+            <type>RTC::TimedULong</type>
             <unit></unit>
             <ioType>OUT</ioType>
             <additionalInfo>
                 <nv>
-                    <name>__iso__idlFile</name>
-                    <value>idl\MyData.idl</value>
+                    <name>idlFile</name>
+                    <value>&lt;RTM_ROOT&gt;\rtm\idl\BasicDataType.idl</value>
                 </nv>
                 <nv>
-                    <name>__iso__type</name>
+                    <name>type</name>
                     <value>out2 type</value>
                 </nv>
                 <nv>
-                    <name>__iso__number</name>
+                    <name>number</name>
                     <value>out2 num</value>
                 </nv>
                 <nv>
-                    <name>__iso__semantics</name>
+                    <name>semantics</name>
                     <value>out2 detail</value>
                 </nv>
                 <nv>
-                    <name>__iso__unit</name>
+                    <name>unit</name>
                     <value>out2 unit</value>
                 </nv>
                 <nv>
-                    <name>__iso__occurrence</name>
+                    <name>occurrence</name>
                     <value>out2 occ</value>
                 </nv>
                 <nv>
-                    <name>__iso__operation</name>
+                    <name>operation</name>
                     <value>out2 freq</value>
                 </nv>
                 <nv>
-                    <name>__iso__variableName</name>
+                    <name>variableName</name>
                     <value>out2Var</value>
                 </nv>
                 <nv>
-                    <name>__iso__position</name>
+                    <name>position</name>
                     <value>RIGHT</value>
                 </nv>
             </additionalInfo>
@@ -296,58 +296,58 @@
                 <reqProvType>PROVIDED</reqProvType>
                 <additionalInfo>
                     <nv>
-                        <name>__iso__instanceName</name>
+                        <name>instanceName</name>
                         <value>if1inst</value>
                     </nv>
                     <nv>
-                        <name>__iso__idlFile</name>
+                        <name>idlFile</name>
                         <value>CameraCommonInterface.idl</value>
                     </nv>
                     <nv>
-                        <name>__iso__path</name>
+                        <name>path</name>
                         <value>&lt;RTM_ROOT&gt;\rtm\idl</value>
                     </nv>
                     <nv>
-                        <name>__iso__description</name>
+                        <name>description</name>
                         <value>if1over</value>
                     </nv>
                     <nv>
-                        <name>__iso__docArgument</name>
+                        <name>docArgument</name>
                         <value>if1arg</value>
                     </nv>
                     <nv>
-                        <name>__iso__docReturn</name>
+                        <name>docReturn</name>
                         <value>if1ret</value>
                     </nv>
                     <nv>
-                        <name>__iso__docException</name>
+                        <name>docException</name>
                         <value>if1ex</value>
                     </nv>
                     <nv>
-                        <name>__iso__docPreCondition</name>
+                        <name>docPreCondition</name>
                         <value>if1pre</value>
                     </nv>
                     <nv>
-                        <name>__iso__docPostCondition</name>
+                        <name>docPostCondition</name>
                         <value>if1post</value>
                     </nv>
                     <nv>
-                        <name>__iso__variableName</name>
+                        <name>variableName</name>
                         <value>if1var</value>
                     </nv>
                 </additionalInfo>
             </methodList>
             <additionalInfo>
                 <nv>
-                    <name>__iso__description</name>
+                    <name>description</name>
                     <value>01over</value>
                 </nv>
                 <nv>
-                    <name>__iso__ifdescription</name>
+                    <name>ifdescription</name>
                     <value>01detail</value>
                 </nv>
                 <nv>
-                    <name>__iso__position</name>
+                    <name>position</name>
                     <value>LEFT</value>
                 </nv>
             </additionalInfo>
@@ -360,58 +360,58 @@
                 <reqProvType>PROVIDED</reqProvType>
                 <additionalInfo>
                     <nv>
-                        <name>__iso__instanceName</name>
+                        <name>instanceName</name>
                         <value>if02inst</value>
                     </nv>
                     <nv>
-                        <name>__iso__idlFile</name>
+                        <name>idlFile</name>
                         <value>MyData.idl</value>
                     </nv>
                     <nv>
-                        <name>__iso__path</name>
+                        <name>path</name>
                         <value>idl</value>
                     </nv>
                     <nv>
-                        <name>__iso__description</name>
+                        <name>description</name>
                         <value>if02over</value>
                     </nv>
                     <nv>
-                        <name>__iso__docArgument</name>
+                        <name>docArgument</name>
                         <value>if02arg</value>
                     </nv>
                     <nv>
-                        <name>__iso__docReturn</name>
+                        <name>docReturn</name>
                         <value>of02ret</value>
                     </nv>
                     <nv>
-                        <name>__iso__docException</name>
+                        <name>docException</name>
                         <value>if02ex</value>
                     </nv>
                     <nv>
-                        <name>__iso__docPreCondition</name>
+                        <name>docPreCondition</name>
                         <value>if02pre</value>
                     </nv>
                     <nv>
-                        <name>__iso__docPostCondition</name>
+                        <name>docPostCondition</name>
                         <value>if02post</value>
                     </nv>
                     <nv>
-                        <name>__iso__variableName</name>
+                        <name>variableName</name>
                         <value>if02v</value>
                     </nv>
                 </additionalInfo>
             </methodList>
             <additionalInfo>
                 <nv>
-                    <name>__iso__description</name>
+                    <name>description</name>
                     <value>02over</value>
                 </nv>
                 <nv>
-                    <name>__iso__ifdescription</name>
+                    <name>ifdescription</name>
                     <value>02detail</value>
                 </nv>
                 <nv>
-                    <name>__iso__position</name>
+                    <name>position</name>
                     <value>LEFT</value>
                 </nv>
             </additionalInfo>
@@ -424,58 +424,58 @@
                 <reqProvType>REQUIRED</reqProvType>
                 <additionalInfo>
                     <nv>
-                        <name>__iso__instanceName</name>
+                        <name>instanceName</name>
                         <value>if03inst</value>
                     </nv>
                     <nv>
-                        <name>__iso__idlFile</name>
+                        <name>idlFile</name>
                         <value>MyData.idl</value>
                     </nv>
                     <nv>
-                        <name>__iso__path</name>
+                        <name>path</name>
                         <value>idl</value>
                     </nv>
                     <nv>
-                        <name>__iso__description</name>
+                        <name>description</name>
                         <value>if03over</value>
                     </nv>
                     <nv>
-                        <name>__iso__docArgument</name>
+                        <name>docArgument</name>
                         <value>if03arg</value>
                     </nv>
                     <nv>
-                        <name>__iso__docReturn</name>
+                        <name>docReturn</name>
                         <value>if03ret</value>
                     </nv>
                     <nv>
-                        <name>__iso__docException</name>
+                        <name>docException</name>
                         <value>if03ex</value>
                     </nv>
                     <nv>
-                        <name>__iso__docPreCondition</name>
+                        <name>docPreCondition</name>
                         <value>if03pre</value>
                     </nv>
                     <nv>
-                        <name>__iso__docPostCondition</name>
+                        <name>docPostCondition</name>
                         <value>if03post</value>
                     </nv>
                     <nv>
-                        <name>__iso__variableName</name>
+                        <name>variableName</name>
                         <value>if03v</value>
                     </nv>
                 </additionalInfo>
             </methodList>
             <additionalInfo>
                 <nv>
-                    <name>__iso__description</name>
+                    <name>description</name>
                     <value>03over</value>
                 </nv>
                 <nv>
-                    <name>__iso__ifdescription</name>
+                    <name>ifdescription</name>
                     <value>03detail</value>
                 </nv>
                 <nv>
-                    <name>__iso__position</name>
+                    <name>position</name>
                     <value>LEFT</value>
                 </nv>
             </additionalInfo>
@@ -483,251 +483,251 @@
     </services>
     <additionalInfo>
         <nv>
-            <name>__iso__profileVersion</name>
+            <name>profileVersion</name>
             <value>0.3</value>
         </nv>
         <nv>
-            <name>__iso__componentKind</name>
+            <name>activityType</name>
+            <value>PERIODIC</value>
+        </nv>
+        <nv>
+            <name>componentKind</name>
             <value>DataFlowComponent</value>
         </nv>
         <nv>
-            <name>__iso__category</name>
+            <name>category</name>
             <value>Category</value>
         </nv>
         <nv>
-            <name>__iso__maxInstances</name>
+            <name>maxInstances</name>
             <value>1</value>
         </nv>
         <nv>
-            <name>__iso__creationDate</name>
+            <name>creationDate</name>
             <value>2025-08-18T10:45:05.000+09:00</value>
         </nv>
         <nv>
-            <name>__iso__updateDate</name>
-            <value>2025-08-24T12:26:50.000+09:00</value>
+            <name>updateDate</name>
+            <value>2025-12-23T23:16:44.000+09:00</value>
         </nv>
         <nv>
-            <name>__iso__executionType</name>
-            <value>PeriodicExecutionContext</value>
-        </nv>
-        <nv>
-            <name>__iso__docAlgorithm</name>
+            <name>docAlgorithm</name>
             <value>アルゴリズムDoc</value>
         </nv>
         <nv>
-            <name>__iso__docDescription</name>
+            <name>docDescription</name>
             <value>概要説明Doc</value>
         </nv>
         <nv>
-            <name>__iso__docInout</name>
+            <name>docInout</name>
             <value>入出力Doc</value>
         </nv>
         <nv>
-            <name>__iso__docCreator</name>
+            <name>docCreator</name>
             <value>作成者Doc</value>
         </nv>
         <nv>
-            <name>__iso__docLicense</name>
+            <name>docLicense</name>
             <value>ライセンスDoc</value>
         </nv>
         <nv>
-            <name>__iso__docReference</name>
+            <name>docReference</name>
             <value>参考文献Doc</value>
         </nv>
         <nv>
-            <name>__iso__extSaveProject</name>
-            <value>Basic</value>
+            <name>extSaveProject</name>
+            <value>ServiceCxx</value>
         </nv>
         <nv>
-            <name>__iso__onInitialize</name>
+            <name>onInitialize</name>
             <value>true</value>
         </nv>
         <nv>
-            <name>__iso__onInitializeDocDescription</name>
+            <name>onInitializeDocDescription</name>
             <value>init Overview</value>
         </nv>
         <nv>
-            <name>__iso__onInitializeDocPreCondition</name>
+            <name>onInitializeDocPreCondition</name>
             <value>init Pre</value>
         </nv>
         <nv>
-            <name>__iso__onInitializeDocPostCondition</name>
+            <name>onInitializeDocPostCondition</name>
             <value>init Post</value>
         </nv>
         <nv>
-            <name>__iso__onFinalize</name>
+            <name>onFinalize</name>
             <value>true</value>
         </nv>
         <nv>
-            <name>__iso__onFinalizeDocDescription</name>
+            <name>onFinalizeDocDescription</name>
             <value>final over</value>
         </nv>
         <nv>
-            <name>__iso__onFinalizeDocPreCondition</name>
+            <name>onFinalizeDocPreCondition</name>
             <value>final pre</value>
         </nv>
         <nv>
-            <name>__iso__onFinalizeDocPostCondition</name>
+            <name>onFinalizeDocPostCondition</name>
             <value>final post</value>
         </nv>
         <nv>
-            <name>__iso__onStartup</name>
+            <name>onStartup</name>
             <value>true</value>
         </nv>
         <nv>
-            <name>__iso__onStartupDocDescription</name>
+            <name>onStartupDocDescription</name>
             <value>start over</value>
         </nv>
         <nv>
-            <name>__iso__onStartupDocPreCondition</name>
+            <name>onStartupDocPreCondition</name>
             <value>start pre</value>
         </nv>
         <nv>
-            <name>__iso__onStartupDocPostCondition</name>
+            <name>onStartupDocPostCondition</name>
             <value>start post</value>
         </nv>
         <nv>
-            <name>__iso__onShutdown</name>
+            <name>onShutdown</name>
             <value>true</value>
         </nv>
         <nv>
-            <name>__iso__onShutdownDocDescription</name>
+            <name>onShutdownDocDescription</name>
             <value>shut over</value>
         </nv>
         <nv>
-            <name>__iso__onShutdownDocPreCondition</name>
+            <name>onShutdownDocPreCondition</name>
             <value>shut pre</value>
         </nv>
         <nv>
-            <name>__iso__onShutdownDocPostCondition</name>
+            <name>onShutdownDocPostCondition</name>
             <value>shut post</value>
         </nv>
         <nv>
-            <name>__iso__onActivated</name>
+            <name>onActivated</name>
             <value>true</value>
         </nv>
         <nv>
-            <name>__iso__onActivatedDocDescription</name>
+            <name>onActivatedDocDescription</name>
             <value>activated over</value>
         </nv>
         <nv>
-            <name>__iso__onActivatedDocPreCondition</name>
+            <name>onActivatedDocPreCondition</name>
             <value>activated pre</value>
         </nv>
         <nv>
-            <name>__iso__onActivatedDocPostCondition</name>
+            <name>onActivatedDocPostCondition</name>
             <value>activated post</value>
         </nv>
         <nv>
-            <name>__iso__onDeactivated</name>
+            <name>onDeactivated</name>
             <value>true</value>
         </nv>
         <nv>
-            <name>__iso__onDeactivatedDocDescription</name>
+            <name>onDeactivatedDocDescription</name>
             <value>deact over</value>
         </nv>
         <nv>
-            <name>__iso__onDeactivatedDocPreCondition</name>
+            <name>onDeactivatedDocPreCondition</name>
             <value>deact pre</value>
         </nv>
         <nv>
-            <name>__iso__onDeactivatedDocPostCondition</name>
+            <name>onDeactivatedDocPostCondition</name>
             <value>deact post</value>
         </nv>
         <nv>
-            <name>__iso__onAborting</name>
+            <name>onAborting</name>
             <value>true</value>
         </nv>
         <nv>
-            <name>__iso__onAbortingDocDescription</name>
+            <name>onAbortingDocDescription</name>
             <value>abort over</value>
         </nv>
         <nv>
-            <name>__iso__onAbortingDocPreCondition</name>
+            <name>onAbortingDocPreCondition</name>
             <value>abort pre</value>
         </nv>
         <nv>
-            <name>__iso__onAbortingDocPostCondition</name>
+            <name>onAbortingDocPostCondition</name>
             <value>abort post</value>
         </nv>
         <nv>
-            <name>__iso__onError</name>
+            <name>onError</name>
             <value>true</value>
         </nv>
         <nv>
-            <name>__iso__onErrorDocDescription</name>
+            <name>onErrorDocDescription</name>
             <value>erro over</value>
         </nv>
         <nv>
-            <name>__iso__onErrorDocPreCondition</name>
+            <name>onErrorDocPreCondition</name>
             <value>error pre</value>
         </nv>
         <nv>
-            <name>__iso__onErrorDocPostCondition</name>
+            <name>onErrorDocPostCondition</name>
             <value>error post</value>
         </nv>
         <nv>
-            <name>__iso__onReset</name>
+            <name>onReset</name>
             <value>true</value>
         </nv>
         <nv>
-            <name>__iso__onResetDocDescription</name>
+            <name>onResetDocDescription</name>
             <value>reset over</value>
         </nv>
         <nv>
-            <name>__iso__onResetDocPreCondition</name>
+            <name>onResetDocPreCondition</name>
             <value>rest pre</value>
         </nv>
         <nv>
-            <name>__iso__onResetDocPostCondition</name>
+            <name>onResetDocPostCondition</name>
             <value>reset post</value>
         </nv>
         <nv>
-            <name>__iso__onExecute</name>
+            <name>onExecute</name>
             <value>true</value>
         </nv>
         <nv>
-            <name>__iso__onExecuteDocDescription</name>
+            <name>onExecuteDocDescription</name>
             <value>exe over</value>
         </nv>
         <nv>
-            <name>__iso__onExecuteDocPreCondition</name>
+            <name>onExecuteDocPreCondition</name>
             <value>exe pre</value>
         </nv>
         <nv>
-            <name>__iso__onExecuteDocPostCondition</name>
+            <name>onExecuteDocPostCondition</name>
             <value>exe post</value>
         </nv>
         <nv>
-            <name>__iso__onStateUpdate</name>
+            <name>onStateUpdate</name>
             <value>true</value>
         </nv>
         <nv>
-            <name>__iso__onStateUpdateDocDescription</name>
+            <name>onStateUpdateDocDescription</name>
             <value>state over</value>
         </nv>
         <nv>
-            <name>__iso__onStateUpdateDocPreCondition</name>
+            <name>onStateUpdateDocPreCondition</name>
             <value>state pre</value>
         </nv>
         <nv>
-            <name>__iso__onStateUpdateDocPostCondition</name>
+            <name>onStateUpdateDocPostCondition</name>
             <value>state post</value>
         </nv>
         <nv>
-            <name>__iso__onRateChanged</name>
+            <name>onRateChanged</name>
             <value>true</value>
         </nv>
         <nv>
-            <name>__iso__onRateChangedDocDescription</name>
+            <name>onRateChangedDocDescription</name>
             <value>rate over</value>
         </nv>
         <nv>
-            <name>__iso__onRateChangedDocPreCondition</name>
+            <name>onRateChangedDocPreCondition</name>
             <value>rate pre</value>
         </nv>
         <nv>
-            <name>__iso__onRateChangedDocPostCondition</name>
+            <name>onRateChangedDocPostCondition</name>
             <value>rate post</value>
         </nv>
     </additionalInfo>

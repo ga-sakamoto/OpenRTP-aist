@@ -2,7 +2,7 @@
 // このファイルは、JavaTM Architecture for XML Binding(JAXB) Reference Implementation、v2.2.8-b130911.1802によって生成されました 
 // <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a>を参照してください 
 // ソース・スキーマの再コンパイル時にこのファイルの変更は失われます。 
-// 生成日: 2025.11.18 時間 11:14:52 AM JST 
+// 生成日: 2025.12.27 時間 01:27:43 PM JST 
 //
 
 
@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="overallvalidSafetyLevelType" type="{}PLSILType"/>
+ *         &lt;element name="overallValidSafetyLevelType" type="{}PLSILType"/>
  *         &lt;element name="overallSafetyLevelPL" type="{}SafeytLevelPL"/>
  *         &lt;element name="overallSafetyLevelSIL" type="{}SafeytLevelSIL"/>
  *         &lt;element name="overallPhySecurityLevel" type="{}SecurityLevel"/>
@@ -45,7 +45,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SafeSecure", propOrder = {
-    "overallvalidSafetyLevelType",
+    "overallValidSafetyLevelType",
     "overallSafetyLevelPL",
     "overallSafetyLevelSIL",
     "overallPhySecurityLevel",
@@ -58,7 +58,7 @@ public class SafeSecure {
 
     @XmlElement(required = true)
     @XmlSchemaType(name = "string")
-    protected PLSILType overallvalidSafetyLevelType;
+    protected PLSILType overallValidSafetyLevelType;
     @XmlElement(required = true)
     @XmlSchemaType(name = "string")
     protected SafeytLevelPL overallSafetyLevelPL;
@@ -73,27 +73,27 @@ public class SafeSecure {
     protected NVList additionalInfo;
 
     /**
-     * overallvalidSafetyLevelTypeプロパティの値を取得します。
+     * overallValidSafetyLevelTypeプロパティの値を取得します。
      * 
      * @return
      *     possible object is
      *     {@link PLSILType }
      *     
      */
-    public PLSILType getOverallvalidSafetyLevelType() {
-        return overallvalidSafetyLevelType;
+    public PLSILType getOverallValidSafetyLevelType() {
+        return overallValidSafetyLevelType;
     }
 
     /**
-     * overallvalidSafetyLevelTypeプロパティの値を設定します。
+     * overallValidSafetyLevelTypeプロパティの値を設定します。
      * 
      * @param value
      *     allowed object is
      *     {@link PLSILType }
      *     
      */
-    public void setOverallvalidSafetyLevelType(PLSILType value) {
-        this.overallvalidSafetyLevelType = value;
+    public void setOverallValidSafetyLevelType(PLSILType value) {
+        this.overallValidSafetyLevelType = value;
     }
 
     /**

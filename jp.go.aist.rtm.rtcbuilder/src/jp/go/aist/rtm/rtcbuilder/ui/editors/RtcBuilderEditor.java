@@ -41,8 +41,10 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.FileEditorInput;
+import org.iso.iso22166.part202.profile.SIM;
 import org.openrtp.namespaces.rtc.version03.RtcProfile;
 
+import jp.ac.meijo_u.iso22166_part202.util.RTC2ISOProfileHandler;
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
 import jp.go.aist.rtm.rtcbuilder.RtcBuilderPlugin;
 import jp.go.aist.rtm.rtcbuilder.extension.AddFormPageExtension;
@@ -546,6 +548,16 @@ public class RtcBuilderEditor extends FormEditor implements IActionFilter {
 					}
 				}
 			}
+			//ISO
+			ProfileHandler handler = new ProfileHandler();
+			RtcProfile rtcProfile = handler.convert2XMLProfile(this.getRtcParam());
+			RTC2ISOProfileHandler isoHandler = new RTC2ISOProfileHandler();
+			SIM isoProfile = isoHandler.convertRtc2Iso(rtcProfile);
+			String isoFile = isoHandler.convertToXmlIso(isoProfile);
+			
+			IFile isoxml = projectHandle.getFile(IRtcBuilderConstants.DEFAULT_ISO_202_XML);
+			if( isoxml.exists()) isoxml.delete(true, null);
+			isoxml.create(new ByteArrayInputStream(isoFile.getBytes("UTF-8")), true, null);
 			/////////
 			//
 			setInput(new FileEditorInput(rtcxml));

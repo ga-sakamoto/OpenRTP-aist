@@ -2,7 +2,7 @@
 // このファイルは、JavaTM Architecture for XML Binding(JAXB) Reference Implementation、v2.2.8-b130911.1802によって生成されました 
 // <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a>を参照してください 
 // ソース・スキーマの再コンパイル時にこのファイルの変更は失われます。 
-// 生成日: 2025.11.18 時間 11:14:52 AM JST 
+// 生成日: 2025.12.27 時間 01:27:43 PM JST 
 //
 
 
@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="mostTopProtocol" type="{}InfraType" maxOccurs="unbounded"/>
- *         &lt;element name="underlyingProrocol" type="{}DataBus"/>
+ *         &lt;element name="underlyingProtocol" type="{}DataBus"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -39,14 +39,14 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Communication", propOrder = {
     "mostTopProtocol",
-    "underlyingProrocol"
+    "underlyingProtocol"
 })
 public class Communication {
 
     @XmlElement(required = true)
     protected List<InfraType> mostTopProtocol;
     @XmlElement(required = true)
-    protected DataBus underlyingProrocol;
+    protected DataBus underlyingProtocol;
 
     /**
      * Gets the value of the mostTopProtocol property.
@@ -78,27 +78,27 @@ public class Communication {
     }
 
     /**
-     * underlyingProrocolプロパティの値を取得します。
+     * underlyingProtocolプロパティの値を取得します。
      * 
      * @return
      *     possible object is
      *     {@link DataBus }
      *     
      */
-    public DataBus getUnderlyingProrocol() {
-        return underlyingProrocol;
+    public DataBus getUnderlyingProtocol() {
+        return underlyingProtocol;
     }
 
     /**
-     * underlyingProrocolプロパティの値を設定します。
+     * underlyingProtocolプロパティの値を設定します。
      * 
      * @param value
      *     allowed object is
      *     {@link DataBus }
      *     
      */
-    public void setUnderlyingProrocol(DataBus value) {
-        this.underlyingProrocol = value;
+    public void setUnderlyingProtocol(DataBus value) {
+        this.underlyingProtocol = value;
     }
 
 }

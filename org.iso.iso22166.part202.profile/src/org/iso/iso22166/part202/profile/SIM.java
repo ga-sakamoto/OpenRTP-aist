@@ -2,7 +2,7 @@
 // このファイルは、JavaTM Architecture for XML Binding(JAXB) Reference Implementation、v2.2.8-b130911.1802によって生成されました 
 // <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a>を参照してください 
 // ソース・スキーマの再コンパイル時にこのファイルの変更は失われます。 
-// 生成日: 2025.11.18 時間 11:14:52 AM JST 
+// 生成日: 2025.12.27 時間 01:27:43 PM JST 
 //
 
 
@@ -37,7 +37,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="infra" type="{}Infrastructure"/>
  *         &lt;element name="safeSecure" type="{}SafeSecure" minOccurs="0"/>
  *         &lt;element name="modelling" type="{}Modelling" minOccurs="0"/>
- *         &lt;element name="execForm" type="{}ExecutableForm"/>
+ *         &lt;element name="exeForm" type="{}ExecutableForm"/>
  *         &lt;element name="additionalInfo" type="{}NVList" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
@@ -62,7 +62,7 @@ import javax.xml.bind.annotation.XmlType;
     "infra",
     "safeSecure",
     "modelling",
-    "execForm",
+    "exeForm",
     "additionalInfo"
 })
 public class SIM {
@@ -88,7 +88,7 @@ public class SIM {
     protected SafeSecure safeSecure;
     protected Modelling modelling;
     @XmlElement(required = true)
-    protected ExecutableForm execForm;
+    protected ExecutableForm exeForm;
     protected NVList additionalInfo;
 
     /**
@@ -380,27 +380,27 @@ public class SIM {
     }
 
     /**
-     * execFormプロパティの値を取得します。
+     * exeFormプロパティの値を取得します。
      * 
      * @return
      *     possible object is
      *     {@link ExecutableForm }
      *     
      */
-    public ExecutableForm getExecForm() {
-        return execForm;
+    public ExecutableForm getExeForm() {
+        return exeForm;
     }
 
     /**
-     * execFormプロパティの値を設定します。
+     * exeFormプロパティの値を設定します。
      * 
      * @param value
      *     allowed object is
      *     {@link ExecutableForm }
      *     
      */
-    public void setExecForm(ExecutableForm value) {
-        this.execForm = value;
+    public void setExeForm(ExecutableForm value) {
+        this.exeForm = value;
     }
 
     /**

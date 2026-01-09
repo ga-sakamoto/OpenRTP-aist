@@ -1,4 +1,4 @@
-package jp.go.aist.rtm.iso22166_part202.nl;
+package jp.ac.meijo_u.iso22166_part202.nl;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;

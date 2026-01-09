@@ -1,4 +1,4 @@
-package jp.go.aist.rtm.iso22166_part202.util;
+package jp.ac.meijo_u.iso22166_part202.util;
 
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 

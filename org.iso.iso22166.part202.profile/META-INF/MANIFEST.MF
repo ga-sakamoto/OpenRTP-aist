@@ -8,6 +8,6 @@ Bundle-Vendor: %providerName
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
  lib/jaxb-impl.jar
-Export-Package: jp.go.aist.rtm.iso22166_part202.util,
+Export-Package: jp.ac.meijo_u.iso22166_part202.util,
  org.iso.iso22166.part202.profile
 Require-Bundle: jp.go.aist.rtm.toolscommon.profiles;bundle-version="2.0.0"

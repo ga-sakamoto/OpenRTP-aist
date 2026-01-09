@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <rtc:RtcProfile rtc:version="0.3" rtc:id="RTC:VenderName:Category:ModuleName222:1.0.0" xmlns:rtc="http://www.openrtp.org/namespaces/rtc" xmlns:rtcExt="http://www.openrtp.org/namespaces/rtc_ext" xmlns:rtcDoc="http://www.openrtp.org/namespaces/rtc_doc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <rtc:BasicInfo xsi:type="rtcExt:basic_info_ext" rtcExt:saveProject="Basic" rtcExt:comment="" rtc:updateDate="2025-08-24T12:26:50.000+09:00" rtc:creationDate="2025-08-18T10:45:05.000+09:00" rtc:hardwareProfile="" rtc:abstract="" rtc:version="1.0.0" rtc:vendor="VenderName" rtc:maxInstances="1" rtc:description="ModuleDescription" rtc:category="Category" rtc:rtcType="" rtc:activityType="PERIODIC" rtc:name="ModuleName222">
+    <rtc:BasicInfo xsi:type="rtcExt:basic_info_ext" rtcExt:saveProject="Basic" rtcExt:comment="" rtc:updateDate="2025-08-24T12:26:50.000+09:00" rtc:creationDate="2025-08-18T10:45:05.000+09:00" rtc:hardwareProfile="" rtc:abstract="" rtc:version="1.0.0" rtc:vendor="VenderName" rtc:maxInstances="1" rtc:executionType="PeriodicExecutionContext" rtc:executionRate="1000.0" rtc:description="ModuleDescription" rtc:category="Category" rtc:rtcType="" rtc:componentKind="DataFlowComponent" rtc:activityType="PERIODIC" rtc:componentType="STATIC" rtc:name="ModuleName222">
         <rtcDoc:Doc rtcDoc:reference="参考文献Doc" rtcDoc:license="ライセンスDoc" rtcDoc:creator="作成者Doc" rtcDoc:algorithm="アルゴリズムDoc" rtcDoc:inout="入出力Doc" rtcDoc:description="概要説明Doc"/>
     </rtc:BasicInfo>
     <rtc:Actions>
@@ -51,7 +51,7 @@
                 </rtc:ConstraintUnitType>
             </rtc:Constraint>
             <rtcDoc:Doc rtcDoc:constraint="const1 doc" rtcDoc:range="range1 doc" rtcDoc:unit="unit1 doc" rtcDoc:description="over1 doc" rtcDoc:defaultValue="def1 doc" rtcDoc:dataname="name1 doc"/>
-            <rtcExt:Properties rtcExt:value="false" rtcExt:name="immutable"/>
+            <rtcExt:Properties rtcExt:value="false" rtcExt:name="__iso__immutable"/>
             <rtcExt:Properties rtcExt:value="text" rtcExt:name="__widget__"/>
         </rtc:Configuration>
         <rtc:Configuration xsi:type="rtcExt:configuration_ext" rtcExt:variableName="vconf2" rtcExt:comment="" rtc:unit="unit2" rtc:defaultValue="1.23" rtc:type="double" rtc:name="conf_name1">
@@ -63,20 +63,20 @@
                 </rtc:ConstraintUnitType>
             </rtc:Constraint>
             <rtcDoc:Doc rtcDoc:constraint="const2 doc" rtcDoc:range="range2 doc" rtcDoc:unit="unit2 doc" rtcDoc:description="over2 doc" rtcDoc:defaultValue="def2 doc" rtcDoc:dataname="name2 doc"/>
-            <rtcExt:Properties rtcExt:value="false" rtcExt:name="immutable"/>
+            <rtcExt:Properties rtcExt:value="false" rtcExt:name="__iso__immutable"/>
             <rtcExt:Properties rtcExt:value="slider.3" rtcExt:name="__widget__"/>
         </rtc:Configuration>
     </rtc:ConfigurationSet>
-    <rtc:DataPorts xsi:type="rtcExt:dataport_ext" rtcExt:position="LEFT" rtcExt:variableName="InVar1" rtcExt:comment="" rtc:unit="" rtc:subscriptionType="" rtc:dataflowType="" rtc:interfaceType="" rtc:idlFile="idl\MyData.idl" rtc:type="Test::MyData" rtc:name="InPort1" rtc:portType="IN">
+    <rtc:DataPorts xsi:type="rtcExt:dataport_ext" rtcExt:position="LEFT" rtcExt:variableName="InVar1" rtcExt:comment="" rtc:unit="" rtc:subscriptionType="" rtc:dataflowType="" rtc:interfaceType="" rtc:idlFile="idl\MyData.idl" rtc:type="Test::MyData" rtc:name="InPort1" rtc:portType="DataInPort">
         <rtcDoc:Doc rtcDoc:operation="In1 Freq" rtcDoc:occerrence="In1 Occ" rtcDoc:unit="In1 Unit" rtcDoc:semantics="In1 Detail" rtcDoc:number="In1 Num" rtcDoc:type="In1 Type" rtcDoc:description="In1 over"/>
     </rtc:DataPorts>
-    <rtc:DataPorts xsi:type="rtcExt:dataport_ext" rtcExt:position="LEFT" rtcExt:variableName="in2Var" rtcExt:comment="" rtc:unit="" rtc:subscriptionType="" rtc:dataflowType="" rtc:interfaceType="" rtc:idlFile="&lt;RTM_ROOT&gt;\rtm\idl\BasicDataType.idl" rtc:type="RTC::TimedUShort" rtc:name="InPort2" rtc:portType="IN">
+    <rtc:DataPorts xsi:type="rtcExt:dataport_ext" rtcExt:position="LEFT" rtcExt:variableName="in2Var" rtcExt:comment="" rtc:unit="" rtc:subscriptionType="" rtc:dataflowType="" rtc:interfaceType="" rtc:idlFile="&lt;RTM_ROOT&gt;\rtm\idl\BasicDataType.idl" rtc:type="RTC::TimedUShort" rtc:name="InPort2" rtc:portType="DataInPort">
         <rtcDoc:Doc rtcDoc:operation="in2 freq" rtcDoc:occerrence="in2 occ" rtcDoc:unit="in2 unit" rtcDoc:semantics="In2 detail" rtcDoc:number="in2 num" rtcDoc:type="In2 type" rtcDoc:description="In2 over"/>
     </rtc:DataPorts>
-    <rtc:DataPorts xsi:type="rtcExt:dataport_ext" rtcExt:position="RIGHT" rtcExt:variableName="out1Var" rtcExt:comment="" rtc:unit="" rtc:subscriptionType="" rtc:dataflowType="" rtc:interfaceType="" rtc:idlFile="&lt;RTM_ROOT&gt;\rtm\idl\BasicDataType.idl" rtc:type="RTC::TimedUShort" rtc:name="OutPort1" rtc:portType="OUT">
+    <rtc:DataPorts xsi:type="rtcExt:dataport_ext" rtcExt:position="RIGHT" rtcExt:variableName="out1Var" rtcExt:comment="" rtc:unit="" rtc:subscriptionType="" rtc:dataflowType="" rtc:interfaceType="" rtc:idlFile="&lt;RTM_ROOT&gt;\rtm\idl\BasicDataType.idl" rtc:type="RTC::TimedUShort" rtc:name="OutPort1" rtc:portType="DataOutPort">
         <rtcDoc:Doc rtcDoc:operation="out1 freq" rtcDoc:occerrence="out1 occ" rtcDoc:unit="out1 unit" rtcDoc:semantics="out1 detail" rtcDoc:number="out1 num" rtcDoc:type="out1 type" rtcDoc:description="out1 over"/>
     </rtc:DataPorts>
-    <rtc:DataPorts xsi:type="rtcExt:dataport_ext" rtcExt:position="RIGHT" rtcExt:variableName="out2Var" rtcExt:comment="" rtc:unit="" rtc:subscriptionType="" rtc:dataflowType="" rtc:interfaceType="" rtc:idlFile="idl\MyData.idl" rtc:type="Test::MyData" rtc:name="OutPort2" rtc:portType="OUT">
+    <rtc:DataPorts xsi:type="rtcExt:dataport_ext" rtcExt:position="RIGHT" rtcExt:variableName="out2Var" rtcExt:comment="" rtc:unit="" rtc:subscriptionType="" rtc:dataflowType="" rtc:interfaceType="" rtc:idlFile="idl\MyData.idl" rtc:type="Test::MyData" rtc:name="OutPort2" rtc:portType="DataOutPort">
         <rtcDoc:Doc rtcDoc:operation="out2 freq" rtcDoc:occerrence="out2 occ" rtcDoc:unit="out2 unit" rtcDoc:semantics="out2 detail" rtcDoc:number="out2 num" rtcDoc:type="out2 type" rtcDoc:description="out2 over"/>
     </rtc:DataPorts>
     <rtc:ServicePorts xsi:type="rtcExt:serviceport_ext" rtcExt:position="LEFT" rtcExt:comment="" rtc:name="sp01">

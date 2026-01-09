@@ -1,4 +1,4 @@
-package jp.go.aist.rtm.iso22166_part202.util;
+package jp.ac.meijo_u.iso22166_part202.util;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -30,6 +30,7 @@ import org.iso.iso22166.part202.profile.InOutType;
 import org.iso.iso22166.part202.profile.InfraType;
 import org.iso.iso22166.part202.profile.Infrastructure;
 import org.iso.iso22166.part202.profile.InstanceType;
+import org.iso.iso22166.part202.profile.Libraries;
 import org.iso.iso22166.part202.profile.MOType;
 import org.iso.iso22166.part202.profile.ModelCase;
 import org.iso.iso22166.part202.profile.Modelling;
@@ -71,6 +72,7 @@ import org.openrtp.namespaces.rtc.version03.DocServiceinterface;
 import org.openrtp.namespaces.rtc.version03.DocServiceport;
 import org.openrtp.namespaces.rtc.version03.Language;
 import org.openrtp.namespaces.rtc.version03.LanguageExt;
+import org.openrtp.namespaces.rtc.version03.Library;
 import org.openrtp.namespaces.rtc.version03.Property;
 import org.openrtp.namespaces.rtc.version03.RtcProfile;
 import org.openrtp.namespaces.rtc.version03.Serviceinterface;
@@ -83,8 +85,6 @@ import org.openrtp.namespaces.rtc.version03.TransmissionMethod;
 import jp.go.aist.rtm.toolscommon.profiles.util.XmlHandler;
 
 public class RTC2ISOProfileHandler {
-	final private String ELEM_DELIMITOR = ":";
-	
 	public SIM convertRtc2Iso(RtcProfile source) {
 		ObjectFactory factory = new ObjectFactory();
 
@@ -117,7 +117,6 @@ public class RTC2ISOProfileHandler {
 		
 		idnType.setInformationModelVersion(basicProfile.getVersion());
 
-		createNameValue(factory, "activityType", basicProfile.getActivityType(), simNv);
 		createNameValue(factory, "componentKind", basicProfile.getComponentKind(), simNv);
 		createNameValue(factory, "rtcType", basicProfile.getRtcType(), simNv);
 		createNameValue(factory, "category", basicProfile.getCategory(), simNv);
@@ -132,6 +131,7 @@ public class RTC2ISOProfileHandler {
 		if(basicProfile.getUpdateDate() != null) {
 			createNameValue(factory, "updateDate", basicProfile.getUpdateDate().toString(), simNv);
 		}
+		createNameValue(factory, "executionType", basicProfile.getExecutionType(), simNv);
 		
 		DocBasic basicDoc = basicProfile.getDoc();
 		if(basicDoc != null) {
@@ -149,12 +149,11 @@ public class RTC2ISOProfileHandler {
 		
 		ExecutionType exeType = factory.createExecutionType();
 		properties.getExeType().add(exeType); 
-		//TODO 要修正
-		exeType.setInstanceType(InstanceType.SINGLETON);
+		exeType.setOpType(convertActivityType(basicProfile.getActivityType()));
+		exeType.setInstanceType(convertComponentType(basicProfile.getComponentType()));
 		if(basicProfile.getExecutionRate()!=null) {
 			exeType.setTimeConstraint(basicProfile.getExecutionRate());
 		}
-		exeType.setOpType(OpTypes.PERIODIC);
 		
 		List<Property> propList = basicProfile.getProperties();
 		propList.sort(Comparator.comparing(Property::getName));
@@ -202,7 +201,7 @@ public class RTC2ISOProfileHandler {
 			for(Property prop : port.getProperties()) {
 				String key = prop.getName();
 				
-				if(key.toLowerCase().equals("value")) {
+				if(equalsKey(key, "value")) {
 					var.setValue(prop.getValue());
 				} else {
 					createNameValue(factory, prop.getName(), prop.getValue(), iovarNv);
@@ -218,7 +217,7 @@ public class RTC2ISOProfileHandler {
 		for(Serviceport sport : source.getServicePorts() ) {
 			ServiceportExt port = (ServiceportExt)sport;
 			ServiceProfile prof = factory.createServiceProfile();
-			services.getSeviceProfile().add(prof);
+			services.getServiceProfile().add(prof);
 			NVList serviceNv = factory.createNVList();
 			
 			prof.setId(port.getName());
@@ -236,11 +235,11 @@ public class RTC2ISOProfileHandler {
 			for(Property prop : port.getProperties()) {
 				String key = prop.getName();
 				
-				if(key.toLowerCase().equals("ifurl")) {
+				if(equalsKey(key, "ifurl")) {
 					prof.setIfURL(prop.getValue());
-				} else if(key.toLowerCase().equals("pvtype")) {
+				} else if(equalsKey(key, "pvtype")) {
 					prof.setPvType(PhysicalVirtual_0020.valueOf(prop.getValue()));
-				} else if(key.toLowerCase().equals("motype")) {
+				} else if(equalsKey(key, "motype")) {
 					prof.setMoType(MOType.valueOf(prop.getValue()));
 				} else {
 					createNameValue(factory, prop.getName(), prop.getValue(), serviceNv);
@@ -310,7 +309,7 @@ public class RTC2ISOProfileHandler {
 				
 				prop.setName(conf.getName());
 				prop.setType(conf.getType());
-				prop.setVallue(conf.getDefaultValue());
+				prop.setValue(conf.getDefaultValue());
 				prop.setUnit(conf.getUnit());
 				String constraintStr;
 				try {
@@ -335,7 +334,7 @@ public class RTC2ISOProfileHandler {
 					String key = confprop.getName();
 					String value = confprop.getValue();
 					
-					if(key.equals("immutable")) {
+					if(equalsKey(key, "immutable")) {
 						prop.setImmutable(Boolean.valueOf(value));
 					} else {
 						createNameValue(factory, key, value, propNv);
@@ -355,9 +354,30 @@ public class RTC2ISOProfileHandler {
 			compiler.setCompilerName(lang.getKind());
 			
 			LanguageExt langext = (LanguageExt)lang;
-			//TODO 要修正
-			for(TargetEnvironment env : langext.getTargets()) {
-				
+			//TODO 隕∽ｿｮ豁｣
+			List<TargetEnvironment> envs = langext.getTargets();
+			if(0<envs.size()) {
+				TargetEnvironment env = envs.get(0);
+				String strVersion = env.getLangVersion();
+				String[] elems = strVersion.split(IProfileConstants.ELEM_DELIMITOR);
+				if(0<elems.length) {
+					RangeString range = factory.createRangeString();
+					compiler.setVerRangeCompiler(range);
+					range.setMin(elems[0]);
+					if(1<elems.length) {
+						range.setMax(elems[1]);
+					}
+				}
+				if(0<env.getLibraries().size()) {
+					Libraries libs = factory.createLibraries();
+					properties.setLibs(libs);
+					for(Library each : env.getLibraries() ) {
+						org.iso.iso22166.part202.profile.Library lib = factory.createLibrary();
+						lib.setName(each.getName());
+						lib.setVersion(each.getVersion());
+						libs.getLibraries().add(lib);
+					}
+				}
 			}
 		}
 		//////////
@@ -381,6 +401,28 @@ public class RTC2ISOProfileHandler {
 		
 		return result;
 	}
+	
+	private OpTypes convertActivityType(String source) {
+		if(source.toUpperCase().equals("PERIODIC")) {
+			return OpTypes.PERIODIC;
+		} else if(source.toUpperCase().equals("EVENTDRIVEN")) {
+			return OpTypes.EVENTDRIVEN;
+		} else if(source.toUpperCase().equals("SPORADIC")) {
+			return OpTypes.NONRT;
+		}
+		return null;
+	}
+
+	private InstanceType convertComponentType(String source) {
+		if(source.toUpperCase().equals("STATIC")) {
+			return InstanceType.SINGLETON;
+		} else if(source.toUpperCase().equals("UNIQUE")) {
+			return InstanceType.MULTITON_STATIC;
+		} else if(source.toUpperCase().equals("COMMUTATIVE")) {
+			return InstanceType.MULTITON_COMM;
+		}
+		return null;
+	}
 
 	private void parseInterfaceProperties(ObjectFactory factory, List<Property> propList, ServiceMethod method, NVList sifNv) {
 		for(Property prop : propList) {
@@ -388,8 +430,8 @@ public class RTC2ISOProfileHandler {
 			String value = prop.getValue();
 			if(value==null || value.length() == 0) continue;
 			
-			if(key.toLowerCase().startsWith("argtype_valuename")) {
-				if(key.toLowerCase().equals("argtype_valuename") == false) continue;
+			if(startsWithKey(key, "argtype_valuename")) {
+				if(equalsKey(key, "argtype_valuename") == false) continue;
 				
 				ArgSpec arg = factory.createArgSpec();
 				method.getArgType().add(arg);
@@ -412,8 +454,8 @@ public class RTC2ISOProfileHandler {
 					arg.setAdditionalInfo(argNv);
 				}
 			} else {
-				if(key.toLowerCase().equals("motype")) continue;
-				if(key.toLowerCase().startsWith("argtype_")) continue;
+				if(equalsKey(key, "motype")) continue;
+				if(startsWithKey(key, "argtype_")) continue;
 
 				createNameValue(factory, key, value, sifNv);
 			}
@@ -449,15 +491,15 @@ public class RTC2ISOProfileHandler {
 			
 			if(value==null || value.length() == 0) continue;
 
-			if(key.toLowerCase().equals("examples")
-				|| key.toLowerCase().startsWith("infra_")
-				|| key.toLowerCase().startsWith("safesecure_")
-				|| key.toLowerCase().startsWith("modelling_")
-				|| key.toLowerCase().startsWith("exeform_")) continue;
+			if(equalsKey(key, "examples")
+					|| startsWithKey(key, "infra_")
+					|| startsWithKey(key, "safesecure_")
+					|| startsWithKey(key, "modelling_")
+					|| startsWithKey(key, "exeform_")) continue;
 				
-			if(key.toLowerCase().equals("swaspects")){
-				if(value.contains(ELEM_DELIMITOR) == false) continue;
-				String[] elems = value.split(ELEM_DELIMITOR);
+			if(equalsKey(key, "swaspects")){
+				if(value.contains(IProfileConstants.ELEM_DELIMITOR) == false) continue;
+				String[] elems = value.split(IProfileConstants.ELEM_DELIMITOR);
 				if(0 < elems.length) {
 					ModuleID mid = factory.createModuleID();
 					result.getIdnType().getSwAspects().add(mid);
@@ -467,9 +509,9 @@ public class RTC2ISOProfileHandler {
 					}
 				}
 
-			} else if(key.toLowerCase().equals("executionstatus")){
+			} else if(equalsKey(key, "executionstatus")){
 				status.setExecutionStatus(ExeStatus.valueOf(prop.getValue()));
-			} else if(key.toLowerCase().equals("errortype")){
+			} else if(equalsKey(key, "errortype")){
 				BigInteger val = new BigInteger(prop.getValue());
 				status.setErrorType(val);
 
@@ -481,7 +523,7 @@ public class RTC2ISOProfileHandler {
 	
 	private void buildExeForm(ObjectFactory factory, SIM result, List<Property> propList) {
 		ExecutableForm exeFrom = factory.createExecutableForm();
-		result.setExecForm(exeFrom);
+		result.setExeForm(exeFrom);
 		
 		List<Property> libList = getTargetStartProperty(propList, "exeForm_LibraryURL");
 		for(Property each : libList) {
@@ -491,6 +533,7 @@ public class RTC2ISOProfileHandler {
 		for(Property each : propList) {
 			String eachKey = each.getName();
 			String eachValue = each.getValue();
+			eachKey = eachKey.replace(IProfileConstants.ISO_PREFIX, "");
 			
 			if(eachKey.equals("exeForm_LibraryURL")) continue;
 			
@@ -556,7 +599,7 @@ public class RTC2ISOProfileHandler {
 				}
 				
 				if(eachKey.endsWith("_value")) {
-					targetProp.setVallue(eachValue);
+					targetProp.setValue(eachValue);
 				} else if(eachKey.endsWith("_immutable")) {
 					targetProp.setImmutable(Boolean.valueOf(eachValue));
 				} else if(eachKey.endsWith("_description")) {
@@ -579,6 +622,7 @@ public class RTC2ISOProfileHandler {
 		for(Property each : modelList) {
 			String eachKey = each.getName();
 			String eachValue = each.getValue();
+			eachKey = eachKey.replace(IProfileConstants.ISO_PREFIX, "");
 			
 			String[] elems = eachKey.split("_");
 			if(elems.length < 2) continue;
@@ -625,6 +669,7 @@ public class RTC2ISOProfileHandler {
 			for(Property each : dynamicList) {
 				String eachKey = each.getName();
 				String eachValue = each.getValue();
+				eachKey = eachKey.replace(IProfileConstants.ISO_PREFIX, "");
 				
 				String[] elems = eachKey.split("_");
 				if(elems.length < 4) continue;
@@ -687,7 +732,7 @@ public class RTC2ISOProfileHandler {
 					}
 
 					if(eachKey.endsWith("_value")) {
-						targetProp.setVallue(eachValue);
+						targetProp.setValue(eachValue);
 					} else if(eachKey.endsWith("_immutable")) {
 						targetProp.setImmutable(Boolean.valueOf(eachValue));
 					} else if(eachKey.endsWith("_description")) {
@@ -718,7 +763,7 @@ public class RTC2ISOProfileHandler {
 			safes.setAdditionalInfo(safesNv);
 		}
 		///////
-		safes.setOverallvalidSafetyLevelType(PLSILType.valueOf(getTargetPropertyValue(propList, "safesecure_overallvalidsafetyleveltype")));
+		safes.setOverallValidSafetyLevelType(PLSILType.valueOf(getTargetPropertyValue(propList, "safesecure_overallvalidsafetyleveltype")));
 		safes.setOverallSafetyLevelPL(SafeytLevelPL.valueOf(getTargetPropertyValue(propList, "safesecure_overallsafetylevelpl")));
 		safes.setOverallSafetyLevelSIL(getTargetPropertyValue(propList, "safesecure_overallsafetylevelsil"));
 		safes.setOverallPhySecurityLevel(getTargetPropertyValue(propList, "safesecure_overallphysecuritylevel"));
@@ -728,6 +773,7 @@ public class RTC2ISOProfileHandler {
 		for(Property each : inSafeList) {
 			String eachKey = each.getName();
 			String eachValue = each.getValue();
+			eachKey = eachKey.replace(IProfileConstants.ISO_PREFIX, "");
 			
 			String[] elems = eachKey.split("_");
 			if(elems.length < 3) continue;
@@ -761,6 +807,7 @@ public class RTC2ISOProfileHandler {
 		for(Property each : inCyberList) {
 			String eachKey = each.getName();
 			String eachValue = each.getValue();
+			eachKey = eachKey.replace(IProfileConstants.ISO_PREFIX, "");
 			
 			String[] elems = eachKey.split("_");
 			if(elems.length < 3) continue;
@@ -781,7 +828,7 @@ public class RTC2ISOProfileHandler {
 			if(eachKey.endsWith("_securityType")) {
 				func.setSecurityType(SecurityType.valueOf(eachValue));
 			} else if(eachKey.endsWith("_eachSecurityLevel")) {
-				func.setSecurityLevel(eachValue);
+				func.setEachSecurityLevel(eachValue);
 			}
 		}
 	}
@@ -793,7 +840,7 @@ public class RTC2ISOProfileHandler {
 		NVList infraNv = factory.createNVList();
 		List<Property> otherList = getTargetProperty(propList, "infra_add_");
 		for(Property each : otherList) {
-			String orgKey = each.getName().replace("infra_add_", "");
+			String orgKey = each.getName().replace(IProfileConstants.ISO_PREFIX + "infra_add_", "");
 			createNameValue(factory, orgKey, each.getValue(), infraNv);
 		}
 		if(0 < infraNv.getNv().size()) {
@@ -803,8 +850,8 @@ public class RTC2ISOProfileHandler {
 		List<Property> dbList = getTargetProperty(propList, "infra_database");
 		for(Property each : dbList) {
 			String eachValue = each.getValue();
-			if(eachValue.contains(ELEM_DELIMITOR) == false) continue;
-			String[] elems = eachValue.split(ELEM_DELIMITOR);
+			if(eachValue.contains(IProfileConstants.ELEM_DELIMITOR) == false) continue;
+			String[] elems = eachValue.split(IProfileConstants.ELEM_DELIMITOR);
 			
 			if(0 < elems.length) {
 				InfraType itype = factory.createInfraType();
@@ -826,7 +873,7 @@ public class RTC2ISOProfileHandler {
 			String eachKey = each.getName();
 			String eachValue = each.getValue();
 			
-			String commsNoStr = eachKey.replace("infra_comms_mostTop_", "");
+			String commsNoStr = eachKey.replace(IProfileConstants.ISO_PREFIX + "infra_comms_mostTop_", "");
 			try {
 				int commsNo = Integer.parseInt(commsNoStr);
 				Communication comms;
@@ -837,8 +884,8 @@ public class RTC2ISOProfileHandler {
 					comms = infra.getComms().get(commsNo-1); 
 				}
 
-				if(eachValue.contains(ELEM_DELIMITOR) == false) continue;
-				String[] elems = eachValue.split(ELEM_DELIMITOR);
+				if(eachValue.contains(IProfileConstants.ELEM_DELIMITOR) == false) continue;
+				String[] elems = eachValue.split(IProfileConstants.ELEM_DELIMITOR);
 				
 				if(0 < elems.length) {
 					InfraType itype = factory.createInfraType();
@@ -864,22 +911,22 @@ public class RTC2ISOProfileHandler {
 			if(0<upList.size()) {
 				Communication targetCom =infra.getComms().get(index); 
 				DataBus dBus = factory.createDataBus();
-				targetCom.setUnderlyingProrocol(dBus);
+				targetCom.setUnderlyingProtocol(dBus);
 				NVList dbNv = new NVList();
 				for(Property each : upList) {
 					String eachName = each.getName();
 					String eachValue = each.getValue();
-					if(eachName.startsWith("infra_comms_underlaying_" + comIdx + "_connectionType")) {
+					if(startsWithKey(eachName, "infra_comms_underlaying_" + comIdx + "_connectionType")) {
 						dBus.setConnectionType(eachValue);
-					} else if(eachName.startsWith("infra_comms_underlaying_" + comIdx + "_typePhyMac")) {
+					} else if(startsWithKey(eachName, "infra_comms_underlaying_" + comIdx + "_typePhyMac")) {
 						dBus.setTypePhyMac(eachValue);
-					} else if(eachName.startsWith("infra_comms_underlaying_" + comIdx + "_typeNetTrans")) {
+					} else if(startsWithKey(eachName, "infra_comms_underlaying_" + comIdx + "_typeNetTrans")) {
 						dBus.getTypeNetTrans().addAll(Arrays.asList(eachValue.split(",")));
-					} else if(eachName.startsWith("infra_comms_underlaying_" + comIdx + "_typeApp")) {
+					} else if(startsWithKey(eachName, "infra_comms_underlaying_" + comIdx + "_typeApp")) {
 						dBus.getTypeApp().addAll(Arrays.asList(eachValue.split(",")));
-					} else if(eachName.startsWith("infra_comms_underlaying_" + comIdx + "_speed")) {
+					} else if(startsWithKey(eachName, "infra_comms_underlaying_" + comIdx + "_speed")) {
 						dBus.setSpeed(Double.parseDouble(eachValue));
-					} else if(eachName.startsWith("infra_comms_underlaying_" + comIdx + "_add_")) {
+					} else if(startsWithKey(eachName, "infra_comms_underlaying_" + comIdx + "_add_")) {
 						String orgKey = each.getName().replace("infra_comms_underlaying_" + comIdx + "_add_", "");
 						createNameValue(factory, orgKey, eachValue, dbNv);
 					}
@@ -893,8 +940,8 @@ public class RTC2ISOProfileHandler {
 		List<Property> mwList = getTargetProperty(propList, "infra_middleware");
 		for(Property each : mwList) {
 			String eachValue = each.getValue();
-			if(eachValue.contains(ELEM_DELIMITOR) == false) continue;
-			String[] elems = eachValue.split(ELEM_DELIMITOR);
+			if(eachValue.contains(IProfileConstants.ELEM_DELIMITOR) == false) continue;
+			String[] elems = eachValue.split(IProfileConstants.ELEM_DELIMITOR);
 			
 			if(0 < elems.length) {
 				InfraType itype = factory.createInfraType();
@@ -912,6 +959,20 @@ public class RTC2ISOProfileHandler {
 		}
 	}
 	
+	private boolean equalsKey(String key, String target) {
+		if(key.toLowerCase().equals(IProfileConstants.ISO_PREFIX.toLowerCase() + target.toLowerCase())) {
+			return true;
+		}
+		return false;
+	}
+	
+	private boolean startsWithKey(String key, String target) {
+		if(key.toLowerCase().startsWith(IProfileConstants.ISO_PREFIX.toLowerCase() + target.toLowerCase())) {
+			return true;
+		}
+		return false;
+	}
+
 	private String getTargetPropertyValue(List<Property> propList, String key) {
 		List<Property> filtered = getTargetProperty(propList, key);
 		if(filtered.size() == 1) return filtered.get(0).getValue();
@@ -920,14 +981,16 @@ public class RTC2ISOProfileHandler {
 
 	private List<Property> getTargetProperty(List<Property> propList, String key) {
 		List<Property> filtered = propList.stream()
-									.filter(p -> p.getName().toLowerCase().equals(key))
+									.filter(p -> p.getName().toLowerCase().equals(IProfileConstants.ISO_PREFIX.toLowerCase() + key)
+													|| p.getName().toLowerCase().equals(key))
 									.collect(Collectors.toList());
 		return filtered;
 	}
 	
 	private List<Property> getTargetStartProperty(List<Property> propList, String key) {
 		List<Property> filtered = propList.stream()
-									.filter(p -> p.getName().toLowerCase().startsWith(key.toLowerCase()))
+									.filter(p -> p.getName().toLowerCase().startsWith(IProfileConstants.ISO_PREFIX.toLowerCase() + key.toLowerCase())
+													|| p.getName().toLowerCase().startsWith(key.toLowerCase()))
 									.collect(Collectors.toList());
 		return filtered;
 	}
@@ -960,7 +1023,11 @@ public class RTC2ISOProfileHandler {
 	private void createNameValue(ObjectFactory factory, String key, String value, NVList nvs) {
 		if(value==null || value.length() == 0) return;
 		NameValue nv = factory.createNameValue();
-		nv.setName(key);
+		if(key.toLowerCase().startsWith(IProfileConstants.ISO_PREFIX.toLowerCase())) {
+			nv.setName(key.substring(IProfileConstants.ISO_PREFIX.length()));
+		} else {
+			nv.setName(IProfileConstants.ISO_PREFIX + key);
+		}
 		nv.setValue(value);
 		nvs.getNv().add(nv);
 	}
@@ -1003,7 +1070,7 @@ public class RTC2ISOProfileHandler {
 
 //
 //	/**
-//	 * XMLGregorianCalendar 繧剃ｻｻ諢上�ｮ譌･莉倥〒逕滓�舌＠縺ｾ縺吶��(Map謖�螳�)
+//	 * XMLGregorianCalendar 郢ｧ蜑�ｽｻ�ｽｻ隲｢荳奇ｿｽ�ｽｮ隴鯉ｽ･闔牙�･縲帝�墓ｻ難ｿｽ闊鯉ｼ�邵ｺ�ｽｾ邵ｺ蜷ｶ�ｿｽ�ｿｽ(Map隰厄ｿｽ陞ｳ�ｿｽ)
 //	 */
 //	public static XMLGregorianCalendar createXMLGregorianCalendar(Map<String, Integer> dateY) {
 //		return createXMLGregorianCalendar((dateY.get("year")).intValue(), (dateY.get("month")).intValue(),
@@ -1012,7 +1079,7 @@ public class RTC2ISOProfileHandler {
 //	}
 //
 //	/**
-//	 * XMLGregorianCalendar 繧剃ｻｻ諢上�ｮ譌･莉倥〒逕滓�舌＠縺ｾ縺吶��(蟷ｴ縲∵怦縲∵律縲∵凾縲∝�縲∫ｧ呈欠螳�)
+//	 * XMLGregorianCalendar 郢ｧ蜑�ｽｻ�ｽｻ隲｢荳奇ｿｽ�ｽｮ隴鯉ｽ･闔牙�･縲帝�墓ｻ難ｿｽ闊鯉ｼ�邵ｺ�ｽｾ邵ｺ蜷ｶ�ｿｽ�ｿｽ(陝ｷ�ｽｴ邵ｲ竏ｵ諤ｦ邵ｲ竏ｵ蠕狗ｸｲ竏ｵ蜃ｾ邵ｲ竏晢ｿｽ邵ｲ竏ｫ�ｽｧ蜻域ｬ�陞ｳ�ｿｽ)
 //	 */
 //	public static XMLGregorianCalendar createXMLGregorianCalendar(int year, int month, int day, int hourOfDay,
 //			int minute, int second) {
@@ -1023,7 +1090,7 @@ public class RTC2ISOProfileHandler {
 //	}
 
 //	/**
-//	 * XMLGregorianCalendar 繧剃ｻｻ諢上�ｮ譌･莉倥〒逕滓�舌＠縺ｾ縺吶��(譁�蟄怜�玲欠螳� yyyy-MM-ddTHH:mm:ss)
+//	 * XMLGregorianCalendar 郢ｧ蜑�ｽｻ�ｽｻ隲｢荳奇ｿｽ�ｽｮ隴鯉ｽ･闔牙�･縲帝�墓ｻ難ｿｽ闊鯉ｼ�邵ｺ�ｽｾ邵ｺ蜷ｶ�ｿｽ�ｿｽ(隴�ｿｽ陝�諤懶ｿｽ邇ｲ谺�陞ｳ�ｿｽ yyyy-MM-ddTHH:mm:ss)
 //	 */
 //	public static XMLGregorianCalendar createXMLGregorianCalendar(String date) {
 //		try {
@@ -1036,7 +1103,7 @@ public class RTC2ISOProfileHandler {
 //	}
 
 //	/**
-//	 * XMLGregorianCalendar 繧剃ｻｻ諢上�ｮ譌･莉倥〒逕滓�舌＠縺ｾ縺吶��(譌･莉俶欠螳�)
+//	 * XMLGregorianCalendar 郢ｧ蜑�ｽｻ�ｽｻ隲｢荳奇ｿｽ�ｽｮ隴鯉ｽ･闔牙�･縲帝�墓ｻ難ｿｽ闊鯉ｼ�邵ｺ�ｽｾ邵ｺ蜷ｶ�ｿｽ�ｿｽ(隴鯉ｽ･闔我ｿｶ谺�陞ｳ�ｿｽ)
 //	 */
 //	public static XMLGregorianCalendar createXMLGregorianCalendar(Date date) {
 //		GregorianCalendar c = new GregorianCalendar();

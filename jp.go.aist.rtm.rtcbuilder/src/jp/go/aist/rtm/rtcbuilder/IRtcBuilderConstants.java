@@ -35,6 +35,7 @@ public interface IRtcBuilderConstants {
 	public static final String SPEC_EVENTPORT_KIND = "EventPort";
 
 	public static final String DEFAULT_RTC_XML = "RTC.xml";
+	public static final String DEFAULT_ISO_202_XML = "iso22166_202.xml";
 	public static final String YAML_EXTENSION = "yaml";
 	public static final String XML_EXTENSION = "xml";
 	//
