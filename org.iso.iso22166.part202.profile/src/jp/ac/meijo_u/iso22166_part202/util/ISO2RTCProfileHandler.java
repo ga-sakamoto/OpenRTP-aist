@@ -42,6 +42,7 @@ import org.iso.iso22166.part202.profile.Modelling;
 import org.iso.iso22166.part202.profile.ModuleID;
 import org.iso.iso22166.part202.profile.NVList;
 import org.iso.iso22166.part202.profile.NameValue;
+import org.iso.iso22166.part202.profile.OStype;
 import org.iso.iso22166.part202.profile.OpTypes;
 import org.iso.iso22166.part202.profile.Properties;
 import org.iso.iso22166.part202.profile.RangeString;
@@ -98,7 +99,8 @@ public class ISO2RTCProfileHandler {
 		basic.setName(source.getModuleName());
 		basic.setDescription(source.getDescription());
 		basic.setVendor(source.getManufacturer());
-		createProperty(factory, "examples", source.getExamples(), basicProp);
+		createISOProperty(factory, "examples", source.getExamples(), basicProp);
+		createProperty(factory, "SIM_Version", "iso22166-202:2025", "", basicProp);
 		
 		convertIDnType(source, factory, basic);
 		convertProperties(source, factory, result);
@@ -139,7 +141,9 @@ public class ISO2RTCProfileHandler {
 		IDnType idnType = source.getIdnType();
 		if(idnType == null) return;
 		
-		//TODO moduleID
+		createISOProperty(factory, "mID", bytesListToHexString(idnType.getModuleID().getMID()), basic.getProperties());
+		createISOProperty(factory, "iID", bytesToHexString(idnType.getModuleID().getIID()), basic.getProperties());
+		
 		basic.setVersion(idnType.getInformationModelVersion());
 		
 		if(idnType.getSwAspects() == null) return;
@@ -147,16 +151,26 @@ public class ISO2RTCProfileHandler {
 		for(ModuleID each : idnType.getSwAspects()) {
 			String mId = bytesListToHexString(each.getMID());
 			String iId = bytesToHexString(each.getIID());
-			createProperty(factory, "swAspects", mId + IProfileConstants.ELEM_DELIMITOR + iId, basicProp);
+			createISOProperty(factory, "swAspects", mId + IProfileConstants.ELEM_DELIMITOR + iId, basicProp);
 		}
 	}
 
 	private void convertProperties(SIM source, ObjectFactory factory, RtcProfile result) {
+		BasicInfoExt basic = (BasicInfoExt)result.getBasicInfo();
 		LanguageExt lang = (LanguageExt)result.getLanguage();
 		TargetEnvironment env = lang.getTargets().get(0);
 		
 		Properties properties =source.getProperties();
 		if(properties == null) return;
+		
+		OStype osType = properties.getOsType();
+		if(osType != null) {
+			createISOProperty(factory, "osType_type", osType.getType(), basic.getProperties());
+			if(osType.getBit() != null) {
+				createISOProperty(factory, "osType_bit", osType.getBit().value(), basic.getProperties());
+			}
+			createISOProperty(factory, "osType_version", osType.getVersion(), basic.getProperties());
+		}
 		
 		Libraries libs = properties.getLibs();
 		if(libs!=null) {
@@ -175,23 +189,48 @@ public class ISO2RTCProfileHandler {
 		CompilerType compiler = properties.getCompiler();
 		if(compiler!=null) {
 			lang.setKind(compiler.getCompilerName());
+
+			env.setOs(compiler.getOsName());
+			RangeString verRangeOS = compiler.getVerRangeOS();
+			if(verRangeOS!=null) {
+				env.getOsVersions().add(verRangeOS.getMin() + IProfileConstants.ELEM_DELIMITOR + verRangeOS.getMax());
+			}
+			
 			RangeString verRangeCompiler = compiler.getVerRangeCompiler();
 			if(verRangeCompiler!=null) {
 				env.setLangVersion(verRangeCompiler.getMin() + IProfileConstants.ELEM_DELIMITOR + verRangeCompiler.getMax());
 			}
+			
+			if(compiler.getBitnCPUarch()  != null) {
+				env.getCpus().add(compiler.getBitnCPUarch());
+			}
+			
 			NVList compilerNv =  compiler.getAdditionalInfo();
 			if(compilerNv!=null) {
 				env.setOther(getTargetNVValue("targetOther", compilerNv.getNv()));
 			}
 		}
 		
-		//TODO –¢‘Î‰ž
 		List<ExecutionType> exeTypes = properties.getExeType();
 		if(0<exeTypes.size()) {
 			ExecutionType exeType = exeTypes.get(0);
 			result.getBasicInfo().setActivityType(convertActivityType(exeType.getOpType()));
 			result.getBasicInfo().setExecutionRate(exeType.getTimeConstraint());
 			result.getBasicInfo().setComponentType(convertComponentType(exeType.getInstanceType()));
+			createISOProperty(factory, "exeType_hardRT", Boolean.valueOf(exeType.isHardRT()).toString(), basic.getProperties());
+			createISOProperty(factory, "exeType_priority", bytesToHexString(exeType.getPriority()), basic.getProperties());
+			
+			if(1<exeTypes.size()) {
+				for(int index=1; index<exeTypes.size(); index++) {
+					ExecutionType each = exeTypes.get(index);
+					String ketPre = "exeType_" + Integer.valueOf(index) + "_";
+					createISOProperty(factory, ketPre + "opType", each.getOpType().name(), basic.getProperties());
+					createISOProperty(factory, ketPre + "hardRT", Boolean.valueOf(each.isHardRT()).toString(), basic.getProperties());
+					createISOProperty(factory, ketPre + "timeConstraint", Double.valueOf(each.getTimeConstraint()).toString(), basic.getProperties());
+					createISOProperty(factory, ketPre + "priority", bytesToHexString(each.getPriority()), basic.getProperties());
+					createISOProperty(factory, ketPre + "instanceType", each.getInstanceType().name(), basic.getProperties());
+				}
+			}
 		}
 		
 		List<org.iso.iso22166.part202.profile.Property> propList = properties.getProperty();
@@ -205,7 +244,7 @@ public class ISO2RTCProfileHandler {
 				configSet.getConfiguration().add(config);
 				
 				config.setDefaultValue(each.getValue());
-				createProperty(factory, "immutable", Boolean.valueOf(each.isImmutable()).toString(), config.getProperties());
+				createISOProperty(factory, "immutable", Boolean.valueOf(each.isImmutable()).toString(), config.getProperties());
 				docConfig.setDescription(each.getDescription());
 				config.setName(each.getName());
 				config.setType(each.getType());
@@ -235,7 +274,7 @@ public class ISO2RTCProfileHandler {
 
 					for(NameValue nv : nvList.getNv()) {
 						if(checkNVName(nv.getName(), definedList)) continue;
-						createProperty(factory, nv.getName(), nv.getValue(), config.getProperties());
+						createISOProperty(factory, nv.getName(), nv.getValue(), config.getProperties());
 					}
 				}
 			}
@@ -254,7 +293,7 @@ public class ISO2RTCProfileHandler {
 				dataPort.setDoc(docPort);
 				result.getDataPorts().add(dataPort);
 
-				createProperty(factory, "value", each.getValue(), dataPort.getProperties());
+				createISOProperty(factory, "value", each.getValue(), dataPort.getProperties());
 				docPort.setDescription(each.getDescription());
 				dataPort.setName(each.getName());
 				dataPort.setType(each.getType());
@@ -296,7 +335,7 @@ public class ISO2RTCProfileHandler {
 
 					for(NameValue nv : nvList.getNv()) {
 						if(checkNVName(nv.getName(), definedList)) continue;
-						createProperty(factory, nv.getName(), nv.getValue(), dataPort.getProperties());
+						createISOProperty(factory, nv.getName(), nv.getValue(), dataPort.getProperties());
 					}
 				}
 			}
@@ -308,10 +347,10 @@ public class ISO2RTCProfileHandler {
 		if(status==null) return;
 		
 		if(status.getExecutionStatus() != null) {
-			createProperty(factory, "executionStatus", status.getExecutionStatus().toString(), basicProp);
+			createISOProperty(factory, "executionStatus", status.getExecutionStatus().toString(), basicProp);
 		}
 		if(status.getErrorType() != null) {
-			createProperty(factory, "errorType", status.getErrorType().toString(), basicProp);
+			createISOProperty(factory, "errorType", status.getErrorType().toString(), basicProp);
 		}
 	}
 	
@@ -326,12 +365,12 @@ public class ISO2RTCProfileHandler {
 			servicePort.setDoc(docPort);
 			
 			servicePort.setName(each.getId());
-			createProperty(factory, "ifURL", each.getIfURL(), servicePort.getProperties());
+			createISOProperty(factory, "ifURL", each.getIfURL(), servicePort.getProperties());
 			if(each.getPvType() != null) {
-				createProperty(factory, "pvType", each.getPvType().toString(), servicePort.getProperties());
+				createISOProperty(factory, "pvType", each.getPvType().toString(), servicePort.getProperties());
 			}
 			if(each.getMoType() != null) {
-				createProperty(factory, "moType", each.getMoType().toString(), servicePort.getProperties());
+				createISOProperty(factory, "moType", each.getMoType().toString(), servicePort.getProperties());
 			}
 			
 			
@@ -360,7 +399,7 @@ public class ISO2RTCProfileHandler {
 				
 				for(NameValue nv : nvList.getNv()) {
 					if(checkNVName(nv.getName(), definedList)) continue;
-					createProperty(factory, nv.getName(), nv.getValue(), servicePort.getProperties());
+					createISOProperty(factory, nv.getName(), nv.getValue(), servicePort.getProperties());
 				}
 			}
 			
@@ -373,7 +412,7 @@ public class ISO2RTCProfileHandler {
 				serviceIf.setName(eachIf.getMethodName());
 				serviceIf.setType(eachIf.getRetType());
 				if(eachIf.getMoType() != null) {
-					createProperty(factory, "moType", eachIf.getMoType().toString(), serviceIf.getProperties());
+					createISOProperty(factory, "moType", eachIf.getMoType().toString(), serviceIf.getProperties());
 				}
 				serviceIf.setDirection(eachIf.getReqProvType().toString());
 				
@@ -402,22 +441,22 @@ public class ISO2RTCProfileHandler {
 
 					for(NameValue nv : nvListIf.getNv()) {
 						if(checkNVName(nv.getName(), definedList)) continue;
-						createProperty(factory, nv.getName(), nv.getValue(), serviceIf.getProperties());
+						createISOProperty(factory, nv.getName(), nv.getValue(), serviceIf.getProperties());
 					}
 				}
 				
 				for(ArgSpec eachArg : eachIf.getArgType()) {
 					String argName = eachArg.getValueName();
-					createProperty(factory, "argType_valueName", argName, serviceIf.getProperties());
-					createProperty(factory, "argType_" + argName + "_type", eachArg.getType(), serviceIf.getProperties());
+					createISOProperty(factory, "argType_valueName", argName, serviceIf.getProperties());
+					createISOProperty(factory, "argType_" + argName + "_type", eachArg.getType(), serviceIf.getProperties());
 					if(eachArg.getInout() != null) {
-						createProperty(factory, "argType_" + argName + "_inout", eachArg.getInout().toString(), serviceIf.getProperties());
+						createISOProperty(factory, "argType_" + argName + "_inout", eachArg.getInout().toString(), serviceIf.getProperties());
 					}
 
 					NVList nvListArg = eachArg.getAdditionalInfo();
 					if(nvListArg!=null) {
 						for(NameValue nv : nvListArg.getNv()) {
-							createProperty(factory, 
+							createISOProperty(factory, 
 											"argType_" + argName + "_add_" + nv.getName(),
 											nv.getValue(),
 											serviceIf.getProperties());
@@ -435,7 +474,7 @@ public class ISO2RTCProfileHandler {
 		NVList nvList = infra.getAdditionalInfo();
 		if(nvList!=null) {
 			for(NameValue nv : nvList.getNv()) {
-				createProperty(factory, "infra_add_" + nv.getName(), nv.getValue(), basicProp);
+				createISOProperty(factory, "infra_add_" + nv.getName(), nv.getValue(), basicProp);
 			}
 		}
 		
@@ -447,7 +486,7 @@ public class ISO2RTCProfileHandler {
 				min = each.getVersion().getMin();
 				max = each.getVersion().getMax();
 			}
-			createProperty(factory, "infra_database", name + IProfileConstants.ELEM_DELIMITOR + min + IProfileConstants.ELEM_DELIMITOR + max, basicProp);
+			createISOProperty(factory, "infra_database", name + IProfileConstants.ELEM_DELIMITOR + min + IProfileConstants.ELEM_DELIMITOR + max, basicProp);
 		}
 		
 		String commsPre = "infra_comms_";
@@ -462,7 +501,7 @@ public class ISO2RTCProfileHandler {
 					min = each.getVersion().getMin();
 					max = each.getVersion().getMax();
 				}
-				createProperty(factory,
+				createISOProperty(factory,
 								commsPre + "mostTop_" + strIndex,
 								name + IProfileConstants.ELEM_DELIMITOR + min + IProfileConstants.ELEM_DELIMITOR + max,
 								basicProp);
@@ -471,21 +510,21 @@ public class ISO2RTCProfileHandler {
 			if(underlayingProtocol!=null) {
 				String underlayingPre = commsPre + "underlaying_" + strIndex;
 
-				createProperty(factory, underlayingPre + "_connectionType", underlayingProtocol.getConnectionType(), basicProp);
-				createProperty(factory, underlayingPre + "_typePhyMac", underlayingProtocol.getTypePhyMac(), basicProp);
+				createISOProperty(factory, underlayingPre + "_connectionType", underlayingProtocol.getConnectionType(), basicProp);
+				createISOProperty(factory, underlayingPre + "_typePhyMac", underlayingProtocol.getTypePhyMac(), basicProp);
 				
 				String typeNetTrans = String.join(",", underlayingProtocol.getTypeNetTrans());
-				createProperty(factory, underlayingPre + "_typeNetTrans", typeNetTrans, basicProp);
+				createISOProperty(factory, underlayingPre + "_typeNetTrans", typeNetTrans, basicProp);
 				
 				String typeApp = String.join(",", underlayingProtocol.getTypeApp());
-				createProperty(factory, underlayingPre + "_typeApp", typeApp, basicProp);
+				createISOProperty(factory, underlayingPre + "_typeApp", typeApp, basicProp);
 
-				createProperty(factory, underlayingPre + "_speed", Double.valueOf(underlayingProtocol.getSpeed()).toString(), basicProp);
+				createISOProperty(factory, underlayingPre + "_speed", Double.valueOf(underlayingProtocol.getSpeed()).toString(), basicProp);
 				
 				NVList nvListCom = underlayingProtocol.getAdditionalInfo();
 				if(nvListCom!=null) {
 					for(NameValue nv : nvListCom.getNv()) {
-						createProperty(factory, underlayingPre + "_add_" + nv.getName(), nv.getValue(), basicProp);
+						createISOProperty(factory, underlayingPre + "_add_" + nv.getName(), nv.getValue(), basicProp);
 					}
 				}
 			}
@@ -499,18 +538,18 @@ public class ISO2RTCProfileHandler {
 				min = each.getVersion().getMin();
 				max = each.getVersion().getMax();
 			}
-			createProperty(factory, "infra_middleware", name + IProfileConstants.ELEM_DELIMITOR + min + IProfileConstants.ELEM_DELIMITOR + max, basicProp);
+			createISOProperty(factory, "infra_middleware", name + IProfileConstants.ELEM_DELIMITOR + min + IProfileConstants.ELEM_DELIMITOR + max, basicProp);
 		}
 	}
 	
 	private void convertSafeSecure(SIM source, ObjectFactory factory, List<Property> basicProp) {
 		SafeSecure safeSecure = source.getSafeSecure();
 		if(safeSecure!=null) {
-			createProperty(factory, "safeSecure_overallValidSafetyLevelType", safeSecure.getOverallValidSafetyLevelType().toString(), basicProp);
-			createProperty(factory, "safeSecure_overallSafetyLevelPL", safeSecure.getOverallSafetyLevelPL().toString(), basicProp);
-			createProperty(factory, "safeSecure_overallSafetyLevelSIL", safeSecure.getOverallSafetyLevelSIL().toString(), basicProp);
-			createProperty(factory, "safeSecure_overallPhySecurityLevel", safeSecure.getOverallPhySecurityLevel(), basicProp);
-			createProperty(factory, "safeSecure_overallCybSecurityLevel", safeSecure.getOverallCybSecurityLevel(), basicProp);
+			createISOProperty(factory, "safeSecure_overallValidSafetyLevelType", safeSecure.getOverallValidSafetyLevelType().toString(), basicProp);
+			createISOProperty(factory, "safeSecure_overallSafetyLevelPL", safeSecure.getOverallSafetyLevelPL().toString(), basicProp);
+			createISOProperty(factory, "safeSecure_overallSafetyLevelSIL", safeSecure.getOverallSafetyLevelSIL().toString(), basicProp);
+			createISOProperty(factory, "safeSecure_overallPhySecurityLevel", safeSecure.getOverallPhySecurityLevel(), basicProp);
+			createISOProperty(factory, "safeSecure_overallCybSecurityLevel", safeSecure.getOverallCybSecurityLevel(), basicProp);
 			
 			List<SafetyFunction> inSafetyLevel = safeSecure.getInSafetyLevel();
 			for(int index=0;index<inSafetyLevel.size(); index++) {
@@ -518,10 +557,10 @@ public class ISO2RTCProfileHandler {
 				String strIndex = Integer.valueOf(index + 1).toString();
 				String inSafetyLevelPre = "safeSecure_inSafetyLevel_" + strIndex;
 
-				createProperty(factory, inSafetyLevelPre + "_safetyFunctionType", each.getSafetyFunctionType().toString(), basicProp);
-				createProperty(factory, inSafetyLevelPre + "_validSafetyLevelType", each.getValidSafetyLevelType().toString(), basicProp);
-				createProperty(factory, inSafetyLevelPre + "_eachSafetyLevelPL", each.getEachSafetyLevelPL().toString(), basicProp);
-				createProperty(factory, inSafetyLevelPre + "_eachSafetyLevelSIL", each.getEachSafetyLevelSIL().toString(), basicProp);
+				createISOProperty(factory, inSafetyLevelPre + "_safetyFunctionType", each.getSafetyFunctionType().toString(), basicProp);
+				createISOProperty(factory, inSafetyLevelPre + "_validSafetyLevelType", each.getValidSafetyLevelType().toString(), basicProp);
+				createISOProperty(factory, inSafetyLevelPre + "_eachSafetyLevelPL", each.getEachSafetyLevelPL().toString(), basicProp);
+				createISOProperty(factory, inSafetyLevelPre + "_eachSafetyLevelSIL", each.getEachSafetyLevelSIL().toString(), basicProp);
 			}
 
 			List<CyberSecurity> inCybSecurityLevel = safeSecure.getInCybSecurityLevel();
@@ -530,14 +569,14 @@ public class ISO2RTCProfileHandler {
 				String strIndex = Integer.valueOf(index + 1).toString();
 				String inCybSecurityLevelPre = "safeSecure_inCybSecurityLevel_" + strIndex;
 
-				createProperty(factory, inCybSecurityLevelPre + "_securityType", each.getSecurityType().toString(), basicProp);
-				createProperty(factory, inCybSecurityLevelPre + "_eachSecurityLevel", each.getEachSecurityLevel().toString(), basicProp);
+				createISOProperty(factory, inCybSecurityLevelPre + "_securityType", each.getSecurityType().toString(), basicProp);
+				createISOProperty(factory, inCybSecurityLevelPre + "_eachSecurityLevel", each.getEachSecurityLevel().toString(), basicProp);
 			}
 
 			NVList nvList = safeSecure.getAdditionalInfo();
 			if(nvList!=null) {
 				for(NameValue nv : nvList.getNv()) {
-					createProperty(factory,
+					createISOProperty(factory,
 							"safeSecure_add_" + nv.getName(), nv.getValue(), basicProp);
 				}
 			}
@@ -553,12 +592,12 @@ public class ISO2RTCProfileHandler {
 				String strIndex = Integer.valueOf(index + 1).toString();
 				String modellingPre = "modelling_" + strIndex;
 
-				createProperty(factory, modellingPre + "_simulator", each.getSimulator(), basicProp);
+				createISOProperty(factory, modellingPre + "_simulator", each.getSimulator(), basicProp);
 				String mdfs = String.join(",", each.getMdf());
-				createProperty(factory, modellingPre + "_mdf", mdfs, basicProp);
+				createISOProperty(factory, modellingPre + "_mdf", mdfs, basicProp);
 				
 				for(String eachLib :each.getLibraries() ) {
-					createProperty(factory, modellingPre + "_lib", eachLib, basicProp);
+					createISOProperty(factory, modellingPre + "_lib", eachLib, basicProp);
 				}
 				
 				List<ExeForm> dynamicSW = each.getDynamicSW();
@@ -567,8 +606,8 @@ public class ISO2RTCProfileHandler {
 					String strIdxExe = Integer.valueOf(idxDyn + 1).toString();
 					String dynamicSWPre = modellingPre + "_dynamicSW_" + strIdxExe;
 
-					createProperty(factory, dynamicSWPre + "_exeFileURL", eachExe.getExeFileURL(), basicProp);
-					createProperty(factory, dynamicSWPre + "_shellCmd", eachExe.getShellCmd(), basicProp);
+					createISOProperty(factory, dynamicSWPre + "_exeFileURL", eachExe.getExeFileURL(), basicProp);
+					createISOProperty(factory, dynamicSWPre + "_shellCmd", eachExe.getShellCmd(), basicProp);
 					
 					List<org.iso.iso22166.part202.profile.Property> exePros = eachExe.getProperties();
 					for(int idxProp=0; idxProp<exePros.size();idxProp++) {
@@ -576,25 +615,25 @@ public class ISO2RTCProfileHandler {
 						String strIdxProp = Integer.valueOf(idxProp + 1).toString();
 						String propertyPre = dynamicSWPre + "_property_" + strIdxProp;
 
-						createProperty(factory, propertyPre + "_value", eachProp.getValue(), basicProp);
-						createProperty(factory, propertyPre + "_immutable", Boolean.valueOf(eachProp.isImmutable()).toString(), basicProp);
-						createProperty(factory, propertyPre + "_description", eachProp.getDescription(), basicProp);
-						createProperty(factory, propertyPre + "_name", eachProp.getName(), basicProp);
-						createProperty(factory, propertyPre + "_type", eachProp.getType(), basicProp);
-						createProperty(factory, propertyPre + "_unit", eachProp.getUnit(), basicProp);
+						createISOProperty(factory, propertyPre + "_value", eachProp.getValue(), basicProp);
+						createISOProperty(factory, propertyPre + "_immutable", Boolean.valueOf(eachProp.isImmutable()).toString(), basicProp);
+						createISOProperty(factory, propertyPre + "_description", eachProp.getDescription(), basicProp);
+						createISOProperty(factory, propertyPre + "_name", eachProp.getName(), basicProp);
+						createISOProperty(factory, propertyPre + "_type", eachProp.getType(), basicProp);
+						createISOProperty(factory, propertyPre + "_unit", eachProp.getUnit(), basicProp);
 					}
 					
 					NVList nvList = eachExe.getAdditionalInfo();
 					if(nvList!=null) {
 						for(NameValue nv : nvList.getNv()) {
-							createProperty(factory, dynamicSWPre + "_add_" + nv.getName(), nv.getValue(), basicProp);
+							createISOProperty(factory, dynamicSWPre + "_add_" + nv.getName(), nv.getValue(), basicProp);
 						}
 					}
 				}
 				NVList nvListMod = each.getAdditionalInfo();
 				if(nvListMod!=null) {
 					for(NameValue nv : nvListMod.getNv()) {
-						createProperty(factory, modellingPre + "_add_" + nv.getName(), nv.getValue(), basicProp);
+						createISOProperty(factory, modellingPre + "_add_" + nv.getName(), nv.getValue(), basicProp);
 					}
 				}
 			}
@@ -605,7 +644,7 @@ public class ISO2RTCProfileHandler {
 		ExecutableForm exeForms = source.getExeForm();
 		if(exeForms!=null) {
 			for(String each : exeForms.getLibraryURL()) {
-				createProperty(factory, "exeForm_LibraryURL", each, basicProp);
+				createISOProperty(factory, "exeForm_LibraryURL", each, basicProp);
 			}
 			List<ExeForm> exeForm = exeForms.getExeForm();
 			for(int index=0;index<exeForm.size(); index++) {
@@ -613,8 +652,8 @@ public class ISO2RTCProfileHandler {
 				String strIndex = Integer.valueOf(index + 1).toString();
 				String exeFormPre = "exeForm_exeForm_" + strIndex;
 
-				createProperty(factory, exeFormPre + "_exeFileURL", eachExe.getExeFileURL(), basicProp);
-				createProperty(factory, exeFormPre + "_shellCmd", eachExe.getShellCmd(), basicProp);
+				createISOProperty(factory, exeFormPre + "_exeFileURL", eachExe.getExeFileURL(), basicProp);
+				createISOProperty(factory, exeFormPre + "_shellCmd", eachExe.getShellCmd(), basicProp);
 				
 				List<org.iso.iso22166.part202.profile.Property> exePros = eachExe.getProperties();
 				for(int idxProp=0; idxProp<exePros.size();idxProp++) {
@@ -622,18 +661,18 @@ public class ISO2RTCProfileHandler {
 					String strIdxProp = Integer.valueOf(idxProp + 1).toString();
 					String propertyPre = exeFormPre + "_property_" + strIdxProp;
 
-					createProperty(factory, propertyPre + "_value", eachProp.getValue(), basicProp);
-					createProperty(factory, propertyPre + "_immutable", Boolean.valueOf(eachProp.isImmutable()).toString(), basicProp);
-					createProperty(factory, propertyPre + "_description", eachProp.getDescription(), basicProp);
-					createProperty(factory, propertyPre + "_name", eachProp.getName(), basicProp);
-					createProperty(factory, propertyPre + "_type", eachProp.getType(), basicProp);
-					createProperty(factory, propertyPre + "_unit", eachProp.getUnit(), basicProp);
+					createISOProperty(factory, propertyPre + "_value", eachProp.getValue(), basicProp);
+					createISOProperty(factory, propertyPre + "_immutable", Boolean.valueOf(eachProp.isImmutable()).toString(), basicProp);
+					createISOProperty(factory, propertyPre + "_description", eachProp.getDescription(), basicProp);
+					createISOProperty(factory, propertyPre + "_name", eachProp.getName(), basicProp);
+					createISOProperty(factory, propertyPre + "_type", eachProp.getType(), basicProp);
+					createISOProperty(factory, propertyPre + "_unit", eachProp.getUnit(), basicProp);
 				}
 				
 				NVList nvList = eachExe.getAdditionalInfo();
 				if(nvList!=null) {
 					for(NameValue nv : nvList.getNv()) {
-						createProperty(factory, exeFormPre + "_add_" + nv.getName(), nv.getValue(), basicProp);
+						createISOProperty(factory, exeFormPre + "_add_" + nv.getName(), nv.getValue(), basicProp);
 					}
 				}
 			}
@@ -645,7 +684,8 @@ public class ISO2RTCProfileHandler {
 		
 		BasicInfoExt basic = (BasicInfoExt)result.getBasicInfo();
 		DocBasic docBasic = basic.getDoc();
-		List<String> definedList = Arrays.asList("profileVersion", "rtcType", "category", "maxInstances", "executionType",
+		List<String> definedList = Arrays.asList("SIM_Version", "profileVersion",
+												 "rtcType", "category", "maxInstances", "executionType",
 												 "abstract", "creationDate", "updateDate", "componentKind",
 												 "docAlgorithm", "docDescription", "docInout", "docCreator", "docLicense",
 												 "docReference",
@@ -877,7 +917,7 @@ public class ISO2RTCProfileHandler {
 		
 		for(NameValue nv : nvList) {
 			if(checkNVName(nv.getName(), definedList)) continue;
-			createProperty(factory, nv.getName(), nv.getValue(), basic.getProperties());
+			createISOProperty(factory, nv.getName(), nv.getValue(), basic.getProperties());
 		}
 	}
 
@@ -977,14 +1017,28 @@ public class ISO2RTCProfileHandler {
 		return filtered;
 	}
 	
-	private void createProperty(ObjectFactory factory, String name, String value, List<Property> propList) {
+	private void createISOProperty(ObjectFactory factory, String name, String value, List<Property> propList) {
+		createProperty(factory, name, value, IProfileConstants.ISO_PREFIX, propList);
+//		if(value==null || value.length() == 0) return;
+//		
+//		Property prop = factory.createProperty();
+//		if(name.startsWith(IProfileConstants.ISO_PREFIX)) {
+//			prop.setName(name.substring(IProfileConstants.ISO_PREFIX.length()));
+//		} else {
+//			prop.setName(IProfileConstants.ISO_PREFIX + name);
+//		}
+//		prop.setValue(value);
+//		propList.add(prop);
+	}
+	
+	private void createProperty(ObjectFactory factory, String name, String value, String prefix, List<Property> propList) {
 		if(value==null || value.length() == 0) return;
 		
 		Property prop = factory.createProperty();
-		if(name.startsWith(IProfileConstants.ISO_PREFIX)) {
-			prop.setName(name.substring(IProfileConstants.ISO_PREFIX.length()));
+		if(name.startsWith(prefix)) {
+			prop.setName(name.substring(prefix.length()));
 		} else {
-			prop.setName(IProfileConstants.ISO_PREFIX + name);
+			prop.setName(prefix + name);
 		}
 		prop.setValue(value);
 		propList.add(prop);

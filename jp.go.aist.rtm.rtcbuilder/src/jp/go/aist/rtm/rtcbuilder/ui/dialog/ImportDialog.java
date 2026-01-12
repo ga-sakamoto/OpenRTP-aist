@@ -88,7 +88,7 @@ public class ImportDialog extends Dialog {
 		
 		isoBtn = new Button(kindComposite, SWT.RADIO);
 		gd = new GridData(GridData.BEGINNING, SWT.CENTER, false, false);
-		isoBtn.setText("ISO 22162-202 Profile");
+		isoBtn.setText("ISO 22166-202 Profile");
 		isoBtn.setLayoutData(gd);
 		
 		rtcBtn.setSelection(true);

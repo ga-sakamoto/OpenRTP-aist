@@ -147,7 +147,7 @@ public class ExportDialog extends Dialog {
 		///////
 		isoBtn = new Button(selectComposite, SWT.CHECK);
 		gd = new GridData(GridData.BEGINNING, SWT.CENTER, false, false);
-		isoBtn.setText("ISO 22162-202 Profile");
+		isoBtn.setText("ISO 22166-202 Profile");
 		isoBtn.setLayoutData(gd);
 		isoBtn.setSelection(false);
 		isoBtn.addSelectionListener(new SelectionAdapter() {

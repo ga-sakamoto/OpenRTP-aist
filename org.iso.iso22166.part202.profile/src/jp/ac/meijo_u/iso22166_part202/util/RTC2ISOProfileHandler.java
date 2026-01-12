@@ -37,6 +37,8 @@ import org.iso.iso22166.part202.profile.Modelling;
 import org.iso.iso22166.part202.profile.ModuleID;
 import org.iso.iso22166.part202.profile.NVList;
 import org.iso.iso22166.part202.profile.NameValue;
+import org.iso.iso22166.part202.profile.NoBit;
+import org.iso.iso22166.part202.profile.OStype;
 import org.iso.iso22166.part202.profile.ObjectFactory;
 import org.iso.iso22166.part202.profile.OpTypes;
 import org.iso.iso22166.part202.profile.PLSILType;
@@ -90,7 +92,9 @@ public class RTC2ISOProfileHandler {
 
 		SIM result = factory.createSIM();
 		IDnType idnType = factory.createIDnType();
-		result.setIdnType(idnType);	
+		result.setIdnType(idnType);
+		ModuleID moduleId = factory.createModuleID();
+		idnType.setModuleID(moduleId);
 		
 		IOVariables iovar = factory.createIOVariables();
 		result.setIoVariables(iovar);
@@ -107,7 +111,8 @@ public class RTC2ISOProfileHandler {
 		NVList simNv = factory.createNVList();
 		result.setAdditionalInfo(simNv);
 		
-		createNameValue(factory, "profileVersion", source.getVersion(), simNv);
+		createISONameValue(factory, "profileVersion", source.getVersion(), simNv);
+		createNameValue(factory, "SIM_Version", "iso22166-202:2025", "", simNv);
 		
 		//BasicInfo
 		BasicInfoExt basicProfile = (BasicInfoExt)source.getBasicInfo();
@@ -117,35 +122,38 @@ public class RTC2ISOProfileHandler {
 		
 		idnType.setInformationModelVersion(basicProfile.getVersion());
 
-		createNameValue(factory, "componentKind", basicProfile.getComponentKind(), simNv);
-		createNameValue(factory, "rtcType", basicProfile.getRtcType(), simNv);
-		createNameValue(factory, "category", basicProfile.getCategory(), simNv);
+		createISONameValue(factory, "componentKind", basicProfile.getComponentKind(), simNv);
+		createISONameValue(factory, "rtcType", basicProfile.getRtcType(), simNv);
+		createISONameValue(factory, "category", basicProfile.getCategory(), simNv);
 		if(basicProfile.getMaxInstances()!=null) {
-			createNameValue(factory, "maxInstances", basicProfile.getMaxInstances().toString(), simNv);
+			createISONameValue(factory, "maxInstances", basicProfile.getMaxInstances().toString(), simNv);
 		}
-		createNameValue(factory, "abstract", basicProfile.getAbstract(), simNv);
-		createNameValue(factory, "hardwareProfile", basicProfile.getHardwareProfile(), simNv);
+		createISONameValue(factory, "abstract", basicProfile.getAbstract(), simNv);
+		createISONameValue(factory, "hardwareProfile", basicProfile.getHardwareProfile(), simNv);
 		if(basicProfile.getCreationDate()!=null) {
-			createNameValue(factory, "creationDate", basicProfile.getCreationDate().toString(), simNv);
+			createISONameValue(factory, "creationDate", basicProfile.getCreationDate().toString(), simNv);
 		}
 		if(basicProfile.getUpdateDate() != null) {
-			createNameValue(factory, "updateDate", basicProfile.getUpdateDate().toString(), simNv);
+			createISONameValue(factory, "updateDate", basicProfile.getUpdateDate().toString(), simNv);
 		}
-		createNameValue(factory, "executionType", basicProfile.getExecutionType(), simNv);
+		createISONameValue(factory, "executionType", basicProfile.getExecutionType(), simNv);
 		
 		DocBasic basicDoc = basicProfile.getDoc();
 		if(basicDoc != null) {
-			createNameValue(factory, "docAlgorithm", basicDoc.getAlgorithm(), simNv);
-			createNameValue(factory, "docDescription", basicDoc.getDescription(), simNv);
-			createNameValue(factory, "docInout", basicDoc.getInout(), simNv);
-			createNameValue(factory, "docCreator", basicDoc.getCreator(), simNv);
-			createNameValue(factory, "docLicense", basicDoc.getLicense(), simNv);
-			createNameValue(factory, "docReference", basicDoc.getReference(), simNv);
+			createISONameValue(factory, "docAlgorithm", basicDoc.getAlgorithm(), simNv);
+			createISONameValue(factory, "docDescription", basicDoc.getDescription(), simNv);
+			createISONameValue(factory, "docInout", basicDoc.getInout(), simNv);
+			createISONameValue(factory, "docCreator", basicDoc.getCreator(), simNv);
+			createISONameValue(factory, "docLicense", basicDoc.getLicense(), simNv);
+			createISONameValue(factory, "docReference", basicDoc.getReference(), simNv);
 		}
 
-		createNameValue(factory, "extComment", basicProfile.getComment(), simNv);
-		createNameValue(factory, "extSaveProject", basicProfile.getSaveProject(), simNv);
-		createNameValue(factory, "extVersionUpLog", String.join(", ", basicProfile.getVersionUpLogs()), simNv);
+		createISONameValue(factory, "extComment", basicProfile.getComment(), simNv);
+		createISONameValue(factory, "extSaveProject", basicProfile.getSaveProject(), simNv);
+		createISONameValue(factory, "extVersionUpLog", String.join(", ", basicProfile.getVersionUpLogs()), simNv);
+		
+		OStype osType = factory.createOStype();
+		properties.setOsType(osType);
 		
 		ExecutionType exeType = factory.createExecutionType();
 		properties.getExeType().add(exeType); 
@@ -175,26 +183,26 @@ public class RTC2ISOProfileHandler {
 				var.setIoType(InOutType.OUT);
 			}
 			
-			createNameValue(factory, "idlFile", port.getIdlFile(), iovarNv);
-			createNameValue(factory, "interfaceType", port.getInterfaceType(), iovarNv);
-			createNameValue(factory, "dataflowType", port.getDataflowType(), iovarNv);
-			createNameValue(factory, "subscriptionType", port.getSubscriptionType(), iovarNv);
+			createISONameValue(factory, "idlFile", port.getIdlFile(), iovarNv);
+			createISONameValue(factory, "interfaceType", port.getInterfaceType(), iovarNv);
+			createISONameValue(factory, "dataflowType", port.getDataflowType(), iovarNv);
+			createISONameValue(factory, "subscriptionType", port.getSubscriptionType(), iovarNv);
 			
 			DocDataport portDoc = port.getDoc();
 			if(portDoc != null) {
 				var.setDescription(portDoc.getDescription());
-				createNameValue(factory, "type", portDoc.getType(), iovarNv);
-				createNameValue(factory, "number", portDoc.getNumber(), iovarNv);
-				createNameValue(factory, "semantics", portDoc.getSemantics(), iovarNv);
-				createNameValue(factory, "unit", portDoc.getUnit(), iovarNv);
-				createNameValue(factory, "occurrence", portDoc.getOccerrence(), iovarNv);
-				createNameValue(factory, "operation", portDoc.getOperation(), iovarNv);
+				createISONameValue(factory, "type", portDoc.getType(), iovarNv);
+				createISONameValue(factory, "number", portDoc.getNumber(), iovarNv);
+				createISONameValue(factory, "semantics", portDoc.getSemantics(), iovarNv);
+				createISONameValue(factory, "unit", portDoc.getUnit(), iovarNv);
+				createISONameValue(factory, "occurrence", portDoc.getOccerrence(), iovarNv);
+				createISONameValue(factory, "operation", portDoc.getOperation(), iovarNv);
 			}
 
-			createNameValue(factory, "comment", port.getComment(), iovarNv);
-			createNameValue(factory, "variableName", port.getVariableName(), iovarNv);
+			createISONameValue(factory, "comment", port.getComment(), iovarNv);
+			createISONameValue(factory, "variableName", port.getVariableName(), iovarNv);
 			try {
-				createNameValue(factory, "position", port.getPosition().toString(), iovarNv);
+				createISONameValue(factory, "position", port.getPosition().toString(), iovarNv);
 			} catch (Exception ex){
 			}
 			
@@ -204,7 +212,7 @@ public class RTC2ISOProfileHandler {
 				if(equalsKey(key, "value")) {
 					var.setValue(prop.getValue());
 				} else {
-					createNameValue(factory, prop.getName(), prop.getValue(), iovarNv);
+					createISONameValue(factory, prop.getName(), prop.getValue(), iovarNv);
 				}
 			}
 			if(0<iovarNv.getNv().size()) {
@@ -223,13 +231,13 @@ public class RTC2ISOProfileHandler {
 			prof.setId(port.getName());
 			DocServiceport doc = port.getDoc();
 			if(doc!=null) {
-				createNameValue(factory, "description", doc.getDescription(), serviceNv);
-				createNameValue(factory, "ifdescription", doc.getIfdescription(), serviceNv);
+				createISONameValue(factory, "description", doc.getDescription(), serviceNv);
+				createISONameValue(factory, "ifdescription", doc.getIfdescription(), serviceNv);
 			}
 
-			createNameValue(factory, "comment", port.getComment(), serviceNv);
+			createISONameValue(factory, "comment", port.getComment(), serviceNv);
 			try {
-				createNameValue(factory, "position", port.getPosition().toString(), serviceNv);
+				createISONameValue(factory, "position", port.getPosition().toString(), serviceNv);
 			} catch (Exception ex){
 			}
 			for(Property prop : port.getProperties()) {
@@ -242,12 +250,12 @@ public class RTC2ISOProfileHandler {
 				} else if(equalsKey(key, "motype")) {
 					prof.setMoType(MOType.valueOf(prop.getValue()));
 				} else {
-					createNameValue(factory, prop.getName(), prop.getValue(), serviceNv);
+					createISONameValue(factory, prop.getName(), prop.getValue(), serviceNv);
 				}
 			}
 			
 			for(TransmissionMethod trans : port.getTransMethods() ) {
-				createNameValue(factory, "kind", trans.getKind(), serviceNv);
+				createISONameValue(factory, "kind", trans.getKind(), serviceNv);
 			}
 			
 			for(Serviceinterface sifbasic : port.getServiceInterface()) {
@@ -268,26 +276,26 @@ public class RTC2ISOProfileHandler {
 					method.setMoType(MOType.valueOf(strMoType));
 				}
 				
-				createNameValue(factory, "instanceName", sif.getInstanceName(), sifNv);
+				createISONameValue(factory, "instanceName", sif.getInstanceName(), sifNv);
 				if(sif.getIdlFile() != null) {
 					File file = new File(sif.getIdlFile());
-					createNameValue(factory, "idlFile", file.getName(), sifNv);
-					createNameValue(factory, "path", file.getParent(), sifNv);
+					createISONameValue(factory, "idlFile", file.getName(), sifNv);
+					createISONameValue(factory, "path", file.getParent(), sifNv);
 				}
 				
 				DocServiceinterface ifdoc = sif.getDoc();
 				if(ifdoc != null) {
-					createNameValue(factory, "description", ifdoc.getDescription(), sifNv);
-					createNameValue(factory, "docArgument", ifdoc.getDocArgument(), sifNv);
-					createNameValue(factory, "docReturn", ifdoc.getDocReturn(), sifNv);
-					createNameValue(factory, "docException", ifdoc.getDocException(), sifNv);
-					createNameValue(factory, "docPreCondition", ifdoc.getDocPreCondition(), sifNv);
-					createNameValue(factory, "docPostCondition", ifdoc.getDocPostCondition(), sifNv);
+					createISONameValue(factory, "description", ifdoc.getDescription(), sifNv);
+					createISONameValue(factory, "docArgument", ifdoc.getDocArgument(), sifNv);
+					createISONameValue(factory, "docReturn", ifdoc.getDocReturn(), sifNv);
+					createISONameValue(factory, "docException", ifdoc.getDocException(), sifNv);
+					createISONameValue(factory, "docPreCondition", ifdoc.getDocPreCondition(), sifNv);
+					createISONameValue(factory, "docPostCondition", ifdoc.getDocPostCondition(), sifNv);
 					
 				}
 
-				createNameValue(factory, "comment", sif.getComment(), sifNv);
-				createNameValue(factory, "variableName", sif.getVariableName(), sifNv);
+				createISONameValue(factory, "comment", sif.getComment(), sifNv);
+				createISONameValue(factory, "variableName", sif.getVariableName(), sifNv);
 				parseInterfaceProperties(factory, sif.getProperties(), method, sifNv);
 				
 				if(0 < sifNv.getNv().size()) {
@@ -314,22 +322,22 @@ public class RTC2ISOProfileHandler {
 				String constraintStr;
 				try {
 					constraintStr = XmlHandler.restoreConstraint(conf.getConstraint());
-					createNameValue(factory, "constraint", constraintStr, propNv);
+					createISONameValue(factory, "constraint", constraintStr, propNv);
 				} catch (Exception e) {
 				}
 				
 				DocConfiguration docConf = conf.getDoc();
 				if(docConf != null) {
 					prop.setDescription(docConf.getDescription());
-					createNameValue(factory, "docDataname", docConf.getDataname(), propNv);
-					createNameValue(factory, "docDefaultValue", docConf.getDefaultValue(), propNv);
-					createNameValue(factory, "docUnit", docConf.getUnit(), propNv);
-					createNameValue(factory, "docRange", docConf.getRange(), propNv);
-					createNameValue(factory, "docConstraint", docConf.getConstraint(), propNv);
+					createISONameValue(factory, "docDataname", docConf.getDataname(), propNv);
+					createISONameValue(factory, "docDefaultValue", docConf.getDefaultValue(), propNv);
+					createISONameValue(factory, "docUnit", docConf.getUnit(), propNv);
+					createISONameValue(factory, "docRange", docConf.getRange(), propNv);
+					createISONameValue(factory, "docConstraint", docConf.getConstraint(), propNv);
 				}
 				
-				createNameValue(factory, "comment", conf.getComment(), propNv);
-				createNameValue(factory, "variableName", conf.getVariableName(), propNv);
+				createISONameValue(factory, "comment", conf.getComment(), propNv);
+				createISONameValue(factory, "variableName", conf.getVariableName(), propNv);
 				for(Property confprop : conf.getProperties()) {
 					String key = confprop.getName();
 					String value = confprop.getValue();
@@ -337,7 +345,7 @@ public class RTC2ISOProfileHandler {
 					if(equalsKey(key, "immutable")) {
 						prop.setImmutable(Boolean.valueOf(value));
 					} else {
-						createNameValue(factory, key, value, propNv);
+						createISONameValue(factory, key, value, propNv);
 					}
 				}
 				if(0 < propNv.getNv().size()) {
@@ -354,10 +362,16 @@ public class RTC2ISOProfileHandler {
 			compiler.setCompilerName(lang.getKind());
 			
 			LanguageExt langext = (LanguageExt)lang;
-			//TODO 隕∽ｿｮ豁｣
 			List<TargetEnvironment> envs = langext.getTargets();
 			if(0<envs.size()) {
 				TargetEnvironment env = envs.get(0);
+				
+				compiler.setOsName(env.getOs());
+				List<String> cpus = env.getCpus();
+				if(0<cpus.size()) {
+					compiler.setBitnCPUarch(env.getCpus().get(0));
+				}
+				
 				String strVersion = env.getLangVersion();
 				String[] elems = strVersion.split(IProfileConstants.ELEM_DELIMITOR);
 				if(0<elems.length) {
@@ -448,7 +462,7 @@ public class RTC2ISOProfileHandler {
 				List<Property> otherList = getTargetStartProperty(propList, "argtype_" + value.toLowerCase() + "_add_");
 				for(Property each : otherList) {
 					String orgKey = each.getName().replace("argType_" + value + "_add_", "");
-					createNameValue(factory, orgKey, each.getValue(), argNv);
+					createISONameValue(factory, orgKey, each.getValue(), argNv);
 				}
 				if(0 < argNv.getNv().size()) {
 					arg.setAdditionalInfo(argNv);
@@ -457,7 +471,7 @@ public class RTC2ISOProfileHandler {
 				if(equalsKey(key, "motype")) continue;
 				if(startsWithKey(key, "argtype_")) continue;
 
-				createNameValue(factory, key, value, sifNv);
+				createISONameValue(factory, key, value, sifNv);
 			}
 		}
 	}
@@ -468,6 +482,10 @@ public class RTC2ISOProfileHandler {
 		
 		result.setExamples(getTargetPropertyValue(propList, "examples"));
 
+		List<Property> exeTypeList = getTargetStartProperty(propList, "exeType_");
+		if(0<exeTypeList.size()) {
+			buildExeType(factory, result, exeTypeList);
+		}
 		List<Property> infraList = getTargetStartProperty(propList, "infra_");
 		if(0<infraList.size()) {
 			buildInfrastructure(factory, result, infraList);
@@ -492,6 +510,9 @@ public class RTC2ISOProfileHandler {
 			if(value==null || value.length() == 0) continue;
 
 			if(equalsKey(key, "examples")
+					|| equalsKey(key, "profileVersion")
+					|| key.equals("SIM_Version")
+					|| startsWithKey(key, "exeType_")
 					|| startsWithKey(key, "infra_")
 					|| startsWithKey(key, "safesecure_")
 					|| startsWithKey(key, "modelling_")
@@ -509,16 +530,85 @@ public class RTC2ISOProfileHandler {
 					}
 				}
 
+			} else if(equalsKey(key, "mID")){
+				result.getIdnType().getModuleID().getMID().add(hexStringToBytes(value));
+			} else if(equalsKey(key, "iID")){
+				result.getIdnType().getModuleID().setIID(hexStringToBytes(value));
+
+			} else if(equalsKey(key, "osType_type")){
+				result.getProperties().getOsType().setType(value);
+			} else if(equalsKey(key, "osType_bit")){
+				result.getProperties().getOsType().setBit(NoBit.fromValue(value));
+			} else if(equalsKey(key, "osType_version")){
+				result.getProperties().getOsType().setVersion(value);
+
 			} else if(equalsKey(key, "executionstatus")){
-				status.setExecutionStatus(ExeStatus.valueOf(prop.getValue()));
+				status.setExecutionStatus(ExeStatus.valueOf(value));
 			} else if(equalsKey(key, "errortype")){
-				BigInteger val = new BigInteger(prop.getValue());
+				BigInteger val = new BigInteger(value);
 				status.setErrorType(val);
 
 			} else {
-				createNameValue(factory, prop.getName(), prop.getValue(), simNv);
+				createISONameValue(factory, key, value, simNv);
 			}
 		}
+		if(simNv.getNv().size() == 0) {
+			result.setAdditionalInfo(null);
+		}
+	}
+	
+	private void buildExeType(ObjectFactory factory, SIM result, List<Property> propList) {
+		List<ExecutionType> exeTypes = result.getProperties().getExeType();
+		ExecutionType exeType = exeTypes.get(0);
+
+		String hardRtStr = getTargetPropertyValue(propList, "exeType_hardRT");
+		if(0 < hardRtStr.length()) {
+			exeType.setHardRT(Boolean.valueOf(hardRtStr));
+		}
+		String priorityStr = getTargetPropertyValue(propList, "exeType_priority");
+		if(0 < priorityStr.length()) {
+			exeType.setPriority(hexStringToBytes(priorityStr));
+		}
+		
+		for(Property each : propList) {
+			String eachKey = each.getName();
+			String eachValue = each.getValue();
+			eachKey = eachKey.replace(IProfileConstants.ISO_PREFIX, "");
+			
+			if(eachKey.equals("exeType_hardRT")
+					|| eachKey.equals("exeType_priority")) continue;
+
+			String[] elems = eachKey.split("_");
+			if(elems.length < 3) continue;
+			
+			String funcNoStr = elems[1];
+			ExecutionType func;
+			try {
+				int funcNo = Integer.parseInt(funcNoStr);
+				if(exeTypes.size() < funcNo + 1) {
+					func = factory.createExecutionType();
+					result.getProperties().getExeType().add(func);
+					
+				} else {
+					func = exeTypes.get(funcNo); 
+				}
+			} catch (NumberFormatException ex) {
+				continue;
+			}
+
+			if(eachKey.endsWith("_opType")) {
+				func.setOpType(OpTypes.valueOf(eachValue));
+			} else if(eachKey.endsWith("_hardRT")) {
+				func.setHardRT(Boolean.valueOf(eachValue));
+			} else if(eachKey.endsWith("_timeConstraint")) {
+				func.setTimeConstraint(Double.valueOf(eachValue));
+			} else if(eachKey.endsWith("_priority")) {
+				func.setPriority(hexStringToBytes(eachValue));
+			} else if(eachKey.endsWith("_instanceType")) {
+				func.setInstanceType(InstanceType.valueOf(eachValue));
+			}
+		}
+
 	}
 	
 	private void buildExeForm(ObjectFactory factory, SIM result, List<Property> propList) {
@@ -552,7 +642,7 @@ public class RTC2ISOProfileHandler {
 					NVList mcNv = factory.createNVList();
 					for(Property eachP : otherList) {
 						String orgKey = eachP.getName().replace("exeForm_" + funcNo + "_add_", "");
-						createNameValue(factory, orgKey, eachP.getValue(), mcNv);
+						createISONameValue(factory, orgKey, eachP.getValue(), mcNv);
 					}
 					if(0 < mcNv.getNv().size()) {
 						func.setAdditionalInfo(mcNv);
@@ -639,7 +729,7 @@ public class RTC2ISOProfileHandler {
 					NVList mcNv = factory.createNVList();
 					for(Property eachP : modelPropList) {
 						String orgKey = eachP.getName().replace("modelling_" + modelNo + "_add_", "");
-						createNameValue(factory, orgKey, eachP.getValue(), mcNv);
+						createISONameValue(factory, orgKey, eachP.getValue(), mcNv);
 					}
 					if(0 < mcNv.getNv().size()) {
 						func.setAdditionalInfo(mcNv);
@@ -685,7 +775,7 @@ public class RTC2ISOProfileHandler {
 						NVList dynNv = factory.createNVList();
 						for(Property eachP : dynPropList) {
 							String orgKey = eachP.getName().replace("modelling_" + mcIdx + "_dynamicsw_" + dynamicNo + "_add_", "");
-							createNameValue(factory, orgKey, eachP.getValue(), dynNv);
+							createISONameValue(factory, orgKey, eachP.getValue(), dynNv);
 						}
 						if(0 < dynNv.getNv().size()) {
 							targetDyn.setAdditionalInfo(dynNv);
@@ -757,7 +847,7 @@ public class RTC2ISOProfileHandler {
 		List<Property> otherList = getTargetStartProperty(propList, "safesecure_add_");
 		for(Property each : otherList) {
 			String orgKey = each.getName().replace("safeSecure_add_", "");
-			createNameValue(factory, orgKey, each.getValue(), safesNv);
+			createISONameValue(factory, orgKey, each.getValue(), safesNv);
 		}
 		if(0 < safesNv.getNv().size()) {
 			safes.setAdditionalInfo(safesNv);
@@ -841,7 +931,7 @@ public class RTC2ISOProfileHandler {
 		List<Property> otherList = getTargetProperty(propList, "infra_add_");
 		for(Property each : otherList) {
 			String orgKey = each.getName().replace(IProfileConstants.ISO_PREFIX + "infra_add_", "");
-			createNameValue(factory, orgKey, each.getValue(), infraNv);
+			createISONameValue(factory, orgKey, each.getValue(), infraNv);
 		}
 		if(0 < infraNv.getNv().size()) {
 			infra.setAdditionalInfo(infraNv);
@@ -928,7 +1018,7 @@ public class RTC2ISOProfileHandler {
 						dBus.setSpeed(Double.parseDouble(eachValue));
 					} else if(startsWithKey(eachName, "infra_comms_underlaying_" + comIdx + "_add_")) {
 						String orgKey = each.getName().replace("infra_comms_underlaying_" + comIdx + "_add_", "");
-						createNameValue(factory, orgKey, eachValue, dbNv);
+						createISONameValue(factory, orgKey, eachValue, dbNv);
 					}
 				}
 				if(0<dbNv.getNv().size()) {
@@ -981,7 +1071,7 @@ public class RTC2ISOProfileHandler {
 
 	private List<Property> getTargetProperty(List<Property> propList, String key) {
 		List<Property> filtered = propList.stream()
-									.filter(p -> p.getName().toLowerCase().equals(IProfileConstants.ISO_PREFIX.toLowerCase() + key)
+									.filter(p -> p.getName().toLowerCase().equals(IProfileConstants.ISO_PREFIX.toLowerCase() + key.toLowerCase())
 													|| p.getName().toLowerCase().equals(key))
 									.collect(Collectors.toList());
 		return filtered;
@@ -1009,24 +1099,28 @@ public class RTC2ISOProfileHandler {
 
 	private void createActionInfo(ObjectFactory factory, ActionStatus action, String actionName, NVList nvs) {
 		if(action != null) {
-			createNameValue(factory, actionName, action.getImplemented(), nvs);
+			createISONameValue(factory, actionName, action.getImplemented(), nvs);
 			ActionStatusDoc actionDoc = (ActionStatusDoc)action;
 			DocAction docaction = actionDoc.getDoc();
 			if(docaction != null) {
-				createNameValue(factory, actionName + "DocDescription", docaction.getDescription(), nvs);
-				createNameValue(factory, actionName + "DocPreCondition", docaction.getPreCondition(), nvs);
-				createNameValue(factory, actionName + "DocPostCondition", docaction.getPostCondition(), nvs);
+				createISONameValue(factory, actionName + "DocDescription", docaction.getDescription(), nvs);
+				createISONameValue(factory, actionName + "DocPreCondition", docaction.getPreCondition(), nvs);
+				createISONameValue(factory, actionName + "DocPostCondition", docaction.getPostCondition(), nvs);
 			}
 		}
 	}
 
-	private void createNameValue(ObjectFactory factory, String key, String value, NVList nvs) {
+	private void createISONameValue(ObjectFactory factory, String key, String value, NVList nvs) {
+		createNameValue(factory, key, value, IProfileConstants.ISO_PREFIX, nvs);
+	}
+	
+	private void createNameValue(ObjectFactory factory, String key, String value, String prefix, NVList nvs) {
 		if(value==null || value.length() == 0) return;
 		NameValue nv = factory.createNameValue();
-		if(key.toLowerCase().startsWith(IProfileConstants.ISO_PREFIX.toLowerCase())) {
-			nv.setName(key.substring(IProfileConstants.ISO_PREFIX.length()));
+		if(key.toLowerCase().startsWith(prefix.toLowerCase())) {
+			nv.setName(key.substring(prefix.length()));
 		} else {
-			nv.setName(IProfileConstants.ISO_PREFIX + key);
+			nv.setName(prefix + key);
 		}
 		nv.setValue(value);
 		nvs.getNv().add(nv);
