@@ -1150,9 +1150,6 @@ public class RTC2ISOProfileHandler {
 			
 			Marshaller marshaller = jaxbContext.createMarshaller();
 		    marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT , new Boolean(true));
-//		    marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper",
-//					new NamespacePrefixMapperImpl(
-//							"http://www.openrtp.org/namespaces/rts"));
 		    StringWriter xmlFileWriter = new StringWriter();
 		    marshaller.marshal(profile, xmlFileWriter);
 		    xmlString = xmlFileWriter.toString();
@@ -1161,56 +1158,4 @@ public class RTC2ISOProfileHandler {
 		}
 		return xmlString;
 	}
-
-//
-//	/**
-//	 * XMLGregorianCalendar 郢ｧ蜑�ｽｻ�ｽｻ隲｢荳奇ｿｽ�ｽｮ隴鯉ｽ･闔牙�･縲帝�墓ｻ難ｿｽ闊鯉ｼ�邵ｺ�ｽｾ邵ｺ蜷ｶ�ｿｽ�ｿｽ(Map隰厄ｿｽ陞ｳ�ｿｽ)
-//	 */
-//	public static XMLGregorianCalendar createXMLGregorianCalendar(Map<String, Integer> dateY) {
-//		return createXMLGregorianCalendar((dateY.get("year")).intValue(), (dateY.get("month")).intValue(),
-//				(dateY.get("day")).intValue(), (dateY.get("hour")).intValue(), (dateY.get("minute")).intValue(),
-//				(dateY.get("second")).intValue());
-//	}
-//
-//	/**
-//	 * XMLGregorianCalendar 郢ｧ蜑�ｽｻ�ｽｻ隲｢荳奇ｿｽ�ｽｮ隴鯉ｽ･闔牙�･縲帝�墓ｻ難ｿｽ闊鯉ｼ�邵ｺ�ｽｾ邵ｺ蜷ｶ�ｿｽ�ｿｽ(陝ｷ�ｽｴ邵ｲ竏ｵ諤ｦ邵ｲ竏ｵ蠕狗ｸｲ竏ｵ蜃ｾ邵ｲ竏晢ｿｽ邵ｲ竏ｫ�ｽｧ蜻域ｬ�陞ｳ�ｿｽ)
-//	 */
-//	public static XMLGregorianCalendar createXMLGregorianCalendar(int year, int month, int day, int hourOfDay,
-//			int minute, int second) {
-//		GregorianCalendar c = new GregorianCalendar();
-//		c.set(year, month - 1, day, hourOfDay, minute, second);
-//		c.set(GregorianCalendar.MILLISECOND, 0);
-//		return createXMLGregorianCalendar(c);
-//	}
-
-//	/**
-//	 * XMLGregorianCalendar 郢ｧ蜑�ｽｻ�ｽｻ隲｢荳奇ｿｽ�ｽｮ隴鯉ｽ･闔牙�･縲帝�墓ｻ難ｿｽ闊鯉ｼ�邵ｺ�ｽｾ邵ｺ蜷ｶ�ｿｽ�ｿｽ(隴�ｿｽ陝�諤懶ｿｽ邇ｲ谺�陞ｳ�ｿｽ yyyy-MM-ddTHH:mm:ss)
-//	 */
-//	public static XMLGregorianCalendar createXMLGregorianCalendar(String date) {
-//		try {
-//			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-//			sdf.setLenient(false);
-//			return createXMLGregorianCalendar(sdf.parse(date));
-//		} catch (Exception e) {
-//			throw new RuntimeException("Fail to create xml date.", e);
-//		}
-//	}
-
-//	/**
-//	 * XMLGregorianCalendar 郢ｧ蜑�ｽｻ�ｽｻ隲｢荳奇ｿｽ�ｽｮ隴鯉ｽ･闔牙�･縲帝�墓ｻ難ｿｽ闊鯉ｼ�邵ｺ�ｽｾ邵ｺ蜷ｶ�ｿｽ�ｿｽ(隴鯉ｽ･闔我ｿｶ谺�陞ｳ�ｿｽ)
-//	 */
-//	public static XMLGregorianCalendar createXMLGregorianCalendar(Date date) {
-//		GregorianCalendar c = new GregorianCalendar();
-//		c.setTime(date);
-//		return createXMLGregorianCalendar(c);
-//	}
-
-//	public static XMLGregorianCalendar createXMLGregorianCalendar(GregorianCalendar cal) {
-//		try {
-//			XMLGregorianCalendar xmlDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(cal);
-//			return xmlDate;
-//		} catch (Exception e) {
-//			throw new RuntimeException("Fail to create xml date.", e);
-//		}
-//	}
 }
