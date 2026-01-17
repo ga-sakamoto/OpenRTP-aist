@@ -114,6 +114,11 @@
            class="jp.go.aist.rtm.rtcbuilder.ui.preference.CodeGenerateConfigPreferencePage"
            id="jp.go.aist.rtm.rtcbuilder.ui.preferencePage.codeGenerate.Configuration"
            name="%preferecePagesConfigurationName"/>
+     <page
+           category="jp.go.aist.rtm.rtcbuilder.ui.preferencePage.codeGenerate"
+           class="jp.go.aist.rtm.rtcbuilder.ui.preference.CodeGenerateContainerPreferencePage"
+           id="jp.go.aist.rtm.rtcbuilder.ui.preferencePage.codeGenerate.Container"
+           name="%preferecePagesContainerName"/>
   </extension>
   <extension
         point="org.eclipse.core.runtime.contentTypes">
