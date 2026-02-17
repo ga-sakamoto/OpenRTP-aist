@@ -6,9 +6,11 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXBContext;
@@ -167,20 +169,63 @@ public class RTC2ISOProfileHandler {
 		propList.sort(Comparator.comparing(Property::getName));
 		parseBasicProperties(factory, result, propList);
 		//////////
+		List<String> skipNames = new ArrayList<String>(); 
 		for(Dataport dport : source.getDataPorts() ) {
 			DataportExt port = (DataportExt)dport;
+			String portName = port.getName();
+			if(skipNames.contains(portName)) continue;
+			
 			Variable var = factory.createVariable();
 			iovar.getVariable().add(var);
 			NVList iovarNv = factory.createNVList();
 			
-			var.setName(port.getName());
+			boolean isInOut = false;
+			String oppBaseName = null;
+			if(portName.endsWith(IProfileConstants.INOUT_SUFFIX_IN)
+					|| portName.endsWith(IProfileConstants.INOUT_SUFFIX_OUT)) {
+				String oppPortNameChk = null;
+				Optional<Dataport> oppPortOpt = null;
+				DataportExt targetPort = null;
+				if(portName.endsWith(IProfileConstants.INOUT_SUFFIX_IN)) {
+					oppBaseName = portName.substring(0, portName.length() - IProfileConstants.INOUT_SUFFIX_IN.length());
+					String oppPortName = oppBaseName + IProfileConstants.INOUT_SUFFIX_OUT;
+					oppPortOpt = source.getDataPorts().stream()
+					         .filter(u -> u.getName().equals(oppPortName))
+					         .findFirst();
+					oppPortNameChk = oppPortName;
+				} else if(portName.endsWith(IProfileConstants.INOUT_SUFFIX_OUT)) {
+					oppBaseName = portName.substring(0, portName.length() - IProfileConstants.INOUT_SUFFIX_OUT.length());
+					String oppPortName = oppBaseName + IProfileConstants.INOUT_SUFFIX_IN;
+					oppPortOpt = source.getDataPorts().stream()
+					         .filter(u -> u.getName().equals(oppPortName))
+					         .findFirst();
+					oppPortNameChk = oppPortName;
+				}
+				Dataport oppPort = oppPortOpt.orElse(null);
+				if(oppPort != null) {
+					targetPort = (DataportExt)oppPort;
+				}
+				if(targetPort != null) {
+					if(compareDataPort(port, targetPort)) {
+						skipNames.add(oppPortNameChk);
+						isInOut = true;
+					}
+				}
+			}
+			
 			var.setType(port.getType());
 			var.setUnit(port.getUnit());
-			String portType = port.getPortType();
-			if(portType.toLowerCase().contains("in")) {
-				var.setIoType(InOutType.IN);
-			} else if(portType.toLowerCase().contains("out")) {
-				var.setIoType(InOutType.OUT);
+			if(isInOut) {
+				var.setName(oppBaseName);
+				var.setIoType(InOutType.INOUT);
+			} else {
+				var.setName(port.getName());
+				String portType = port.getPortType();
+				if(portType.toLowerCase().contains("in")) {
+					var.setIoType(InOutType.IN);
+				} else if(portType.toLowerCase().contains("out")) {
+					var.setIoType(InOutType.OUT);
+				}
 			}
 			
 			createISONameValue(factory, "idlFile", port.getIdlFile(), iovarNv);
@@ -363,33 +408,114 @@ public class RTC2ISOProfileHandler {
 			
 			LanguageExt langext = (LanguageExt)lang;
 			List<TargetEnvironment> envs = langext.getTargets();
-			if(0<envs.size()) {
-				TargetEnvironment env = envs.get(0);
-				
-				compiler.setOsName(env.getOs());
-				List<String> cpus = env.getCpus();
-				if(0<cpus.size()) {
-					compiler.setBitnCPUarch(env.getCpus().get(0));
-				}
-				
-				String strVersion = env.getLangVersion();
-				String[] elems = strVersion.split(IProfileConstants.ELEM_DELIMITOR);
-				if(0<elems.length) {
-					RangeString range = factory.createRangeString();
-					compiler.setVerRangeCompiler(range);
-					range.setMin(elems[0]);
-					if(1<elems.length) {
-						range.setMax(elems[1]);
+			int containerNum = 0;
+			for(TargetEnvironment env : envs) {
+				String langVer = env.getLangVersion();
+				if(langVer.startsWith(IProfileConstants.CONTAINER_PREFIX)) {
+					langVer.replace(IProfileConstants.CONTAINER_PREFIX, "");
+					String middleware = env.getOs();
+					String mdlVersion = env.getCpuOther();
+					String osVersion = "";
+					if(0 < env.getOsVersions().size()) {
+						osVersion = env.getOsVersions().get(0);
 					}
-				}
-				if(0<env.getLibraries().size()) {
-					Libraries libs = factory.createLibraries();
-					properties.setLibs(libs);
-					for(Library each : env.getLibraries() ) {
-						org.iso.iso22166.part202.profile.Library lib = factory.createLibrary();
-						lib.setName(each.getName());
-						lib.setVersion(each.getVersion());
-						libs.getLibraries().add(lib);
+					String workSpace = env.getOther();
+					String config = "";
+					if(0<env.getCpus().size()) {
+						config = env.getCpus().get(0);
+					}
+					//					
+					StringBuilder builder = new StringBuilder();
+					builder.append(IProfileConstants.CONTAINER_PREFIX);
+					builder.append(basicProfile.getName()).append("__");
+					
+					String osInfo = osVersion;
+					String[] elems = osInfo.split(" ");
+					if(0<elems.length) {
+						builder.append(elems[0]);
+					}
+					builder.append("-");
+					if(1<elems.length) {
+						builder.append(elems[1]);
+					}
+					builder.append("__");
+					
+					String mwName = middleware.replace(" ", "");
+					builder.append(mwName).append("-");
+					builder.append(mdlVersion.toLowerCase()).append("__");
+					builder.append(config);
+					builder.append(".Dockerfile");
+					//
+					containerNum++;
+					ExeForm exeForm = factory.createExeForm();
+					if(result.getExeForm() == null) {
+						ExecutableForm elem = factory.createExecutableForm();
+						result.setExeForm(elem);
+					}
+					result.getExeForm().getExeForm().add(exeForm);
+					exeForm.setExeFileURL(builder.toString());
+					NVList exeNv = factory.createNVList();
+					exeForm.setAdditionalInfo(exeNv);
+					
+					createNameValue(factory, IProfileConstants.CONTAINER_PREFIX + "Middleware",
+									middleware, "", exeNv);
+					createNameValue(factory, IProfileConstants.CONTAINER_PREFIX + "MiddlewareVersion",
+							mdlVersion, "", exeNv);
+					createNameValue(factory, IProfileConstants.CONTAINER_PREFIX + "TargetOSVersion",
+							osVersion, "", exeNv);
+					createNameValue(factory, IProfileConstants.CONTAINER_PREFIX + "Workspace",
+							workSpace, "", exeNv);
+					createNameValue(factory, IProfileConstants.CONTAINER_PREFIX + "Language",
+							langVer, "", exeNv);
+					createNameValue(factory, IProfileConstants.CONTAINER_PREFIX + "Configuration",
+							config, "", exeNv);
+
+					List<Property> libraryList = getTargetStartProperty(langext.getProperties(), IProfileConstants.CONTAINER_PREFIX + "lib_" + containerNum);
+					for(Property each : libraryList) {
+						createNameValue(factory, IProfileConstants.CONTAINER_PREFIX + "Libraries",
+								each.getValue(), "", exeNv);
+					}
+					
+					for(Library each : env.getLibraries()) {
+						createNameValue(factory, IProfileConstants.CONTAINER_PREFIX + "GitURL",
+								each.getName() + " " + each.getVersion(),
+								"", exeNv);
+					}
+					
+					List<Property> presetList = getTargetStartProperty(langext.getProperties(), IProfileConstants.CONTAINER_PREFIX + "category_" + containerNum);
+					for(Property each : presetList) {
+						createNameValue(factory, IProfileConstants.CONTAINER_PREFIX + "category",
+								each.getValue(), "", exeNv);
+					}
+					
+				} else {
+					compiler.setOsName(env.getOs());
+					List<String> cpus = env.getCpus();
+					if(0<cpus.size()) {
+						compiler.setBitnCPUarch(env.getCpus().get(0));
+					}
+					
+					String strVersion = env.getLangVersion();
+					if(strVersion != null) {
+						String[] elems = strVersion.split(IProfileConstants.ELEM_DELIMITOR);
+						if(0<elems.length) {
+							RangeString range = factory.createRangeString();
+							compiler.setVerRangeCompiler(range);
+							range.setMin(elems[0]);
+							if(1<elems.length) {
+								range.setMax(elems[1]);
+							}
+						}
+					}
+					if(0<env.getLibraries().size()) {
+						Libraries libs = factory.createLibraries();
+						properties.setLibs(libs);
+						for(Library each : env.getLibraries() ) {
+							org.iso.iso22166.part202.profile.Library lib = factory.createLibrary();
+							lib.setName(each.getName());
+							lib.setVersion(each.getVersion());
+							libs.getLibraries().add(lib);
+						}
 					}
 				}
 			}
@@ -417,6 +543,7 @@ public class RTC2ISOProfileHandler {
 	}
 	
 	private OpTypes convertActivityType(String source) {
+		if(source == null) return null;
 		if(source.toUpperCase().equals("PERIODIC")) {
 			return OpTypes.PERIODIC;
 		} else if(source.toUpperCase().equals("EVENTDRIVEN")) {
@@ -428,6 +555,7 @@ public class RTC2ISOProfileHandler {
 	}
 
 	private InstanceType convertComponentType(String source) {
+		if(source == null) return null;
 		if(source.toUpperCase().equals("STATIC")) {
 			return InstanceType.SINGLETON;
 		} else if(source.toUpperCase().equals("UNIQUE")) {
@@ -436,6 +564,39 @@ public class RTC2ISOProfileHandler {
 			return InstanceType.MULTITON_COMM;
 		}
 		return null;
+	}
+	
+	private boolean compareDataPort(DataportExt port01, DataportExt port02) {
+		if(port01.getType().equals(port02.getType())==false) return false;
+		if(port01.getIdlFile().equals(port02.getIdlFile())==false) return false;
+		if(port01.getInterfaceType().equals(port02.getInterfaceType())==false) return false;
+		if(port01.getDataflowType().equals(port02.getDataflowType())==false) return false;
+		if(port01.getSubscriptionType().equals(port02.getSubscriptionType())==false) return false;
+		if(port01.getUnit().equals(port02.getUnit())==false) return false;
+		
+		DocDataport doc01 = port01.getDoc();
+		DocDataport doc02 = port02.getDoc();
+		if(doc01.getDescription().equals(doc02.getDescription())==false) return false;
+		if(doc01.getType().equals(doc02.getType())==false) return false;
+		if(doc01.getNumber().equals(doc02.getNumber())==false) return false;
+		if(doc01.getSemantics().equals(doc02.getSemantics())==false) return false;
+		if(doc01.getUnit().equals(doc02.getUnit())==false) return false;
+		if(doc01.getOccerrence().equals(doc02.getOccerrence())==false) return false;
+		if(doc01.getOperation().equals(doc02.getOperation())==false) return false;
+
+		if(port01.getComment().equals(port02.getComment())==false) return false;
+		if(port01.getVariableName().equals(port02.getVariableName())==false) return false;
+
+		List<Property> props01 = port01.getProperties();
+		List<Property> props02 = port02.getProperties();
+		if(props01.size() != props02.size()) return false;
+		for(int index=0; index<props01.size(); index++) {
+			Property prop01 = props01.get(index);
+			Property prop02 = props02.get(index);
+			if(prop01.getName().equals(prop02.getName())==false) return false;
+			if(prop01.getValue().equals(prop02.getValue())==false) return false;
+		}
+		return true;
 	}
 
 	private void parseInterfaceProperties(ObjectFactory factory, List<Property> propList, ServiceMethod method, NVList sifNv) {

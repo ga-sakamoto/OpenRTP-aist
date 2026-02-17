@@ -764,14 +764,19 @@ public class ProfileTest {
 		ProfileTest test = new ProfileTest();
 //		test.makeIsoProfile();
 		
-		//RTC - ISO - RTC 
-		test.convertRtc2IsoProfile("\\resource\\RTC_Base.xml", "\\resource\\ISO.xml");
-		test.convertIso2RtcProfile("\\resource\\ISO.xml", "\\resource\\RTC.xml");
-
-		//ISO - RTC - ISO 
+//		//RTC - ISO - RTC 
+//		test.convertRtc2IsoProfile("\\resource\\RTC_Base.xml", "\\resource\\ISO.xml");
+//		test.convertIso2RtcProfile("\\resource\\ISO.xml", "\\resource\\RTC.xml");
+//
+//		//ISO - RTC - ISO 
 //		test.convertIso2RtcProfile("\\resource\\ISO_Base.xml", "\\resource\\RTC_Conv.xml");
 //		test.convertRtc2IsoProfile("\\resource\\RTC_Conv.xml", "\\resource\\ISO_Conv.xml");
+//		test.convertIso2RtcProfile("\\resource\\ISO_Base_InOut.xml", "\\resource\\RTC_Conv_InOut.xml");
+//		test.convertRtc2IsoProfile("\\resource\\RTC_Conv_InOut.xml", "\\resource\\ISO_Conv_InOut.xml");
 
+		//RTC - ISO - RTC 
+		test.convertRtc2IsoProfile("\\resource\\RTC_Docker_Base.xml", "\\resource\\ISO_Docker.xml");
+//		test.convertIso2RtcProfile("\\resource\\ISO_Docker.xml", "\\resource\\RTC_Docker_Conv.xml");
 
 	}
 

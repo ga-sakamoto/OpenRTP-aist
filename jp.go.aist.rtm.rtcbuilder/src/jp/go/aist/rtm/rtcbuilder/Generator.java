@@ -58,6 +58,7 @@ import jp.go.aist.rtm.rtcbuilder.generator.parser.MergeBlockParser;
 import jp.go.aist.rtm.rtcbuilder.manager.CMakeGenerateManager;
 import jp.go.aist.rtm.rtcbuilder.manager.CXXGenerateManager;
 import jp.go.aist.rtm.rtcbuilder.manager.CommonGenerateManager;
+import jp.go.aist.rtm.rtcbuilder.manager.ContainerGenerateManager;
 import jp.go.aist.rtm.rtcbuilder.manager.GenerateManager;
 import jp.go.aist.rtm.rtcbuilder.nl.Messages;
 import jp.go.aist.rtm.rtcbuilder.ui.compare.GeneratedCautionDialog;
@@ -83,6 +84,7 @@ public class Generator {
 		this.addGenerateManager(new CommonGenerateManager());
 		this.addGenerateManager(new CXXGenerateManager());
 		this.addGenerateManager(new CMakeGenerateManager());
+		this.addGenerateManager(new ContainerGenerateManager());
 	}
 
 	public String getWarningMessage() {

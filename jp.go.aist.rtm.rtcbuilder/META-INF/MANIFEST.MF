@@ -13,7 +13,10 @@ Bundle-ClassPath: .,
  lib/commons-logging-1.2.jar,
  lib/commons-scxml-0.9.jar,
  lib/jgraphx.jar,
- lib/rsyntaxtextarea.jar
+ lib/rsyntaxtextarea.jar,
+ lib/jackson-annotations-2.13.5.jar,
+ lib/jackson-core-2.13.5.jar,
+ lib/jackson-databind-2.13.5.jar
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: jp.go.aist.rtm.rtcbuilder,

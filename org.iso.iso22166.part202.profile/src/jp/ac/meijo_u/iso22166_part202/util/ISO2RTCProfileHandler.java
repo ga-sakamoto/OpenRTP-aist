@@ -110,7 +110,7 @@ public class ISO2RTCProfileHandler {
 		convertInfrastructure(source, factory, basicProp);
 		convertSafeSecure(source, factory, basicProp);
 		convertModelling(source, factory, basicProp);
-		convertExecutableForm(source, factory, basicProp);
+		convertExecutableForm(source, factory, result, basicProp);
 		convertNVList(source, factory, result);
 		
 		StringBuilder builder = new StringBuilder();
@@ -288,56 +288,61 @@ public class ISO2RTCProfileHandler {
 		List<Variable> varList = iOVariables.getVariable();
 		if(varList != null && 0<varList.size()) {
 			for(Variable each : varList) {
-				DataportExt dataPort = factory.createDataportExt();
-				DocDataport docPort = factory.createDocDataport();
-				dataPort.setDoc(docPort);
-				result.getDataPorts().add(dataPort);
-
-				createISOProperty(factory, "value", each.getValue(), dataPort.getProperties());
-				docPort.setDescription(each.getDescription());
-				dataPort.setName(each.getName());
-				dataPort.setType(each.getType());
-				dataPort.setUnit(each.getUnit());
-				if(each.getIoType() != null) {
-					String strInOut = each.getIoType().toString();
-					if(strInOut.equals("IN")) {
-						dataPort.setPortType("DataInPort");
-					} else if(strInOut.equals("OUT")) {
-						dataPort.setPortType("DataOutPort");
-					}
+				String strInOut = each.getIoType().toString();
+				if(strInOut.equals("IN")) {
+					createDataPort(factory, result, each, "DataInPort", "");
+				} else if(strInOut.equals("OUT")) {
+					createDataPort(factory, result, each, "DataOutPort", "");
+				} else if(strInOut.equals("INOUT")) {
+					createDataPort(factory, result, each, "DataInPort", IProfileConstants.INOUT_SUFFIX_IN);
+					createDataPort(factory, result, each, "DataOutPort", IProfileConstants.INOUT_SUFFIX_OUT);
 				}
-				
-				NVList nvList = each.getAdditionalInfo();
-				if(nvList!=null) {
-					List<NameValue> nvs = nvList.getNv();
-					List<String> definedList = Arrays.asList("idlFile", "interfaceType", "dataflowType", "subscriptionType",
-															 "type", "number", "semantics", "unit",
-															 "occurrence", "operation",
-															 "comment", "variableName", "position"); 
-					dataPort.setIdlFile(getTargetNVValue("idlFile", nvs));
-					dataPort.setInterfaceType(getTargetNVValue("interfaceType", nvs));
-					dataPort.setDataflowType(getTargetNVValue("dataflowType", nvs));
-					dataPort.setSubscriptionType(getTargetNVValue("subscriptionType", nvs));
-					
-					docPort.setType(getTargetNVValue("type", nvs));
-					docPort.setNumber(getTargetNVValue("number", nvs));
-					docPort.setSemantics(getTargetNVValue("semantics", nvs));
-					docPort.setUnit(getTargetNVValue("unit", nvs));
-					docPort.setOccerrence(getTargetNVValue("occurrence", nvs));
-					docPort.setOperation(getTargetNVValue("operation", nvs));
-					
-					dataPort.setComment(getTargetNVValue("comment", nvs));
-					dataPort.setVariableName(getTargetNVValue("variableName", nvs));
-					try {
-						dataPort.setPosition(Position.valueOf(getTargetNVValue("position", nvs)));
-					} catch (Exception e) {
-					}
+			}
+		}
+	}
 
-					for(NameValue nv : nvList.getNv()) {
-						if(checkNVName(nv.getName(), definedList)) continue;
-						createISOProperty(factory, nv.getName(), nv.getValue(), dataPort.getProperties());
-					}
-				}
+	private void createDataPort(ObjectFactory factory, RtcProfile result, Variable each, String portType, String suffix) {
+		DataportExt dataPort = factory.createDataportExt();
+		DocDataport docPort = factory.createDocDataport();
+		dataPort.setDoc(docPort);
+		result.getDataPorts().add(dataPort);
+
+		createISOProperty(factory, "value", each.getValue(), dataPort.getProperties());
+		docPort.setDescription(each.getDescription());
+		dataPort.setName(each.getName() + suffix);
+		dataPort.setType(each.getType());
+		dataPort.setUnit(each.getUnit());
+		dataPort.setPortType(portType);
+		
+		NVList nvList = each.getAdditionalInfo();
+		if(nvList!=null) {
+			List<NameValue> nvs = nvList.getNv();
+			List<String> definedList = Arrays.asList("idlFile", "interfaceType", "dataflowType", "subscriptionType",
+													 "type", "number", "semantics", "unit",
+													 "occurrence", "operation",
+													 "comment", "variableName", "position"); 
+			dataPort.setIdlFile(getTargetNVValue("idlFile", nvs));
+			dataPort.setInterfaceType(getTargetNVValue("interfaceType", nvs));
+			dataPort.setDataflowType(getTargetNVValue("dataflowType", nvs));
+			dataPort.setSubscriptionType(getTargetNVValue("subscriptionType", nvs));
+			
+			docPort.setType(getTargetNVValue("type", nvs));
+			docPort.setNumber(getTargetNVValue("number", nvs));
+			docPort.setSemantics(getTargetNVValue("semantics", nvs));
+			docPort.setUnit(getTargetNVValue("unit", nvs));
+			docPort.setOccerrence(getTargetNVValue("occurrence", nvs));
+			docPort.setOperation(getTargetNVValue("operation", nvs));
+			
+			dataPort.setComment(getTargetNVValue("comment", nvs));
+			dataPort.setVariableName(getTargetNVValue("variableName", nvs));
+			try {
+				dataPort.setPosition(Position.valueOf(getTargetNVValue("position", nvs)));
+			} catch (Exception e) {
+			}
+
+			for(NameValue nv : nvList.getNv()) {
+				if(checkNVName(nv.getName(), definedList)) continue;
+				createISOProperty(factory, nv.getName(), nv.getValue(), dataPort.getProperties());
 			}
 		}
 	}
@@ -640,39 +645,85 @@ public class ISO2RTCProfileHandler {
 		}
 	}
 	
-	private void convertExecutableForm(SIM source, ObjectFactory factory, List<Property> basicProp) {
+	private void convertExecutableForm(SIM source, ObjectFactory factory, RtcProfile result, List<Property> basicProp) {
 		ExecutableForm exeForms = source.getExeForm();
 		if(exeForms!=null) {
 			for(String each : exeForms.getLibraryURL()) {
 				createISOProperty(factory, "exeForm_LibraryURL", each, basicProp);
 			}
 			List<ExeForm> exeForm = exeForms.getExeForm();
+			int containerNum = 0;
+			LanguageExt lang = (LanguageExt)result.getLanguage();
+			lang.getTargets().clear();
 			for(int index=0;index<exeForm.size(); index++) {
 				ExeForm eachExe = exeForm.get(index);
-				String strIndex = Integer.valueOf(index + 1).toString();
-				String exeFormPre = "exeForm_exeForm_" + strIndex;
-
-				createISOProperty(factory, exeFormPre + "_exeFileURL", eachExe.getExeFileURL(), basicProp);
-				createISOProperty(factory, exeFormPre + "_shellCmd", eachExe.getShellCmd(), basicProp);
 				
-				List<org.iso.iso22166.part202.profile.Property> exePros = eachExe.getProperties();
-				for(int idxProp=0; idxProp<exePros.size();idxProp++) {
-					org.iso.iso22166.part202.profile.Property eachProp = exePros.get(idxProp);
-					String strIdxProp = Integer.valueOf(idxProp + 1).toString();
-					String propertyPre = exeFormPre + "_property_" + strIdxProp;
+				if(eachExe.getExeFileURL().startsWith(IProfileConstants.CONTAINER_PREFIX)) {
+					List<NameValue> nv = eachExe.getAdditionalInfo().getNv();
+					String middleware = getTargetNVValueRaw(IProfileConstants.CONTAINER_PREFIX + "Middleware", nv);
+					String mdlVersion  = getTargetNVValueRaw(IProfileConstants.CONTAINER_PREFIX + "MiddlewareVersion", nv);
+					String osVersion  = getTargetNVValueRaw(IProfileConstants.CONTAINER_PREFIX + "TargetOSVersion", nv);
+					String workSpace  = getTargetNVValueRaw(IProfileConstants.CONTAINER_PREFIX + "Workspace", nv);
+					String language  = getTargetNVValueRaw(IProfileConstants.CONTAINER_PREFIX + "Language", nv);
+					String config  = getTargetNVValueRaw(IProfileConstants.CONTAINER_PREFIX + "Configuration", nv);
+					
+					TargetEnvironment env = factory.createTargetEnvironment();
+					lang.getTargets().add(env);
+					containerNum++;
+					
+					env.setOs(middleware);
+					env.setCpuOther(mdlVersion);
+					env.getOsVersions().add(osVersion);
+					env.setOther(workSpace);
+					env.setLangVersion(language);
+					env.getCpus().add(config);
+					
+					List<NameValue> libraries = getTargetStartNVRaw(IProfileConstants.CONTAINER_PREFIX + "Libraries", nv);
+					for(NameValue each : libraries) {
+						createProperty(factory, IProfileConstants.CONTAINER_PREFIX + "lib_" + containerNum, each.getValue(), "", lang.getProperties());
+					}
+					
+					List<NameValue> repositories = getTargetStartNVRaw(IProfileConstants.CONTAINER_PREFIX + "GitURL", nv);
+					for(NameValue each : repositories) {
+						String val = each.getValue();
+						String[] elems = val.split(" ");
+						if(elems.length < 2) continue;
+						org.openrtp.namespaces.rtc.version03.Library lib = factory.createLibrary();
+						lib.setName(elems[0]);
+						lib.setVersion(elems[1]);
+						env.getLibraries().add(lib);
+					}
 
-					createISOProperty(factory, propertyPre + "_value", eachProp.getValue(), basicProp);
-					createISOProperty(factory, propertyPre + "_immutable", Boolean.valueOf(eachProp.isImmutable()).toString(), basicProp);
-					createISOProperty(factory, propertyPre + "_description", eachProp.getDescription(), basicProp);
-					createISOProperty(factory, propertyPre + "_name", eachProp.getName(), basicProp);
-					createISOProperty(factory, propertyPre + "_type", eachProp.getType(), basicProp);
-					createISOProperty(factory, propertyPre + "_unit", eachProp.getUnit(), basicProp);
-				}
-				
-				NVList nvList = eachExe.getAdditionalInfo();
-				if(nvList!=null) {
-					for(NameValue nv : nvList.getNv()) {
-						createISOProperty(factory, exeFormPre + "_add_" + nv.getName(), nv.getValue(), basicProp);
+					List<NameValue> preSets = getTargetStartNVRaw(IProfileConstants.CONTAINER_PREFIX + "category", nv);
+					for(NameValue each : preSets) {
+						createProperty(factory, IProfileConstants.CONTAINER_PREFIX + "category_" + containerNum, each.getValue(), "", lang.getProperties());
+					}
+					
+				} else {
+					String strIndex = Integer.valueOf(index + 1).toString();
+					String exeFormPre = "exeForm_exeForm_" + strIndex;
+	
+					createISOProperty(factory, exeFormPre + "_exeFileURL", eachExe.getExeFileURL(), basicProp);
+					createISOProperty(factory, exeFormPre + "_shellCmd", eachExe.getShellCmd(), basicProp);
+					
+					List<org.iso.iso22166.part202.profile.Property> exePros = eachExe.getProperties();
+					for(int idxProp=0; idxProp<exePros.size();idxProp++) {
+						org.iso.iso22166.part202.profile.Property eachProp = exePros.get(idxProp);
+						String strIdxProp = Integer.valueOf(idxProp + 1).toString();
+						String propertyPre = exeFormPre + "_property_" + strIdxProp;
+	
+						createISOProperty(factory, propertyPre + "_value", eachProp.getValue(), basicProp);
+						createISOProperty(factory, propertyPre + "_immutable", Boolean.valueOf(eachProp.isImmutable()).toString(), basicProp);
+						createISOProperty(factory, propertyPre + "_description", eachProp.getDescription(), basicProp);
+						createISOProperty(factory, propertyPre + "_name", eachProp.getName(), basicProp);
+						createISOProperty(factory, propertyPre + "_type", eachProp.getType(), basicProp);
+						createISOProperty(factory, propertyPre + "_unit", eachProp.getUnit(), basicProp);
+					}
+					NVList nvList = eachExe.getAdditionalInfo();
+					if(nvList!=null) {
+						for(NameValue nv : nvList.getNv()) {
+							createISOProperty(factory, exeFormPre + "_add_" + nv.getName(), nv.getValue(), basicProp);
+						}
 					}
 				}
 			}
@@ -1003,6 +1054,16 @@ public class ISO2RTCProfileHandler {
 		return "";
 	}
 
+	private String getTargetNVValueRaw(String key, List<NameValue> nvList) {
+		List<NameValue> filtered = nvList.stream()
+									.filter(p -> p.getName().equals(key))
+									.collect(Collectors.toList());
+		if(filtered != null && 0 < filtered.size() ) {
+			return filtered.get(0).getValue();
+		}
+		return "";
+	}
+
 	private List<NameValue> getTargetNV(String key, List<NameValue> nvList) {
 		List<NameValue> filtered = nvList.stream()
 									.filter(p -> p.getName().equals(IProfileConstants.ISO_PREFIX + key))
@@ -1017,18 +1078,15 @@ public class ISO2RTCProfileHandler {
 		return filtered;
 	}
 	
+	private List<NameValue> getTargetStartNVRaw(String key, List<NameValue> nvList) {
+		List<NameValue> filtered = nvList.stream()
+									.filter(p -> p.getName().startsWith(key))
+									.collect(Collectors.toList());
+		return filtered;
+	}
+
 	private void createISOProperty(ObjectFactory factory, String name, String value, List<Property> propList) {
 		createProperty(factory, name, value, IProfileConstants.ISO_PREFIX, propList);
-//		if(value==null || value.length() == 0) return;
-//		
-//		Property prop = factory.createProperty();
-//		if(name.startsWith(IProfileConstants.ISO_PREFIX)) {
-//			prop.setName(name.substring(IProfileConstants.ISO_PREFIX.length()));
-//		} else {
-//			prop.setName(IProfileConstants.ISO_PREFIX + name);
-//		}
-//		prop.setValue(value);
-//		propList.add(prop);
 	}
 	
 	private void createProperty(ObjectFactory factory, String name, String value, String prefix, List<Property> propList) {

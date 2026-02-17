@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -20,6 +21,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;extension base="{http://www.openrtp.org/namespaces/rtc}language">
  *       &lt;sequence>
  *         &lt;element name="targets" type="{http://www.openrtp.org/namespaces/rtc_ext}target_environment" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="Properties" type="{http://www.openrtp.org/namespaces/rtc_ext}property" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/extension>
  *   &lt;/complexContent>
@@ -30,13 +32,16 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "language_ext", namespace = "http://www.openrtp.org/namespaces/rtc_ext", propOrder = {
-    "targets"
+    "targets",
+    "properties"
 })
 public class LanguageExt
     extends Language
 {
 
     protected List<TargetEnvironment> targets;
+    @XmlElement(name = "Properties")
+    protected List<Property> properties;
 
     /**
      * Gets the value of the targets property.
@@ -68,5 +73,34 @@ public class LanguageExt
     }
 
     public void setTargets(List<TargetEnvironment> list) {
+    }
+    
+    /**
+     * Gets the value of the properties property.
+     * 
+     * <p>
+     * This accessor method returns a reference to the live list,
+     * not a snapshot. Therefore any modification you make to the
+     * returned list will be present inside the JAXB object.
+     * This is why there is not a <CODE>set</CODE> method for the properties property.
+     * 
+     * <p>
+     * For example, to add a new item, do as follows:
+     * <pre>
+     *    getProperties().add(newItem);
+     * </pre>
+     * 
+     * 
+     * <p>
+     * Objects of the following type(s) are allowed in the list
+     * {@link Property }
+     * 
+     * 
+     */
+    public List<Property> getProperties() {
+        if (properties == null) {
+            properties = new ArrayList<Property>();
+        }
+        return this.properties;
     }
 }

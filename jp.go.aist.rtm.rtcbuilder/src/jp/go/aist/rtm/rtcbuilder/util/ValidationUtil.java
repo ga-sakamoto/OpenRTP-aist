@@ -8,11 +8,14 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 
+import jp.go.aist.rtm.rtcbuilder.container.param.ContainerParam;
+import jp.go.aist.rtm.rtcbuilder.container.param.RepositoryParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.ConfigSetParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.DataPortParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.ServicePortInterfaceParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.ServicePortParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.idl.IdlPathParam;
+import jp.go.aist.rtm.rtcbuilder.nl.Messages;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.IMessageConstants;
 
 public class ValidationUtil {
@@ -171,6 +174,45 @@ public class ValidationUtil {
 //		if( config.getWidget().equals("spin") || config.getWidget().equals("slider")) {
 //		}
 		return result;
+	}
+	
+	public static String validateContainerSetting(ContainerParam container) {
+		if( container.getMiddleware()==null || container.getMiddleware().length()==0 ) {
+			return Messages.getString("IMC.CONTAINER_VALIDATE_MIDDLEWARE");
+		}
+
+		if( container.getMdlVersion()==null || container.getMdlVersion().length()==0 ) {
+			return Messages.getString("IMC.CONTAINER_VALIDATE_MIDDLEWARE_VERSION");
+		}
+		
+		if( container.getOsVersion()==null || container.getOsVersion().length()==0 ) {
+			return Messages.getString("IMC.CONTAINER_VALIDATE_OS_VERSION");
+		}
+		
+		if( container.getWorkspace()==null || container.getWorkspace().length()==0 ) {
+			return Messages.getString("IMC.CONTAINER_VALIDATE_WORKSPACE");
+		}
+		
+		if( container.getLanguage()==null || container.getLanguage().length()==0 ) {
+			return Messages.getString("IMC.CONTAINER_VALIDATE_LANGUAGE");
+		}
+
+		if( container.getConfiguration()==null || container.getConfiguration().length()==0 ) {
+			return Messages.getString("IMC.CONTAINER_VALIDATE_CONFIGURATION");
+		}
+		
+		if(container.getRepositories() != null) {
+			for(RepositoryParam each : container.getRepositories()) {
+				if(each.getURL()==null || each.getURL().length() ==0) {
+					return Messages.getString("IMC.CONTAINER_VALIDATE_REPOSITORY_URL");
+				}
+				if(each.getBranch()==null || each.getBranch().length() ==0) {
+					return Messages.getString("IMC.CONTAINER_VALIDATE_REPOSITORY_BRANCH");
+				}
+			}
+		}
+
+		return null;
 	}
 	
 }

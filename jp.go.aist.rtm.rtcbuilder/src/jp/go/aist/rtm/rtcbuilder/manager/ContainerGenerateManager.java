@@ -1,0 +1,140 @@
+package jp.go.aist.rtm.rtcbuilder.manager;
+
+import static jp.go.aist.rtm.rtcbuilder.util.RTCUtil.form;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jp.go.aist.rtm.rtcbuilder.container.param.ContainerParam;
+import jp.go.aist.rtm.rtcbuilder.container.param.setting.ContainerConfig;
+import jp.go.aist.rtm.rtcbuilder.generator.GeneratedResult;
+import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
+import jp.go.aist.rtm.rtcbuilder.template.TemplateHelper;
+import jp.go.aist.rtm.rtcbuilder.template.TemplateUtil;
+import jp.go.aist.rtm.rtcbuilder.ui.preference.ContainerPreferenceManager;
+
+/**
+ * コンテナファイルの出力を制御するマネージャ
+ */
+public class ContainerGenerateManager extends GenerateManager {
+
+	static final String TEMPLATE_PATH = "jp/go/aist/rtm/rtcbuilder/template";
+
+	static final String MSG_ERROR_GENERATE_FILE = "Container generation error. [{0}]";
+
+	@Override
+	public String getManagerKey() {
+		return "Common";
+	}
+
+	@Override
+	public String getLangArgList() {
+		return null;
+	}
+
+	/**
+	 * ファイルを出力する
+	 *
+	 * @param generatorParam
+	 * @return 出力結果のリスト
+	 */
+	public List<GeneratedResult> generateTemplateCode(RtcParam rtcParam) {
+		if(rtcParam.getContainerSettings() == null || rtcParam.getContainerSettings().size() == 0) {
+			return new ArrayList<GeneratedResult>();
+		}
+
+		Map<String, Object> contextMap = new HashMap<String, Object>();
+		contextMap.put("template", TEMPLATE_PATH);
+		contextMap.put("rtcParam", rtcParam);
+		contextMap.put("tmpltHelper", new TemplateHelper());
+		
+		ContainerConfig containerConfig;
+		if(rtcParam.getContainerConfig()==null) {
+			String configText = ContainerPreferenceManager.getInstance().getSettings();
+			ObjectMapper mapper = new ObjectMapper();
+			try {
+				containerConfig = mapper.readValue(configText, ContainerConfig.class);
+				rtcParam.setContainerConfig(containerConfig);
+			} catch (Exception e) {
+				return new ArrayList<GeneratedResult>();
+			}
+		}
+
+		List<GeneratedResult> result = new ArrayList<GeneratedResult>();
+		
+		for(ContainerParam param : rtcParam.getContainerSettings()) {
+			contextMap.put("containerParam", param);
+			
+			StringBuilder builder = new StringBuilder();
+			builder.append("scripts/");
+			builder.append(rtcParam.getName()).append("__");
+			
+			String osInfo = param.getOsVersion();
+			String[] elems = osInfo.split(" ");
+			if(0<elems.length) {
+				builder.append(elems[0]);
+			}
+			builder.append("-");
+			if(1<elems.length) {
+				builder.append(elems[1]);
+			}
+			builder.append("__");
+			
+			String mwName = param.getMiddleware().replace(" ", "");
+			builder.append(mwName).append("-");
+			builder.append(param.getMdlVersion().toLowerCase()).append("__");
+			builder.append(param.getLanguage()).append("_");
+			builder.append(param.getConfiguration());
+			builder.append(".Dockerfile");
+			
+			if(param.getMiddleware().contains("ROS")) {
+				result.add(generateROSContainer(contextMap, builder.toString()));
+			} else {
+				if(param.getLanguage().contains("Python")) {
+					result.add(generateOpenRTMPythonContainer(contextMap, builder.toString()));
+				} else {
+					result.add(generateOpenRTMCppContainer(contextMap, builder.toString()));
+				}
+			}
+		}
+
+		return result;
+	}
+
+	public GeneratedResult generateROSContainer(Map<String, Object> contextMap, String outfile) {
+		String infile = "container/ROS_Container.vsl";
+		return generate(infile, outfile, contextMap);
+	}
+
+	public GeneratedResult generateOpenRTMPythonContainer(Map<String, Object> contextMap, String outfile) {
+		String infile = "container/OpenRTM_Python_Container.vsl";
+		return generate(infile, outfile, contextMap);
+	}
+
+	public GeneratedResult generateOpenRTMCppContainer(Map<String, Object> contextMap, String outfile) {
+		String infile = "container/OpenRTM_Cpp_Container.vsl";
+		return generate(infile, outfile, contextMap);
+	}
+
+	public GeneratedResult generate(String infile, String outfile,
+			Map<String, Object> contextMap) {
+		try {
+			String template = TEMPLATE_PATH + "/" + infile;
+			ClassLoader cl = Thread.currentThread().getContextClassLoader();
+			GeneratedResult gr = null;
+			try( InputStream ins = cl.getResourceAsStream(template) ) {
+				gr = TemplateUtil.createGeneratedResult(ins, contextMap, outfile);
+			}
+			return gr;
+		} catch (Exception e) {
+			throw new RuntimeException(form(MSG_ERROR_GENERATE_FILE,
+					new String[] { outfile }), e);
+		}
+	}
+
+}

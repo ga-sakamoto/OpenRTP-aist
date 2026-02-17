@@ -86,6 +86,7 @@
 			<xsd:extension base ="rtc:language">
 				<xsd:sequence>
 					<xsd:element name="targets" type="rtcExt:target_environment" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element name="Properties" type="rtcExt:property" minOccurs="0" maxOccurs="unbounded"/>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>

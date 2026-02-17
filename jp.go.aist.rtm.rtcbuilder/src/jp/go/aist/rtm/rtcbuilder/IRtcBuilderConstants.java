@@ -79,6 +79,8 @@ public interface IRtcBuilderConstants {
 	public static final String CONFIG_WIDGET = "__widget__";
 	public static final String CONFIG_WIDGET_SPIN = "spin";
 	public static final String CONFIG_WIDGET_SLIDER = "slider";
+
+	public static final String CONTAINER_PREFIX = "__container__";
 	//
 	public static final String SPACE1 = " "; 
 	public static final String SPACE2 = "  "; 

@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
+import jp.go.aist.rtm.rtcbuilder.container.param.ContainerParam;
+import jp.go.aist.rtm.rtcbuilder.container.param.setting.ContainerConfig;
 import jp.go.aist.rtm.rtcbuilder.fsm.EventParam;
 import jp.go.aist.rtm.rtcbuilder.fsm.StateParam;
 import jp.go.aist.rtm.rtcbuilder.fsm.TransitionParam;
@@ -126,6 +128,9 @@ public class RtcParam extends AbstractRecordedParam implements Serializable {
 
 	private boolean isChoreonoid = false;
 	private List<IdlPathParam> idlSearchPathList = new ArrayList<IdlPathParam>();
+	//
+	private RecordedList<ContainerParam> containerSettings = new RecordedList<ContainerParam>();
+	private ContainerConfig containerConfig = null;
 
 	public RtcParam(GeneratorParam parent) {
 		this(parent, false);
@@ -1005,6 +1010,9 @@ public class RtcParam extends AbstractRecordedParam implements Serializable {
 		if (this.targetEnvs.isUpdated()) {
 			return true;
 		}
+		if (this.containerSettings.isUpdated()) {
+			return true;
+		}
 		return false;
 	}
 
@@ -1026,6 +1034,8 @@ public class RtcParam extends AbstractRecordedParam implements Serializable {
 		this.actions.resetUpdated();
 		//
 		this.targetEnvs.resetUpdated();
+		
+		this.containerSettings.resetUpdated();
 	}
 	/////
 	public void addFSMPort() {
@@ -1075,5 +1085,16 @@ public class RtcParam extends AbstractRecordedParam implements Serializable {
 			}
 		}
 		return false;
+	}
+
+	public RecordedList<ContainerParam> getContainerSettings() {
+		return containerSettings;
+	}
+
+	public ContainerConfig getContainerConfig() {
+		return containerConfig;
+	}
+	public void setContainerConfig(ContainerConfig containerConfig) {
+		this.containerConfig = containerConfig;
 	}
 }

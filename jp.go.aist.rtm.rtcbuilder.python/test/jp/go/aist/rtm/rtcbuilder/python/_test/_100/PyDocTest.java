@@ -268,6 +268,7 @@ public class PyDocTest extends TestBase {
 //		checkCode(result, resourceDir, "idlcompile.bat");
 //		checkCode(result, resourceDir, "idlcompile.sh");
 	}
+	
 
 	public void testDocRefer() throws Exception {
 		rtcParam.setName("foo");
