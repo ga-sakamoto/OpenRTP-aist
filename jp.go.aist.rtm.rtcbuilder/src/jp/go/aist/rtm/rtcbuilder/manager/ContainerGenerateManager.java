@@ -88,7 +88,7 @@ public class ContainerGenerateManager extends GenerateManager {
 			String mwName = param.getMiddleware().replace(" ", "");
 			builder.append(mwName).append("-");
 			builder.append(param.getMdlVersion().toLowerCase()).append("__");
-			builder.append(param.getLanguage()).append("_");
+			builder.append(convLanguage(param.getLanguage())).append("_");
 			builder.append(param.getConfiguration());
 			builder.append(".Dockerfile");
 			
@@ -104,6 +104,10 @@ public class ContainerGenerateManager extends GenerateManager {
 		}
 
 		return result;
+	}
+	
+	private String convLanguage(String source) {
+		return source.replace("+", "p").toLowerCase();
 	}
 
 	public GeneratedResult generateROSContainer(Map<String, Object> contextMap, String outfile) {
