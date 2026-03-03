@@ -228,7 +228,7 @@ public class ServicePortEditorFormPage extends AbstractEditorFormPage {
 	private void createHintSectionROS(FormToolkit toolkit, Composite parent) {
 		Composite composite = createHintSectionComp(toolkit, parent, Messages.getString("IMC.HINT_ROS_TITLE"));
 		//
-		createHintLabel(Messages.getString("IMC.SERVICEPORT_LBL"), Messages.getString("IMC.SERVIVEPORT_HINT_PORT_DESC_ROS"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.SERVICEPORT_LBL"), IMessageConstants.SERVICEPORT_HINT_ROS_PORT_DESC, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.SERVICEPORT_LBL_PORTNAME"), IMessageConstants.SERVICEPORT_HINT_ROS_PORT_NAME_DESC, toolkit, composite);
 		createHintSpace(toolkit, composite);
 		createHintLabel(Messages.getString("IMC.SERVICEPORT_LBL_IFNAME"), IMessageConstants.SERVICEPORT_HINT_IF_ROS_NAME_DESC, toolkit, composite);

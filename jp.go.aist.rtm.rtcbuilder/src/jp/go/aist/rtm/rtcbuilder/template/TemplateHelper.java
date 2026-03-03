@@ -639,7 +639,7 @@ public class TemplateHelper {
 	public int convConfiguration(String source) {
 		if(source.toLowerCase().equals("min")) {
 			return 1;
-		} else if(source.toLowerCase().equals("full")) {
+		} else if(source.toLowerCase().equals("max") || source.toLowerCase().equals("full")) {
 			return 2;
 		}
 		return 0;
@@ -677,5 +677,14 @@ public class TemplateHelper {
 			}
 		}
 		return 0;
+	}
+	
+	public String getBranchName(String source) {
+		double osVersion = convOSVersionNum(source);
+		
+		if(osVersion < 18.05) {
+			return "v3.1.5";
+		}
+		return "main";
 	}
 }

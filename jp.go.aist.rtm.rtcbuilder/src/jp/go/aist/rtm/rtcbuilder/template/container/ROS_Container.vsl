@@ -3,7 +3,7 @@ ${sharp} Base image
 #if( ${tmpltHelper.convConfiguration(${containerParam.configuration})} == 1 )
 FROM ros:${containerParam.mdlVersion.toLowerCase()}-ros-base
 #elseif( ${tmpltHelper.convConfiguration(${containerParam.configuration})} == 2 )
-FROM ros:${containerParam.mdlVersion.toLowerCase()}-desktop-full
+FROM osrf/ros:${containerParam.mdlVersion.toLowerCase()}-desktop-full
 #end
 
 ENV DEBIAN_FRONTEND=noninteractive

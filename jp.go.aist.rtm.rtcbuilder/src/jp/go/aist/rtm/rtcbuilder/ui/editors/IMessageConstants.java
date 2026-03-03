@@ -108,16 +108,27 @@ public interface IMessageConstants {
 	});
 
 	public static final String DATAPORT_HINT_ROS_DATAPORT_DESC = StringUtil.connectMessageWithSepalator( new String[]{
-			Messages.getString("IMC.DATAPORT_HINT_DATAPORT_DESC_ROS")
+			Messages.getString("IMC.DATAPORT_HINT_DATAPORT_DESC_ROS_P1"),
+			Messages.getString("IMC.DATAPORT_HINT_DATAPORT_DESC_ROS_P2"),
+			Messages.getString("IMC.DATAPORT_HINT_DATAPORT_DESC_ROS_P3"),
+			Messages.getString("IMC.DATAPORT_HINT_DATAPORT_DESC_ROS_P4"),
+			Messages.getString("IMC.DATAPORT_HINT_DATAPORT_DESC_ROS_P5"),
+			Messages.getString("IMC.DATAPORT_HINT_DATAPORT_DESC_ROS_P6"),
+			Messages.getString("IMC.DATAPORT_HINT_DATAPORT_DESC_ROS_P7")
 	});
 	public static final String DATAPORT_HINT_ROS_INPORT_DESC = StringUtil.connectMessageWithSepalator( new String[]{
-			Messages.getString("IMC.DATAPORT_HINT_INPORT_DESC_ROS")
+			Messages.getString("IMC.DATAPORT_HINT_INPORT_DESC_ROS_P1"),
+			Messages.getString("IMC.DATAPORT_HINT_INPORT_DESC_ROS_P2")
 	});
 	public static final String DATAPORT_HINT_ROS_OUTPORT_DESC = StringUtil.connectMessageWithSepalator( new String[]{
-			Messages.getString("IMC.DATAPORT_HINT_OUTPORT_DESC_ROS")
+			Messages.getString("IMC.DATAPORT_HINT_OUTPORT_DESC_ROS_P1"),
+			Messages.getString("IMC.DATAPORT_HINT_OUTPORT_DESC_ROS_P2")
 	});
 	public static final String DATAPORT_HINT_ROS_PORTNAME_DESC = StringUtil.connectMessageWithSepalator( new String[]{
-			Messages.getString("IMC.DATAPORT_HINT_PORTNAME_DESC_ROS")
+			Messages.getString("IMC.DATAPORT_HINT_PORTNAME_DESC_ROS_P1"),
+			Messages.getString("IMC.DATAPORT_HINT_PORTNAME_DESC_ROS_P2"),
+			Messages.getString("IMC.DATAPORT_HINT_PORTNAME_DESC_ROS_P3"),
+			Messages.getString("IMC.DATAPORT_HINT_PORTNAME_DESC_ROS_P4")
 	});
 	public static final String DATAPORT_HINT_ROS_DATATYPE_DESC = StringUtil.connectMessageWithSepalator( new String[]{
 			Messages.getString("IMC.DATAPORT_HINT_DATATYPE_DESC_ROS_P1"),
@@ -210,8 +221,19 @@ public interface IMessageConstants {
 			Messages.getString("IMC.SERVIVEPORT_HINT_POST_CONDITION_DESC_P1"),
 			Messages.getString("IMC.SERVIVEPORT_HINT_POST_CONDITION_DESC_P2")});
 		
+	public static final String SERVICEPORT_HINT_ROS_PORT_DESC = StringUtil.connectMessageWithSepalator( new String[]{
+			Messages.getString("IMC.SERVIVEPORT_HINT_PORT_DESC_ROS_P1"),
+			Messages.getString("IMC.SERVIVEPORT_HINT_PORT_DESC_ROS_P2"),
+			Messages.getString("IMC.SERVIVEPORT_HINT_PORT_DESC_ROS_P3"),
+			Messages.getString("IMC.SERVIVEPORT_HINT_PORT_DESC_ROS_P4"),
+			Messages.getString("IMC.SERVIVEPORT_HINT_PORT_DESC_ROS_P5"),
+			Messages.getString("IMC.SERVIVEPORT_HINT_PORT_DESC_ROS_P6")
+	});
 	public static final String SERVICEPORT_HINT_ROS_PORT_NAME_DESC = StringUtil.connectMessageWithSepalator( new String[]{
-			Messages.getString("IMC.SERVIVEPORT_HINT_PORT_NAME_DESC_ROS")
+			Messages.getString("IMC.SERVIVEPORT_HINT_PORT_NAME_DESC_ROS_P1"),
+			Messages.getString("IMC.SERVIVEPORT_HINT_PORT_NAME_DESC_ROS_P2"),
+			Messages.getString("IMC.SERVIVEPORT_HINT_PORT_NAME_DESC_ROS_P3"),
+			Messages.getString("IMC.SERVIVEPORT_HINT_PORT_NAME_DESC_ROS_P4")
 	});
 	public static final String SERVICEPORT_HINT_IF_ROS_NAME_DESC = StringUtil.connectMessageWithSepalator( new String[]{
 			Messages.getString("IMC.SERVIVEPORT_HINT_IF_NAME_DESC_ROS")
@@ -225,7 +247,8 @@ public interface IMessageConstants {
 			Messages.getString("IMC.SERVIVEPORT_HINT_IFTYPE_DESC_ROS_P1"),
 			Messages.getString("IMC.SERVIVEPORT_HINT_IFTYPE_DESC_ROS_P2"),
 			Messages.getString("IMC.SERVIVEPORT_HINT_IFTYPE_DESC_ROS_P3"),
-			Messages.getString("IMC.SERVIVEPORT_HINT_IFTYPE_DESC_ROS_P4")
+			Messages.getString("IMC.SERVIVEPORT_HINT_IFTYPE_DESC_ROS_P4"),
+			Messages.getString("IMC.SERVIVEPORT_HINT_IFTYPE_DESC_ROS_P5")
 	});
 
 	//

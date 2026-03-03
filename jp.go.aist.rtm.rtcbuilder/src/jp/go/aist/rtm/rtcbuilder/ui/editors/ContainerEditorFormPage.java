@@ -68,7 +68,7 @@ public class ContainerEditorFormPage extends AbstractEditorFormPage {
 	private static final String[] LANGUAGE_ITEMS = new String[] {
 			"C++", "Python" };
 	private static final String[] CONFIGURATION_ITEMS = new String[] {
-			"Min", "Max" };
+			"Min", "Full" };
 
 	private String configText;
 

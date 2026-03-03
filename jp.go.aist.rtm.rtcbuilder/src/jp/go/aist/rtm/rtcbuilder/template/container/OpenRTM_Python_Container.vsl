@@ -43,7 +43,7 @@ RUN pip3 install --upgrade pip && pip3 install "setuptools<60.0.0" wheel
 
 
 ${sharp} Clone and Install Python Component: pymycobot
-RUN git clone -b main https://github.com/elephantrobotics/pymycobot.git \
+RUN git clone -b ${tmpltHelper.getBranchName(${containerParam.osVersion})} https://github.com/elephantrobotics/pymycobot.git \
     && cd ${rtcParam.name} \
     && if [ -f requirements.txt ]; then pip3 install -r requirements.txt; fi \
     && if [ -f setup.py ]; then python3 setup.py install; fi

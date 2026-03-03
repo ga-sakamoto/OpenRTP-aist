@@ -58,7 +58,7 @@ public class ContainerTest extends TestBase {
 	}
 
 	public void testROS01() throws Exception {
-//		MikataArm__Ubuntu-20.04__ROS1-noetic__Min.Dockerfile
+//		MikataArm__Ubuntu-20.04__ROS1-noetic__cpp_Min.Dockerfile
 		rtcParam.setName("MikataArm");
 		rtcParam.setDescription("MikataArm sample");
 		rtcParam.setVersion("1.0.1");
@@ -113,11 +113,11 @@ public class ContainerTest extends TestBase {
 		List<GeneratedResult> result = generator.generateTemplateCode(genParam);
 
 		String resourceDir = rootPath + "/resource/";
-		checkCode(result, resourceDir, "scripts/MikataArm__Ubuntu-20.04__ROS1-noetic__Min.Dockerfile");
+		checkCode(result, resourceDir, "scripts/MikataArm__Ubuntu-20.04__ROS1-noetic__cpp_Min.Dockerfile");
 	}
 
 	public void testROS02() throws Exception {
-//		crane_plus__Ubuntu-22.04__ROS2-humble__Min.Dockerfile
+//		crane_plus__Ubuntu-22.04__ROS2-humble__cpp_Min.Dockerfile
 		rtcParam.setName("crane_plus");
 		rtcParam.setDescription("crane_plus Sample");
 		rtcParam.setVersion("1.0.1");
@@ -173,11 +173,11 @@ public class ContainerTest extends TestBase {
 		List<GeneratedResult> result = generator.generateTemplateCode(genParam);
 
 		String resourceDir = rootPath + "/resource/";
-		checkCode(result, resourceDir, "scripts/crane_plus__Ubuntu-22.04__ROS2-humble__Min.Dockerfile");
+		checkCode(result, resourceDir, "scripts/crane_plus__Ubuntu-22.04__ROS2-humble__cpp_Min.Dockerfile");
 	}
 	
 	public void testROS03() throws Exception {
-//		MikataArm__Ubuntu-20.04__ROS1-noetic__Full.Dockerfile
+//		MikataArm__Ubuntu-20.04__ROS1-noetic__cpp_Full.Dockerfile
 		rtcParam.setName("MikataArm");
 		rtcParam.setDescription("MikataArm sample 20.04");
 		rtcParam.setVersion("1.0.1");
@@ -189,14 +189,15 @@ public class ContainerTest extends TestBase {
 		param.setMdlVersion("Noetic");
 		param.setOsVersion("Ubuntu 20.04 (Focal)");
 		param.setWorkspace("catkin_ws");
-		param.setLanguage("C++ & Python");
+		param.setLanguage("C++");
 		param.setConfiguration("Full");
 		rtcParam.getContainerSettings().add(param);
 		
 		List<String> libraries = Arrays.asList(
-				"build-essential", "cmake", "cmake_modules", "git", "libboost-all-dev", "eigen",
+				"build-essential", "cmake", "git", "libboost-all-dev", "eigen",
 				"libgl1-mesa-dri", "libgl1-mesa-glx", "mesa-utils", "python3-catkin-tools", "python3-pip",
 				"python3-rosdep", "python3-rosinstall", "python3-rosinstall-generator", "python3-wstool", "ros-noetic-actionlib",
+				"cmake_modules", 
 				"ros-noetic-dynamixel-workbench-toolbox", "ros-noetic-gazebo-ros-control",
 				"gazebo_ros_pkgs", "ros-noetic-joint-state-publisher-gui",
 				"moveit", "moveit_core", "moveit_ros_planning", "moveit_ros_planning_interface",
@@ -234,11 +235,11 @@ public class ContainerTest extends TestBase {
 		List<GeneratedResult> result = generator.generateTemplateCode(genParam);
 
 		String resourceDir = rootPath + "/resource/";
-		checkCode(result, resourceDir, "scripts/MikataArm__Ubuntu-20.04__ROS1-noetic__Full.Dockerfile");
+		checkCode(result, resourceDir, "scripts/MikataArm__Ubuntu-20.04__ROS1-noetic__cpp_Full.Dockerfile");
 	}
 	
 	public void testROS04() throws Exception {
-//		crane_plus__Ubuntu-22.04__ROS2-humble__Full.Dockerfile
+//		crane_plus__Ubuntu-22.04__ROS2-humble__cpp_Full.Dockerfile
 		rtcParam.setName("crane_plus");
 		rtcParam.setDescription("crane_plus 22.04 Sample");
 		rtcParam.setVersion("1.0.1");
@@ -250,7 +251,7 @@ public class ContainerTest extends TestBase {
 		param.setMdlVersion("Humble");
 		param.setOsVersion("Ubuntu 22.04 (Jammy)");
 		param.setWorkspace("colcon_ws");
-		param.setLanguage("C++ & Python");
+		param.setLanguage("C++");
 		param.setConfiguration("Full");
 		rtcParam.getContainerSettings().add(param);
 		
@@ -295,11 +296,11 @@ public class ContainerTest extends TestBase {
 		List<GeneratedResult> result = generator.generateTemplateCode(genParam);
 
 		String resourceDir = rootPath + "/resource/";
-		checkCode(result, resourceDir, "scripts/crane_plus__Ubuntu-22.04__ROS2-humble__Full.Dockerfile");
+		checkCode(result, resourceDir, "scripts/crane_plus__Ubuntu-22.04__ROS2-humble__cpp_Full.Dockerfile");
 	}
 	
 	public void testOpenRTM_Cpp01() throws Exception {
-//		MikataArmRTC__Ubuntu-20.04__OpenRTM-1.2.0__Std.Dockerfile
+//		MikataArmRTC__Ubuntu-20.04__OpenRTM-1.2.0__cpp_Std.Dockerfile
 		rtcParam.setName("MikataArmRTC");
 		rtcParam.setDescription("MikataArmRTC Sample");
 		rtcParam.setVersion("1.0.1");
@@ -331,11 +332,11 @@ public class ContainerTest extends TestBase {
 		List<GeneratedResult> result = generator.generateTemplateCode(genParam);
 
 		String resourceDir = rootPath + "/resource/";
-		checkCode(result, resourceDir, "scripts/MikataArmRTC__Ubuntu-20.04__OpenRTM-1.2.0__Std.Dockerfile");
+		checkCode(result, resourceDir, "scripts/MikataArmRTC__Ubuntu-20.04__OpenRTM-1.2.0__cpp_Std.Dockerfile");
 	}
 	
 	public void testOpenRTM_Cpp02() throws Exception {
-//		MikataArmRTC__Ubuntu-22.04__OpenRTM-1.2.0__Std.Dockerfile
+//		MikataArmRTC__Ubuntu-22.04__OpenRTM-1.2.0__cpp_Std.Dockerfile
 		rtcParam.setName("MikataArmRTC");
 		rtcParam.setDescription("MikataArmRTC 22.04 Sample");
 		rtcParam.setVersion("1.0.1");
@@ -367,11 +368,11 @@ public class ContainerTest extends TestBase {
 		List<GeneratedResult> result = generator.generateTemplateCode(genParam);
 
 		String resourceDir = rootPath + "/resource/";
-		checkCode(result, resourceDir, "scripts/MikataArmRTC__Ubuntu-22.04__OpenRTM-1.2.0__Std.Dockerfile");
+		checkCode(result, resourceDir, "scripts/MikataArmRTC__Ubuntu-22.04__OpenRTM-1.2.0__cpp_Std.Dockerfile");
 	}
 	
 	public void testOpenRTM_Cpp03() throws Exception {
-//		MikataArmRTC__Ubuntu-18.04__OpenRTM-1.2.0__Std.Dockerfile
+//		MikataArmRTC__Ubuntu-18.04__OpenRTM-1.2.0__cpp_Std.Dockerfile
 		rtcParam.setName("MikataArmRTC");
 		rtcParam.setDescription("MikataArmRTC 18.04 Sample");
 		rtcParam.setVersion("1.0.1");
@@ -403,11 +404,11 @@ public class ContainerTest extends TestBase {
 		List<GeneratedResult> result = generator.generateTemplateCode(genParam);
 
 		String resourceDir = rootPath + "/resource/";
-		checkCode(result, resourceDir, "scripts/MikataArmRTC__Ubuntu-18.04__OpenRTM-1.2.0__Std.Dockerfile");
+		checkCode(result, resourceDir, "scripts/MikataArmRTC__Ubuntu-18.04__OpenRTM-1.2.0__cpp_Std.Dockerfile");
 	}
 	
 	public void testOpenRTM_Python01() throws Exception {
-//		pymycobot__Ubuntu-20.04__OpenRTM-1.2.0__Std.Dockerfile
+//		pymycobot__Ubuntu-20.04__OpenRTM-1.2.0__python_Std.Dockerfile
 		rtcParam.setName("pymycobot");
 		rtcParam.setDescription("pymycobot Sample");
 		rtcParam.setVersion("1.0.1");
@@ -439,11 +440,11 @@ public class ContainerTest extends TestBase {
 		List<GeneratedResult> result = generator.generateTemplateCode(genParam);
 
 		String resourceDir = rootPath + "/resource/";
-		checkCode(result, resourceDir, "scripts/pymycobot__Ubuntu-20.04__OpenRTM-1.2.0__Std.Dockerfile");
+		checkCode(result, resourceDir, "scripts/pymycobot__Ubuntu-20.04__OpenRTM-1.2.0__python_Std.Dockerfile");
 	}
 	
 	public void testOpenRTM_Python02() throws Exception {
-//		pymycobot__Ubuntu-22.04__OpenRTM-1.2.0__Std.Dockerfile
+//		pymycobot__Ubuntu-22.04__OpenRTM-1.2.0__python_Std.Dockerfile
 		rtcParam.setName("pymycobot");
 		rtcParam.setDescription("pymycobot 22.04 Sample");
 		rtcParam.setVersion("1.0.1");
@@ -475,11 +476,11 @@ public class ContainerTest extends TestBase {
 		List<GeneratedResult> result = generator.generateTemplateCode(genParam);
 
 		String resourceDir = rootPath + "/resource/";
-		checkCode(result, resourceDir, "scripts/pymycobot__Ubuntu-22.04__OpenRTM-1.2.0__Std.Dockerfile");
+		checkCode(result, resourceDir, "scripts/pymycobot__Ubuntu-22.04__OpenRTM-1.2.0__python_Std.Dockerfile");
 	}
 	
 	public void testOpenRTM_Python03() throws Exception {
-//		pymycobot__Ubuntu-18.04__OpenRTM-1.2.0__Std.Dockerfile
+//		pymycobot__Ubuntu-18.04__OpenRTM-1.2.0__python_Std.Dockerfile
 		rtcParam.setName("pymycobot");
 		rtcParam.setDescription("pymycobot 18.04 Sample");
 		rtcParam.setVersion("1.0.1");
@@ -498,7 +499,7 @@ public class ContainerTest extends TestBase {
 		List<String> libraries = Arrays.asList(
 				"build-essential", "cmake", "doxygen", "git", "libboost-all-dev",
 				"omniidl", "omniorb-nameserver", "openrtm-aist", 
-				"python3-dev", "python3-omniorb", "python3-pip"
+				"python3-dev", "python3-omniorb", "python3-pip", "python3-opencv"
 				);
 		createLibraries(param, libraries);
 		/////
@@ -511,6 +512,6 @@ public class ContainerTest extends TestBase {
 		List<GeneratedResult> result = generator.generateTemplateCode(genParam);
 
 		String resourceDir = rootPath + "/resource/";
-		checkCode(result, resourceDir, "scripts/pymycobot__Ubuntu-18.04__OpenRTM-1.2.0__Std.Dockerfile");
+		checkCode(result, resourceDir, "scripts/pymycobot__Ubuntu-18.04__OpenRTM-1.2.0__python_Std.Dockerfile");
 	}
 }
