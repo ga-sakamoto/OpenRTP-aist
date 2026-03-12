@@ -1,10 +1,3 @@
-//
-// このファイルは、JavaTM Architecture for XML Binding(JAXB) Reference Implementation、v2.2.8-b130911.1802によって生成されました 
-// <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a>を参照してください 
-// ソース・スキーマの再コンパイル時にこのファイルの変更は失われます。 
-// 生成日: 2025.12.27 時間 01:27:43 PM JST 
-//
-
 
 package org.iso.iso22166.part202.profile;
 
@@ -18,9 +11,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>ServiceProfile complex typeのJavaクラス。
+ * <p>Java class for ServiceProfile complex type.
  * 
- * <p>次のスキーマ・フラグメントは、このクラス内に含まれる予期されるコンテンツを指定します。
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="ServiceProfile">
@@ -73,7 +66,7 @@ public class ServiceProfile {
     protected ServiceDescriptionType descriptionType;
 
     /**
-     * idプロパティの値を取得します。
+     * Gets the value of the id property.
      * 
      * @return
      *     possible object is
@@ -85,7 +78,7 @@ public class ServiceProfile {
     }
 
     /**
-     * idプロパティの値を設定します。
+     * Sets the value of the id property.
      * 
      * @param value
      *     allowed object is
@@ -97,7 +90,7 @@ public class ServiceProfile {
     }
 
     /**
-     * ifURLプロパティの値を取得します。
+     * Gets the value of the ifURL property.
      * 
      * @return
      *     possible object is
@@ -109,7 +102,7 @@ public class ServiceProfile {
     }
 
     /**
-     * ifURLプロパティの値を設定します。
+     * Sets the value of the ifURL property.
      * 
      * @param value
      *     allowed object is
@@ -150,7 +143,7 @@ public class ServiceProfile {
     }
 
     /**
-     * pvTypeプロパティの値を取得します。
+     * Gets the value of the pvType property.
      * 
      * @return
      *     possible object is
@@ -162,7 +155,7 @@ public class ServiceProfile {
     }
 
     /**
-     * pvTypeプロパティの値を設定します。
+     * Sets the value of the pvType property.
      * 
      * @param value
      *     allowed object is
@@ -174,7 +167,7 @@ public class ServiceProfile {
     }
 
     /**
-     * moTypeプロパティの値を取得します。
+     * Gets the value of the moType property.
      * 
      * @return
      *     possible object is
@@ -186,7 +179,7 @@ public class ServiceProfile {
     }
 
     /**
-     * moTypeプロパティの値を設定します。
+     * Sets the value of the moType property.
      * 
      * @param value
      *     allowed object is
@@ -198,7 +191,7 @@ public class ServiceProfile {
     }
 
     /**
-     * moduleIDプロパティの値を取得します。
+     * Gets the value of the moduleID property.
      * 
      * @return
      *     possible object is
@@ -210,7 +203,7 @@ public class ServiceProfile {
     }
 
     /**
-     * moduleIDプロパティの値を設定します。
+     * Sets the value of the moduleID property.
      * 
      * @param value
      *     allowed object is
@@ -222,7 +215,7 @@ public class ServiceProfile {
     }
 
     /**
-     * additionalInfoプロパティの値を取得します。
+     * Gets the value of the additionalInfo property.
      * 
      * @return
      *     possible object is
@@ -234,7 +227,7 @@ public class ServiceProfile {
     }
 
     /**
-     * additionalInfoプロパティの値を設定します。
+     * Sets the value of the additionalInfo property.
      * 
      * @param value
      *     allowed object is
@@ -246,7 +239,7 @@ public class ServiceProfile {
     }
 
     /**
-     * descriptionTypeプロパティの値を取得します。
+     * Gets the value of the descriptionType property.
      * 
      * @return
      *     possible object is
@@ -258,7 +251,7 @@ public class ServiceProfile {
     }
 
     /**
-     * descriptionTypeプロパティの値を設定します。
+     * Sets the value of the descriptionType property.
      * 
      * @param value
      *     allowed object is

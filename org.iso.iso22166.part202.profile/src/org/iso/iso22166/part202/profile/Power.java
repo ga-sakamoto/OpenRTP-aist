@@ -1,10 +1,3 @@
-//
-// このファイルは、JavaTM Architecture for XML Binding(JAXB) Reference Implementation、v2.2.8-b130911.1802によって生成されました 
-// <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a>を参照してください 
-// ソース・スキーマの再コンパイル時にこのファイルの変更は失われます。 
-// 生成日: 2025.12.27 時間 01:27:43 PM JST 
-//
-
 
 package org.iso.iso22166.part202.profile;
 
@@ -14,9 +7,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Power complex typeのJavaクラス。
+ * <p>Java class for Power complex type.
  * 
- * <p>次のスキーマ・フラグメントは、このクラス内に含まれる予期されるコンテンツを指定します。
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="Power">
@@ -47,7 +40,7 @@ public class Power {
     protected NVList additionalInfo;
 
     /**
-     * ratedPowerプロパティの値を取得します。
+     * Gets the value of the ratedPower property.
      * 
      */
     public double getRatedPower() {
@@ -55,7 +48,7 @@ public class Power {
     }
 
     /**
-     * ratedPowerプロパティの値を設定します。
+     * Sets the value of the ratedPower property.
      * 
      */
     public void setRatedPower(double value) {
@@ -63,7 +56,7 @@ public class Power {
     }
 
     /**
-     * maxPowerプロパティの値を取得します。
+     * Gets the value of the maxPower property.
      * 
      */
     public double getMaxPower() {
@@ -71,7 +64,7 @@ public class Power {
     }
 
     /**
-     * maxPowerプロパティの値を設定します。
+     * Sets the value of the maxPower property.
      * 
      */
     public void setMaxPower(double value) {
@@ -79,7 +72,7 @@ public class Power {
     }
 
     /**
-     * additionalInfoプロパティの値を取得します。
+     * Gets the value of the additionalInfo property.
      * 
      * @return
      *     possible object is
@@ -91,7 +84,7 @@ public class Power {
     }
 
     /**
-     * additionalInfoプロパティの値を設定します。
+     * Sets the value of the additionalInfo property.
      * 
      * @param value
      *     allowed object is

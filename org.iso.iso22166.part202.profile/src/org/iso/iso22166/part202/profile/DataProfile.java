@@ -1,10 +1,3 @@
-//
-// このファイルは、JavaTM Architecture for XML Binding(JAXB) Reference Implementation、v2.2.8-b130911.1802によって生成されました 
-// <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a>を参照してください 
-// ソース・スキーマの再コンパイル時にこのファイルの変更は失われます。 
-// 生成日: 2025.12.27 時間 01:27:43 PM JST 
-//
-
 
 package org.iso.iso22166.part202.profile;
 
@@ -16,9 +9,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>DataProfile complex typeのJavaクラス。
+ * <p>Java class for DataProfile complex type.
  * 
- * <p>次のスキーマ・フラグメントは、このクラス内に含まれる予期されるコンテンツを指定します。
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="DataProfile">
@@ -59,7 +52,7 @@ public class DataProfile {
     protected String unit;
 
     /**
-     * descriptionプロパティの値を取得します。
+     * Gets the value of the description property.
      * 
      * @return
      *     possible object is
@@ -71,7 +64,7 @@ public class DataProfile {
     }
 
     /**
-     * descriptionプロパティの値を設定します。
+     * Sets the value of the description property.
      * 
      * @param value
      *     allowed object is
@@ -83,7 +76,7 @@ public class DataProfile {
     }
 
     /**
-     * nameプロパティの値を取得します。
+     * Gets the value of the name property.
      * 
      * @return
      *     possible object is
@@ -95,7 +88,7 @@ public class DataProfile {
     }
 
     /**
-     * nameプロパティの値を設定します。
+     * Sets the value of the name property.
      * 
      * @param value
      *     allowed object is
@@ -107,7 +100,7 @@ public class DataProfile {
     }
 
     /**
-     * typeプロパティの値を取得します。
+     * Gets the value of the type property.
      * 
      * @return
      *     possible object is
@@ -119,7 +112,7 @@ public class DataProfile {
     }
 
     /**
-     * typeプロパティの値を設定します。
+     * Sets the value of the type property.
      * 
      * @param value
      *     allowed object is
@@ -131,7 +124,7 @@ public class DataProfile {
     }
 
     /**
-     * unitプロパティの値を取得します。
+     * Gets the value of the unit property.
      * 
      * @return
      *     possible object is
@@ -143,7 +136,7 @@ public class DataProfile {
     }
 
     /**
-     * unitプロパティの値を設定します。
+     * Sets the value of the unit property.
      * 
      * @param value
      *     allowed object is

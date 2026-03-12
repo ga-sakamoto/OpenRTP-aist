@@ -2,6 +2,8 @@
 <rtc:RtcProfile rtc:version="0.3" rtc:id="RTC:VenderName:Category:ModuleName222:1.0.0" xmlns:rtc="http://www.openrtp.org/namespaces/rtc" xmlns:rtcExt="http://www.openrtp.org/namespaces/rtc_ext" xmlns:rtcDoc="http://www.openrtp.org/namespaces/rtc_doc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <rtc:BasicInfo xsi:type="rtcExt:basic_info_ext" rtcExt:saveProject="Basic" rtcExt:comment="" rtc:updateDate="2025-08-24T12:26:50.000+09:00" rtc:creationDate="2025-08-18T10:45:05.000+09:00" rtc:hardwareProfile="" rtc:abstract="" rtc:version="1.0.0" rtc:vendor="VenderName" rtc:maxInstances="1" rtc:executionType="PeriodicExecutionContext" rtc:executionRate="1000.0" rtc:description="ModuleDescription" rtc:category="Category" rtc:rtcType="" rtc:componentKind="DataFlowComponent" rtc:activityType="PERIODIC" rtc:componentType="STATIC" rtc:name="ModuleName222">
         <rtcDoc:Doc rtcDoc:reference="参考文献Doc" rtcDoc:license="ライセンスDoc" rtcDoc:creator="作成者Doc" rtcDoc:algorithm="アルゴリズムDoc" rtcDoc:inout="入出力Doc" rtcDoc:description="概要説明Doc"/>
+        <rtcExt:Properties rtcExt:value="iso22166-202:2025" rtcExt:name="SIM_Version"/>
+        <rtcExt:Properties rtcExt:value="false" rtcExt:name="__iso__exeType_hardRT"/>
     </rtc:BasicInfo>
     <rtc:Actions>
         <rtc:OnInitialize xsi:type="rtcDoc:action_status_doc" rtc:implemented="true">

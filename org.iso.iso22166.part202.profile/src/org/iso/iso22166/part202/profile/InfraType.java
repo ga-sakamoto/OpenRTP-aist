@@ -1,10 +1,3 @@
-//
-// このファイルは、JavaTM Architecture for XML Binding(JAXB) Reference Implementation、v2.2.8-b130911.1802によって生成されました 
-// <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a>を参照してください 
-// ソース・スキーマの再コンパイル時にこのファイルの変更は失われます。 
-// 生成日: 2025.12.27 時間 01:27:43 PM JST 
-//
-
 
 package org.iso.iso22166.part202.profile;
 
@@ -15,9 +8,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>InfraType complex typeのJavaクラス。
+ * <p>Java class for InfraType complex type.
  * 
- * <p>次のスキーマ・フラグメントは、このクラス内に含まれる予期されるコンテンツを指定します。
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="InfraType">
@@ -47,7 +40,7 @@ public class InfraType {
     protected RangeString version;
 
     /**
-     * nameプロパティの値を取得します。
+     * Gets the value of the name property.
      * 
      * @return
      *     possible object is
@@ -59,7 +52,7 @@ public class InfraType {
     }
 
     /**
-     * nameプロパティの値を設定します。
+     * Sets the value of the name property.
      * 
      * @param value
      *     allowed object is
@@ -71,7 +64,7 @@ public class InfraType {
     }
 
     /**
-     * versionプロパティの値を取得します。
+     * Gets the value of the version property.
      * 
      * @return
      *     possible object is
@@ -83,7 +76,7 @@ public class InfraType {
     }
 
     /**
-     * versionプロパティの値を設定します。
+     * Sets the value of the version property.
      * 
      * @param value
      *     allowed object is

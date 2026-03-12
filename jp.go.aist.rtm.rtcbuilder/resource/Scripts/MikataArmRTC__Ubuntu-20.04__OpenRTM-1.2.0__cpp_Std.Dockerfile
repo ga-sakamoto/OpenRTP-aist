@@ -1,11 +1,13 @@
-# MikataArmRTC 22.04 Sample
+# MikataArmRTC Sample
 # Base image
-FROM ubuntu:22.04
+FROM ubuntu:20.04
 
 ENV DEBIAN_FRONTEND=noninteractive
-WORKDIR /root/workspace2
+WORKDIR /root/workspace
 
-# OpenRTM official repository skipped for newer Ubuntu (Using OS standard packages)
+# OpenRTM Repo & APT
+RUN rm -f /etc/apt/sources.list.d/openrtm.list \
+    && echo "deb [trusted=yes] http://openrtm.org/pub/Linux/ubuntu focal main" > /etc/apt/sources.list.d/openrtm.list
 
 # Install packages
 RUN apt-get update \
@@ -15,7 +17,7 @@ RUN apt-get update \
     doxygen \
     git \
     libboost-all-dev \
-    libeigen-stl-dev \
+    libeigen3-dev \
     libomniorb4-dev \
     omniidl \
     omniorb-nameserver \

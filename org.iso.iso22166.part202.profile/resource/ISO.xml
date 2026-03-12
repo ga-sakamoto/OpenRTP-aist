@@ -5,9 +5,11 @@
     <manufacturer>VenderName</manufacturer>
     <examples></examples>
     <idnType>
+        <moduleID/>
         <informationModelVersion>1.0.0</informationModelVersion>
     </idnType>
     <properties>
+        <osType/>
         <compiler>
             <compilerName>C++</compilerName>
         </compiler>
@@ -485,6 +487,10 @@
         <nv>
             <name>__iso__profileVersion</name>
             <value>0.3</value>
+        </nv>
+        <nv>
+            <name>SIM_Version</name>
+            <value>iso22166-202:2025</value>
         </nv>
         <nv>
             <name>__iso__componentKind</name>

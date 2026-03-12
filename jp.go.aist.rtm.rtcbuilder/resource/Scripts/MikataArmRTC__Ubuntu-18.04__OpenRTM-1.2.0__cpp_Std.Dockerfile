@@ -1,13 +1,15 @@
-# MikataArmRTC Sample
+# MikataArmRTC 18.04 Sample
 # Base image
-FROM ubuntu:20.04
+FROM ubuntu:18.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 WORKDIR /root/workspace
 
+
+
 # OpenRTM Repo & APT
 RUN rm -f /etc/apt/sources.list.d/openrtm.list \
-    && echo "deb [trusted=yes] http://openrtm.org/pub/Linux/ubuntu focal main" > /etc/apt/sources.list.d/openrtm.list
+    && echo "deb [trusted=yes] http://openrtm.org/pub/Linux/ubuntu bionic main" > /etc/apt/sources.list.d/openrtm.list
 
 # Install packages
 RUN apt-get update \
@@ -17,19 +19,16 @@ RUN apt-get update \
     doxygen \
     git \
     libboost-all-dev \
-    libeigen-stl-dev \
+    libeigen3-dev \
     libomniorb4-dev \
     omniidl \
     omniorb-nameserver \
     openrtm-aist \
-    python-is-python3 \
     python3-dev \
     python3-omniorb \
     python3-pip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-
-
 
 
 

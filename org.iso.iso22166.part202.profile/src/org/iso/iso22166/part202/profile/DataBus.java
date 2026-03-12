@@ -1,10 +1,3 @@
-//
-// このファイルは、JavaTM Architecture for XML Binding(JAXB) Reference Implementation、v2.2.8-b130911.1802によって生成されました 
-// <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a>を参照してください 
-// ソース・スキーマの再コンパイル時にこのファイルの変更は失われます。 
-// 生成日: 2025.12.27 時間 01:27:43 PM JST 
-//
-
 
 package org.iso.iso22166.part202.profile;
 
@@ -17,9 +10,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>DataBus complex typeのJavaクラス。
+ * <p>Java class for DataBus complex type.
  * 
- * <p>次のスキーマ・フラグメントは、このクラス内に含まれる予期されるコンテンツを指定します。
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="DataBus">
@@ -61,7 +54,7 @@ public class DataBus {
     protected NVList additionalInfo;
 
     /**
-     * connectionTypeプロパティの値を取得します。
+     * Gets the value of the connectionType property.
      * 
      * @return
      *     possible object is
@@ -73,7 +66,7 @@ public class DataBus {
     }
 
     /**
-     * connectionTypeプロパティの値を設定します。
+     * Sets the value of the connectionType property.
      * 
      * @param value
      *     allowed object is
@@ -85,7 +78,7 @@ public class DataBus {
     }
 
     /**
-     * typePhyMacプロパティの値を取得します。
+     * Gets the value of the typePhyMac property.
      * 
      * @return
      *     possible object is
@@ -97,7 +90,7 @@ public class DataBus {
     }
 
     /**
-     * typePhyMacプロパティの値を設定します。
+     * Sets the value of the typePhyMac property.
      * 
      * @param value
      *     allowed object is
@@ -167,7 +160,7 @@ public class DataBus {
     }
 
     /**
-     * speedプロパティの値を取得します。
+     * Gets the value of the speed property.
      * 
      */
     public double getSpeed() {
@@ -175,7 +168,7 @@ public class DataBus {
     }
 
     /**
-     * speedプロパティの値を設定します。
+     * Sets the value of the speed property.
      * 
      */
     public void setSpeed(double value) {
@@ -183,7 +176,7 @@ public class DataBus {
     }
 
     /**
-     * additionalInfoプロパティの値を取得します。
+     * Gets the value of the additionalInfo property.
      * 
      * @return
      *     possible object is
@@ -195,7 +188,7 @@ public class DataBus {
     }
 
     /**
-     * additionalInfoプロパティの値を設定します。
+     * Sets the value of the additionalInfo property.
      * 
      * @param value
      *     allowed object is

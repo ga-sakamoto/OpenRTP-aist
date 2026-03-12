@@ -1,10 +1,3 @@
-//
-// このファイルは、JavaTM Architecture for XML Binding(JAXB) Reference Implementation、v2.2.8-b130911.1802によって生成されました 
-// <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a>を参照してください 
-// ソース・スキーマの再コンパイル時にこのファイルの変更は失われます。 
-// 生成日: 2025.12.27 時間 01:27:43 PM JST 
-//
-
 
 package org.iso.iso22166.part202.profile;
 
@@ -18,9 +11,9 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 
 /**
- * <p>ExecutionType complex typeのJavaクラス。
+ * <p>Java class for ExecutionType complex type.
  * 
- * <p>次のスキーマ・フラグメントは、このクラス内に含まれる予期されるコンテンツを指定します。
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="ExecutionType">
@@ -64,7 +57,7 @@ public class ExecutionType {
     protected InstanceType instanceType;
 
     /**
-     * opTypeプロパティの値を取得します。
+     * Gets the value of the opType property.
      * 
      * @return
      *     possible object is
@@ -76,7 +69,7 @@ public class ExecutionType {
     }
 
     /**
-     * opTypeプロパティの値を設定します。
+     * Sets the value of the opType property.
      * 
      * @param value
      *     allowed object is
@@ -88,7 +81,7 @@ public class ExecutionType {
     }
 
     /**
-     * hardRTプロパティの値を取得します。
+     * Gets the value of the hardRT property.
      * 
      */
     public boolean isHardRT() {
@@ -96,7 +89,7 @@ public class ExecutionType {
     }
 
     /**
-     * hardRTプロパティの値を設定します。
+     * Sets the value of the hardRT property.
      * 
      */
     public void setHardRT(boolean value) {
@@ -104,7 +97,7 @@ public class ExecutionType {
     }
 
     /**
-     * timeConstraintプロパティの値を取得します。
+     * Gets the value of the timeConstraint property.
      * 
      */
     public double getTimeConstraint() {
@@ -112,7 +105,7 @@ public class ExecutionType {
     }
 
     /**
-     * timeConstraintプロパティの値を設定します。
+     * Sets the value of the timeConstraint property.
      * 
      */
     public void setTimeConstraint(double value) {
@@ -120,7 +113,7 @@ public class ExecutionType {
     }
 
     /**
-     * priorityプロパティの値を取得します。
+     * Gets the value of the priority property.
      * 
      * @return
      *     possible object is
@@ -132,7 +125,7 @@ public class ExecutionType {
     }
 
     /**
-     * priorityプロパティの値を設定します。
+     * Sets the value of the priority property.
      * 
      * @param value
      *     allowed object is
@@ -144,7 +137,7 @@ public class ExecutionType {
     }
 
     /**
-     * instanceTypeプロパティの値を取得します。
+     * Gets the value of the instanceType property.
      * 
      * @return
      *     possible object is
@@ -156,7 +149,7 @@ public class ExecutionType {
     }
 
     /**
-     * instanceTypeプロパティの値を設定します。
+     * Sets the value of the instanceType property.
      * 
      * @param value
      *     allowed object is

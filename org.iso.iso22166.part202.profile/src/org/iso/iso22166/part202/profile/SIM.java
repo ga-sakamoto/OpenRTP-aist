@@ -1,10 +1,3 @@
-//
-// このファイルは、JavaTM Architecture for XML Binding(JAXB) Reference Implementation、v2.2.8-b130911.1802によって生成されました 
-// <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a>を参照してください 
-// ソース・スキーマの再コンパイル時にこのファイルの変更は失われます。 
-// 生成日: 2025.12.27 時間 01:27:43 PM JST 
-//
-
 
 package org.iso.iso22166.part202.profile;
 
@@ -16,9 +9,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>SIM complex typeのJavaクラス。
+ * <p>Java class for SIM complex type.
  * 
- * <p>次のスキーマ・フラグメントは、このクラス内に含まれる予期されるコンテンツを指定します。
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="SIM">
@@ -92,7 +85,7 @@ public class SIM {
     protected NVList additionalInfo;
 
     /**
-     * moduleNameプロパティの値を取得します。
+     * Gets the value of the moduleName property.
      * 
      * @return
      *     possible object is
@@ -104,7 +97,7 @@ public class SIM {
     }
 
     /**
-     * moduleNameプロパティの値を設定します。
+     * Sets the value of the moduleName property.
      * 
      * @param value
      *     allowed object is
@@ -116,7 +109,7 @@ public class SIM {
     }
 
     /**
-     * descriptionプロパティの値を取得します。
+     * Gets the value of the description property.
      * 
      * @return
      *     possible object is
@@ -128,7 +121,7 @@ public class SIM {
     }
 
     /**
-     * descriptionプロパティの値を設定します。
+     * Sets the value of the description property.
      * 
      * @param value
      *     allowed object is
@@ -140,7 +133,7 @@ public class SIM {
     }
 
     /**
-     * manufacturerプロパティの値を取得します。
+     * Gets the value of the manufacturer property.
      * 
      * @return
      *     possible object is
@@ -152,7 +145,7 @@ public class SIM {
     }
 
     /**
-     * manufacturerプロパティの値を設定します。
+     * Sets the value of the manufacturer property.
      * 
      * @param value
      *     allowed object is
@@ -164,7 +157,7 @@ public class SIM {
     }
 
     /**
-     * examplesプロパティの値を取得します。
+     * Gets the value of the examples property.
      * 
      * @return
      *     possible object is
@@ -176,7 +169,7 @@ public class SIM {
     }
 
     /**
-     * examplesプロパティの値を設定します。
+     * Sets the value of the examples property.
      * 
      * @param value
      *     allowed object is
@@ -188,7 +181,7 @@ public class SIM {
     }
 
     /**
-     * idnTypeプロパティの値を取得します。
+     * Gets the value of the idnType property.
      * 
      * @return
      *     possible object is
@@ -200,7 +193,7 @@ public class SIM {
     }
 
     /**
-     * idnTypeプロパティの値を設定します。
+     * Sets the value of the idnType property.
      * 
      * @param value
      *     allowed object is
@@ -212,7 +205,7 @@ public class SIM {
     }
 
     /**
-     * propertiesプロパティの値を取得します。
+     * Gets the value of the properties property.
      * 
      * @return
      *     possible object is
@@ -224,7 +217,7 @@ public class SIM {
     }
 
     /**
-     * propertiesプロパティの値を設定します。
+     * Sets the value of the properties property.
      * 
      * @param value
      *     allowed object is
@@ -236,7 +229,7 @@ public class SIM {
     }
 
     /**
-     * ioVariablesプロパティの値を取得します。
+     * Gets the value of the ioVariables property.
      * 
      * @return
      *     possible object is
@@ -248,7 +241,7 @@ public class SIM {
     }
 
     /**
-     * ioVariablesプロパティの値を設定します。
+     * Sets the value of the ioVariables property.
      * 
      * @param value
      *     allowed object is
@@ -260,7 +253,7 @@ public class SIM {
     }
 
     /**
-     * statusプロパティの値を取得します。
+     * Gets the value of the status property.
      * 
      * @return
      *     possible object is
@@ -272,7 +265,7 @@ public class SIM {
     }
 
     /**
-     * statusプロパティの値を設定します。
+     * Sets the value of the status property.
      * 
      * @param value
      *     allowed object is
@@ -284,7 +277,7 @@ public class SIM {
     }
 
     /**
-     * servicesプロパティの値を取得します。
+     * Gets the value of the services property.
      * 
      * @return
      *     possible object is
@@ -296,7 +289,7 @@ public class SIM {
     }
 
     /**
-     * servicesプロパティの値を設定します。
+     * Sets the value of the services property.
      * 
      * @param value
      *     allowed object is
@@ -308,7 +301,7 @@ public class SIM {
     }
 
     /**
-     * infraプロパティの値を取得します。
+     * Gets the value of the infra property.
      * 
      * @return
      *     possible object is
@@ -320,7 +313,7 @@ public class SIM {
     }
 
     /**
-     * infraプロパティの値を設定します。
+     * Sets the value of the infra property.
      * 
      * @param value
      *     allowed object is
@@ -332,7 +325,7 @@ public class SIM {
     }
 
     /**
-     * safeSecureプロパティの値を取得します。
+     * Gets the value of the safeSecure property.
      * 
      * @return
      *     possible object is
@@ -344,7 +337,7 @@ public class SIM {
     }
 
     /**
-     * safeSecureプロパティの値を設定します。
+     * Sets the value of the safeSecure property.
      * 
      * @param value
      *     allowed object is
@@ -356,7 +349,7 @@ public class SIM {
     }
 
     /**
-     * modellingプロパティの値を取得します。
+     * Gets the value of the modelling property.
      * 
      * @return
      *     possible object is
@@ -368,7 +361,7 @@ public class SIM {
     }
 
     /**
-     * modellingプロパティの値を設定します。
+     * Sets the value of the modelling property.
      * 
      * @param value
      *     allowed object is
@@ -380,7 +373,7 @@ public class SIM {
     }
 
     /**
-     * exeFormプロパティの値を取得します。
+     * Gets the value of the exeForm property.
      * 
      * @return
      *     possible object is
@@ -392,7 +385,7 @@ public class SIM {
     }
 
     /**
-     * exeFormプロパティの値を設定します。
+     * Sets the value of the exeForm property.
      * 
      * @param value
      *     allowed object is
@@ -404,7 +397,7 @@ public class SIM {
     }
 
     /**
-     * additionalInfoプロパティの値を取得します。
+     * Gets the value of the additionalInfo property.
      * 
      * @return
      *     possible object is
@@ -416,7 +409,7 @@ public class SIM {
     }
 
     /**
-     * additionalInfoプロパティの値を設定します。
+     * Sets the value of the additionalInfo property.
      * 
      * @param value
      *     allowed object is

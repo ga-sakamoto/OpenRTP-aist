@@ -1,10 +1,3 @@
-//
-// このファイルは、JavaTM Architecture for XML Binding(JAXB) Reference Implementation、v2.2.8-b130911.1802によって生成されました 
-// <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a>を参照してください 
-// ソース・スキーマの再コンパイル時にこのファイルの変更は失われます。 
-// 生成日: 2025.12.27 時間 01:27:43 PM JST 
-//
-
 
 package org.iso.iso22166.part202.profile;
 
@@ -17,9 +10,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Status complex typeのJavaクラス。
+ * <p>Java class for Status complex type.
  * 
- * <p>次のスキーマ・フラグメントは、このクラス内に含まれる予期されるコンテンツを指定します。
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="Status">
@@ -50,7 +43,7 @@ public class Status {
     protected BigInteger errorType;
 
     /**
-     * executionStatusプロパティの値を取得します。
+     * Gets the value of the executionStatus property.
      * 
      * @return
      *     possible object is
@@ -62,7 +55,7 @@ public class Status {
     }
 
     /**
-     * executionStatusプロパティの値を設定します。
+     * Sets the value of the executionStatus property.
      * 
      * @param value
      *     allowed object is
@@ -74,7 +67,7 @@ public class Status {
     }
 
     /**
-     * errorTypeプロパティの値を取得します。
+     * Gets the value of the errorType property.
      * 
      * @return
      *     possible object is
@@ -86,7 +79,7 @@ public class Status {
     }
 
     /**
-     * errorTypeプロパティの値を設定します。
+     * Sets the value of the errorType property.
      * 
      * @param value
      *     allowed object is

@@ -1,10 +1,3 @@
-//
-// このファイルは、JavaTM Architecture for XML Binding(JAXB) Reference Implementation、v2.2.8-b130911.1802によって生成されました 
-// <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a>を参照してください 
-// ソース・スキーマの再コンパイル時にこのファイルの変更は失われます。 
-// 生成日: 2025.12.27 時間 01:27:43 PM JST 
-//
-
 
 package org.iso.iso22166.part202.profile;
 
@@ -18,9 +11,9 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>SafeSecure complex typeのJavaクラス。
+ * <p>Java class for SafeSecure complex type.
  * 
- * <p>次のスキーマ・フラグメントは、このクラス内に含まれる予期されるコンテンツを指定します。
+ * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="SafeSecure">
@@ -73,7 +66,7 @@ public class SafeSecure {
     protected NVList additionalInfo;
 
     /**
-     * overallValidSafetyLevelTypeプロパティの値を取得します。
+     * Gets the value of the overallValidSafetyLevelType property.
      * 
      * @return
      *     possible object is
@@ -85,7 +78,7 @@ public class SafeSecure {
     }
 
     /**
-     * overallValidSafetyLevelTypeプロパティの値を設定します。
+     * Sets the value of the overallValidSafetyLevelType property.
      * 
      * @param value
      *     allowed object is
@@ -97,7 +90,7 @@ public class SafeSecure {
     }
 
     /**
-     * overallSafetyLevelPLプロパティの値を取得します。
+     * Gets the value of the overallSafetyLevelPL property.
      * 
      * @return
      *     possible object is
@@ -109,7 +102,7 @@ public class SafeSecure {
     }
 
     /**
-     * overallSafetyLevelPLプロパティの値を設定します。
+     * Sets the value of the overallSafetyLevelPL property.
      * 
      * @param value
      *     allowed object is
@@ -121,7 +114,7 @@ public class SafeSecure {
     }
 
     /**
-     * overallSafetyLevelSILプロパティの値を取得します。
+     * Gets the value of the overallSafetyLevelSIL property.
      * 
      * @return
      *     possible object is
@@ -133,7 +126,7 @@ public class SafeSecure {
     }
 
     /**
-     * overallSafetyLevelSILプロパティの値を設定します。
+     * Sets the value of the overallSafetyLevelSIL property.
      * 
      * @param value
      *     allowed object is
@@ -145,7 +138,7 @@ public class SafeSecure {
     }
 
     /**
-     * overallPhySecurityLevelプロパティの値を取得します。
+     * Gets the value of the overallPhySecurityLevel property.
      * 
      * @return
      *     possible object is
@@ -157,7 +150,7 @@ public class SafeSecure {
     }
 
     /**
-     * overallPhySecurityLevelプロパティの値を設定します。
+     * Sets the value of the overallPhySecurityLevel property.
      * 
      * @param value
      *     allowed object is
@@ -169,7 +162,7 @@ public class SafeSecure {
     }
 
     /**
-     * overallCybSecurityLevelプロパティの値を取得します。
+     * Gets the value of the overallCybSecurityLevel property.
      * 
      * @return
      *     possible object is
@@ -181,7 +174,7 @@ public class SafeSecure {
     }
 
     /**
-     * overallCybSecurityLevelプロパティの値を設定します。
+     * Sets the value of the overallCybSecurityLevel property.
      * 
      * @param value
      *     allowed object is
@@ -251,7 +244,7 @@ public class SafeSecure {
     }
 
     /**
-     * additionalInfoプロパティの値を取得します。
+     * Gets the value of the additionalInfo property.
      * 
      * @return
      *     possible object is
@@ -263,7 +256,7 @@ public class SafeSecure {
     }
 
     /**
-     * additionalInfoプロパティの値を設定します。
+     * Sets the value of the additionalInfo property.
      * 
      * @param value
      *     allowed object is

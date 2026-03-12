@@ -1,6 +1,6 @@
-# MikataArm sample
+# MikataArm sample 20.04
 # Base image
-FROM ros:noetic-ros-base
+FROM osrf/ros:noetic-desktop-full
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV ROS_DISTRO=noetic
@@ -9,10 +9,9 @@ ENV ROS_DISTRO=noetic
 RUN apt-get update && apt-get install -y \
     build-essential \
     cmake \
-    cmake_modules \
     git \
     libboost-all-dev \
-    libeigen-stl-dev \
+    libeigen3-dev \
     libgl1-mesa-dri \
     libgl1-mesa-glx \
     mesa-utils \
@@ -23,6 +22,7 @@ RUN apt-get update && apt-get install -y \
     python3-rosinstall-generator \
     python3-wstool \
     ros-noetic-actionlib \
+    ros-noetic-cmake-modules \
     ros-noetic-dynamixel-workbench-toolbox \
     ros-noetic-gazebo-ros-control \
     ros-noetic-gazebo-ros-pkgs \
@@ -38,8 +38,6 @@ RUN apt-get update && apt-get install -y \
     ros-noetic-xacro \
     x11-apps \
     && rm -rf /var/lib/apt/lists/*
-
-
 
 # Setup Workspace
 RUN mkdir -p /root/catkin_ws/src
