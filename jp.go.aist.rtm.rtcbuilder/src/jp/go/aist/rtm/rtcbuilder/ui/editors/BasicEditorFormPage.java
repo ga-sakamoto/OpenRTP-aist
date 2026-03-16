@@ -55,9 +55,13 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.iso.iso22166.part202.profile.SIM;
+import org.openrtp.namespaces.rtc.version03.RtcProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import jp.ac.meijo_u.iso22166_part202.util.ISO2RTCProfileHandler;
+import jp.ac.meijo_u.iso22166_part202.util.RTC2ISOProfileHandler;
 import jp.go.aist.rtm.rtcbuilder.Generator.MergeHandler;
 import jp.go.aist.rtm.rtcbuilder.GuiRtcBuilder;
 import jp.go.aist.rtm.rtcbuilder.IRTCBMessageConstants;
@@ -76,12 +80,15 @@ import jp.go.aist.rtm.rtcbuilder.nl.Messages;
 import jp.go.aist.rtm.rtcbuilder.ui.Perspective.LanguageProperty;
 import jp.go.aist.rtm.rtcbuilder.ui.compare.CompareResultDialog;
 import jp.go.aist.rtm.rtcbuilder.ui.compare.CompareTarget;
+import jp.go.aist.rtm.rtcbuilder.ui.dialog.ExportDialog;
+import jp.go.aist.rtm.rtcbuilder.ui.dialog.ImportDialog;
 import jp.go.aist.rtm.rtcbuilder.ui.dialog.RestoreDialog;
 import jp.go.aist.rtm.rtcbuilder.ui.preference.ComponentPreferenceManager;
 import jp.go.aist.rtm.rtcbuilder.ui.preference.DocumentPreferenceManager;
 import jp.go.aist.rtm.rtcbuilder.util.FileUtil;
 import jp.go.aist.rtm.rtcbuilder.util.RTCUtil;
 import jp.go.aist.rtm.rtcbuilder.util.StringUtil;
+import jp.go.aist.rtm.toolscommon.profiles.util.XmlHandler;
 
 /**
  * Basic Profile 設定ページ
@@ -120,13 +127,17 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 	
 	private Button generateButton;
 	private Button codeRestoreButton;
+	private Button backupClearButton;
 
 	private Button profileLoadButton;
 	private Button profileSaveButton;
 
+	private Button profileGenerateButton;
+
 	private Composite generateSection;
 	private Composite codeRestoreSection;
 	private Composite outputProjectSection;
+	private Composite isoProfileSection;
 	private Composite profileSection;
 	
 	private String[] defaultCategory = { "Actuator", "Animation", "Autonomous Decentralized System", "Chatbot", "Computer Algebra System",
@@ -173,6 +184,7 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 		createLanguageSection(toolkit, form);
 		createGenerateSection(toolkit, form);
 		createCodeRestoreSection(toolkit, form);
+		createIsoProfileSection(toolkit, form);
 		createExportImportSection(toolkit, form);
 		//
 		managerList = RtcBuilderPlugin.getDefault().getLoader()
@@ -354,16 +366,17 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 		createHintSpace(toolkit, composite);
 		createHintSpace(toolkit, composite);
 		createHintSpace(toolkit, composite);
+		createHintSpace(toolkit, composite);
 		createHintLabel(Messages.getString("IMC.BASIC_HINT_GENERATE_TITLE"), Messages.getString("IMC.BASIC_HINT_GENERATE_DESC"), toolkit, composite);
 		//
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
 		createHintSpace(toolkit, composite);
 		//
 		createHintLabel(Messages.getString("IMC.BASIC_HINT_CODE_RESTORE_TITLE"), Messages.getString("IMC.BASIC_HINT_CODE_RESTORE_DESC"), toolkit, composite);
 		//
 		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
+		//
+		createHintLabel(Messages.getString("IMC.BASIC_HINT_ISO_PROFILE_TITLE"), Messages.getString("IMC.BASIC_HINT_ISO_PROFILE_DESC"), toolkit, composite);
+		//
 		createHintSpace(toolkit, composite);
 		//
 		createHintLabel(Messages.getString("IMC.BASIC_HINT_IMPORT_TITLE"), Messages.getString("IMC.BASIC_HINT_IMPORT_DESC"), toolkit, composite);
@@ -375,7 +388,7 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 				IMessageConstants.LANGUAGE_LANG_TITLE, IMessageConstants.LANGUAGE_LANG_EXPL, 2);
 		//
 		LangGroup = new Group(composite, SWT.NONE);
-		LangGroup.setLayout(new GridLayout(1, false));
+		LangGroup.setLayout(new GridLayout(5, false));
 		GridData gd = new GridData();
 		LangGroup.setLayoutData(gd);
 		//
@@ -632,6 +645,21 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 					}
 					IFile saveRtcxml = project.getFile(IRtcBuilderConstants.DEFAULT_RTC_XML);
 					saveRtcxml.create(new ByteArrayInputStream(strXml.getBytes("UTF-8")), true, null);
+
+					//ISO
+					RtcProfile rtcProfile = handler.convert2XMLProfile(editor.getRtcParam());
+					RTC2ISOProfileHandler isoHandler = new RTC2ISOProfileHandler();
+					SIM isoProfile = isoHandler.convertRtc2Iso(rtcProfile);
+					String strIsoXml = isoHandler.convertToXmlIso(isoProfile);
+					
+					IFile orgIsoxml = project.getFile(IRtcBuilderConstants.DEFAULT_ISO_202_XML);
+					if (orgIsoxml.exists()) {
+						IFile renameIsoFile = project.getFile(IRtcBuilderConstants.DEFAULT_ISO_202_XML + genTime);
+						orgIsoxml.move(renameIsoFile.getFullPath(), true, null);
+						FileUtil.removeBackupFiles(project.getLocation().toOSString(), IRtcBuilderConstants.DEFAULT_ISO_202_XML);
+					}
+					IFile saveIsoxml = project.getFile(IRtcBuilderConstants.DEFAULT_ISO_202_XML);
+					saveIsoxml.create(new ByteArrayInputStream(strIsoXml.getBytes("UTF-8")), true, null);
 					//
 					editor.getRtcParam().resetUpdated();
 					editor.updateDirty();
@@ -640,45 +668,46 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 				}
 			}
 
-			private IProject checkTargetProject(String targetProject, boolean isConfirmNew) {
-				if( targetProject==null || "".equals(targetProject) ){
-					MessageDialog.openError(getSite().getShell(), "Error", IRTCBMessageConstants.VALIDATE_ERROR_OUTPUTPROJECT);
-					return null;
-				}
-				IWorkspaceRoot workspaceHandle = ResourcesPlugin.getWorkspace().getRoot();
-				IProject project = workspaceHandle.getProject(targetProject);
-				if(!project.exists()) {
-					if(isConfirmNew) {
-						IWorkbench workbench = PlatformUI.getWorkbench();
-						IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-						Shell shell = window.getShell();
-						MessageBox message = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
-						message.setText(IRTCBMessageConstants.CONFIRM_PROJECT_GENERATE_TITLE);
-						message.setMessage(IRTCBMessageConstants.CONFIRM_PROJECT_GENERATE);
-						if( message.open() != SWT.YES) return null;
-					}
-					try {
-						project.create(null);
-						project.open(null);
-						LanguageProperty langProp = LanguageProperty.checkPlugin(editor.getRtcParam());
-						if(langProp != null) {
-							IProjectDescription description = project.getDescription();
-							String[] ids = description.getNatureIds();
-							String[] newIds = new String[ids.length + langProp.getNatures().size()];
-							System.arraycopy(ids, 0, newIds, 0, ids.length);
-							for( int intIdx=0; intIdx<langProp.getNatures().size(); intIdx++ ) {
-								newIds[ids.length+intIdx] = langProp.getNatures().get(intIdx);
-							}
-							description.setNatureIds(newIds);
-							project.setDescription(description, null);
-						}
-					} catch (CoreException ex) {
-						throw new RuntimeException(IRTCBMessageConstants.ERROR_GENERATE_FAILED);
-					}
-				}
-				return project;
-			}
 		});
+	}
+
+	private IProject checkTargetProject(String targetProject, boolean isConfirmNew) {
+		if( targetProject==null || "".equals(targetProject) ){
+			MessageDialog.openError(getSite().getShell(), "Error", IRTCBMessageConstants.VALIDATE_ERROR_OUTPUTPROJECT);
+			return null;
+		}
+		IWorkspaceRoot workspaceHandle = ResourcesPlugin.getWorkspace().getRoot();
+		IProject project = workspaceHandle.getProject(targetProject);
+		if(!project.exists()) {
+			if(isConfirmNew) {
+				IWorkbench workbench = PlatformUI.getWorkbench();
+				IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+				Shell shell = window.getShell();
+				MessageBox message = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
+				message.setText(IRTCBMessageConstants.CONFIRM_PROJECT_GENERATE_TITLE);
+				message.setMessage(IRTCBMessageConstants.CONFIRM_PROJECT_GENERATE);
+				if( message.open() != SWT.YES) return null;
+			}
+			try {
+				project.create(null);
+				project.open(null);
+				LanguageProperty langProp = LanguageProperty.checkPlugin(editor.getRtcParam());
+				if(langProp != null) {
+					IProjectDescription description = project.getDescription();
+					String[] ids = description.getNatureIds();
+					String[] newIds = new String[ids.length + langProp.getNatures().size()];
+					System.arraycopy(ids, 0, newIds, 0, ids.length);
+					for( int intIdx=0; intIdx<langProp.getNatures().size(); intIdx++ ) {
+						newIds[ids.length+intIdx] = langProp.getNatures().get(intIdx);
+					}
+					description.setNatureIds(newIds);
+					project.setDescription(description, null);
+				}
+			} catch (CoreException ex) {
+				throw new RuntimeException(IRTCBMessageConstants.ERROR_GENERATE_FAILED);
+			}
+		}
+		return project;
 	}
 
 	private void setPrefixSuffix(RtcParam param) {
@@ -712,11 +741,103 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 		return null;
 	}
 
+	private void createIsoProfileSection(FormToolkit toolkit, ScrolledForm form) {
+		isoProfileSection = createSectionBaseWithLabel(toolkit, form,
+				Messages.getString("IMC.BASIC_ISO_PROFILE_TITLE"), Messages.getString("IMC.BASIC_ISO_PROFILE_EXPL"), 2);
+		profileGenerateButton = toolkit.createButton(isoProfileSection,
+				Messages.getString("IMC.BASIC_BTN_ISO_PROFILE_GENERATE"), SWT.NONE);
+		profileGenerateButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				editor.allUpdates();
+				String validateRtcParam = editor.validateParam();
+				if (validateRtcParam != null) {
+					MessageDialog.openError(getSite().getShell(), "Error", validateRtcParam);
+					return;
+				}
+				IProject project = checkTargetProject(editor.getRtcParam().getOutputProject(), true);
+				if( project==null) return;
+
+				ProfileHandler handler = new ProfileHandler();
+				try {
+					RtcProfile rtcProfile = handler.convert2XMLProfile(editor.getRtcParam());
+					RTC2ISOProfileHandler isoHandler = new RTC2ISOProfileHandler();
+					SIM isoProfile = isoHandler.convertRtc2Iso(rtcProfile);
+					String strIsoXml = isoHandler.convertToXmlIso(isoProfile);
+	
+					IFile orgIsoxml = project.getFile(IRtcBuilderConstants.DEFAULT_ISO_202_XML);
+					if (orgIsoxml.exists()) {
+						String genTime = DATE_FORMAT.format(new GregorianCalendar().getTime());
+						IFile renameIsoFile = project.getFile(IRtcBuilderConstants.DEFAULT_ISO_202_XML + genTime);
+						orgIsoxml.move(renameIsoFile.getFullPath(), true, null);
+						FileUtil.removeBackupFiles(project.getLocation().toOSString(), IRtcBuilderConstants.DEFAULT_ISO_202_XML);
+					}
+					IFile saveIsoxml = project.getFile(IRtcBuilderConstants.DEFAULT_ISO_202_XML);
+					saveIsoxml.create(new ByteArrayInputStream(strIsoXml.getBytes("UTF-8")), true, null);
+				} catch (Exception ex) {
+					LOGGER.error("Fail to save iso-profile", ex);
+					MessageDialog.openWarning(getSite().getShell(),
+	    					Messages.getString("IMC.BASIC_ISO_PROFILE_TITLE"),
+							Messages.getString("IMC.BASIC_ISO_EXPORT_ERROR"));
+					return;
+				}
+				MessageDialog.openInformation(getSite().getShell(),
+    					Messages.getString("IMC.BASIC_ISO_PROFILE_TITLE"),
+						Messages.getString("IMC.BASIC_ISO_EXPORT_DONE"));
+			}
+		});
+	}
+
 	private void createCodeRestoreSection(FormToolkit toolkit, ScrolledForm form) {
 		codeRestoreSection = createSectionBaseWithLabel(toolkit, form,
-				Messages.getString("IMC.BASIC_CODE_RESTORE_TITLE"), Messages.getString("IMC.BASIC_CODE_RESTORE_EXPL"), 2);
+				Messages.getString("IMC.BASIC_CODE_RESTORE_TITLE"), Messages.getString("IMC.BASIC_CODE_RESTORE_EXPL"), 3);
 		createCodeRestoreButton(toolkit);
+		backupClearButton = toolkit.createButton(codeRestoreSection,
+				Messages.getString("IMC.BASIC_BTN_BACKUP_CLEAR"), SWT.NONE);
+		backupClearButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+    			if (!MessageDialog.openQuestion(getSite().getShell(),
+    					Messages.getString("IMC.BASIC_BTN_BACKUP_CLEAR"),
+    					Messages.getString("IMC.BASIC_BACKUP_CLEAR_MSG")) )
+    				return;
+				
+				IWorkspaceRoot workspaceHandle = ResourcesPlugin.getWorkspace().getRoot();
+				String targetProject = editor.getRtcParam().getOutputProject();
+				IProject project = workspaceHandle.getProject(targetProject);
+				File dir = new File(project.getLocation().toOSString());
+				List<File> files = listAllFiles(dir);
+				for(File target : files) {
+					String name = target.getName();
+					if(name.length() < 14) continue;
+					String last14 = name.substring(name.length() - 14);
+					if(last14.matches("\\d{14}")) {
+						target.delete();
+					}
+				}
+				MessageDialog.openInformation(getSite().getShell(),
+    					Messages.getString("IMC.BASIC_BTN_BACKUP_CLEAR"),
+						Messages.getString("IMC.BASIC_BACKUP_CLEAR_DONE_MSG"));
+			}
+		});
 	}
+	
+	private List<File> listAllFiles(File dir) {
+	    List<File> result = new ArrayList<>();
+	    File[] files = dir.listFiles();
+	    if (files != null) {
+	        for (File each : files) {
+	        	if(each.isFile()) {
+	        		result.add(each);
+	        	}
+	            if (each.isDirectory()) {
+	                result.addAll(listAllFiles(each));
+	            }
+	        }
+	    }
+	    return result;
+	}
+	
 	private void createCodeRestoreButton(FormToolkit toolkit) {
 		codeRestoreButton = toolkit.createButton(codeRestoreSection,
 				Messages.getString("IMC.BASIC_BTN_CODE_RESTORE"), SWT.NONE);
@@ -836,26 +957,46 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 					MessageDialog.openError(getSite().getShell(), "Error", validateRtcParam);
 					return;
 				}
-
-				String selectedFileName;
+				///////////
+				boolean outputRtc = false;
+				String selectedFileNameRtc = "";
+				boolean outputIso = false;
+				String selectedFileNameIso = "";
         		ExportCreator export = new ExportCreator();
         		if(!export.canCreateProfileName(editor)) {
-        			FileDialog dialog = new FileDialog(getSite().getShell(),SWT.SAVE);
-    		        dialog.setText(Messages.getString("IMC.BASIC_BTN_EXPORT"));
-    				dialog.setFilterNames(new String[] {IMessageConstants.FILETYPE_XML,IMessageConstants.FILETYPE_YAML});
-    				dialog.setFilterExtensions(new String[] { "*.xml","*.yaml" });
-    				selectedFileName = dialog.open();
+    				ExportDialog dialog = new ExportDialog(getSite().getShell());
+    				int ret = dialog.open();
+    				if(ret != IDialogConstants.OK_ID) return;
+
+    				outputRtc = dialog.outputRtc();
+    				outputIso = dialog.outputIso();
+    				selectedFileNameRtc = dialog.getRtcFileName();
+    				selectedFileNameIso = dialog.getIsoFileName();
         		} else {
-        			selectedFileName = export.createProfileName(editor);
+        			outputRtc = true;
+        			selectedFileNameRtc = export.createProfileName(editor);
         		}
 
-		        if (selectedFileName != null) {
+				if(outputIso) {
+	        		try {
+	            		ProfileHandler handlerTemp = new ProfileHandler();
+						RtcProfile profile = handlerTemp.convert2XMLProfile(editor.getGeneratorParam().getRtcParam());
+	
+						RTC2ISOProfileHandler handler202 = new RTC2ISOProfileHandler();
+						SIM result = handler202.convertRtc2Iso(profile);
+						handler202.saveXmlIso(result, selectedFileNameIso);
+					} catch (Exception e3) {
+						e3.printStackTrace();
+					}
+				}
+
+		        if (outputRtc) {
 		        	try {
 		        		export.preExport(editor);
 
-		            	if (getFileExtension(selectedFileName).equals(IRtcBuilderConstants.YAML_EXTENSION)) {
+		            	if (getFileExtension(selectedFileNameRtc).equals(IRtcBuilderConstants.YAML_EXTENSION)) {
 		            		ProfileHandler handler = new ProfileHandler();
-		            		handler.createYaml(selectedFileName, editor.getGeneratorParam());
+		            		handler.createYaml(selectedFileNameRtc, editor.getGeneratorParam());
 		            	} else {
 		            		ProfileHandler handler = new ProfileHandler();
 		            		try {
@@ -865,7 +1006,7 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 		            					IMessageConstants.PROFILE_VALIDATE_ERROR_MESSAGE + System.getProperty("line.separator") + ex.getCause().toString()) )
 		            				return ;// 「いいえ」のときは保存しない
 		            		}// 通常のExceptionは外側でcatchする
-		        			handler.storeToXML(selectedFileName, editor.getGeneratorParam());
+		        			handler.storeToXML(selectedFileNameRtc, editor.getGeneratorParam());
 		            	}
 		            	//FSM
 		        		PropertyParam fsm = editor.getRtcParam().getProperty(IRtcBuilderConstants.PROP_TYPE_FSM);
@@ -877,7 +1018,7 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 			    				IProject project = root.getProject(editor.getRtcParam().getOutputProject());
 			    				String fsmFile  = project.getFile(cmpName).getLocation().toOSString();
 			        			if(fsmFile!=null) {
-			        				String dirName = new File(selectedFileName).getParent();
+			        				String dirName = new File(selectedFileNameRtc).getParent();
 			        				String targetFile = dirName + File.separator + cmpName;
 			        				Path inputPath = FileSystems.getDefault().getPath(fsmFile);
 			        				Path outputPath = FileSystems.getDefault().getPath(targetFile);			        				
@@ -885,7 +1026,7 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 			        			}
 			        		}
 		        		}
-		        		export.postExport(selectedFileName, editor);
+		        		export.postExport(selectedFileNameRtc, editor);
 		        		editor.getRtcParam().resetUpdated();
 		        		editor.updateDirty();
 
@@ -910,19 +1051,16 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 		profileLoadButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-					ImportExtension extension = getTargetImportExtension();
-				FileDialog dialog = new FileDialog(getSite().getShell(),SWT.OPEN);
-		        dialog.setText(Messages.getString("IMC.BASIC_BTN_IMPORT"));
+				ImportExtension extension = getTargetImportExtension();
+				ImportDialog dialog = new ImportDialog(getSite().getShell());
+				dialog.setExtension(extension);
+				int ret = dialog.open();
+				if(ret != IDialogConstants.OK_ID) return;
+				
+				String targetKind = dialog.getSelectedKind();
+				String selectedFileName = dialog.getSelectedFile();
 
-				String[] names = extension == null ? new String[] { IMessageConstants.FILETYPE_XML,IMessageConstants.FILETYPE_YAML }
-				  					: extension.getFileDialogFilterNames();
-				String[] exts = extension == null	 ? new String[] { "*.xml","*.yaml" }
-				 					: extension.getFileDialogFilterExtensions();
-				dialog.setFilterNames(names);
-				dialog.setFilterExtensions(exts);
-
-				String selectedFileName = dialog.open();
-		        if (selectedFileName != null) {
+				if (targetKind.equals("RTC")) {
 		        	if(extension == null) {
 			        	try {
 			        		String origProject = editor.getRtcParam().getOutputProject();
@@ -999,22 +1137,43 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 		    				}
 		        		}
 	        		}
+				} else {
+		        	try {
+		        		String origProject = editor.getRtcParam().getOutputProject();
+		        		ISO2RTCProfileHandler isoHandler = new ISO2RTCProfileHandler();
+		        		ProfileHandler handler = new ProfileHandler();
+		        		
+	        			SIM profile = isoHandler.restoreFromFileIso(selectedFileName);
+	        			RtcProfile rtcProfile = isoHandler.convertIso2Rtc(profile);
+	        			XmlHandler xmlHandler = new XmlHandler();
+	        			String xmlFile = xmlHandler.convertToXmlRtc(rtcProfile);
+	        			
+						GeneratorParam genParam = handler.restorefromRtcProfile(rtcProfile);
+						editor.setGeneratorParam(genParam);
+						editor.getRtcParam().setRtcXml(xmlFile);
+
+						editor.getRtcParam().setOutputProject(origProject);
+					} catch (Exception e1) {
+						MessageDialog.openError(getSite().getShell(), "Error",
+								Messages.getString("IMC.BASIC_IMPORT_ERROR"));
+						return;
+					}
 	        		
-					MessageDialog.openInformation(getSite().getShell(), "Finish",
-							Messages.getString("IMC.BASIC_IMPORT_DONE"));
-					//
-					editor.allPagesReLoad();
-					editor.updateEMFModuleName(editor.getRtcParam().getName());
-					editor.updateEMFDataPorts(
-							editor.getRtcParam().getInports(), editor.getRtcParam().getOutports(),
-							editor.getRtcParam().getEventports(), editor.getRtcParam().getServicePorts());
-					editor.setEnabledInfoByLang();
-					extractDataTypes();
-					load();
-					//
-//					editor.getRtcParam().resetUpdated();
-					editor.updateDirty();
 		        }
+				MessageDialog.openInformation(getSite().getShell(), "Finish",
+						Messages.getString("IMC.BASIC_IMPORT_DONE"));
+				//
+				editor.allPagesReLoad();
+				editor.updateEMFModuleName(editor.getRtcParam().getName());
+				editor.updateEMFDataPorts(
+						editor.getRtcParam().getInports(), editor.getRtcParam().getOutports(),
+						editor.getRtcParam().getEventports(), editor.getRtcParam().getServicePorts());
+				editor.setEnabledInfoByLang();
+				extractDataTypes();
+				load();
+				//
+//				editor.getRtcParam().resetUpdated();
+				editor.updateDirty();
 			}
 		});
 	}
@@ -1106,7 +1265,8 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 		versionText.setText(getValue(rtcParam.getVersion()));
 		venderText.setText(getValue(rtcParam.getVender()));
 		categoryCombo.setText(getValue(rtcParam.getCategory()));
-		if( rtcParam.getComponentKind().contains(KIND_CHOREONOID) ) {
+		if( rtcParam.getComponentKind() != null
+				&& rtcParam.getComponentKind().contains(KIND_CHOREONOID) ) {
 			choreonoidBtn.setSelection(true);
 		}
 		activityTypeCombo.setText(getValue(rtcParam.getActivityType()));

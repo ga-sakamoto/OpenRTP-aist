@@ -1,0 +1,735 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<SIM>
+    <moduleName>ModuleName</moduleName>
+    <description>ModuleDescription</description>
+    <manufacturer>VenderName</manufacturer>
+    <examples></examples>
+    <idnType>
+        <informationModelVersion>1.0.0</informationModelVersion>
+    </idnType>
+    <properties>
+        <compiler>
+            <compilerName>C++</compilerName>
+        </compiler>
+        <exeType>
+            <opType>PERIODIC</opType>
+            <hardRT>false</hardRT>
+            <timeConstraint>1000.0</timeConstraint>
+            <instanceType>Singleton</instanceType>
+        </exeType>
+        <property>
+            <description>over1 doc</description>
+            <name>conf_name0</name>
+            <type>int</type>
+            <unit>unit1</unit>
+            <immutable>false</immutable>
+            <value>10</value>
+            <additionalInfo>
+                <nv>
+                    <name>constraint</name>
+                    <value>const1</value>
+                </nv>
+                <nv>
+                    <name>docDataname</name>
+                    <value>name1 doc</value>
+                </nv>
+                <nv>
+                    <name>docDefaultValue</name>
+                    <value>def1 doc</value>
+                </nv>
+                <nv>
+                    <name>docUnit</name>
+                    <value>unit1 doc</value>
+                </nv>
+                <nv>
+                    <name>docRange</name>
+                    <value>range1 doc</value>
+                </nv>
+                <nv>
+                    <name>docConstraint</name>
+                    <value>const1 doc</value>
+                </nv>
+                <nv>
+                    <name>variableName</name>
+                    <value>vconf1</value>
+                </nv>
+                <nv>
+                    <name>__widget__</name>
+                    <value>text</value>
+                </nv>
+            </additionalInfo>
+        </property>
+        <property>
+            <description>over2 doc</description>
+            <name>conf_name1</name>
+            <type>double</type>
+            <unit>unit2</unit>
+            <immutable>false</immutable>
+            <value>1.23</value>
+            <additionalInfo>
+                <nv>
+                    <name>constraint</name>
+                    <value>const2</value>
+                </nv>
+                <nv>
+                    <name>docDataname</name>
+                    <value>name2 doc</value>
+                </nv>
+                <nv>
+                    <name>docDefaultValue</name>
+                    <value>def2 doc</value>
+                </nv>
+                <nv>
+                    <name>docUnit</name>
+                    <value>unit2 doc</value>
+                </nv>
+                <nv>
+                    <name>docRange</name>
+                    <value>range2 doc</value>
+                </nv>
+                <nv>
+                    <name>docConstraint</name>
+                    <value>const2 doc</value>
+                </nv>
+                <nv>
+                    <name>variableName</name>
+                    <value>vconf2</value>
+                </nv>
+                <nv>
+                    <name>__widget__</name>
+                    <value>slider.3</value>
+                </nv>
+            </additionalInfo>
+        </property>
+    </properties>
+    <ioVariables>
+        <variable>
+            <description>In1 over</description>
+            <name>InPort1</name>
+            <type>RTC::TimedLong</type>
+            <unit></unit>
+            <ioType>IN</ioType>
+            <additionalInfo>
+                <nv>
+                    <name>idlFile</name>
+                    <value>&lt;RTM_ROOT&gt;\rtm\idl\BasicDataType.idl</value>
+                </nv>
+                <nv>
+                    <name>type</name>
+                    <value>In1 Type</value>
+                </nv>
+                <nv>
+                    <name>number</name>
+                    <value>In1 Num</value>
+                </nv>
+                <nv>
+                    <name>semantics</name>
+                    <value>In1 Detail</value>
+                </nv>
+                <nv>
+                    <name>unit</name>
+                    <value>In1 Unit</value>
+                </nv>
+                <nv>
+                    <name>occurrence</name>
+                    <value>In1 Occ</value>
+                </nv>
+                <nv>
+                    <name>operation</name>
+                    <value>In1 Freq</value>
+                </nv>
+                <nv>
+                    <name>variableName</name>
+                    <value>InVar1</value>
+                </nv>
+                <nv>
+                    <name>position</name>
+                    <value>LEFT</value>
+                </nv>
+            </additionalInfo>
+        </variable>
+        <variable>
+            <description>In2 over</description>
+            <name>InPort2</name>
+            <type>RTC::TimedUShort</type>
+            <unit></unit>
+            <ioType>IN</ioType>
+            <additionalInfo>
+                <nv>
+                    <name>idlFile</name>
+                    <value>&lt;RTM_ROOT&gt;\rtm\idl\BasicDataType.idl</value>
+                </nv>
+                <nv>
+                    <name>type</name>
+                    <value>In2 type</value>
+                </nv>
+                <nv>
+                    <name>number</name>
+                    <value>in2 num</value>
+                </nv>
+                <nv>
+                    <name>semantics</name>
+                    <value>In2 detail</value>
+                </nv>
+                <nv>
+                    <name>unit</name>
+                    <value>in2 unit</value>
+                </nv>
+                <nv>
+                    <name>occurrence</name>
+                    <value>in2 occ</value>
+                </nv>
+                <nv>
+                    <name>operation</name>
+                    <value>in2 freq</value>
+                </nv>
+                <nv>
+                    <name>variableName</name>
+                    <value>in2Var</value>
+                </nv>
+                <nv>
+                    <name>position</name>
+                    <value>LEFT</value>
+                </nv>
+            </additionalInfo>
+        </variable>
+        <variable>
+            <description>out1 over</description>
+            <name>OutPort1</name>
+            <type>RTC::TimedUShort</type>
+            <unit></unit>
+            <ioType>OUT</ioType>
+            <additionalInfo>
+                <nv>
+                    <name>idlFile</name>
+                    <value>&lt;RTM_ROOT&gt;\rtm\idl\BasicDataType.idl</value>
+                </nv>
+                <nv>
+                    <name>type</name>
+                    <value>out1 type</value>
+                </nv>
+                <nv>
+                    <name>number</name>
+                    <value>out1 num</value>
+                </nv>
+                <nv>
+                    <name>semantics</name>
+                    <value>out1 detail</value>
+                </nv>
+                <nv>
+                    <name>unit</name>
+                    <value>out1 unit</value>
+                </nv>
+                <nv>
+                    <name>occurrence</name>
+                    <value>out1 occ</value>
+                </nv>
+                <nv>
+                    <name>operation</name>
+                    <value>out1 freq</value>
+                </nv>
+                <nv>
+                    <name>variableName</name>
+                    <value>out1Var</value>
+                </nv>
+                <nv>
+                    <name>position</name>
+                    <value>RIGHT</value>
+                </nv>
+            </additionalInfo>
+        </variable>
+        <variable>
+            <description>out2 over</description>
+            <name>OutPort2</name>
+            <type>RTC::TimedULong</type>
+            <unit></unit>
+            <ioType>OUT</ioType>
+            <additionalInfo>
+                <nv>
+                    <name>idlFile</name>
+                    <value>&lt;RTM_ROOT&gt;\rtm\idl\BasicDataType.idl</value>
+                </nv>
+                <nv>
+                    <name>type</name>
+                    <value>out2 type</value>
+                </nv>
+                <nv>
+                    <name>number</name>
+                    <value>out2 num</value>
+                </nv>
+                <nv>
+                    <name>semantics</name>
+                    <value>out2 detail</value>
+                </nv>
+                <nv>
+                    <name>unit</name>
+                    <value>out2 unit</value>
+                </nv>
+                <nv>
+                    <name>occurrence</name>
+                    <value>out2 occ</value>
+                </nv>
+                <nv>
+                    <name>operation</name>
+                    <value>out2 freq</value>
+                </nv>
+                <nv>
+                    <name>variableName</name>
+                    <value>out2Var</value>
+                </nv>
+                <nv>
+                    <name>position</name>
+                    <value>RIGHT</value>
+                </nv>
+            </additionalInfo>
+        </variable>
+    </ioVariables>
+    <status/>
+    <services>
+        <NoOfBasicService>3</NoOfBasicService>
+        <NoOfOptionalService>0</NoOfOptionalService>
+        <serviceProfile>
+            <id>sp01</id>
+            <methodList>
+                <methodName>if01</methodName>
+                <retType>Img::CameraCaptureService</retType>
+                <reqProvType>PROVIDED</reqProvType>
+                <additionalInfo>
+                    <nv>
+                        <name>instanceName</name>
+                        <value>if1inst</value>
+                    </nv>
+                    <nv>
+                        <name>idlFile</name>
+                        <value>CameraCommonInterface.idl</value>
+                    </nv>
+                    <nv>
+                        <name>path</name>
+                        <value>&lt;RTM_ROOT&gt;\rtm\idl</value>
+                    </nv>
+                    <nv>
+                        <name>description</name>
+                        <value>if1over</value>
+                    </nv>
+                    <nv>
+                        <name>docArgument</name>
+                        <value>if1arg</value>
+                    </nv>
+                    <nv>
+                        <name>docReturn</name>
+                        <value>if1ret</value>
+                    </nv>
+                    <nv>
+                        <name>docException</name>
+                        <value>if1ex</value>
+                    </nv>
+                    <nv>
+                        <name>docPreCondition</name>
+                        <value>if1pre</value>
+                    </nv>
+                    <nv>
+                        <name>docPostCondition</name>
+                        <value>if1post</value>
+                    </nv>
+                    <nv>
+                        <name>variableName</name>
+                        <value>if1var</value>
+                    </nv>
+                </additionalInfo>
+            </methodList>
+            <additionalInfo>
+                <nv>
+                    <name>description</name>
+                    <value>01over</value>
+                </nv>
+                <nv>
+                    <name>ifdescription</name>
+                    <value>01detail</value>
+                </nv>
+                <nv>
+                    <name>position</name>
+                    <value>LEFT</value>
+                </nv>
+            </additionalInfo>
+        </serviceProfile>
+        <serviceProfile>
+            <id>sp02</id>
+            <methodList>
+                <methodName>if02</methodName>
+                <retType>MyServiceSuper</retType>
+                <reqProvType>PROVIDED</reqProvType>
+                <additionalInfo>
+                    <nv>
+                        <name>instanceName</name>
+                        <value>if02inst</value>
+                    </nv>
+                    <nv>
+                        <name>idlFile</name>
+                        <value>MyData.idl</value>
+                    </nv>
+                    <nv>
+                        <name>path</name>
+                        <value>idl</value>
+                    </nv>
+                    <nv>
+                        <name>description</name>
+                        <value>if02over</value>
+                    </nv>
+                    <nv>
+                        <name>docArgument</name>
+                        <value>if02arg</value>
+                    </nv>
+                    <nv>
+                        <name>docReturn</name>
+                        <value>of02ret</value>
+                    </nv>
+                    <nv>
+                        <name>docException</name>
+                        <value>if02ex</value>
+                    </nv>
+                    <nv>
+                        <name>docPreCondition</name>
+                        <value>if02pre</value>
+                    </nv>
+                    <nv>
+                        <name>docPostCondition</name>
+                        <value>if02post</value>
+                    </nv>
+                    <nv>
+                        <name>variableName</name>
+                        <value>if02v</value>
+                    </nv>
+                </additionalInfo>
+            </methodList>
+            <additionalInfo>
+                <nv>
+                    <name>description</name>
+                    <value>02over</value>
+                </nv>
+                <nv>
+                    <name>ifdescription</name>
+                    <value>02detail</value>
+                </nv>
+                <nv>
+                    <name>position</name>
+                    <value>LEFT</value>
+                </nv>
+            </additionalInfo>
+        </serviceProfile>
+        <serviceProfile>
+            <id>sp03</id>
+            <methodList>
+                <methodName>if03</methodName>
+                <retType>MyServiceSuper</retType>
+                <reqProvType>REQUIRED</reqProvType>
+                <additionalInfo>
+                    <nv>
+                        <name>instanceName</name>
+                        <value>if03inst</value>
+                    </nv>
+                    <nv>
+                        <name>idlFile</name>
+                        <value>MyData.idl</value>
+                    </nv>
+                    <nv>
+                        <name>path</name>
+                        <value>idl</value>
+                    </nv>
+                    <nv>
+                        <name>description</name>
+                        <value>if03over</value>
+                    </nv>
+                    <nv>
+                        <name>docArgument</name>
+                        <value>if03arg</value>
+                    </nv>
+                    <nv>
+                        <name>docReturn</name>
+                        <value>if03ret</value>
+                    </nv>
+                    <nv>
+                        <name>docException</name>
+                        <value>if03ex</value>
+                    </nv>
+                    <nv>
+                        <name>docPreCondition</name>
+                        <value>if03pre</value>
+                    </nv>
+                    <nv>
+                        <name>docPostCondition</name>
+                        <value>if03post</value>
+                    </nv>
+                    <nv>
+                        <name>variableName</name>
+                        <value>if03v</value>
+                    </nv>
+                </additionalInfo>
+            </methodList>
+            <additionalInfo>
+                <nv>
+                    <name>description</name>
+                    <value>03over</value>
+                </nv>
+                <nv>
+                    <name>ifdescription</name>
+                    <value>03detail</value>
+                </nv>
+                <nv>
+                    <name>position</name>
+                    <value>LEFT</value>
+                </nv>
+            </additionalInfo>
+        </serviceProfile>
+    </services>
+    <additionalInfo>
+        <nv>
+            <name>profileVersion</name>
+            <value>0.3</value>
+        </nv>
+        <nv>
+            <name>activityType</name>
+            <value>PERIODIC</value>
+        </nv>
+        <nv>
+            <name>componentKind</name>
+            <value>DataFlowComponent</value>
+        </nv>
+        <nv>
+            <name>category</name>
+            <value>Category</value>
+        </nv>
+        <nv>
+            <name>maxInstances</name>
+            <value>1</value>
+        </nv>
+        <nv>
+            <name>creationDate</name>
+            <value>2025-08-18T10:45:05.000+09:00</value>
+        </nv>
+        <nv>
+            <name>updateDate</name>
+            <value>2025-12-23T23:16:44.000+09:00</value>
+        </nv>
+        <nv>
+            <name>docAlgorithm</name>
+            <value>アルゴリズムDoc</value>
+        </nv>
+        <nv>
+            <name>docDescription</name>
+            <value>概要説明Doc</value>
+        </nv>
+        <nv>
+            <name>docInout</name>
+            <value>入出力Doc</value>
+        </nv>
+        <nv>
+            <name>docCreator</name>
+            <value>作成者Doc</value>
+        </nv>
+        <nv>
+            <name>docLicense</name>
+            <value>ライセンスDoc</value>
+        </nv>
+        <nv>
+            <name>docReference</name>
+            <value>参考文献Doc</value>
+        </nv>
+        <nv>
+            <name>extSaveProject</name>
+            <value>ServiceCxx</value>
+        </nv>
+        <nv>
+            <name>onInitialize</name>
+            <value>true</value>
+        </nv>
+        <nv>
+            <name>onInitializeDocDescription</name>
+            <value>init Overview</value>
+        </nv>
+        <nv>
+            <name>onInitializeDocPreCondition</name>
+            <value>init Pre</value>
+        </nv>
+        <nv>
+            <name>onInitializeDocPostCondition</name>
+            <value>init Post</value>
+        </nv>
+        <nv>
+            <name>onFinalize</name>
+            <value>true</value>
+        </nv>
+        <nv>
+            <name>onFinalizeDocDescription</name>
+            <value>final over</value>
+        </nv>
+        <nv>
+            <name>onFinalizeDocPreCondition</name>
+            <value>final pre</value>
+        </nv>
+        <nv>
+            <name>onFinalizeDocPostCondition</name>
+            <value>final post</value>
+        </nv>
+        <nv>
+            <name>onStartup</name>
+            <value>true</value>
+        </nv>
+        <nv>
+            <name>onStartupDocDescription</name>
+            <value>start over</value>
+        </nv>
+        <nv>
+            <name>onStartupDocPreCondition</name>
+            <value>start pre</value>
+        </nv>
+        <nv>
+            <name>onStartupDocPostCondition</name>
+            <value>start post</value>
+        </nv>
+        <nv>
+            <name>onShutdown</name>
+            <value>true</value>
+        </nv>
+        <nv>
+            <name>onShutdownDocDescription</name>
+            <value>shut over</value>
+        </nv>
+        <nv>
+            <name>onShutdownDocPreCondition</name>
+            <value>shut pre</value>
+        </nv>
+        <nv>
+            <name>onShutdownDocPostCondition</name>
+            <value>shut post</value>
+        </nv>
+        <nv>
+            <name>onActivated</name>
+            <value>true</value>
+        </nv>
+        <nv>
+            <name>onActivatedDocDescription</name>
+            <value>activated over</value>
+        </nv>
+        <nv>
+            <name>onActivatedDocPreCondition</name>
+            <value>activated pre</value>
+        </nv>
+        <nv>
+            <name>onActivatedDocPostCondition</name>
+            <value>activated post</value>
+        </nv>
+        <nv>
+            <name>onDeactivated</name>
+            <value>true</value>
+        </nv>
+        <nv>
+            <name>onDeactivatedDocDescription</name>
+            <value>deact over</value>
+        </nv>
+        <nv>
+            <name>onDeactivatedDocPreCondition</name>
+            <value>deact pre</value>
+        </nv>
+        <nv>
+            <name>onDeactivatedDocPostCondition</name>
+            <value>deact post</value>
+        </nv>
+        <nv>
+            <name>onAborting</name>
+            <value>true</value>
+        </nv>
+        <nv>
+            <name>onAbortingDocDescription</name>
+            <value>abort over</value>
+        </nv>
+        <nv>
+            <name>onAbortingDocPreCondition</name>
+            <value>abort pre</value>
+        </nv>
+        <nv>
+            <name>onAbortingDocPostCondition</name>
+            <value>abort post</value>
+        </nv>
+        <nv>
+            <name>onError</name>
+            <value>true</value>
+        </nv>
+        <nv>
+            <name>onErrorDocDescription</name>
+            <value>erro over</value>
+        </nv>
+        <nv>
+            <name>onErrorDocPreCondition</name>
+            <value>error pre</value>
+        </nv>
+        <nv>
+            <name>onErrorDocPostCondition</name>
+            <value>error post</value>
+        </nv>
+        <nv>
+            <name>onReset</name>
+            <value>true</value>
+        </nv>
+        <nv>
+            <name>onResetDocDescription</name>
+            <value>reset over</value>
+        </nv>
+        <nv>
+            <name>onResetDocPreCondition</name>
+            <value>rest pre</value>
+        </nv>
+        <nv>
+            <name>onResetDocPostCondition</name>
+            <value>reset post</value>
+        </nv>
+        <nv>
+            <name>onExecute</name>
+            <value>true</value>
+        </nv>
+        <nv>
+            <name>onExecuteDocDescription</name>
+            <value>exe over</value>
+        </nv>
+        <nv>
+            <name>onExecuteDocPreCondition</name>
+            <value>exe pre</value>
+        </nv>
+        <nv>
+            <name>onExecuteDocPostCondition</name>
+            <value>exe post</value>
+        </nv>
+        <nv>
+            <name>onStateUpdate</name>
+            <value>true</value>
+        </nv>
+        <nv>
+            <name>onStateUpdateDocDescription</name>
+            <value>state over</value>
+        </nv>
+        <nv>
+            <name>onStateUpdateDocPreCondition</name>
+            <value>state pre</value>
+        </nv>
+        <nv>
+            <name>onStateUpdateDocPostCondition</name>
+            <value>state post</value>
+        </nv>
+        <nv>
+            <name>onRateChanged</name>
+            <value>true</value>
+        </nv>
+        <nv>
+            <name>onRateChangedDocDescription</name>
+            <value>rate over</value>
+        </nv>
+        <nv>
+            <name>onRateChangedDocPreCondition</name>
+            <value>rate pre</value>
+        </nv>
+        <nv>
+            <name>onRateChangedDocPostCondition</name>
+            <value>rate post</value>
+        </nv>
+    </additionalInfo>
+</SIM>
+

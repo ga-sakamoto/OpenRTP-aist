@@ -26,7 +26,8 @@ set TARGETS=^
 	jp.go.aist.rtm.nameserviceview ^
 	jp.go.aist.rtm.nameserviceview.nl1 ^
 	jp.go.aist.rtm.systemeditor ^
-	jp.go.aist.rtm.systemeditor.nl1
+	jp.go.aist.rtm.systemeditor.nl1 ^
+    org.iso.iso22166.part202.profile
 
 @if exist %JARDIR% (
     rd /S /Q %JARDIR%

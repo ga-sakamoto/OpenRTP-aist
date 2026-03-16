@@ -89,7 +89,6 @@ public class RestoreDialog extends Dialog {
         GridData gd = new GridData(GridData.FILL_BOTH);
 		gd.grabExcessHorizontalSpace = true;
 		table.setLayoutData(gd);
-
 		
 		timeStampViewer.setContentProvider(new ArrayContentProvider());
 		timeStampViewer.setLabelProvider(new SingleLabelProvider());

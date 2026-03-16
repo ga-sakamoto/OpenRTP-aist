@@ -218,6 +218,7 @@ public class ComponentPreferenceManager {
 	//
 	public static final int DEFAULT_BACKUP_NUM = 3;
 	public static final boolean DEFAULT_NOT_GENERATED_CAUTION = false;
+
 	
 	/**
 	 * コード生成時の ModuleName デフォルト値を取得する

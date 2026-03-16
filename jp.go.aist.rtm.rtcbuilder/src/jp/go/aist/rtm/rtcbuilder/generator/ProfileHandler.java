@@ -90,6 +90,21 @@ public class ProfileHandler {
 		return generatorParam;
 	}
 
+	public GeneratorParam restorefromRtcProfile(RtcProfile profile) throws Exception {
+		GeneratorParam generatorParam = null;
+		try {
+			generatorParam = new GeneratorParam();
+			ParamUtil putil = new ParamUtil();
+			RtcParam rtcParam = putil.convertFromModule(profile, generatorParam, managerList, isDirect);
+			generatorParam.setRtcParam(rtcParam);
+		} catch (FileNotFoundException e) {
+			throw new Exception(IRTCBMessageConstants.ERROR_PROFILE_RESTORE, e);
+		} catch (IOException e) {
+			throw new Exception(IRTCBMessageConstants.ERROR_PROFILE_RESTORE, e);
+		}
+		return generatorParam;
+	}
+
 	public String convert2XML(GeneratorParam generatorParam) throws Exception {
 	    String xmlFile = "";
 	    ParamUtil putil = new ParamUtil();

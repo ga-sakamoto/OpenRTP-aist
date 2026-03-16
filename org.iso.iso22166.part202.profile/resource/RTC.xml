@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<rtc:RtcProfile rtc:version="0.3" rtc:id="RTC:VenderName:Category:ModuleName222:1.0.0" xmlns:rtc="http://www.openrtp.org/namespaces/rtc" xmlns:rtcExt="http://www.openrtp.org/namespaces/rtc_ext" xmlns:rtcDoc="http://www.openrtp.org/namespaces/rtc_doc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <rtc:BasicInfo xsi:type="rtcExt:basic_info_ext" rtcExt:saveProject="Basic" rtcExt:comment="" rtc:updateDate="2025-08-24T12:26:50.000+09:00" rtc:creationDate="2025-08-18T10:45:05.000+09:00" rtc:hardwareProfile="" rtc:abstract="" rtc:version="1.0.0" rtc:vendor="VenderName" rtc:maxInstances="1" rtc:executionType="PeriodicExecutionContext" rtc:executionRate="1000.0" rtc:description="ModuleDescription" rtc:category="Category" rtc:rtcType="" rtc:componentKind="DataFlowComponent" rtc:activityType="PERIODIC" rtc:componentType="STATIC" rtc:name="ModuleName222">
+        <rtcDoc:Doc rtcDoc:reference="参考文献Doc" rtcDoc:license="ライセンスDoc" rtcDoc:creator="作成者Doc" rtcDoc:algorithm="アルゴリズムDoc" rtcDoc:inout="入出力Doc" rtcDoc:description="概要説明Doc"/>
+        <rtcExt:Properties rtcExt:value="iso22166-202:2025" rtcExt:name="SIM_Version"/>
+        <rtcExt:Properties rtcExt:value="false" rtcExt:name="__iso__exeType_hardRT"/>
+    </rtc:BasicInfo>
+    <rtc:Actions>
+        <rtc:OnInitialize xsi:type="rtcDoc:action_status_doc" rtc:implemented="true">
+            <rtcDoc:Doc rtcDoc:postCondition="init Post" rtcDoc:preCondition="init Pre" rtcDoc:description="init Overview"/>
+        </rtc:OnInitialize>
+        <rtc:OnFinalize xsi:type="rtcDoc:action_status_doc" rtc:implemented="true">
+            <rtcDoc:Doc rtcDoc:postCondition="final post" rtcDoc:preCondition="final pre" rtcDoc:description="final over"/>
+        </rtc:OnFinalize>
+        <rtc:OnStartup xsi:type="rtcDoc:action_status_doc" rtc:implemented="true">
+            <rtcDoc:Doc rtcDoc:postCondition="start post" rtcDoc:preCondition="start pre" rtcDoc:description="start over"/>
+        </rtc:OnStartup>
+        <rtc:OnShutdown xsi:type="rtcDoc:action_status_doc" rtc:implemented="true">
+            <rtcDoc:Doc rtcDoc:postCondition="shut post" rtcDoc:preCondition="shut pre" rtcDoc:description="shut over"/>
+        </rtc:OnShutdown>
+        <rtc:OnActivated xsi:type="rtcDoc:action_status_doc" rtc:implemented="true">
+            <rtcDoc:Doc rtcDoc:postCondition="activated post" rtcDoc:preCondition="activated pre" rtcDoc:description="activated over"/>
+        </rtc:OnActivated>
+        <rtc:OnDeactivated xsi:type="rtcDoc:action_status_doc" rtc:implemented="true">
+            <rtcDoc:Doc rtcDoc:postCondition="deact post" rtcDoc:preCondition="deact pre" rtcDoc:description="deact over"/>
+        </rtc:OnDeactivated>
+        <rtc:OnAborting xsi:type="rtcDoc:action_status_doc" rtc:implemented="true">
+            <rtcDoc:Doc rtcDoc:postCondition="abort post" rtcDoc:preCondition="abort pre" rtcDoc:description="abort over"/>
+        </rtc:OnAborting>
+        <rtc:OnError xsi:type="rtcDoc:action_status_doc" rtc:implemented="true">
+            <rtcDoc:Doc rtcDoc:postCondition="error post" rtcDoc:preCondition="error pre" rtcDoc:description="erro over"/>
+        </rtc:OnError>
+        <rtc:OnReset xsi:type="rtcDoc:action_status_doc" rtc:implemented="true">
+            <rtcDoc:Doc rtcDoc:postCondition="reset post" rtcDoc:preCondition="rest pre" rtcDoc:description="reset over"/>
+        </rtc:OnReset>
+        <rtc:OnExecute xsi:type="rtcDoc:action_status_doc" rtc:implemented="true">
+            <rtcDoc:Doc rtcDoc:postCondition="exe post" rtcDoc:preCondition="exe pre" rtcDoc:description="exe over"/>
+        </rtc:OnExecute>
+        <rtc:OnStateUpdate xsi:type="rtcDoc:action_status_doc" rtc:implemented="true">
+            <rtcDoc:Doc rtcDoc:postCondition="state post" rtcDoc:preCondition="state pre" rtcDoc:description="state over"/>
+        </rtc:OnStateUpdate>
+        <rtc:OnRateChanged xsi:type="rtcDoc:action_status_doc" rtc:implemented="true">
+            <rtcDoc:Doc rtcDoc:postCondition="rate post" rtcDoc:preCondition="rate pre" rtcDoc:description="rate over"/>
+        </rtc:OnRateChanged>
+    </rtc:Actions>
+    <rtc:ConfigurationSet>
+        <rtc:Configuration xsi:type="rtcExt:configuration_ext" rtcExt:variableName="vconf1" rtcExt:comment="" rtc:unit="unit1" rtc:defaultValue="10" rtc:type="int" rtc:name="conf_name0">
+            <rtc:Constraint>
+                <rtc:ConstraintUnitType>
+                    <rtc:propertyIsEqualTo rtc:matchCase="false">
+                        <rtc:Literal>const1</rtc:Literal>
+                    </rtc:propertyIsEqualTo>
+                </rtc:ConstraintUnitType>
+            </rtc:Constraint>
+            <rtcDoc:Doc rtcDoc:constraint="const1 doc" rtcDoc:range="range1 doc" rtcDoc:unit="unit1 doc" rtcDoc:description="over1 doc" rtcDoc:defaultValue="def1 doc" rtcDoc:dataname="name1 doc"/>
+            <rtcExt:Properties rtcExt:value="false" rtcExt:name="__iso__immutable"/>
+            <rtcExt:Properties rtcExt:value="text" rtcExt:name="__widget__"/>
+        </rtc:Configuration>
+        <rtc:Configuration xsi:type="rtcExt:configuration_ext" rtcExt:variableName="vconf2" rtcExt:comment="" rtc:unit="unit2" rtc:defaultValue="1.23" rtc:type="double" rtc:name="conf_name1">
+            <rtc:Constraint>
+                <rtc:ConstraintUnitType>
+                    <rtc:propertyIsEqualTo rtc:matchCase="false">
+                        <rtc:Literal>const2</rtc:Literal>
+                    </rtc:propertyIsEqualTo>
+                </rtc:ConstraintUnitType>
+            </rtc:Constraint>
+            <rtcDoc:Doc rtcDoc:constraint="const2 doc" rtcDoc:range="range2 doc" rtcDoc:unit="unit2 doc" rtcDoc:description="over2 doc" rtcDoc:defaultValue="def2 doc" rtcDoc:dataname="name2 doc"/>
+            <rtcExt:Properties rtcExt:value="false" rtcExt:name="__iso__immutable"/>
+            <rtcExt:Properties rtcExt:value="slider.3" rtcExt:name="__widget__"/>
+        </rtc:Configuration>
+    </rtc:ConfigurationSet>
+    <rtc:DataPorts xsi:type="rtcExt:dataport_ext" rtcExt:position="LEFT" rtcExt:variableName="InVar1" rtcExt:comment="" rtc:unit="" rtc:subscriptionType="" rtc:dataflowType="" rtc:interfaceType="" rtc:idlFile="idl\MyData.idl" rtc:type="Test::MyData" rtc:name="InPort1" rtc:portType="DataInPort">
+        <rtcDoc:Doc rtcDoc:operation="In1 Freq" rtcDoc:occerrence="In1 Occ" rtcDoc:unit="In1 Unit" rtcDoc:semantics="In1 Detail" rtcDoc:number="In1 Num" rtcDoc:type="In1 Type" rtcDoc:description="In1 over"/>
+    </rtc:DataPorts>
+    <rtc:DataPorts xsi:type="rtcExt:dataport_ext" rtcExt:position="LEFT" rtcExt:variableName="in2Var" rtcExt:comment="" rtc:unit="" rtc:subscriptionType="" rtc:dataflowType="" rtc:interfaceType="" rtc:idlFile="&lt;RTM_ROOT&gt;\rtm\idl\BasicDataType.idl" rtc:type="RTC::TimedUShort" rtc:name="InPort2" rtc:portType="DataInPort">
+        <rtcDoc:Doc rtcDoc:operation="in2 freq" rtcDoc:occerrence="in2 occ" rtcDoc:unit="in2 unit" rtcDoc:semantics="In2 detail" rtcDoc:number="in2 num" rtcDoc:type="In2 type" rtcDoc:description="In2 over"/>
+    </rtc:DataPorts>
+    <rtc:DataPorts xsi:type="rtcExt:dataport_ext" rtcExt:position="RIGHT" rtcExt:variableName="out1Var" rtcExt:comment="" rtc:unit="" rtc:subscriptionType="" rtc:dataflowType="" rtc:interfaceType="" rtc:idlFile="&lt;RTM_ROOT&gt;\rtm\idl\BasicDataType.idl" rtc:type="RTC::TimedUShort" rtc:name="OutPort1" rtc:portType="DataOutPort">
+        <rtcDoc:Doc rtcDoc:operation="out1 freq" rtcDoc:occerrence="out1 occ" rtcDoc:unit="out1 unit" rtcDoc:semantics="out1 detail" rtcDoc:number="out1 num" rtcDoc:type="out1 type" rtcDoc:description="out1 over"/>
+    </rtc:DataPorts>
+    <rtc:DataPorts xsi:type="rtcExt:dataport_ext" rtcExt:position="RIGHT" rtcExt:variableName="out2Var" rtcExt:comment="" rtc:unit="" rtc:subscriptionType="" rtc:dataflowType="" rtc:interfaceType="" rtc:idlFile="idl\MyData.idl" rtc:type="Test::MyData" rtc:name="OutPort2" rtc:portType="DataOutPort">
+        <rtcDoc:Doc rtcDoc:operation="out2 freq" rtcDoc:occerrence="out2 occ" rtcDoc:unit="out2 unit" rtcDoc:semantics="out2 detail" rtcDoc:number="out2 num" rtcDoc:type="out2 type" rtcDoc:description="out2 over"/>
+    </rtc:DataPorts>
+    <rtc:ServicePorts xsi:type="rtcExt:serviceport_ext" rtcExt:position="LEFT" rtcExt:comment="" rtc:name="sp01">
+        <rtc:ServiceInterface xsi:type="rtcExt:serviceinterface_ext" rtcExt:variableName="if1var" rtcExt:comment="" rtc:type="Img::CameraCaptureService" rtc:idlFile="&lt;RTM_ROOT&gt;\rtm\idl\CameraCommonInterface.idl" rtc:instanceName="if1inst" rtc:direction="PROVIDED" rtc:name="if01">
+            <rtcDoc:Doc rtcDoc:docPostCondition="if1post" rtcDoc:docPreCondition="if1pre" rtcDoc:docException="if1ex" rtcDoc:docReturn="if1ret" rtcDoc:docArgument="if1arg" rtcDoc:description="if1over"/>
+        </rtc:ServiceInterface>
+        <rtcDoc:Doc rtcDoc:ifdescription="01detail" rtcDoc:description="01over"/>
+    </rtc:ServicePorts>
+    <rtc:ServicePorts xsi:type="rtcExt:serviceport_ext" rtcExt:position="LEFT" rtcExt:comment="" rtc:name="sp02">
+        <rtc:ServiceInterface xsi:type="rtcExt:serviceinterface_ext" rtcExt:variableName="if02v" rtcExt:comment="" rtc:type="MyServiceSuper" rtc:idlFile="idl\MyData.idl" rtc:instanceName="if02inst" rtc:direction="PROVIDED" rtc:name="if02">
+            <rtcDoc:Doc rtcDoc:docPostCondition="if02post" rtcDoc:docPreCondition="if02pre" rtcDoc:docException="if02ex" rtcDoc:docReturn="of02ret" rtcDoc:docArgument="if02arg" rtcDoc:description="if02over"/>
+        </rtc:ServiceInterface>
+        <rtcDoc:Doc rtcDoc:ifdescription="02detail" rtcDoc:description="02over"/>
+    </rtc:ServicePorts>
+    <rtc:ServicePorts xsi:type="rtcExt:serviceport_ext" rtcExt:position="LEFT" rtcExt:comment="" rtc:name="sp03">
+        <rtc:ServiceInterface xsi:type="rtcExt:serviceinterface_ext" rtcExt:variableName="if03v" rtcExt:comment="" rtc:type="MyServiceSuper" rtc:idlFile="idl\MyData.idl" rtc:instanceName="if03inst" rtc:direction="REQUIRED" rtc:name="if03">
+            <rtcDoc:Doc rtcDoc:docPostCondition="if03post" rtcDoc:docPreCondition="if03pre" rtcDoc:docException="if03ex" rtcDoc:docReturn="if03ret" rtcDoc:docArgument="if03arg" rtcDoc:description="if03over"/>
+        </rtc:ServiceInterface>
+        <rtcDoc:Doc rtcDoc:ifdescription="03detail" rtcDoc:description="03over"/>
+    </rtc:ServicePorts>
+    <rtc:Language xsi:type="rtcExt:language_ext" rtc:kind="C++">
+        <rtcExt:targets/>
+    </rtc:Language>
+</rtc:RtcProfile>
+

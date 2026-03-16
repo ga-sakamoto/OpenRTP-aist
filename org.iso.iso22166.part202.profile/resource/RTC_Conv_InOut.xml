@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<rtc:RtcProfile rtc:version="0.3" rtc:id="RTC:Vecdor01::mod01:1.3.5" xmlns:rtc="http://www.openrtp.org/namespaces/rtc" xmlns:rtcExt="http://www.openrtp.org/namespaces/rtc_ext" xmlns:rtcDoc="http://www.openrtp.org/namespaces/rtc_doc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <rtc:BasicInfo xsi:type="rtcExt:basic_info_ext" rtc:version="1.3.5" rtc:vendor="Vecdor01" rtc:description="mod01Desc" rtc:name="mod01">
+        <rtcDoc:Doc/>
+        <rtcExt:Properties rtcExt:value="Mod01Example" rtcExt:name="__iso__examples"/>
+        <rtcExt:Properties rtcExt:value="iso22166-202:2025" rtcExt:name="SIM_Version"/>
+        <rtcExt:Properties rtcExt:value="2345678901" rtcExt:name="__iso__mID"/>
+        <rtcExt:Properties rtcExt:value="080706050403020100:09" rtcExt:name="__iso__swAspects"/>
+        <rtcExt:Properties rtcExt:value="010305070902040608:08" rtcExt:name="__iso__swAspects"/>
+        <rtcExt:Properties rtcExt:value="00050100010502000205:05" rtcExt:name="__iso__swAspects"/>
+    </rtc:BasicInfo>
+    <rtc:DataPorts xsi:type="rtcExt:dataport_ext" rtcExt:variableName="" rtcExt:comment="" rtc:unit="var01Unit" rtc:subscriptionType="" rtc:dataflowType="" rtc:interfaceType="" rtc:idlFile="" rtc:type="String" rtc:name="Var01_In" rtc:portType="DataInPort">
+        <rtcDoc:Doc rtcDoc:operation="" rtcDoc:occerrence="" rtcDoc:unit="" rtcDoc:semantics="" rtcDoc:number="" rtcDoc:type="" rtcDoc:description="var01Desc"/>
+        <rtcExt:Properties rtcExt:value="val01" rtcExt:name="__iso__value"/>
+        <rtcExt:Properties rtcExt:value="val01" rtcExt:name="__iso__nv01"/>
+        <rtcExt:Properties rtcExt:value="val02" rtcExt:name="__iso__nv02"/>
+        <rtcExt:Properties rtcExt:value="val03" rtcExt:name="__iso__nv03"/>
+    </rtc:DataPorts>
+    <rtc:DataPorts xsi:type="rtcExt:dataport_ext" rtcExt:variableName="" rtcExt:comment="" rtc:unit="var01Unit" rtc:subscriptionType="" rtc:dataflowType="" rtc:interfaceType="" rtc:idlFile="" rtc:type="String" rtc:name="Var01_Out" rtc:portType="DataOutPort">
+        <rtcDoc:Doc rtcDoc:operation="" rtcDoc:occerrence="" rtcDoc:unit="" rtcDoc:semantics="" rtcDoc:number="" rtcDoc:type="" rtcDoc:description="var01Desc"/>
+        <rtcExt:Properties rtcExt:value="val01" rtcExt:name="__iso__value"/>
+        <rtcExt:Properties rtcExt:value="val01" rtcExt:name="__iso__nv01"/>
+        <rtcExt:Properties rtcExt:value="val02" rtcExt:name="__iso__nv02"/>
+        <rtcExt:Properties rtcExt:value="val03" rtcExt:name="__iso__nv03"/>
+    </rtc:DataPorts>
+    <rtc:DataPorts xsi:type="rtcExt:dataport_ext" rtc:unit="var02Unit" rtc:type="float" rtc:name="Var02" rtc:portType="DataOutPort">
+        <rtcDoc:Doc rtcDoc:description="var02Desc"/>
+        <rtcExt:Properties rtcExt:value="val02" rtcExt:name="__iso__value"/>
+    </rtc:DataPorts>
+    <rtc:DataPorts xsi:type="rtcExt:dataport_ext" rtc:unit="var03Unit" rtc:type="int" rtc:name="Var03" rtc:portType="DataOutPort">
+        <rtcDoc:Doc rtcDoc:description="var03Desc"/>
+        <rtcExt:Properties rtcExt:value="val03" rtcExt:name="__iso__value"/>
+    </rtc:DataPorts>
+    <rtc:Language xsi:type="rtcExt:language_ext">
+        <rtcExt:targets/>
+    </rtc:Language>
+</rtc:RtcProfile>
+

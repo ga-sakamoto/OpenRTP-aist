@@ -128,11 +128,16 @@ public abstract class AbstractEditorFormPage extends FormPage {
 
 	protected Composite createSectionBaseWithLabel(FormToolkit toolkit, ScrolledForm form,
 			String title, String explain, int colnum) {
+		return createSectionBaseWithLabel(toolkit, form, title, explain, colnum, 1);
+	}
+	protected Composite createSectionBaseWithLabel(FormToolkit toolkit, ScrolledForm form,
+			String title, String explain, int colnum, int verSpan) {
 		Section sctBasic = toolkit.createSection(form.getBody(),
 							Section.TITLE_BAR | Section.EXPANDED | Section.TWISTIE);
 		sctBasic.setText(title);
 		GridData gridData = new GridData();
 		gridData.horizontalAlignment = GridData.FILL;
+		gridData.verticalSpan = verSpan;
 		sctBasic.setLayoutData(gridData);
 		//
 		Composite composite = toolkit.createComposite(sctBasic, SWT.NULL);
@@ -153,9 +158,13 @@ public abstract class AbstractEditorFormPage extends FormPage {
 
 	protected Composite createHintSectionBase(FormToolkit toolkit, ScrolledForm form,
 			int verSpan) {
+		return createHintSectionBase(toolkit, form, IMessageConstants.HINT_TITLE, verSpan);
+	}
+	protected Composite createHintSectionBase(FormToolkit toolkit, ScrolledForm form,
+			String hintTitle, int verSpan) {
 		Section sctHint = toolkit.createSection(form.getBody(),
 		Section.TITLE_BAR | Section.EXPANDED | Section.TWISTIE);
-		sctHint.setText(IMessageConstants.HINT_TITLE);
+		sctHint.setText(hintTitle);
 		GridData gd = new GridData();
 		gd.horizontalAlignment = GridData.FILL;
 		gd.verticalAlignment = GridData.FILL;

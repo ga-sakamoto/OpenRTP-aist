@@ -6,6 +6,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -44,7 +45,10 @@ import org.openrtp.namespaces.rtc.version03.ServiceportDoc;
 import org.openrtp.namespaces.rtc.version03.ServiceportExt;
 import org.openrtp.namespaces.rtc.version03.TargetEnvironment;
 
+import jp.ac.meijo_u.iso22166_part202.util.IProfileConstants;
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
+import jp.go.aist.rtm.rtcbuilder.container.param.ContainerParam;
+import jp.go.aist.rtm.rtcbuilder.container.param.RepositoryParam;
 import jp.go.aist.rtm.rtcbuilder.fsm.EventParam;
 import jp.go.aist.rtm.rtcbuilder.manager.GenerateManager;
 import jp.go.aist.rtm.rtcbuilder.ui.preference.ComponentPreferenceManager;
@@ -274,28 +278,72 @@ public class ParamUtil {
 			if( language instanceof LanguageExt ) {
 				LanguageExt langExt = (LanguageExt)language;
 				for( TargetEnvironment target : langExt.getTargets()) {
-					TargetEnvParam env = new TargetEnvParam();
-					env.setLangVersion(target.getLangVersion());
-					env.setOs(target.getOs());
-					env.setOther(target.getOther());
-					env.setCpuOther(target.getCpuOther());
-					//
-					for( String osVersion : target.getOsVersions()) {
-						env.getOsVersions().add(osVersion);
+					String langVer = target.getLangVersion();
+					if(langVer.startsWith(IRtcBuilderConstants.CONTAINER_PREFIX)) {
+						//For Container
+						langVer = langVer.replace(IRtcBuilderConstants.CONTAINER_PREFIX, "");
+						ContainerParam param = new ContainerParam();
+						param.setMiddleware(target.getOs());
+						param.setMdlVersion(target.getCpuOther());
+						if(0 < target.getOsVersions().size()) {
+							param.setOsVersion(target.getOsVersions().get(0));
+						}
+						param.setWorkspace(target.getOther());
+						param.setLanguage(langVer);
+						if(0<target.getCpus().size()) {
+							param.setConfiguration(target.getCpus().get(0));
+						}
+						rtcParam.getContainerSettings().add(param);
+						
+						for( Library lib : target.getLibraries()) {
+							RepositoryParam rep = new RepositoryParam();
+							rep.setURL(lib.getName());
+							rep.setBranch(lib.getVersion());
+							param.getRepositories().add(rep);
+						}
+						
+						String strKey = IRtcBuilderConstants.CONTAINER_PREFIX + "lib_" + rtcParam.getContainerSettings().size();
+						List<Property> libs = langExt.getProperties().stream()
+								.filter(p -> p.getName().toLowerCase().equals(strKey))
+								.collect(Collectors.toList());
+						for(Property each : libs) {
+							jp.go.aist.rtm.rtcbuilder.container.param.LibraryParam lib = new jp.go.aist.rtm.rtcbuilder.container.param.LibraryParam();
+							lib.setName(each.getValue());
+							param.getLibraries().add(lib);
+						}
+						
+						String strKeyCat = IRtcBuilderConstants.CONTAINER_PREFIX + "category_" + rtcParam.getContainerSettings().size();
+						List<Property> presets = langExt.getProperties().stream()
+								.filter(p -> p.getName().toLowerCase().equals(strKeyCat))
+								.collect(Collectors.toList());
+						for(Property each : presets) {
+							param.getPreSets().add(each.getValue());
+						}
+						
+					} else {
+						TargetEnvParam env = new TargetEnvParam();
+						env.setLangVersion(target.getLangVersion());
+						env.setOs(target.getOs());
+						env.setOther(target.getOther());
+						env.setCpuOther(target.getCpuOther());
+						//
+						for( String osVersion : target.getOsVersions()) {
+							env.getOsVersions().add(osVersion);
+						}
+						//
+						for( String cpus : target.getCpus()) {
+							env.getCpus().add(cpus);
+						}
+						//
+						for( Library lib : target.getLibraries()) {
+							LibraryParam libParam = new LibraryParam();
+							libParam.setName(lib.getName());
+							libParam.setVersion(lib.getVersion());
+							libParam.setOther(lib.getOther());
+							env.getLibraries().add(libParam);
+						}
+						rtcParam.getTargetEnvs().add(env);
 					}
-					//
-					for( String cpus : target.getCpus()) {
-						env.getCpus().add(cpus);
-					}
-					//
-					for( Library lib : target.getLibraries()) {
-						LibraryParam libParam = new LibraryParam();
-						libParam.setName(lib.getName());
-						libParam.setVersion(lib.getVersion());
-						libParam.setOther(lib.getOther());
-						env.getLibraries().add(libParam);
-					}
-					rtcParam.getTargetEnvs().add(env);
 				}
 			}
 		}
@@ -595,6 +643,29 @@ public class ParamUtil {
 		}
 		convertToModuleConfiguration(target, factory, profile);
 		convertToModuleLanguage(managerList, target, factory, profile);
+		
+		for(ContainerParam param : target.getContainerSettings()) {
+			LanguageExt lang =  (LanguageExt)profile.getLanguage();
+//			lang.getTargets().clear();
+			
+			TargetEnvironment env = createTargetEnv(param);
+			lang.getTargets().add(env);
+			
+			String strKey = IRtcBuilderConstants.CONTAINER_PREFIX + "lib_" + lang.getTargets().size();
+			for(jp.go.aist.rtm.rtcbuilder.container.param.LibraryParam lib : param.getLibraries()) {
+				Property prop = factory.createProperty();
+				prop.setName(strKey);
+				prop.setValue(lib.getName());
+				lang.getProperties().add(prop);
+			}
+			String strKeyCat = IRtcBuilderConstants.CONTAINER_PREFIX + "category_" + lang.getTargets().size();
+			for(String each : param.getPreSets()) {
+				Property prop = factory.createProperty();
+				prop.setName(strKeyCat);
+				prop.setValue(each);
+				lang.getProperties().add(prop);
+			}
+		}
 
 		deleteInapplicableItem(profile, managerList);
 
@@ -898,6 +969,27 @@ public class ParamUtil {
 		status.setImplementedbln(rtcParam.getActionImplemented(actionId));
 		//
 		return status;
+	}
+	
+	private TargetEnvironment createTargetEnv(ContainerParam param) {
+		ObjectFactory factory = new ObjectFactory();
+		TargetEnvironment env = factory.createTargetEnvironment();
+		
+		env.setOs(param.getMiddleware());
+		env.setCpuOther(param.getMdlVersion());
+		env.getOsVersions().add(param.getOsVersion());
+		env.setOther(param.getWorkspace());
+		env.setLangVersion(IProfileConstants.CONTAINER_PREFIX + param.getLanguage());
+		env.getCpus().add(param.getConfiguration());
+		
+		for(RepositoryParam rep : param.getRepositories()) {
+			Library lib = factory.createLibrary();
+			lib.setName(rep.getURL());
+			lib.setVersion(rep.getBranch());
+			env.getLibraries().add(lib);
+		}
+		
+		return env;
 	}
 
 	private void deleteInapplicableItem(RtcProfile profile, List<GenerateManager> managerList){

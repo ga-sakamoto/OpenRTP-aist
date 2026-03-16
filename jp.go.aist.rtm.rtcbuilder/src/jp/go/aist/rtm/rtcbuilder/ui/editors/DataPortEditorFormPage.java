@@ -130,11 +130,12 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 				Messages.getString("IMC.DATAPORT_TITLE"), Messages.getString("IMC.DATAPORT_EXPL"), 4);
 		inportTableViewer = createPortSection(toolkit, composite,
 				IMessageConstants.REQUIRED + Messages.getString("IMC.DATAPORT_TBLLBL_INPORTNAME"), 0, true);
-		createHintSection(toolkit, form);
 		outportTableViewer = createPortSection(toolkit, composite,
 				IMessageConstants.REQUIRED + Messages.getString("IMC.DATAPORT_TBLLBL_OUTPORTNAME"), 1, false);
+		createHintSection(toolkit, form);
 
 		createDetailSection(toolkit, form);
+		createHintROSSection(toolkit, form);
 		//
 		// 言語・環境ページより先にこのページが表示された場合、ここで言語を判断する
 		editor.setEnabledInfoByLang();
@@ -143,7 +144,7 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 	}
 
 	private void createHintSection(FormToolkit toolkit, ScrolledForm form) {
-		Composite composite = createHintSectionBase(toolkit, form, 3);
+		Composite composite = createHintSectionBase(toolkit, form, 2);
 		//
 		createHintLabel(Messages.getString("IMC.DATAPORT_HINT_DATAPORT_TITLE"), IMessageConstants.DATAPORT_HINT_DATAPORT_DESC, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.DATAPORT_HINT_INPORT_TITLE"), IMessageConstants.DATAPORT_HINT_INPORT_DESC, toolkit, composite);
@@ -164,10 +165,19 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 		createHintLabel(Messages.getString("IMC.DATAPORT_LBL_OPERAT"), IMessageConstants.DATAPORT_HINT_OPERAT_DESC, toolkit, composite);
 	}
 
-	private void createDetailSection(FormToolkit toolkit, ScrolledForm form) {
+	private void createHintROSSection(FormToolkit toolkit, ScrolledForm form) {
+		Composite composite = createHintSectionBase(toolkit, form, Messages.getString("IMC.HINT_ROS_TITLE"), 1);
+		//
+		createHintLabel(Messages.getString("IMC.DATAPORT_HINT_DATAPORT_TITLE"), IMessageConstants.DATAPORT_HINT_ROS_DATAPORT_DESC, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.DATAPORT_HINT_INPORT_TITLE"), IMessageConstants.DATAPORT_HINT_ROS_INPORT_DESC, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.DATAPORT_HINT_OUTPORT_TITLE"), IMessageConstants.DATAPORT_HINT_ROS_OUTPORT_DESC, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.DATAPORT_HINT_PORTNAME_TITLE"), IMessageConstants.DATAPORT_HINT_ROS_PORTNAME_DESC, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.DATAPORT_HINT_DATATYPE_TITLE"), IMessageConstants.DATAPORT_HINT_ROS_DATATYPE_DESC, toolkit, composite);
+	}
 
+	private void createDetailSection(FormToolkit toolkit, ScrolledForm form) {
 		Composite composite = createSectionBaseWithLabel(toolkit, form,
-				"Detail", IMessageConstants.DATAPORT_DOCUMENT_EXPL, 2);
+				"Detail", IMessageConstants.DATAPORT_DOCUMENT_EXPL, 2, 2);
 		//
 		portNameText = createLabelAndRefText(toolkit, composite,
 				Messages.getString("IMC.DATAPORT_LBL_PORTNAME"), SWT.BORDER, 1);

@@ -92,10 +92,15 @@ public class TemplateUtil {
 		result
 				.setProperty("class.resource.loader.class",
 						"org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+		
+		ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
 		try {
+			Thread.currentThread().setContextClassLoader(VelocityEngine.class.getClassLoader());
 			result.init();
 		} catch (Exception e) {
 			throw new RuntimeException(e); // system error
+		} finally {
+			Thread.currentThread().setContextClassLoader(oldLoader);
 		}
 
 		return result;
