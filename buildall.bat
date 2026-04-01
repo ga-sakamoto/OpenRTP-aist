@@ -15,8 +15,7 @@ set TARGETS=^
 	jp.go.aist.rtm.toolscommon.profiles.nl1 ^
 	jp.go.aist.rtm.toolscommon ^
 	jp.go.aist.rtm.toolscommon.nl1 ^
-   org.iso.iso22166.part202.profile ^
-   org.iso.iso22166.part202.profile.nl1 ^
+    org.iso.iso22166.part202.profile ^
 	jp.go.aist.rtm.rtcbuilder ^
 	jp.go.aist.rtm.rtcbuilder.nl1 ^
 	jp.go.aist.rtm.rtcbuilder.java ^
