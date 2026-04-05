@@ -23,7 +23,6 @@
 	<property name="idl.RTC" value="${idl.path}/RTC10.idl" />
 	<property name="idl.Manager" value="${idl.path}/Manager.idl" />
 	<property name="idl.ComponentObserver" value="${idl.path}/ComponentObserver.idl" />
-	<property name="idl.Logger" value="${idl.path}/Logger.idl" />
 	
 
 	<taskdef uri="antlib:net.sf.antcontrib"
@@ -70,9 +69,6 @@
 		</exec>
 		<exec executable="${java.home}\..\bin\idlj" >
 			<arg line="-fall -td ${source} -i ${idl.path} -emitAll ${idl.ComponentObserver}" />
-		</exec>
-		<exec executable="${java.home}\..\bin\idlj">
-			<arg line="-fall -td ${source} -i ${idl.path} -emitAll ${idl.Logger}"/>
 		</exec>
 	</target>
 
