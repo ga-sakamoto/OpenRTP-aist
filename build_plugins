@@ -76,6 +76,7 @@ PROJECTS="jp.go.aist.rtm.toolscommon.profiles
     jp.go.aist.rtm.toolscommon.profiles.nl1
     jp.go.aist.rtm.toolscommon
     jp.go.aist.rtm.toolscommon.nl1
+    org.iso.iso22166.part202.profile
     jp.go.aist.rtm.rtcbuilder
     jp.go.aist.rtm.rtcbuilder.nl1
     jp.go.aist.rtm.rtcbuilder.java
@@ -87,8 +88,7 @@ PROJECTS="jp.go.aist.rtm.toolscommon.profiles
     jp.go.aist.rtm.nameserviceview
     jp.go.aist.rtm.nameserviceview.nl1
     jp.go.aist.rtm.systemeditor
-    jp.go.aist.rtm.systemeditor.nl1
-    org.iso.iso22166.part202.profile"
+    jp.go.aist.rtm.systemeditor.nl1"
 
 # Eclipse search directories
 ECLIPSE_DIRS="$HOME/eclipse ../ ../../ ../../ $HOME /usr/lib/ /usr/share"
@@ -275,6 +275,8 @@ do_ant()
             echo "Copying created jar file into $DISTDIR..."
             cp jar/*aist*.jar ../$DISTDIR
             cp jar/*aist*.jar ../$JARDIR
+            cp jar/org.iso*.jar ../$DISTDIR
+            cp jar/org.iso*.jar ../$JARDIR
             cd ..
         else
             echo "Project: $project does not exist"

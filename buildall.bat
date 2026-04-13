@@ -15,6 +15,7 @@ set TARGETS=^
 	jp.go.aist.rtm.toolscommon.profiles.nl1 ^
 	jp.go.aist.rtm.toolscommon ^
 	jp.go.aist.rtm.toolscommon.nl1 ^
+    org.iso.iso22166.part202.profile ^
 	jp.go.aist.rtm.rtcbuilder ^
 	jp.go.aist.rtm.rtcbuilder.nl1 ^
 	jp.go.aist.rtm.rtcbuilder.java ^
@@ -26,9 +27,8 @@ set TARGETS=^
 	jp.go.aist.rtm.nameserviceview ^
 	jp.go.aist.rtm.nameserviceview.nl1 ^
 	jp.go.aist.rtm.systemeditor ^
-	jp.go.aist.rtm.systemeditor.nl1 ^
-    org.iso.iso22166.part202.profile
-
+	jp.go.aist.rtm.systemeditor.nl1
+ 
 @if exist %JARDIR% (
     rd /S /Q %JARDIR%
 )
