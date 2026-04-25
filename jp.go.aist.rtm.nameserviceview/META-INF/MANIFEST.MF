@@ -5,7 +5,9 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: jp.go.aist.rtm.nameserviceview; singleton:=true
 Bundle-Version: 2.0.0
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ lib/jakarta.transaction-api-2.0.1.jar,
+ lib/openjdk-orb-10.1.1.Final.jar
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: jp.go.aist.rtm.nameserviceview,jp.go.aist.rtm.nameserv
