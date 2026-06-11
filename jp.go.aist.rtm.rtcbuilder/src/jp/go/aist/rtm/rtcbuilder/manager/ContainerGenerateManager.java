@@ -68,6 +68,7 @@ public class ContainerGenerateManager extends GenerateManager {
 		List<GeneratedResult> result = new ArrayList<GeneratedResult>();
 		
 		for(ContainerParam param : rtcParam.getContainerSettings()) {
+			param.prepareLibraries(rtcParam.getContainerConfig());
 			contextMap.put("containerParam", param);
 			
 			StringBuilder builder = new StringBuilder();
@@ -95,11 +96,7 @@ public class ContainerGenerateManager extends GenerateManager {
 			if(param.getMiddleware().contains("ROS")) {
 				result.add(generateROSContainer(contextMap, builder.toString()));
 			} else {
-				if(param.getLanguage().contains("Python")) {
-					result.add(generateOpenRTMPythonContainer(contextMap, builder.toString()));
-				} else {
-					result.add(generateOpenRTMCppContainer(contextMap, builder.toString()));
-				}
+				result.add(generateOpenRTMContainer(contextMap, builder.toString()));
 			}
 		}
 
@@ -115,13 +112,8 @@ public class ContainerGenerateManager extends GenerateManager {
 		return generate(infile, outfile, contextMap);
 	}
 
-	public GeneratedResult generateOpenRTMPythonContainer(Map<String, Object> contextMap, String outfile) {
-		String infile = "container/OpenRTM_Python_Container.vsl";
-		return generate(infile, outfile, contextMap);
-	}
-
-	public GeneratedResult generateOpenRTMCppContainer(Map<String, Object> contextMap, String outfile) {
-		String infile = "container/OpenRTM_Cpp_Container.vsl";
+	public GeneratedResult generateOpenRTMContainer(Map<String, Object> contextMap, String outfile) {
+		String infile = "container/OpenRTM_Container.vsl";
 		return generate(infile, outfile, contextMap);
 	}
 

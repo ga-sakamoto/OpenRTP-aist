@@ -64,6 +64,8 @@ public abstract class AbstractEditorFormPage extends FormPage {
 	protected BuildView buildview;
 	protected Font titleFont;
 
+	protected static final int EXEC_BUTTON_WIDTH = 70;
+
 	/**
 	 * コンストラクタ
 	 *
@@ -202,6 +204,13 @@ public abstract class AbstractEditorFormPage extends FormPage {
 		gd.horizontalSpan = 2;
 		sep.setLayoutData(gd);
 	}
+	protected void createSpace(FormToolkit toolkit, Composite composite, int horizontalSpan) {
+		Label sep = toolkit.createLabel(composite, "");
+		GridData gd = new GridData();
+		gd.verticalAlignment = GridData.BEGINNING;
+		gd.horizontalSpan = horizontalSpan;
+		sep.setLayoutData(gd);
+	}
 
 	protected TableViewer createTableViewer(FormToolkit toolkit, Composite composite) {
 		return createTableViewer(toolkit, composite, 120);
@@ -232,12 +241,22 @@ public abstract class AbstractEditorFormPage extends FormPage {
 	}
 	protected Text createLabelAndText(FormToolkit toolkit, Composite composite,
 			String labelString, int style, int color) {
-		return createLabelAndText(toolkit, composite, labelString, style, color, 1);
+		return createLabelAndText(toolkit, composite, labelString, style, color, 0);
 	}
 	protected Text createLabelAndText(FormToolkit toolkit, Composite composite,
 			String labelString, int style, int color, int hspan) {
+		return createLabelAndText(toolkit, composite, labelString, style, color, hspan, 0);
+	}
+	protected Text createLabelAndText(FormToolkit toolkit, Composite composite,
+			String labelString, int style, int color, int hspan, int labelSpan) {
 		if( labelString!=null && labelString.length()>0 ) {
 			Label label = toolkit.createLabel(composite, labelString);
+			if(0<labelSpan) {
+				GridData lblData = new GridData();
+				lblData.horizontalSpan = labelSpan;
+				label.setLayoutData(lblData);
+			}
+
 			if(color>0 ) label.setForeground(getSite().getShell().getDisplay().getSystemColor(color));
 		}
 
@@ -360,6 +379,32 @@ public abstract class AbstractEditorFormPage extends FormPage {
 			public void keyReleased(KeyEvent e) { update(); }
 			public void keyPressed(KeyEvent e) { }
 		});
+		combo.addSelectionListener(new SelectionListener() {
+			  public void widgetDefaultSelected(SelectionEvent e){}
+			  public void widgetSelected(SelectionEvent e){ update(); }
+			});
+		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
+		gridData.horizontalSpan = hspan;
+		combo.setLayoutData(gridData);
+
+		return combo;
+	}
+
+	protected Combo createCombo(FormToolkit toolkit, Composite composite,
+			String labelString, String[] defaultValue) {
+		return createCombo(toolkit, composite, labelString, defaultValue,
+							SWT.COLOR_BLACK, 1);
+	}
+	protected Combo createCombo(FormToolkit toolkit, Composite composite,
+			String labelString, String[] defaultValue, int color, int hspan) {
+		Label label = toolkit.createLabel(composite, labelString);
+		if(color>0) label.setForeground(getSite().getShell().getDisplay().getSystemColor(color));
+		Combo combo = new Combo(composite, SWT.READ_ONLY);
+		for(int index=0;index<defaultValue.length;index++) {
+			combo.add(defaultValue[index]);
+		}
+
+		combo.select(0);
 		combo.addSelectionListener(new SelectionListener() {
 			  public void widgetDefaultSelected(SelectionEvent e){}
 			  public void widgetSelected(SelectionEvent e){ update(); }

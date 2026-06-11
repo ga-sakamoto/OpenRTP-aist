@@ -1,0 +1,575 @@
+package jp.go.aist.rtm.rtcbuilder.ros.ui.editors;
+
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.ScrollBar;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.forms.IManagedForm;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
+
+import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
+import jp.go.aist.rtm.rtcbuilder.generator.param.DataPortParam;
+import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
+import jp.go.aist.rtm.rtcbuilder.nl.Messages;
+import jp.go.aist.rtm.rtcbuilder.ros.param.ROSParam;
+import jp.go.aist.rtm.rtcbuilder.ros.param.ServiceParam;
+import jp.go.aist.rtm.rtcbuilder.ui.editors.AbstractEditorFormPage;
+import jp.go.aist.rtm.rtcbuilder.ui.editors.IMessageConstants;
+import jp.go.aist.rtm.rtcbuilder.util.StringUtil;
+import jp.go.aist.rtm.rtcbuilder.util.ValidationUtil;
+
+/**
+ * Serviceページ
+ */
+public class ServiceEditorFormPage extends AbstractEditorFormPage {
+
+	private TableViewer serverTableViewer;
+	private Button serverAddButton;
+	private Button serverDeleteButton;
+	//
+	private TableViewer clientTableViewer;
+	private Button clientAddButton;
+	private Button clientDeleteButton;
+	//
+	private Text serviceNameText;
+	private Combo serviceTypeCombo;
+	private Text variableNameText;
+	
+	private Text descriptionText;
+	private Text argumentText;
+	private Text returnText;
+	//
+	private ServiceParam preSelection;
+	private ServiceParam selectParam;
+	//
+//	private String defaultPortName;
+//	private String defaultPortType;
+//	private String defaultPortVarName;
+//	private String[] defaultTypeList;
+//	
+//	private List<DataParam> typeList = new ArrayList<DataParam>();
+//	private List<DataParam> currentList = new ArrayList<DataParam>();
+
+	public void setDefaultTypeList(String[] defaultTypeList) {
+//		this.defaultTypeList = defaultTypeList;	
+	}
+	/**
+	 * コンストラクタ
+	 *
+	 * @param editor
+	 *            親のエディタ
+	 */
+	public ServiceEditorFormPage(ROSBuilderEditor editor) {
+		super(editor, "id", Messages.getString("IMC.ROS_SERVICE_SECTION"));
+		//
+		preSelection = null;
+		
+//		IPreferenceStore store = RtcBuilderPlugin.getDefault().getPreferenceStore();
+//		defaultPortName = ComponentPreferenceManager.getInstance().getDataPort_Name();
+//		defaultPortType = store.getString(ComponentPreferenceManager.Generate_DataPort_Type);
+//		defaultPortVarName = store.getString(ComponentPreferenceManager.Generate_DataPort_VarName);
+	}
+
+	public void updateDefaultValue() {
+//		IPreferenceStore store = RtcBuilderPlugin.getDefault().getPreferenceStore();
+//		defaultPortName = ComponentPreferenceManager.getInstance().getDataPort_Name();
+//		defaultPortType = store.getString(ComponentPreferenceManager.Generate_DataPort_Type);
+//		defaultPortVarName = store.getString(ComponentPreferenceManager.Generate_DataPort_VarName);
+//		//
+//		defaultTypeList = super.extractDataTypes();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	protected void createFormContent(IManagedForm managedForm) {
+		ScrolledForm form = super.createBase(managedForm, Messages.getString("IMC.ROS_SERVICE_SECTION"));
+		FormToolkit toolkit = managedForm.getToolkit();
+		//
+		final Composite composite = createSectionBaseWithLabel(toolkit, form,
+				Messages.getString("IMC.ROS_SERVICE_TITLE"), Messages.getString("IMC.ROS_SERVICE_EXPL"), 4);
+		serverTableViewer = createPortSection(toolkit, composite,
+				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_SERVICE_TBLLBL_SERVER"), 0, true);
+		clientTableViewer = createPortSection(toolkit, composite,
+				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_SERVICE_TBLLBL_CLENT"), 1, false);
+		createHintSection(toolkit, form);
+
+		createDetailSection(toolkit, form);
+		//
+		// 言語・環境ページより先にこのページが表示された場合、ここで言語を判断する
+		editor.setEnabledInfoByLang();
+
+		load();
+	}
+
+	private void createHintSection(FormToolkit toolkit, ScrolledForm form) {
+		Composite composite = createHintSectionBase(toolkit, form, 2);
+		//
+		createHintLabel(Messages.getString("IMC.ROS_SERVICE_HINT_SERVICE_TITLE"), IMessageConstantsROS.SERVICE_HINT_SERVICE_EXPL, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_SERVICE_HINT_SERVER_TITLE"), Messages.getString("IMC.ROS_SERVICE_HINT_SERVER_DESC"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_SERVICE_HINT_CLIENT_TITLE"), Messages.getString("IMC.ROS_SERVICE_HINT_CLIENT_DESC"), toolkit, composite);
+		createHintSpace(toolkit, composite);
+		createHintSpace(toolkit, composite);
+		createHintSpace(toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_SERVICE_LBL_SERVICENAME"), Messages.getString("IMC.ROS_SERVICE_HINT_SERVICE_NAME_DESC"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_SERVICE_LBL_SERVICETYPE"), Messages.getString("IMC.ROS_SERVICE_HINT_SERVICE_TYPE_DESC"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_TOPIC_LBL_VARNAME"), "", toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_SERVICE_HINT_VARNAME_SERVER_TITLE"), Messages.getString("IMC.ROS_SERVICE_HINT_VARNAME_SERVER_DESC"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_SERVICE_HINT_VARNAME_CLIENT_TITLE"), IMessageConstantsROS.SERVICE_HINT_VAR_CLIENT_EXPL, toolkit, composite);
+		//
+		createHintSpace(toolkit, composite);
+		createHintSpace(toolkit, composite);
+		createHintLabel(Messages.getString("IMC.HINT_DOCUMENT_TITLE"), "", toolkit, composite);
+		createHintLabel(Messages.getString("IMC.DATAPORT_LBL_DESCRIPTION"), Messages.getString("IMC.ROS_TOPIC_HINT_DOC_OVERVIEW"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_SERVICE_LBL_ARGUMENT"), IMessageConstantsROS.SERVICE_HINT_ARGUMENT_EXPL, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_SERVICE_LBL_RETURN"), IMessageConstantsROS.SERVICE_HINT_RETURN_EXPL, toolkit, composite);
+	}
+
+	private void createDetailSection(FormToolkit toolkit, ScrolledForm form) {
+		Composite composite = createSectionBaseWithLabel(toolkit, form,
+				"Detail", IMessageConstantsROS.SERVICE_DOCUMENT_EXPL, 2, 2);
+		//
+		serviceNameText = createLabelAndRefText(toolkit, composite,
+				Messages.getString("IMC.ROS_SERVICE_LBL_SERVICENAME"), SWT.BORDER, 1);
+		//
+		Group detailGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
+		detailGroup.setLayout(new GridLayout(4, false));
+		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = 2;
+		detailGroup.setLayoutData(gd);
+		//
+		Label label = toolkit.createLabel(detailGroup, IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_SERVICE_LBL_SERVICETYPE"));
+		label.setForeground(getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_RED));
+		serviceTypeCombo = new Combo(detailGroup, SWT.DROP_DOWN);
+		/////
+//		List<DataTypeParam> dataTypes = editor.getGeneratorParam().getDataTypeParams();
+//		typeList.clear();
+//		for(DataTypeParam each : dataTypes) {
+//			for(String eachType : each.getDefinedTypes()) {
+//				typeList.add(new DataParam(eachType, each.getDispPath()));
+//			}
+//		}
+//		Collections.sort(typeList, new DataParamComparator());
+//		currentList.clear();
+//		currentList.addAll(typeList);
+//		for(DataParam item : currentList) {
+//			serviceTypeCombo.add(item.typeName);
+//		}
+		/////
+		serviceTypeCombo.setText("");
+		serviceTypeCombo.addKeyListener(new KeyListener() {
+			public void keyReleased(KeyEvent e) {
+//				String target = serviceTypeCombo.getText();
+//				String[] keyList = target.split(" ");
+//				currentList.clear();
+//				for (DataParam each : typeList) {
+//					boolean isHit = true;
+//					for(String itemKey: keyList) {
+//					  if (each.typeName.contains(itemKey)==false) {
+//						  isHit = false;
+//						  break;
+//					  }
+//					}
+//					if (isHit) {
+//						currentList.add(each);
+//					}
+//				}
+//				Collections.sort(currentList, new DataParamComparator());
+//				serviceTypeCombo.removeAll();
+//				for(DataParam item : currentList) {
+//					serviceTypeCombo.add(item.typeName);
+//				}
+//				serviceTypeCombo.setText(target);
+//				serviceTypeCombo.setSelection(new Point(serviceTypeCombo.getText().length(), serviceTypeCombo.getText().length()) );
+			}
+			public void keyPressed(KeyEvent e) { }
+		});
+		GridData gdcombo = new GridData(GridData.FILL_HORIZONTAL);
+		gdcombo.horizontalSpan = 2;
+		serviceTypeCombo.setLayoutData(gdcombo);
+
+		Button selectButton = toolkit.createButton(detailGroup, "Select", SWT.PUSH);
+		selectButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+//				defaultTypeList = extractDataTypes();
+//				/////
+//				List<DataTypeParam> dataTypes = editor.getGeneratorParam().getDataTypeParams();
+//				typeList.clear();
+//				serviceTypeCombo.removeAll();
+//				for(DataTypeParam each : dataTypes) {
+//					for(String eachType : each.getDefinedTypes()) {
+//						typeList.add(new DataParam(eachType, each.getDispPath()));
+//					}
+//				}
+//				Collections.sort(typeList, new DataParamComparator());
+//				currentList.clear();
+//				currentList.addAll(typeList);
+//				for(DataParam item : currentList) {
+//					serviceTypeCombo.add(item.typeName);
+//				}
+			}
+		});
+		/////
+		variableNameText = createLabelAndText(toolkit, detailGroup,
+				Messages.getString("IMC.ROS_TOPIC_LBL_VARNAME"), SWT.NONE, SWT.COLOR_BLACK, 2, 2);
+
+		/////
+		Group documentGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
+		documentGroup.setLayout(new GridLayout(2, false));
+		documentGroup.setText("Documentation");
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		gd.horizontalSpan = 2;
+		documentGroup.setLayoutData(gd);
+		//
+		descriptionText = createLabelAndText(toolkit, documentGroup,
+				Messages.getString("IMC.DATAPORT_LBL_DESCRIPTION"), SWT.MULTI | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
+		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
+		gridData.heightHint = 50;
+		descriptionText.setLayoutData(gridData);
+		argumentText = createLabelAndText(toolkit, documentGroup,
+				Messages.getString("IMC.ROS_SERVICE_LBL_ARGUMENT"), SWT.BORDER);
+		returnText = createLabelAndText(toolkit, documentGroup,
+				Messages.getString("IMC.ROS_SERVICE_LBL_RETURN"), SWT.MULTI | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
+		returnText.setLayoutData(gridData);
+	}
+
+	private TableViewer createPortSection(FormToolkit toolkit, Composite parent,
+			String columnLabel, final int initSel, boolean isInPort) {
+
+		final TableViewer portParamTableViewer = createTableViewer(toolkit,	parent, 70);
+
+		final TableViewerColumn col = super.createColumn(portParamTableViewer, columnLabel, IRtcBuilderConstants.SINGLE_COLUMN_WIDTH);
+		col.setEditingSupport(new ServiceEditingSuport(portParamTableViewer));
+//		col.getColumn().setResizable(false);
+		portParamTableViewer.setLabelProvider(new ServiceParamLabelProvider());
+		//
+		parent.addControlListener(new ControlAdapter() {
+			public void controlResized(ControlEvent e) {
+				Point size = portParamTableViewer.getControl().getSize();
+				ScrollBar vBar = portParamTableViewer.getTable().getVerticalBar();
+				col.getColumn().setWidth(size.x- vBar.getSize().x*2);
+			}
+		});
+		//
+		Composite buttonComposite = toolkit.createComposite(parent, SWT.NONE);
+		GridLayout gl = new GridLayout();
+		gl.marginWidth = 1;
+		buttonComposite.setLayout(gl);
+		GridData gd = new GridData();
+		gd.verticalAlignment = SWT.BEGINNING;
+		gd.widthHint = 50;
+		buttonComposite.setLayoutData(gd);
+
+		Button addButton = toolkit.createButton(buttonComposite, "Add", SWT.PUSH);
+		addButton.addSelectionListener(new SelectionAdapter() {
+			@SuppressWarnings("unchecked")
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String selected = serviceTypeCombo.getText();
+				updateDefaultValue();
+				ServiceParam selectParam = new ServiceParam();
+				selectParam.setName("new_service");
+				((List) portParamTableViewer.getInput()).add(selectParam);
+				portParamTableViewer.refresh();
+				update();
+				portParamTableViewer.setSelection(new StructuredSelection(selectParam), true);
+				serviceTypeCombo.setText(selected);
+			}
+		});
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		addButton.setLayoutData(gd);
+		//
+		Button deleteButton = toolkit.createButton(buttonComposite, "Delete", SWT.PUSH);
+		deleteButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				int selectionIndex = portParamTableViewer.getTable()
+						.getSelectionIndex();
+				if (selectionIndex >= 0
+						&& ((List) portParamTableViewer.getInput()).size() >= selectionIndex + 1) {
+					((List) portParamTableViewer.getInput())
+							.remove(selectionIndex);
+					portParamTableViewer.refresh();
+					preSelection = null;
+					clearText();
+					update();
+				}
+			}
+		});
+		gd = new GridData(GridData.FILL_HORIZONTAL);
+		deleteButton.setLayoutData(gd);
+		//
+		portParamTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				setDocumentContents();
+				StructuredSelection selection = (StructuredSelection)event.getSelection();
+				selectParam = (ServiceParam)selection.getFirstElement();
+				if( selectParam != null ) {
+					StringBuffer portName = new StringBuffer(selectParam.getName());
+					if(event.getSource().equals(serverTableViewer)) {
+						portName.append(" (InPort)");
+					} else {
+						portName.append(" (OutPort)");
+					}
+					serviceNameText.setText(portName.toString());
+					serviceTypeCombo.setText(selectParam.getType());
+					variableNameText.setText(selectParam.getVarCallbackName());
+					descriptionText.setText(StringUtil.getDisplayDocText(selectParam.getDocDescription()));
+					argumentText.setText(StringUtil.getDisplayDocText(selectParam.getDocArgument()));
+					returnText.setText(StringUtil.getDisplayDocText(selectParam.getDocReturn()));
+					preSelection = selectParam;
+				}
+			}
+		});
+
+		if( isInPort ) {
+			serverAddButton = addButton;
+			serverDeleteButton = deleteButton;
+		} else {
+			clientAddButton = addButton;
+			clientDeleteButton = deleteButton;
+		}
+
+		return portParamTableViewer;
+	}
+
+	public void update() {
+		if (selectParam != null) {
+			selectParam.setType(serviceTypeCombo.getText());
+			selectParam.setVar_callback_name(variableNameText.getText());
+			
+			selectParam.setDocDescription(StringUtil.getDocText(descriptionText.getText()));
+			selectParam.setDocArgument(StringUtil.getDocText(argumentText.getText()));
+			selectParam.setDocReturn(StringUtil.getDocText(returnText.getText()));
+		}
+		//
+		ROSParam rosParam = ((ROSBuilderEditor)editor).getROSParam();
+		((ROSBuilderEditor)editor).updateEMFPorts(
+				rosParam.getTopicSubscribes(), rosParam.getTopicPublishes(),
+				rosParam.getServiceServers(), rosParam.getServiceClients(),
+				rosParam.getActionServers(), rosParam.getActionClients());
+		((ROSBuilderEditor)editor).updateDirty();
+	}
+
+	public void updateForOutput() {
+		update();
+		setDocumentContents();
+	}
+
+	private void setDocumentContents() {
+		if( preSelection != null ) {
+			preSelection.setType(serviceTypeCombo.getText());
+			//
+			preSelection.setDocDescription(StringUtil.getDocText(descriptionText.getText()));
+			preSelection.setDocArgument(StringUtil.getDocText(argumentText.getText()));
+			preSelection.setDocReturn(StringUtil.getDocText(returnText.getText()));
+		}
+	}
+
+	private void clearText() {
+		serviceNameText.setText("");
+		serviceTypeCombo.select(0);
+		variableNameText.setText("");
+		descriptionText.setText("");
+		argumentText.setText("");
+		returnText.setText("");
+	}
+
+	/**
+	 * データをロードする
+	 */
+	public void load() {
+		if (serverTableViewer == null) return;
+		
+		ROSParam rosParam = ((ROSBuilderEditor)editor).getROSParam();
+		clientTableViewer.setInput(rosParam.getServiceClients());
+		serverTableViewer.setInput(rosParam.getServiceServers());
+		//Mac版では列の幅が最小化してしまうため，再度列幅を設定
+		clientTableViewer.getTable().getColumn(0).setWidth(IRtcBuilderConstants.SINGLE_COLUMN_WIDTH);
+		serverTableViewer.getTable().getColumn(0).setWidth(IRtcBuilderConstants.SINGLE_COLUMN_WIDTH);
+		//
+		StructuredSelection selection = (StructuredSelection) clientTableViewer
+				.getSelection();
+		ServiceParam outParam = (ServiceParam) selection.getFirstElement();
+		selection = (StructuredSelection) serverTableViewer.getSelection();
+		ServiceParam inParam = (ServiceParam) selection.getFirstElement();
+		if (outParam == null && inParam == null) clearText();
+		//
+		((ROSBuilderEditor)editor).updateEMFPorts(
+				rosParam.getTopicSubscribes(), rosParam.getTopicPublishes(),
+				rosParam.getServiceServers(), rosParam.getServiceClients(),
+				rosParam.getActionServers(), rosParam.getActionClients());
+	}
+
+	public String validateParam() {
+		String result = null;
+
+		RtcParam rtcParam = editor.getRtcParam();
+		Set<String> checkSet = new HashSet<String>();
+		Set<String> checkVarSet = new HashSet<String>();
+
+		for(DataPortParam dataport : rtcParam.getInports()) {
+			result = checkDataPort(dataport, checkSet, checkVarSet);
+			if( result != null) return result;
+		}
+		//
+		for(DataPortParam dataport : rtcParam.getOutports()) {
+			result = checkDataPort(dataport, checkSet, checkVarSet);
+			if( result != null) return result;
+		}
+
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	private String checkDataPort(DataPortParam dataport, Set checkSet, Set checkVarSet) {
+		String result = ValidationUtil.validateDataPort(dataport);
+		if( result!=null ) return result;
+		//名称重複
+		if( checkSet.contains(dataport.getName()) ) {
+			return IMessageConstants.DATAPORT_VALIDATE_DUPLICATE;
+		}
+		checkSet.add(dataport.getName());
+		//変数名重複
+		if( checkVarSet.contains(dataport.getTmplVarName()) ) {
+			return IMessageConstants.DATAPORT_VALIDATE_VAR_DUPLICATE;
+		}
+		checkVarSet.add(dataport.getTmplVarName());
+		//型存在チェック
+//		if(Arrays.asList(defaultTypeList).contains(dataport.getType().trim())==false) {
+//			return IMessageConstants.DATAPORT_VALIDATE_PORTTYPE_INVALID;
+//		}
+		return null;
+	}
+
+	private class ServiceParamLabelProvider extends LabelProvider implements ITableLabelProvider {
+		public Image getColumnImage(Object element, int columnIndex) {
+			return null;
+		}
+
+		public String getColumnText(Object element, int columnIndex) {
+			if (element instanceof ServiceParam == false) return null;
+			ServiceParam param = (ServiceParam) element;
+			return param.getName();
+		}
+	}
+
+	private class ServiceEditingSuport extends EditingSupport {
+		private CellEditor editor;
+
+		public ServiceEditingSuport(ColumnViewer viewer) {
+			super(viewer);
+			editor = new TextCellEditor(((TableViewer) viewer).getTable());
+		}
+
+		@Override
+		protected boolean canEdit(Object element) {
+			return true;
+		}
+
+		@Override
+		protected CellEditor getCellEditor(Object element) {
+			return editor;
+		}
+
+		@Override
+		protected Object getValue(Object element) {
+			if (element instanceof ServiceParam == false) return null;
+			ServiceParam param = (ServiceParam) element;
+			return param.getName();
+		}
+
+		@Override
+		protected void setValue(Object element, Object value) {
+			if (element instanceof ServiceParam == false) return;
+			ServiceParam param = (ServiceParam) element;
+
+			param.setName((String) value);
+			StringBuffer portName = new StringBuffer(param.getName());
+			if( this.getViewer()==serverTableViewer ) {
+				portName.append(" (Server)");
+			} else {
+				portName.append(" (Client)");
+			}
+			serviceNameText.setText(portName.toString());
+
+			getViewer().update(element, null);
+			update();
+		}
+	}
+
+	/**
+	 * DataPortフォーム内の要素の有効/無効を設定します。
+	 * <ul>
+	 * <li>dataport.inPort.table : InPortセクションのテーブル</li>
+	 * <li>dataport.inPort.addButton : InPortセクションの Addボタン</li>
+	 * <li>dataport.inPort.deleteButton : InPortセクションの Deleteボタン</li>
+	 * <li>dataport.outPort.table : OutPortセクションのテーブル</li>
+	 * <li>dataport.outPort.addButton : OutPortセクションの Addボタン</li>
+	 * <li>dataport.outPort.deleteButton : OutPortセクションの Deleteボタン</li>
+	 * </ul>
+	 */
+	public void setEnabledInfo(WidgetInfo widgetInfo, boolean enabled) {
+		if (widgetInfo.matchSection("inPort")) {
+			if (serverTableViewer != null) {
+				if (widgetInfo.matchWidget("table"))        setViewerEnabled(serverTableViewer, enabled);
+				if (widgetInfo.matchWidget("addButton"))    setButtonEnabled(serverAddButton, enabled);
+				if (widgetInfo.matchWidget("deleteButton")) setButtonEnabled(serverDeleteButton, enabled);
+			}
+		}
+		if (widgetInfo.matchSection("outPort")) {
+			if (clientTableViewer != null) {
+				if (widgetInfo.matchWidget("table"))        setViewerEnabled(clientTableViewer, enabled);
+				if (widgetInfo.matchWidget("addButton"))    setButtonEnabled(clientAddButton, enabled);
+				if (widgetInfo.matchWidget("deleteButton")) setButtonEnabled(clientDeleteButton, enabled);
+			}
+		}
+	}
+	
+	private class DataParam {
+		private String typeName;
+		private String idlPath;
+		
+		public DataParam(String typeName, String idlPath) {
+			this.typeName = typeName;
+			this.idlPath = idlPath;
+		}
+	}
+	private class DataParamComparator implements Comparator<DataParam> {
+		@Override
+		public int compare(DataParam p1, DataParam p2) {
+			return p1.typeName.compareTo(p2.typeName);
+		}
+	}}

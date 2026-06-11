@@ -159,7 +159,6 @@ public class ParamUtil {
 	}
 
 	private static BasicInfoExt initBasicInfo(String creationDate, ObjectFactory factory) {
-
 		BasicInfoExt basic = factory.createBasicInfoExt();
 		basic.setName(ComponentPreferenceManager.getInstance().getBasic_ComponentName());
 		basic.setDescription(ComponentPreferenceManager.getInstance().getBasic_Description());
@@ -184,7 +183,7 @@ public class ParamUtil {
 		return basic;
 	}
 
-	protected  static boolean checkNotNull(String target) {
+	protected static boolean checkNotNull(String target) {
 		if( target==null) return false;
 		if( target.equals("") ) return false;
 		return true;
@@ -405,7 +404,7 @@ public class ParamUtil {
 		}
 	}
 
-	private boolean isCxx(String target) {
+	protected boolean isCxx(String target) {
 		if( target.toUpperCase().equals(IRtcBuilderConstants.LANG_CPPWIN) ||
 				target.equals(IRtcBuilderConstants.LANG_CPP) )
 			return true;
@@ -609,6 +608,7 @@ public class ParamUtil {
 		rtcParam.getEventports().addAll(EventPortList);
 	}
 
+	//////////
 	public RtcProfile convertToModule(GeneratorParam generatorParam,
 										List<GenerateManager> managerList) throws Exception {
 		RtcParam rtcParam = generatorParam.getRtcParam();

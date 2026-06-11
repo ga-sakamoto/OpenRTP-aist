@@ -135,7 +135,6 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 		createHintSection(toolkit, form);
 
 		createDetailSection(toolkit, form);
-		createHintROSSection(toolkit, form);
 		//
 		// 言語・環境ページより先にこのページが表示された場合、ここで言語を判断する
 		editor.setEnabledInfoByLang();
@@ -163,16 +162,6 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 		createHintLabel(Messages.getString("IMC.DATAPORT_LBL_UNIT"), Messages.getString("IMC.DATAPORT_HINT_DOC_UNIT"), toolkit, composite);
 		createHintLabel(Messages.getString("IMC.DATAPORT_LBL_OCCUR"), IMessageConstants.DATAPORT_HINT_OCCUR_DESC, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.DATAPORT_LBL_OPERAT"), IMessageConstants.DATAPORT_HINT_OPERAT_DESC, toolkit, composite);
-	}
-
-	private void createHintROSSection(FormToolkit toolkit, ScrolledForm form) {
-		Composite composite = createHintSectionBase(toolkit, form, Messages.getString("IMC.HINT_ROS_TITLE"), 1);
-		//
-		createHintLabel(Messages.getString("IMC.DATAPORT_HINT_DATAPORT_TITLE"), IMessageConstants.DATAPORT_HINT_ROS_DATAPORT_DESC, toolkit, composite);
-		createHintLabel(Messages.getString("IMC.DATAPORT_HINT_INPORT_TITLE"), IMessageConstants.DATAPORT_HINT_ROS_INPORT_DESC, toolkit, composite);
-		createHintLabel(Messages.getString("IMC.DATAPORT_HINT_OUTPORT_TITLE"), IMessageConstants.DATAPORT_HINT_ROS_OUTPORT_DESC, toolkit, composite);
-		createHintLabel(Messages.getString("IMC.DATAPORT_HINT_PORTNAME_TITLE"), IMessageConstants.DATAPORT_HINT_ROS_PORTNAME_DESC, toolkit, composite);
-		createHintLabel(Messages.getString("IMC.DATAPORT_HINT_DATATYPE_TITLE"), IMessageConstants.DATAPORT_HINT_ROS_DATATYPE_DESC, toolkit, composite);
 	}
 
 	private void createDetailSection(FormToolkit toolkit, ScrolledForm form) {
