@@ -2,6 +2,7 @@ package jp.go.aist.rtm.rtcbuilder.container.param.setting;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class LibraryMapping {

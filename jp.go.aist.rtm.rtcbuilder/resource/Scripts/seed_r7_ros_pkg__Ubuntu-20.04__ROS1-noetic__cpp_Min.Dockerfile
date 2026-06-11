@@ -9,8 +9,8 @@ FROM docker.io/library/ros:noetic-ros-base
 ARG TARGETARCH
 LABEL org.opencontainers.image.architecture="${TARGETARCH:-amd64}"
 # Metadata
-LABEL org.opencontainers.image.authors="Darby Lim, Hye-Jong KIM, Ryan Shim, Yong-Ho Na"
-LABEL org.opencontainers.image.description="既存のMikataArmパッケージで見つかったMoveIt!との統合問題を解決したROS対応OpenManipulatorであり、実機環境とシミュレーション環境の両方でシームレスな操作を可能にするオープンロボットプラットフォームです。"
+LABEL org.opencontainers.image.authors="hi.kondo, Yasuto Shiigi"
+LABEL org.opencontainers.image.description="SEED-R7ロボットをROS環境で制御・運用するためのメタパッケージです。ロボットのモデル記述、Gazeboシミュレーション、MoveIt!動作計画、ROSナビゲーション、そして実機制御のためのインターフェースとコントローラーなど、複数のサブパッケージから構成されています。"
 
 
 # 3. Environment Variables
@@ -24,9 +24,9 @@ RUN apt-get update && apt-get install -y \
     cmake \
     git \
     libboost-all-dev \
-    libeigen3-dev \
     libgl1-mesa-dri \
     libgl1-mesa-glx \
+    libudev-dev \
     mesa-utils \
     python3-catkin-tools \
     python3-pip \
@@ -34,23 +34,69 @@ RUN apt-get update && apt-get install -y \
     python3-rosinstall \
     python3-rosinstall-generator \
     python3-wstool \
-    ros-noetic-actionlib \
-    ros-noetic-cmake-modules \
-    ros-noetic-dynamixel-workbench-toolbox \
+    ros-noetic-amcl \
+    ros-noetic-angles \
+    ros-noetic-control-msgs \
+    ros-noetic-control-toolbox \
+    ros-noetic-controller-manager \
+    ros-noetic-dwa-local-planner \
+    ros-noetic-gazebo-plugins \
+    ros-noetic-gazebo-ros \
     ros-noetic-gazebo-ros-control \
     ros-noetic-gazebo-ros-pkgs \
+    ros-noetic-geometry-msgs \
+    ros-noetic-global-planner \
+    ros-noetic-gmapping \
+    ros-noetic-hardware-interface \
+    ros-noetic-joint-limits-interface \
+    ros-noetic-joint-state-controller \
+    ros-noetic-joint-state-publisher \
     ros-noetic-joint-state-publisher-gui \
-    ros-noetic-moveit \
+    ros-noetic-joint-trajectory-controller \
+    ros-noetic-joy \
+    ros-noetic-map-server \
+    ros-noetic-message-generation \
+    ros-noetic-move-base \
+    ros-noetic-move-base-msgs \
+    ros-noetic-moveit-commander \
     ros-noetic-moveit-core \
+    ros-noetic-moveit-fake-controller-manager \
+    ros-noetic-moveit-kinematics \
+    ros-noetic-moveit-planners-ompl \
     ros-noetic-moveit-ros-planning \
     ros-noetic-moveit-ros-planning-interface \
+    ros-noetic-moveit-ros-visualization \
+    ros-noetic-moveit-setup-assistant \
+    ros-noetic-moveit-simple-controller-manager \
+    ros-noetic-nav-msgs \
+    ros-noetic-pluginlib \
+    ros-noetic-realtime-tools \
     ros-noetic-robot-state-publisher \
-    ros-noetic-robotis-manipulator \
+    ros-noetic-ros-control \
+    ros-noetic-ros-controllers \
+    ros-noetic-roscpp \
+    ros-noetic-rospy \
+    ros-noetic-rqt-common-plugins \
+    ros-noetic-rqt-gui \
     ros-noetic-rviz \
-    ros-noetic-urdf \
+    ros-noetic-rviz-plugin-tutorials \
+    ros-noetic-sensor-msgs \
+    ros-noetic-smach-ros \
+    ros-noetic-smach-viewer \
+    ros-noetic-std-msgs \
+    ros-noetic-teb-local-planner \
+    ros-noetic-teleop-twist-joy \
+    ros-noetic-tf \
+    ros-noetic-tf2-ros \
+    ros-noetic-trajectory-msgs \
+    ros-noetic-transmission-interface \
+    ros-noetic-urg-node \
     ros-noetic-xacro \
     x11-apps \
     && rm -rf /var/lib/apt/lists/*
+
+# 5. Install Python Dependencies
+RUN pip3 install --no-cache-dir pyserial
 
 # 6. Create Non-root User
 ARG USERNAME=container_user
@@ -77,11 +123,8 @@ RUN sudo mkdir -p /workspace/catkin_ws/src \
 WORKDIR /workspace/catkin_ws/src
 
 # 8. Clone and Build Source Code
-RUN git clone -b noetic https://github.com/ROBOTIS-GIT/DynamixelSDK.git
-RUN git clone -b noetic https://github.com/ROBOTIS-GIT/dynamixel-workbench.git
-RUN git clone -b noetic https://github.com/ROBOTIS-GIT/dynamixel-workbench-msgs.git
-RUN git clone -b main https://github.com/rsdlab/MikataArm.git
-RUN git clone -b main https://github.com/ROBOTIS-GIT/robotis_manipulator.git
+RUN git clone -b master https://github.com/seed-solutions/seed_smartactuator_sdk.git
+RUN git clone -b master https://github.com/seed-solutions/seed_r7_ros_pkg.git
 
 WORKDIR /workspace/catkin_ws
 RUN rosdep init || true && rosdep update && sudo apt-get update && rosdep install -r -y -i --from-paths src

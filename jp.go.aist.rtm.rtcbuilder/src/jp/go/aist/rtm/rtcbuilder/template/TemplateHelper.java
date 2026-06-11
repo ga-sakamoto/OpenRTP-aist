@@ -30,11 +30,14 @@ import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_UNIT_PREFIX;
 import static jp.go.aist.rtm.rtcbuilder.util.StringUtil.splitString;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
 import jp.go.aist.rtm.rtcbuilder.container.param.ContainerParam;
+import jp.go.aist.rtm.rtcbuilder.container.param.LibraryParam;
+import jp.go.aist.rtm.rtcbuilder.container.param.setting.ConditionalRule;
 import jp.go.aist.rtm.rtcbuilder.container.param.setting.ContainerConfig;
 import jp.go.aist.rtm.rtcbuilder.container.param.setting.InstallDefinition;
 import jp.go.aist.rtm.rtcbuilder.container.param.setting.LibraryMapping;
@@ -565,13 +568,51 @@ public class TemplateHelper {
 		return result;
 	}
 	
+	public List<String> getLibs(ContainerConfig containerConfig, ContainerParam param) {
+		List<String> result = new ArrayList<String>();
+		MappingDb mdb = containerConfig.mappingDb;
+		
+		result.addAll(mdb.defaultLibs.common);
+		
+		String middleware = param.getMiddleware().replace(" ", "").toLowerCase();
+		result.addAll(mdb.defaultLibs.byMiddleware.get(middleware));
+		
+		for(LibraryParam libParam : param.getLibraries()) {
+			String libName = getContainerLibName(containerConfig, param, libParam.getName());
+			if(libName.contains(" ")) {
+				String[] libNames = libName.split(" ");
+				for(String eachLib : libNames) {
+					if(result.contains(eachLib) == false) {
+						result.add(eachLib);	
+					}
+				}
+			} else {
+				if(result.contains(libName) == false) {
+					result.add(libName);	
+				}
+			}
+			for(ConditionalRule each : mdb.defaultLibs.conditional) {
+				if(each.triggers.contains(libParam.getName())) {
+					for(String lib : each.libs) {
+						if(result.contains(lib) == false) {
+							result.add(lib);	
+						}
+					}
+				}
+			}
+		}
+		result.sort(null);
+		return result;
+	}
+	
 	public String getContainerLibName(ContainerConfig containerConfig, ContainerParam param, String source) {
-		MappingDb mdb = containerConfig.getMapping_db();
-		Map<String, LibraryMapping> libDb = mdb.getLibraries();
+		MappingDb mdb = containerConfig.mappingDb;
+		Map<String, LibraryMapping> libDb = mdb.libraries;
 		
 		String strKey = "";
 		if(param.getLanguage().toLowerCase().equals("python")) {
-			strKey = "pip";
+//			strKey = "pip";
+			strKey = "apt";
 		} else {
 			strKey = "apt";
 		}
@@ -582,7 +623,7 @@ public class TemplateHelper {
 			
 			InstallDefinition def = getDefinition(detailMap, param);
 			if(def != null) {
-				String targtValue = def.getInstallInfo().get(strKey);
+				String targtValue = (String)def.getInstallInfo().get(strKey);
 				if(targtValue != null) {
 					if(targtValue.contains("${ROS_DISTRO}")) {
 						String middleware = param.getMdlVersion().toLowerCase();
@@ -631,6 +672,15 @@ public class TemplateHelper {
 		if(middleware.equals("ros1")) {
 			return 1;
 		} else if(middleware.equals("ros2")) {
+			return 2;
+		}
+		return 0;
+	}
+	
+	public int convLanguage(String source) {
+		if(source.toLowerCase().equals("c++")) {
+			return 1;
+		} else if(source.toLowerCase().equals("python")) {
 			return 2;
 		}
 		return 0;
@@ -686,5 +736,30 @@ public class TemplateHelper {
 			return "v3.1.5";
 		}
 		return "main";
+	}
+	
+	public String getRepositoryName(String source) {
+		String result = "";
+		
+		int lastSlashIdx = source.lastIndexOf("/");
+        int gitIdx = source.lastIndexOf(".git");
+        
+        if (lastSlashIdx != -1 && gitIdx != -1) {
+        	result = source.substring(lastSlashIdx + 1, gitIdx);
+        }		
+        
+        return result;
+	}
+	
+	public String getOSVersionName(String source) {
+		String result = "";
+		
+		int openBracket = source.indexOf("(");
+        int closeBracket = source.indexOf(")");
+        
+        if (openBracket != -1 && closeBracket != -1) {
+        	result = source.substring(openBracket + 1, closeBracket).toLowerCase();
+        }
+        return result;
 	}
 }

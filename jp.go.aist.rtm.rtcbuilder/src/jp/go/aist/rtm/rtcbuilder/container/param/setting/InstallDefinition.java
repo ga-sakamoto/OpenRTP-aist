@@ -5,18 +5,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class InstallDefinition {
-    private Map<String, String> installInfo = new HashMap<>();
+    private Map<String, Object> installInfo = new HashMap<>();
 
     @JsonAnySetter
-    public void addInstallInfo(String key, String value) {
+    public void addInstallInfo(String key, Object value) {
         installInfo.put(key, value);
     }
 
-    public Map<String, String> getInstallInfo() {
+    public Map<String, Object> getInstallInfo() {
         return installInfo;
     }
 
-    public void setInstallInfo(Map<String, String> installInfo) {
+    public void setInstallInfo(Map<String, Object> installInfo) {
         this.installInfo = installInfo;
     }
 }

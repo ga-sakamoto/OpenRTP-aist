@@ -3,13 +3,14 @@
 # ==============================================================================
 
 # 1. Base Image
-FROM docker.io/library/ubuntu:20.04
+FROM docker.io/library/ubuntu:18.04
 
 # 2. Multi-Architecture and Metadata
 ARG TARGETARCH
 LABEL org.opencontainers.image.architecture="${TARGETARCH:-amd64}"
 # Metadata
-LABEL org.opencontainers.image.description="Test container for pymycobot without OpenRTM source build"
+LABEL org.opencontainers.image.authors="rsdlab"
+LABEL org.opencontainers.image.description="CraneplusRTC"
 
 
 # 3. Environment Variables
@@ -21,7 +22,7 @@ RUN apt-get update && apt-get install -y sudo && rm -rf /var/lib/apt/lists/*
 RUN apt-get update && apt-get install -y gnupg2 \
     && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 4BCE106E087AFAC0 \
     && rm -f /etc/apt/sources.list.d/openrtm.list \
-    && echo "deb http://openrtm.org/pub/Linux/ubuntu focal main" > /etc/apt/sources.list.d/openrtm.list
+    && echo "deb http://openrtm.org/pub/Linux/ubuntu bionic main" > /etc/apt/sources.list.d/openrtm.list
 RUN apt-get update \
     && apt-get install -y --allow-unauthenticated \
     build-essential \
@@ -29,18 +30,20 @@ RUN apt-get update \
     doxygen \
     git \
     libboost-all-dev \
+    libomniorb4-dev \
+    libopencv-dev \
+    libudev-dev \
     omniidl \
     omniorb-nameserver \
     openrtm-aist \
     openrtm-aist-dev \
-    python-is-python3 \
+    pkg-config \
     python3-dev \
     python3-omniorb \
     python3-pip \
+    uuid-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-
-RUN pip3 install --upgrade pip && pip3 install "setuptools<60.0.0" wheel
 
 # 6. Create Non-root User
 ARG USERNAME=container_user
@@ -63,10 +66,12 @@ WORKDIR /workspace/workspace
 
 # 8. Clone and Build Source Code
 
-RUN git clone -b main https://github.com/elephantrobotics/pymycobot.git \
-    && cd pymycobot \
-    && if [ -f requirements.txt ]; then sudo pip3 install -r requirements.txt || echo "Warning: pip install -r requirements.txt failed. Skipping..."; fi \
-    && if [ -f setup.py ]; then sudo python3 setup.py install; fi
+RUN git clone -b main https://github.com/masahiro0720/CRANEplusRTC_ver2.git \
+    && cd CRANEplusRTC_ver2 \
+    && git submodule update --init --recursive \
+    && mkdir -p build && cd build \
+    && cmake .. -DBUILD_DOCUMENTATION=OFF -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+    && make -j2
 
 # 9. Setup Entrypoint
 RUN echo '#!/bin/bash' > /workspace/entrypoint.sh && \

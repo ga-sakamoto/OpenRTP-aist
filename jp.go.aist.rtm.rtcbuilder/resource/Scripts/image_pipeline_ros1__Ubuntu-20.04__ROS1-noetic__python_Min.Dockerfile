@@ -9,8 +9,8 @@ FROM docker.io/library/ros:noetic-ros-base
 ARG TARGETARCH
 LABEL org.opencontainers.image.architecture="${TARGETARCH:-amd64}"
 # Metadata
-LABEL org.opencontainers.image.authors="Darby Lim, Hye-Jong KIM, Ryan Shim, Yong-Ho Na"
-LABEL org.opencontainers.image.description="既存のMikataArmパッケージで見つかったMoveIt!との統合問題を解決したROS対応OpenManipulatorであり、実機環境とシミュレーション環境の両方でシームレスな操作を可能にするオープンロボットプラットフォームです。"
+LABEL org.opencontainers.image.authors="Open Robotics"
+LABEL org.opencontainers.image.description="ROS 1 image_pipeline package. Includes camera_calibration (Python) and image_proc (C++)."
 
 
 # 3. Environment Variables
@@ -24,33 +24,33 @@ RUN apt-get update && apt-get install -y \
     cmake \
     git \
     libboost-all-dev \
-    libeigen3-dev \
     libgl1-mesa-dri \
     libgl1-mesa-glx \
     mesa-utils \
     python3-catkin-tools \
+    python3-opencv \
     python3-pip \
     python3-rosdep \
     python3-rosinstall \
     python3-rosinstall-generator \
     python3-wstool \
-    ros-noetic-actionlib \
-    ros-noetic-cmake-modules \
-    ros-noetic-dynamixel-workbench-toolbox \
-    ros-noetic-gazebo-ros-control \
-    ros-noetic-gazebo-ros-pkgs \
-    ros-noetic-joint-state-publisher-gui \
-    ros-noetic-moveit \
-    ros-noetic-moveit-core \
-    ros-noetic-moveit-ros-planning \
-    ros-noetic-moveit-ros-planning-interface \
-    ros-noetic-robot-state-publisher \
-    ros-noetic-robotis-manipulator \
-    ros-noetic-rviz \
-    ros-noetic-urdf \
-    ros-noetic-xacro \
+    ros-noetic-camera-calibration-parsers \
+    ros-noetic-camera-info-manager \
+    ros-noetic-cv-bridge \
+    ros-noetic-eigen-conversions \
+    ros-noetic-image-geometry \
+    ros-noetic-image-transport \
+    ros-noetic-rospy \
+    ros-noetic-sensor-msgs \
+    ros-noetic-std-msgs \
+    ros-noetic-tf2 \
+    ros-noetic-tf2-geometry-msgs \
+    ros-noetic-tf2-ros \
     x11-apps \
     && rm -rf /var/lib/apt/lists/*
+
+# 5. Install Python Dependencies
+RUN pip3 install --no-cache-dir imutils
 
 # 6. Create Non-root User
 ARG USERNAME=container_user
@@ -77,11 +77,7 @@ RUN sudo mkdir -p /workspace/catkin_ws/src \
 WORKDIR /workspace/catkin_ws/src
 
 # 8. Clone and Build Source Code
-RUN git clone -b noetic https://github.com/ROBOTIS-GIT/DynamixelSDK.git
-RUN git clone -b noetic https://github.com/ROBOTIS-GIT/dynamixel-workbench.git
-RUN git clone -b noetic https://github.com/ROBOTIS-GIT/dynamixel-workbench-msgs.git
-RUN git clone -b main https://github.com/rsdlab/MikataArm.git
-RUN git clone -b main https://github.com/ROBOTIS-GIT/robotis_manipulator.git
+RUN git clone -b noetic https://github.com/ros-perception/image_pipeline.git
 
 WORKDIR /workspace/catkin_ws
 RUN rosdep init || true && rosdep update && sudo apt-get update && rosdep install -r -y -i --from-paths src

@@ -9,8 +9,8 @@ FROM docker.io/library/ros:noetic-ros-base
 ARG TARGETARCH
 LABEL org.opencontainers.image.architecture="${TARGETARCH:-amd64}"
 # Metadata
-LABEL org.opencontainers.image.authors="Darby Lim, Hye-Jong KIM, Ryan Shim, Yong-Ho Na"
-LABEL org.opencontainers.image.description="既存のMikataArmパッケージで見つかったMoveIt!との統合問題を解決したROS対応OpenManipulatorであり、実機環境とシミュレーション環境の両方でシームレスな操作を可能にするオープンロボットプラットフォームです。"
+LABEL org.opencontainers.image.authors="ROBOTIS"
+LABEL org.opencontainers.image.description="TurtleBot3 Simulations for ROS 1"
 
 
 # 3. Environment Variables
@@ -24,7 +24,6 @@ RUN apt-get update && apt-get install -y \
     cmake \
     git \
     libboost-all-dev \
-    libeigen3-dev \
     libgl1-mesa-dri \
     libgl1-mesa-glx \
     mesa-utils \
@@ -34,20 +33,15 @@ RUN apt-get update && apt-get install -y \
     python3-rosinstall \
     python3-rosinstall-generator \
     python3-wstool \
-    ros-noetic-actionlib \
-    ros-noetic-cmake-modules \
-    ros-noetic-dynamixel-workbench-toolbox \
-    ros-noetic-gazebo-ros-control \
-    ros-noetic-gazebo-ros-pkgs \
-    ros-noetic-joint-state-publisher-gui \
-    ros-noetic-moveit \
-    ros-noetic-moveit-core \
-    ros-noetic-moveit-ros-planning \
-    ros-noetic-moveit-ros-planning-interface \
-    ros-noetic-robot-state-publisher \
-    ros-noetic-robotis-manipulator \
+    ros-noetic-gazebo-plugins \
+    ros-noetic-gazebo-ros \
+    ros-noetic-rospy \
     ros-noetic-rviz \
-    ros-noetic-urdf \
+    ros-noetic-tf \
+    ros-noetic-turtlebot3-bringup \
+    ros-noetic-turtlebot3-description \
+    ros-noetic-turtlebot3-msgs \
+    ros-noetic-turtlebot3-teleop \
     ros-noetic-xacro \
     x11-apps \
     && rm -rf /var/lib/apt/lists/*
@@ -77,11 +71,7 @@ RUN sudo mkdir -p /workspace/catkin_ws/src \
 WORKDIR /workspace/catkin_ws/src
 
 # 8. Clone and Build Source Code
-RUN git clone -b noetic https://github.com/ROBOTIS-GIT/DynamixelSDK.git
-RUN git clone -b noetic https://github.com/ROBOTIS-GIT/dynamixel-workbench.git
-RUN git clone -b noetic https://github.com/ROBOTIS-GIT/dynamixel-workbench-msgs.git
-RUN git clone -b main https://github.com/rsdlab/MikataArm.git
-RUN git clone -b main https://github.com/ROBOTIS-GIT/robotis_manipulator.git
+RUN git clone -b noetic https://github.com/ROBOTIS-GIT/turtlebot3_simulations.git
 
 WORKDIR /workspace/catkin_ws
 RUN rosdep init || true && rosdep update && sudo apt-get update && rosdep install -r -y -i --from-paths src
