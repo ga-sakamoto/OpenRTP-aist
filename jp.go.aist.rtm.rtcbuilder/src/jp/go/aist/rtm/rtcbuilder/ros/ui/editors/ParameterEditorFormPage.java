@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
@@ -37,7 +36,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
-import jp.go.aist.rtm.rtcbuilder.RtcBuilderPlugin;
 import jp.go.aist.rtm.rtcbuilder.generator.param.ConfigSetParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
 import jp.go.aist.rtm.rtcbuilder.nl.Messages;
@@ -45,7 +43,6 @@ import jp.go.aist.rtm.rtcbuilder.ros.param.ParameterParam;
 import jp.go.aist.rtm.rtcbuilder.ros.param.ROSParam;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.AbstractEditorFormPage;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.IMessageConstants;
-import jp.go.aist.rtm.rtcbuilder.ui.preference.ComponentPreferenceManager;
 import jp.go.aist.rtm.rtcbuilder.util.StringUtil;
 import jp.go.aist.rtm.rtcbuilder.util.ValidationUtil;
 
@@ -388,25 +385,37 @@ public class ParameterEditorFormPage extends AbstractEditorFormPage {
 	public String validateParam() {
 		String result = null;
 
-		RtcParam rtcParam = editor.getRtcParam();
+		ROSParam rosParam = ((ROSBuilderEditor)editor).getROSParam();
 		Set<String> checkSet = new HashSet<String>();
 		Set<String> checkVarSet = new HashSet<String>();
 
-		for(ConfigSetParam config : rtcParam.getConfigParams()) {
-			result = ValidationUtil.validateConfigurationSet(config);
-			if( result!=null ) return result;
+		for(ParameterParam param : rosParam.getParameters()) {
+			if( param.getName()==null || param.getName().length()==0 ) {
+				return Messages.getString("IMC.VALIDATE_PARAMETER_NAME1");
+			}
+//			if( !StringUtil.checkDigitAlphabet(config.getName()) ) {
+//				result = IMessageConstants.CONFIGURATION_VALIDATE_NAME2;
+//				return result;
+//			}
+			
+			if( param.getType()==null || param.getType().length()==0 ) {
+				return Messages.getString("IMC.VALIDATE_PARAMETER_TYPE");
+			}
+			if( param.getDefaultValue()==null || param.getDefaultValue().length()==0 ) {
+				return Messages.getString("IMC.VALIDATE_PARAMETER_DEFVALUE");
+			}
+
 			//重複
-			if( checkSet.contains(config.getName()) ) {
-				result = IMessageConstants.CONFIGURATION_VALIDATE_DUPLICATE;
-				return result;
+			if( checkSet.contains(param.getName()) ) {
+				return Messages.getString("IMC.VALIDATE_PARAMETER_DUPLICATE");
 			}
-			checkSet.add(config.getName());
+			checkSet.add(param.getName());
 			//変数重複
-			if( checkVarSet.contains(config.getTmplVarName()) ) {
-				result = IMessageConstants.CONFIGURATION_VALIDATE_VAR_DUPLICATE;
-				return result;
-			}
-			checkVarSet.add(config.getTmplVarName());
+//			if( checkVarSet.contains(config.getTmplVarName()) ) {
+//				result = IMessageConstants.CONFIGURATION_VALIDATE_VAR_DUPLICATE;
+//				return result;
+//			}
+//			checkVarSet.add(config.getTmplVarName());
 		}
 		return null;
 	}
@@ -465,33 +474,5 @@ public class ParameterEditorFormPage extends AbstractEditorFormPage {
 			getViewer().update(element, null);
 			update();
 		}
-	}
-
-	/**
-	 * Configurationフォーム内の要素の有効/無効を設定します。
-	 * <ul>
-	 * <li>config.configSet.table : ConfigurationSetセクションのテーブル</li>
-	 * <li>config.configSet.addButton : ConfigurationSetセクションの Addボタン</li>
-	 * <li>config.configSet.deleteButton : ConfigurationSetセクションの Deleteボタン</li>
-	 * <li>config.configParam.table : ConfigurationParameterセクションのテーブル</li>
-	 * <li>config.configParam.addButton : ConfigurationParameterセクションの Addボタン</li>
-	 * <li>config.configParam.deleteButton : ConfigurationParameterセクションの
-	 * Deleteボタン</li>
-	 * </ul>
-	 */
-	public void setEnabledInfo(WidgetInfo widgetInfo, boolean enabled) {
-//		if (widgetInfo.matchSection("configSet")) {
-//			if (parmeterTableViewer != null) {
-//				if (widgetInfo.matchWidget("table")) {
-//					setViewerEnabled(parmeterTableViewer, enabled);
-//				}
-//				if (widgetInfo.matchWidget("addButton")) {
-//					setButtonEnabled(addButton, enabled);
-//				}
-//				if (widgetInfo.matchWidget("deleteButton")) {
-//					setButtonEnabled(deleteButton, enabled);
-//				}
-//			}
-//		}
 	}
 }

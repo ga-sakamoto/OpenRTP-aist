@@ -444,17 +444,17 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 	public String validateParam() {
 		String result = null;
 
-		RtcParam rtcParam = editor.getRtcParam();
+		ROSParam rosParam = ((ROSBuilderEditor)editor).getROSParam();
 		Set<String> checkSet = new HashSet<String>();
 		Set<String> checkVarSet = new HashSet<String>();
 
-		for(DataPortParam dataport : rtcParam.getInports()) {
-			result = checkDataPort(dataport, checkSet, checkVarSet);
+		for(ActionParam action : rosParam.getActionServers()) {
+			result = checkAction(action, checkSet, checkVarSet);
 			if( result != null) return result;
 		}
 		//
-		for(DataPortParam dataport : rtcParam.getOutports()) {
-			result = checkDataPort(dataport, checkSet, checkVarSet);
+		for(ActionParam action : rosParam.getActionClients()) {
+			result = checkAction(action, checkSet, checkVarSet);
 			if( result != null) return result;
 		}
 
@@ -462,19 +462,27 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 	}
 
 	@SuppressWarnings("unchecked")
-	private String checkDataPort(DataPortParam dataport, Set checkSet, Set checkVarSet) {
-		String result = ValidationUtil.validateDataPort(dataport);
-		if( result!=null ) return result;
+	private String checkAction(ActionParam action, Set checkSet, Set checkVarSet) {
+		if( action.getName()==null || action.getName().length()==0 ) {
+			return Messages.getString("IMC.VALIDATE_ACTION_NAME");
+		}
+//		if( !StringUtil.checkDigitAlphabet(topic.getName()) ) {
+//			return IMessageConstants.DATAPORT_VALIDATE_PORTNAME2;
+//		}
+		//
+		if( action.getType()==null || action.getType().length()==0 ) {
+			return Messages.getString("IMC.VALIDATE_ACTION_TYPE");
+		}
 		//名称重複
-		if( checkSet.contains(dataport.getName()) ) {
-			return IMessageConstants.DATAPORT_VALIDATE_DUPLICATE;
+		if( checkSet.contains(action.getName()) ) {
+			return Messages.getString("IMC.VALIDATE_ACTION_DUPLICATE");
 		}
-		checkSet.add(dataport.getName());
+		checkSet.add(action.getName());
 		//変数名重複
-		if( checkVarSet.contains(dataport.getTmplVarName()) ) {
-			return IMessageConstants.DATAPORT_VALIDATE_VAR_DUPLICATE;
-		}
-		checkVarSet.add(dataport.getTmplVarName());
+//		if( checkVarSet.contains(dataport.getTmplVarName()) ) {
+//			return IMessageConstants.DATAPORT_VALIDATE_VAR_DUPLICATE;
+//		}
+//		checkVarSet.add(dataport.getTmplVarName());
 		//型存在チェック
 //		if(Arrays.asList(defaultTypeList).contains(dataport.getType().trim())==false) {
 //			return IMessageConstants.DATAPORT_VALIDATE_PORTTYPE_INVALID;
@@ -538,46 +546,19 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 		}
 	}
 
-	/**
-	 * DataPortフォーム内の要素の有効/無効を設定します。
-	 * <ul>
-	 * <li>dataport.inPort.table : InPortセクションのテーブル</li>
-	 * <li>dataport.inPort.addButton : InPortセクションの Addボタン</li>
-	 * <li>dataport.inPort.deleteButton : InPortセクションの Deleteボタン</li>
-	 * <li>dataport.outPort.table : OutPortセクションのテーブル</li>
-	 * <li>dataport.outPort.addButton : OutPortセクションの Addボタン</li>
-	 * <li>dataport.outPort.deleteButton : OutPortセクションの Deleteボタン</li>
-	 * </ul>
-	 */
-	public void setEnabledInfo(WidgetInfo widgetInfo, boolean enabled) {
-		if (widgetInfo.matchSection("inPort")) {
-			if (serverTableViewer != null) {
-				if (widgetInfo.matchWidget("table"))        setViewerEnabled(serverTableViewer, enabled);
-				if (widgetInfo.matchWidget("addButton"))    setButtonEnabled(serverAddButton, enabled);
-				if (widgetInfo.matchWidget("deleteButton")) setButtonEnabled(serverDeleteButton, enabled);
-			}
-		}
-		if (widgetInfo.matchSection("outPort")) {
-			if (clientTableViewer != null) {
-				if (widgetInfo.matchWidget("table"))        setViewerEnabled(clientTableViewer, enabled);
-				if (widgetInfo.matchWidget("addButton"))    setButtonEnabled(clientAddButton, enabled);
-				if (widgetInfo.matchWidget("deleteButton")) setButtonEnabled(clientDeleteButton, enabled);
-			}
-		}
-	}
-	
-	private class DataParam {
-		private String typeName;
-		private String idlPath;
-		
-		public DataParam(String typeName, String idlPath) {
-			this.typeName = typeName;
-			this.idlPath = idlPath;
-		}
-	}
-	private class DataParamComparator implements Comparator<DataParam> {
-		@Override
-		public int compare(DataParam p1, DataParam p2) {
-			return p1.typeName.compareTo(p2.typeName);
-		}
-	}}
+//	private class DataParam {
+//		private String typeName;
+//		private String idlPath;
+//		
+//		public DataParam(String typeName, String idlPath) {
+//			this.typeName = typeName;
+//			this.idlPath = idlPath;
+//		}
+//	}
+//	private class DataParamComparator implements Comparator<DataParam> {
+//		@Override
+//		public int compare(DataParam p1, DataParam p2) {
+//			return p1.typeName.compareTo(p2.typeName);
+//		}
+//	}
+}

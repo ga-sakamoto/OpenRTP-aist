@@ -39,15 +39,12 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
-import jp.go.aist.rtm.rtcbuilder.generator.param.DataPortParam;
-import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
 import jp.go.aist.rtm.rtcbuilder.nl.Messages;
 import jp.go.aist.rtm.rtcbuilder.ros.param.ROSParam;
 import jp.go.aist.rtm.rtcbuilder.ros.param.ServiceParam;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.AbstractEditorFormPage;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.IMessageConstants;
 import jp.go.aist.rtm.rtcbuilder.util.StringUtil;
-import jp.go.aist.rtm.rtcbuilder.util.ValidationUtil;
 
 /**
  * Serviceページ
@@ -436,17 +433,17 @@ public class ServiceEditorFormPage extends AbstractEditorFormPage {
 	public String validateParam() {
 		String result = null;
 
-		RtcParam rtcParam = editor.getRtcParam();
+		ROSParam rosParam = ((ROSBuilderEditor)editor).getROSParam();
 		Set<String> checkSet = new HashSet<String>();
 		Set<String> checkVarSet = new HashSet<String>();
 
-		for(DataPortParam dataport : rtcParam.getInports()) {
-			result = checkDataPort(dataport, checkSet, checkVarSet);
+		for(ServiceParam service : rosParam.getServiceServers()) {
+			result = checkService(service, checkSet, checkVarSet);
 			if( result != null) return result;
 		}
 		//
-		for(DataPortParam dataport : rtcParam.getOutports()) {
-			result = checkDataPort(dataport, checkSet, checkVarSet);
+		for(ServiceParam service : rosParam.getServiceServers()) {
+			result = checkService(service, checkSet, checkVarSet);
 			if( result != null) return result;
 		}
 
@@ -454,19 +451,27 @@ public class ServiceEditorFormPage extends AbstractEditorFormPage {
 	}
 
 	@SuppressWarnings("unchecked")
-	private String checkDataPort(DataPortParam dataport, Set checkSet, Set checkVarSet) {
-		String result = ValidationUtil.validateDataPort(dataport);
-		if( result!=null ) return result;
+	private String checkService(ServiceParam service, Set checkSet, Set checkVarSet) {
+		if( service.getName()==null || service.getName().length()==0 ) {
+			return Messages.getString("IMC.VALIDATE_SERVICE_NAME1");
+		}
+//		if( !StringUtil.checkDigitAlphabet(topic.getName()) ) {
+//			return IMessageConstants.DATAPORT_VALIDATE_PORTNAME2;
+//		}
+		//
+		if( service.getType()==null || service.getType().length()==0 ) {
+			return Messages.getString("IMC.VALIDATE_SERVICE_TYPE");
+		}
 		//名称重複
-		if( checkSet.contains(dataport.getName()) ) {
-			return IMessageConstants.DATAPORT_VALIDATE_DUPLICATE;
+		if( checkSet.contains(service.getName()) ) {
+			return Messages.getString("IMC.VALIDATE_SERVICE_DUPLICATE");
 		}
-		checkSet.add(dataport.getName());
+		checkSet.add(service.getName());
 		//変数名重複
-		if( checkVarSet.contains(dataport.getTmplVarName()) ) {
-			return IMessageConstants.DATAPORT_VALIDATE_VAR_DUPLICATE;
-		}
-		checkVarSet.add(dataport.getTmplVarName());
+//		if( checkVarSet.contains(dataport.getTmplVarName()) ) {
+//			return IMessageConstants.DATAPORT_VALIDATE_VAR_DUPLICATE;
+//		}
+//		checkVarSet.add(dataport.getTmplVarName());
 		//型存在チェック
 //		if(Arrays.asList(defaultTypeList).contains(dataport.getType().trim())==false) {
 //			return IMessageConstants.DATAPORT_VALIDATE_PORTTYPE_INVALID;
@@ -530,46 +535,19 @@ public class ServiceEditorFormPage extends AbstractEditorFormPage {
 		}
 	}
 
-	/**
-	 * DataPortフォーム内の要素の有効/無効を設定します。
-	 * <ul>
-	 * <li>dataport.inPort.table : InPortセクションのテーブル</li>
-	 * <li>dataport.inPort.addButton : InPortセクションの Addボタン</li>
-	 * <li>dataport.inPort.deleteButton : InPortセクションの Deleteボタン</li>
-	 * <li>dataport.outPort.table : OutPortセクションのテーブル</li>
-	 * <li>dataport.outPort.addButton : OutPortセクションの Addボタン</li>
-	 * <li>dataport.outPort.deleteButton : OutPortセクションの Deleteボタン</li>
-	 * </ul>
-	 */
-	public void setEnabledInfo(WidgetInfo widgetInfo, boolean enabled) {
-		if (widgetInfo.matchSection("inPort")) {
-			if (serverTableViewer != null) {
-				if (widgetInfo.matchWidget("table"))        setViewerEnabled(serverTableViewer, enabled);
-				if (widgetInfo.matchWidget("addButton"))    setButtonEnabled(serverAddButton, enabled);
-				if (widgetInfo.matchWidget("deleteButton")) setButtonEnabled(serverDeleteButton, enabled);
-			}
-		}
-		if (widgetInfo.matchSection("outPort")) {
-			if (clientTableViewer != null) {
-				if (widgetInfo.matchWidget("table"))        setViewerEnabled(clientTableViewer, enabled);
-				if (widgetInfo.matchWidget("addButton"))    setButtonEnabled(clientAddButton, enabled);
-				if (widgetInfo.matchWidget("deleteButton")) setButtonEnabled(clientDeleteButton, enabled);
-			}
-		}
-	}
-	
-	private class DataParam {
-		private String typeName;
-		private String idlPath;
-		
-		public DataParam(String typeName, String idlPath) {
-			this.typeName = typeName;
-			this.idlPath = idlPath;
-		}
-	}
-	private class DataParamComparator implements Comparator<DataParam> {
-		@Override
-		public int compare(DataParam p1, DataParam p2) {
-			return p1.typeName.compareTo(p2.typeName);
-		}
-	}}
+//	private class DataParam {
+//		private String typeName;
+//		private String idlPath;
+//		
+//		public DataParam(String typeName, String idlPath) {
+//			this.typeName = typeName;
+//			this.idlPath = idlPath;
+//		}
+//	}
+//	private class DataParamComparator implements Comparator<DataParam> {
+//		@Override
+//		public int compare(DataParam p1, DataParam p2) {
+//			return p1.typeName.compareTo(p2.typeName);
+//		}
+//	}
+}

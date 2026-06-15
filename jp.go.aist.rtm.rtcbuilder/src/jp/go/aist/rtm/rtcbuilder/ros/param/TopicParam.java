@@ -62,26 +62,26 @@ public class TopicParam extends AbstractRecordedParam implements Serializable {
 		this.role = role;
 	}
 
-	public String getMessage_type() {
+	public String getMessageType() {
 		return message_type;
 	}
-	public void setMessage_type(String message_type) {
+	public void setMessageType(String message_type) {
 		checkUpdated(this.message_type, message_type);
 		this.message_type = message_type;
 	}
 
-	public String getReliability_type() {
+	public String getReliabilityType() {
 		return reliability_type;
 	}
-	public void setReliability_type(String reliability_type) {
+	public void setReliabilityType(String reliability_type) {
 		checkUpdated(this.reliability_type, reliability_type);
 		this.reliability_type = reliability_type;
 	}
 
-	public String getHistory_type() {
+	public String getHistoryType() {
 		return history_type;
 	}
-	public void setHistory_type(String history_type) {
+	public void setHistoryType(String history_type) {
 		checkUpdated(this.history_type, history_type);
 		this.history_type = history_type;
 	}

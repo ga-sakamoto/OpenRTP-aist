@@ -552,7 +552,7 @@ public abstract class AbstractEditorFormPage extends FormPage {
 
 	abstract public void load();
 
-	abstract protected String validateParam();
+	abstract public String validateParam();
 
 	@Override
 	public void setActive(boolean active) {

@@ -1,6 +1,5 @@
 package jp.go.aist.rtm.rtcbuilder.ros.ui.editors;
 
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -40,15 +39,12 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
-import jp.go.aist.rtm.rtcbuilder.generator.param.DataPortParam;
-import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
 import jp.go.aist.rtm.rtcbuilder.nl.Messages;
 import jp.go.aist.rtm.rtcbuilder.ros.param.ROSParam;
 import jp.go.aist.rtm.rtcbuilder.ros.param.TopicParam;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.AbstractEditorFormPage;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.IMessageConstants;
 import jp.go.aist.rtm.rtcbuilder.util.StringUtil;
-import jp.go.aist.rtm.rtcbuilder.util.ValidationUtil;
 
 /**
  * Topicページ
@@ -339,6 +335,9 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 				updateDefaultValue();
 				TopicParam selectParam = new TopicParam();
 				selectParam.setName("new_topic");
+				selectParam.setReliabilityType("Reliable");
+				selectParam.setHistoryType("KeepLast");
+				selectParam.setDepth(10);
 				((List) topicTableViewer.getInput()).add(selectParam);
 				topicTableViewer.refresh();
 				update();
@@ -382,9 +381,9 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 						portName.append(" (Publish)");
 					}
 					topicNameText.setText(portName.toString());
-					messageTypeCombo.setText(selectParam.getMessage_type());
-					reliabilityCombo.setText(selectParam.getReliability_type());
-					historyCombo.setText(selectParam.getHistory_type());
+					messageTypeCombo.setText(selectParam.getMessageType());
+					reliabilityCombo.setText(selectParam.getReliabilityType());
+					historyCombo.setText(selectParam.getHistoryType());
 					depthText.setText(selectParam.getDepth().toString());
 					depthText.setEnabled(historyCombo.getSelectionIndex() == 0);
 					variableNameText.setText(selectParam.getVar_callback_name());
@@ -412,10 +411,10 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 
 	public void update() {
 		if (selectParam != null) {
-			selectParam.setMessage_type(messageTypeCombo.getText());
+			selectParam.setMessageType(messageTypeCombo.getText());
 
-			selectParam.setReliability_type(reliabilityCombo.getText());
-			selectParam.setHistory_type(historyCombo.getText());
+			selectParam.setReliabilityType(reliabilityCombo.getText());
+			selectParam.setHistoryType(historyCombo.getText());
 			try {
 				int depth = 0;
 				depth = Integer.parseInt(depthText.getText());
@@ -447,10 +446,10 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 
 	private void setDocumentContents() {
 		if( preSelection != null ) {
-			preSelection.setMessage_type(messageTypeCombo.getText());
+			preSelection.setMessageType(messageTypeCombo.getText());
 			
-			preSelection.setReliability_type(reliabilityCombo.getText());
-			preSelection.setHistory_type(historyCombo.getText());
+			preSelection.setReliabilityType(reliabilityCombo.getText());
+			preSelection.setHistoryType(historyCombo.getText());
 			try {
 				int depth = 0;
 				depth = Integer.parseInt(depthText.getText());
@@ -511,17 +510,17 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 	public String validateParam() {
 		String result = null;
 
-		RtcParam rtcParam = editor.getRtcParam();
+		ROSParam rosParam = ((ROSBuilderEditor)editor).getROSParam();
 		Set<String> checkSet = new HashSet<String>();
 		Set<String> checkVarSet = new HashSet<String>();
 
-		for(DataPortParam dataport : rtcParam.getInports()) {
-			result = checkDataPort(dataport, checkSet, checkVarSet);
+		for(TopicParam topic : rosParam.getTopicSubscribes()) {
+			result = checkTopic(topic, checkSet, checkVarSet);
 			if( result != null) return result;
 		}
 		//
-		for(DataPortParam dataport : rtcParam.getOutports()) {
-			result = checkDataPort(dataport, checkSet, checkVarSet);
+		for(TopicParam topic : rosParam.getTopicPublishes()) {
+			result = checkTopic(topic, checkSet, checkVarSet);
 			if( result != null) return result;
 		}
 
@@ -529,19 +528,33 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 	}
 
 	@SuppressWarnings("unchecked")
-	private String checkDataPort(DataPortParam dataport, Set checkSet, Set checkVarSet) {
-		String result = ValidationUtil.validateDataPort(dataport);
-		if( result!=null ) return result;
+	private String checkTopic(TopicParam topic, Set checkSet, Set checkVarSet) {
+		if( topic.getName()==null || topic.getName().length()==0 ) {
+			return Messages.getString("IMC.VALIDATE_TOPIC_NAME");
+		}
+//		if( !StringUtil.checkDigitAlphabet(topic.getName()) ) {
+//			return IMessageConstants.DATAPORT_VALIDATE_PORTNAME2;
+//		}
+		//
+		if( topic.getMessageType()==null || topic.getMessageType().length()==0 ) {
+			return Messages.getString("IMC.VALIDATE_TOPIC_TYPE");
+		}
+		
+		if(topic.getHistoryType().equals("KeepLast")) {
+			if(topic.getDepth() < 1) {
+				return Messages.getString("IMC.VALIDATE_TOPIC_DEPTH");
+			}
+		}
 		//名称重複
-		if( checkSet.contains(dataport.getName()) ) {
-			return IMessageConstants.DATAPORT_VALIDATE_DUPLICATE;
+		if( checkSet.contains(topic.getName()) ) {
+			return Messages.getString("IMC.VALIDATE_TOPIC_DUPLICATE");
 		}
-		checkSet.add(dataport.getName());
+		checkSet.add(topic.getName());
 		//変数名重複
-		if( checkVarSet.contains(dataport.getTmplVarName()) ) {
-			return IMessageConstants.DATAPORT_VALIDATE_VAR_DUPLICATE;
-		}
-		checkVarSet.add(dataport.getTmplVarName());
+//		if( checkVarSet.contains(dataport.getTmplVarName()) ) {
+//			return IMessageConstants.DATAPORT_VALIDATE_VAR_DUPLICATE;
+//		}
+//		checkVarSet.add(dataport.getTmplVarName());
 		//型存在チェック
 //		if(Arrays.asList(defaultTypeList).contains(dataport.getType().trim())==false) {
 //			return IMessageConstants.DATAPORT_VALIDATE_PORTTYPE_INVALID;
@@ -605,46 +618,19 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 		}
 	}
 
-	/**
-	 * DataPortフォーム内の要素の有効/無効を設定します。
-	 * <ul>
-	 * <li>dataport.inPort.table : InPortセクションのテーブル</li>
-	 * <li>dataport.inPort.addButton : InPortセクションの Addボタン</li>
-	 * <li>dataport.inPort.deleteButton : InPortセクションの Deleteボタン</li>
-	 * <li>dataport.outPort.table : OutPortセクションのテーブル</li>
-	 * <li>dataport.outPort.addButton : OutPortセクションの Addボタン</li>
-	 * <li>dataport.outPort.deleteButton : OutPortセクションの Deleteボタン</li>
-	 * </ul>
-	 */
-	public void setEnabledInfo(WidgetInfo widgetInfo, boolean enabled) {
-		if (widgetInfo.matchSection("inPort")) {
-			if (subscribeTableViewer != null) {
-				if (widgetInfo.matchWidget("table"))        setViewerEnabled(subscribeTableViewer, enabled);
-				if (widgetInfo.matchWidget("addButton"))    setButtonEnabled(subscribeAddButton, enabled);
-				if (widgetInfo.matchWidget("deleteButton")) setButtonEnabled(subscribeDeleteButton, enabled);
-			}
-		}
-		if (widgetInfo.matchSection("outPort")) {
-			if (publishTableViewer != null) {
-				if (widgetInfo.matchWidget("table"))        setViewerEnabled(publishTableViewer, enabled);
-				if (widgetInfo.matchWidget("addButton"))    setButtonEnabled(publishAddButton, enabled);
-				if (widgetInfo.matchWidget("deleteButton")) setButtonEnabled(publishDeleteButton, enabled);
-			}
-		}
-	}
-	
-	private class DataParam {
-		private String typeName;
-		private String idlPath;
-		
-		public DataParam(String typeName, String idlPath) {
-			this.typeName = typeName;
-			this.idlPath = idlPath;
-		}
-	}
-	private class DataParamComparator implements Comparator<DataParam> {
-		@Override
-		public int compare(DataParam p1, DataParam p2) {
-			return p1.typeName.compareTo(p2.typeName);
-		}
-	}}
+//	private class DataParam {
+//		private String typeName;
+//		private String idlPath;
+//		
+//		public DataParam(String typeName, String idlPath) {
+//			this.typeName = typeName;
+//			this.idlPath = idlPath;
+//		}
+//	}
+//	private class DataParamComparator implements Comparator<DataParam> {
+//		@Override
+//		public int compare(DataParam p1, DataParam p2) {
+//			return p1.typeName.compareTo(p2.typeName);
+//		}
+//	}
+}

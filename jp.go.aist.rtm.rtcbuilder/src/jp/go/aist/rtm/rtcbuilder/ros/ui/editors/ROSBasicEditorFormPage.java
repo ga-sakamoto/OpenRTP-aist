@@ -1,13 +1,10 @@
 package jp.go.aist.rtm.rtcbuilder.ros.ui.editors;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -65,14 +62,12 @@ import org.slf4j.LoggerFactory;
 import jp.ac.meijo_u.iso22166_part202.util.ISO2RTCProfileHandler;
 import jp.ac.meijo_u.iso22166_part202.util.RTC2ISOProfileHandler;
 import jp.go.aist.rtm.rtcbuilder.Generator.MergeHandler;
-import jp.go.aist.rtm.rtcbuilder.GuiRtcBuilder;
 import jp.go.aist.rtm.rtcbuilder.IRTCBMessageConstants;
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
 import jp.go.aist.rtm.rtcbuilder.RtcBuilderPlugin;
 import jp.go.aist.rtm.rtcbuilder.factory.ExportCreator;
 import jp.go.aist.rtm.rtcbuilder.generator.ProfileHandler;
 import jp.go.aist.rtm.rtcbuilder.generator.param.GeneratorParam;
-import jp.go.aist.rtm.rtcbuilder.generator.param.PropertyParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
 import jp.go.aist.rtm.rtcbuilder.manager.GenerateManager;
 import jp.go.aist.rtm.rtcbuilder.nl.Messages;
@@ -88,7 +83,6 @@ import jp.go.aist.rtm.rtcbuilder.ui.editors.AbstractEditorFormPage;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.IMessageConstants;
 import jp.go.aist.rtm.rtcbuilder.ui.preference.ComponentPreferenceManager;
 import jp.go.aist.rtm.rtcbuilder.util.FileUtil;
-import jp.go.aist.rtm.rtcbuilder.util.RTCUtil;
 import jp.go.aist.rtm.rtcbuilder.util.StringUtil;
 import jp.go.aist.rtm.toolscommon.profiles.util.XmlHandler;
 
@@ -203,10 +197,9 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 	}
 
 	private void switchPerspective() {
-
-		RtcParam rtcParam = editor.getGeneratorParam().getRtcParam();
+		ROSParam rosParam = editor.getGeneratorParam().getROSParam();
 		//Pluginの存在確認
-		LanguageProperty langProp = LanguageProperty.checkPlugin(rtcParam);
+		LanguageProperty langProp = LanguageProperty.checkPlugin(rosParam);
 		String currentPerspectiveId = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
             							.getActivePage().getPerspective().getId();
 		if( langProp != null && !langProp.getPerspectiveId().equals(currentPerspectiveId) ) {
@@ -230,30 +223,41 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 	 * @return
 	 */
 	public String validateParam() {
-		String result = null;
-		//Module Name
-		if (result == null && nodeText.getText().length() == 0) {
-			result = Messages.getString("IMC.BASIC_VALIDATE_NAME1");
+		String packageName = packageText.getText(); 
+		if (packageName.length() == 0) {
+			return Messages.getString("IMC.VALIDATE_BASIC_PACKAGE_NAME1");
 		}
-		if( !StringUtil.checkDigitAlphabet(nodeText.getText()) ) {
-			result = IMessageConstants.BASIC_VALIDATE_NAME2;
+		if( !StringUtil.checkDigitAlphabet(packageName) ) {
+			return Messages.getString("IMC.VALIDATE_BASIC_PACKAGE_NAME2");
 		}
-		//Module category
-		if (result == null && categoryCombo.getText().length() == 0) {
-			result = IMessageConstants.BASIC_VALIDATE_CATEGORY;
+
+		if (nodeText.getText().length() == 0) {
+			return Messages.getString("IMC.VALIDATE_BASIC_NODE_NAME1");
+		}
+		if (versionText.getText().length() == 0) {
+			return Messages.getString("IMC.VALIDATE_BASIC_VERSION1");
+		}
+		if (maintainerText.getText().length() == 0) {
+			return Messages.getString("IMC.VALIDATE_BASIC_MAINTAINER1");
+		}
+		if (categoryCombo.getText().length() == 0) {
+			return Messages.getString("IMC.VALIDATE_BASIC_CATEGORY1");
+		}
+
+		if (licenseCombo.getText().length() == 0) {
+			return Messages.getString("IMC.VALIDATE_BASIC_LICENSE1");
+		}
+		if (contactText.getText().length() == 0) {
+			return Messages.getString("IMC.VALIDATE_BASIC_CONTACT1");
 		}
 		//Language
-		RtcParam rtcParam = editor.getRtcParam();
+		ROSParam rosParam = ((ROSBuilderEditor)editor).getROSParam();
 
-		if( rtcParam.getLangList()==null || rtcParam.getLangList().size()==0 ) {
-			result = IMessageConstants.LANGUAGE_SELECTION_CAUTION;
+		if( rosParam.getLangList()==null || rosParam.getLangList().size()==0 ) {
+			return Messages.getString("IMC.VALIDATE_BASIC_LANGUAGE");
 		}
 
-		if(rtcParam.isChoreonoid() && rtcParam.getLangList().contains(IRtcBuilderConstants.LANG_CPP)==false ) {
-			result = IMessageConstants.LANGUAGE_CHOREONOID_CAUTION;
-		}
-
-		return result;
+		return null;
 	}
 
 	private void createModuleSection(FormToolkit toolkit, ScrolledForm form) {
@@ -428,28 +432,14 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				((ROSBuilderEditor)editor).allUpdates();
-				String validateRtcParam = editor.validateParam();
+				String validateRtcParam = ((ROSBuilderEditor)editor).validateParam();
 				if (validateRtcParam != null) {
 					MessageDialog.openError(getSite().getShell(), "Error", validateRtcParam);
 					return;
 				}
-				//動的FSMの場合
-				boolean isDynamicFSM = false;
-				RtcParam rtcParam = editor.getRtcParam();
-				PropertyParam fsm = rtcParam.getProperty(IRtcBuilderConstants.PROP_TYPE_FSM);
-				if(fsm!=null) {
-					if(Boolean.valueOf(fsm.getValue())) {
-						PropertyParam fsmType = rtcParam.getProperty(IRtcBuilderConstants.PROP_TYPE_FSMTYTPE);
-						if(fsmType!=null && fsmType.getValue().equals(IRtcBuilderConstants.FSMTYTPE_DYNAMIC)) {
-							isDynamicFSM = true;
-						}
-					}
-				}
 				//対象プロジェクトの確認
 				IProject project = checkTargetProject(editor.getRtcParam().getOutputProject(), true);
 				if( project==null) return;
-				// 裏からファイルを削除されている可能性があるため、
-				// プロジェクトとファイルシステムの同期を取る
 				try {
 					project.refreshLocal(IResource.DEPTH_INFINITE, null);
 				} catch (CoreException e1) {
@@ -457,126 +447,126 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 				}
 				//
 //				editor.addDefaultComboValue();
-				GuiRtcBuilder rtcBuilder = new GuiRtcBuilder();
-				List<GenerateManager> managerList = RtcBuilderPlugin
-						.getDefault().getLoader().getManagerList();
-				if (managerList != null) {
-					for (GenerateManager manager : managerList) {
-						rtcBuilder.addGenerateManager(manager);
-					}
-				}
-				GeneratorParam generatorParam = editor.getGeneratorParam();
-				//TODO 複数コンポーネント対応版とする場合には複数設定
-				generatorParam.getRtcParam().getServiceClassParams().clear();
-				setPrefixSuffix(generatorParam.getRtcParam());
-				RTCUtil.getIDLPathes(editor.getRtcParam());
-				String genTime = DATE_FORMAT.format(new GregorianCalendar().getTime());
-				if (rtcBuilder.doGenerateWrite(generatorParam, editor.getRtcParam().getIdlSearchPathList(), !isDynamicFSM, genTime)) {
-					LanguageProperty langProp = LanguageProperty.checkPlugin(editor.getRtcParam());
-					if(langProp != null) {
-						try {
-							IProjectDescription description = project.getDescription();
-							String[] ids = description.getNatureIds();
-							String[] newIds = new String[ids.length + langProp.getNatures().size()];
-							System.arraycopy(ids, 0, newIds, 0, ids.length);
-							for( int intIdx=0; intIdx<langProp.getNatures().size(); intIdx++ ) {
-								newIds[ids.length+intIdx] = langProp.getNatures().get(intIdx);
-							}
-							description.setNatureIds(newIds);
-							project.setDescription(description, null);
-						} catch (CoreException e1) {
-							LOGGER.error(
-									"Fail to get/set description for project",
-									e1);
-						}
-					}
-					//
-					saveRtcProfile(project, genTime);
-					switchPerspective();
-	        		editor.getRtcParam().resetUpdated();
-	        		editor.updateDirty();
-					//
-					try {
-						project.refreshLocal(IResource.DEPTH_INFINITE, null);
-					} catch (CoreException e1) {
-						throw new RuntimeException(IRTCBMessageConstants.ERROR_GENERATE_FAILED);
-					}
-				}
-        		//
-			}
+//				GuiRtcBuilder rtcBuilder = new GuiRtcBuilder();
+//				List<GenerateManager> managerList = RtcBuilderPlugin
+//						.getDefault().getLoader().getManagerList();
+//				if (managerList != null) {
+//					for (GenerateManager manager : managerList) {
+//						rtcBuilder.addGenerateManager(manager);
+//					}
+//				}
+//				GeneratorParam generatorParam = editor.getGeneratorParam();
+//				//TODO 複数コンポーネント対応版とする場合には複数設定
+//				generatorParam.getRtcParam().getServiceClassParams().clear();
+//				setPrefixSuffix(generatorParam.getRtcParam());
+//				RTCUtil.getIDLPathes(editor.getRtcParam());
+//				String genTime = DATE_FORMAT.format(new GregorianCalendar().getTime());
+//				if (rtcBuilder.doGenerateWrite(generatorParam, editor.getRtcParam().getIdlSearchPathList(), !isDynamicFSM, genTime)) {
+//					LanguageProperty langProp = LanguageProperty.checkPlugin(editor.getRtcParam());
+//					if(langProp != null) {
+//						try {
+//							IProjectDescription description = project.getDescription();
+//							String[] ids = description.getNatureIds();
+//							String[] newIds = new String[ids.length + langProp.getNatures().size()];
+//							System.arraycopy(ids, 0, newIds, 0, ids.length);
+//							for( int intIdx=0; intIdx<langProp.getNatures().size(); intIdx++ ) {
+//								newIds[ids.length+intIdx] = langProp.getNatures().get(intIdx);
+//							}
+//							description.setNatureIds(newIds);
+//							project.setDescription(description, null);
+//						} catch (CoreException e1) {
+//							LOGGER.error(
+//									"Fail to get/set description for project",
+//									e1);
+//						}
+//					}
+//					//
+//					saveRtcProfile(project, genTime);
+//					switchPerspective();
+//	        		editor.getRtcParam().resetUpdated();
+//	        		editor.updateDirty();
+//					//
+//					try {
+//						project.refreshLocal(IResource.DEPTH_INFINITE, null);
+//					} catch (CoreException e1) {
+//						throw new RuntimeException(IRTCBMessageConstants.ERROR_GENERATE_FAILED);
+//					}
+//				}
+//        		//
+//			}
 
 			// Profileを保存
-			private void saveRtcProfile(IProject project, String genTime) {
-				ProfileHandler handler = new ProfileHandler();
-				try {
-					ExportCreator export = new ExportCreator();
-					export.preExport(editor);
-					//
-					////FSM
-					if(editor.getRtcParam().getFsmParam()!=null) {
-						String fsmName = editor.getRtcParam().getName() + "FSM.scxml";
-						IFile fsmFile  = project.getFile(fsmName);
-						if(editor.getRtcParam().getFsmContents().trim().length()==0) {
-							try {
-								fsmFile.delete(true, null);
-							} catch (CoreException e) {
-								e.printStackTrace();
-							}
-						} else {
-							if(fsmFile.exists()==false) {
-								try {
-									fsmFile.create(null, true, null);
-								} catch (CoreException e) {
-									e.printStackTrace();
-								}
-							}
-							String strPath = fsmFile.getLocation().toOSString();
-							String xmlSplit[] = editor.getRtcParam().getFsmContents().split("\n");
-							try {
-								BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(strPath), "UTF-8"));
-								for (String s : xmlSplit) {
-									writer.write(s);
-									writer.newLine();
-								}
-								writer.close();
-							} catch (IOException e1) {
-								e1.printStackTrace();
-							}
-						}
-					}
-					//
-					String strXml = handler.convert2XML(editor.getGeneratorParam());
-
-					IFile orgRtcxml = project.getFile(IRtcBuilderConstants.DEFAULT_RTC_XML);
-					if (orgRtcxml.exists()) {
-						IFile renameFile = project.getFile(IRtcBuilderConstants.DEFAULT_RTC_XML + genTime);
-						orgRtcxml.move(renameFile.getFullPath(), true, null);
-						//バックアップ最大数以上のファイルは削除
-						FileUtil.removeBackupFiles(project.getLocation().toOSString(), IRtcBuilderConstants.DEFAULT_RTC_XML);
-					}
-					IFile saveRtcxml = project.getFile(IRtcBuilderConstants.DEFAULT_RTC_XML);
-					saveRtcxml.create(new ByteArrayInputStream(strXml.getBytes("UTF-8")), true, null);
-
-					//ISO
-					RtcProfile rtcProfile = handler.convert2XMLProfile(editor.getRtcParam());
-					RTC2ISOProfileHandler isoHandler = new RTC2ISOProfileHandler();
-					SIM isoProfile = isoHandler.convertRtc2Iso(rtcProfile);
-					String strIsoXml = isoHandler.convertToXmlIso(isoProfile);
-					
-					IFile orgIsoxml = project.getFile(IRtcBuilderConstants.DEFAULT_ISO_202_XML);
-					if (orgIsoxml.exists()) {
-						IFile renameIsoFile = project.getFile(IRtcBuilderConstants.DEFAULT_ISO_202_XML + genTime);
-						orgIsoxml.move(renameIsoFile.getFullPath(), true, null);
-						FileUtil.removeBackupFiles(project.getLocation().toOSString(), IRtcBuilderConstants.DEFAULT_ISO_202_XML);
-					}
-					IFile saveIsoxml = project.getFile(IRtcBuilderConstants.DEFAULT_ISO_202_XML);
-					saveIsoxml.create(new ByteArrayInputStream(strIsoXml.getBytes("UTF-8")), true, null);
-					//
-					editor.getRtcParam().resetUpdated();
-					editor.updateDirty();
-				} catch (Exception e) {
-					LOGGER.error("Fail to save rtc-profile", e);
-				}
+//			private void saveRtcProfile(IProject project, String genTime) {
+//				ProfileHandler handler = new ProfileHandler();
+//				try {
+//					ExportCreator export = new ExportCreator();
+//					export.preExport(editor);
+//					//
+//					////FSM
+//					if(editor.getRtcParam().getFsmParam()!=null) {
+//						String fsmName = editor.getRtcParam().getName() + "FSM.scxml";
+//						IFile fsmFile  = project.getFile(fsmName);
+//						if(editor.getRtcParam().getFsmContents().trim().length()==0) {
+//							try {
+//								fsmFile.delete(true, null);
+//							} catch (CoreException e) {
+//								e.printStackTrace();
+//							}
+//						} else {
+//							if(fsmFile.exists()==false) {
+//								try {
+//									fsmFile.create(null, true, null);
+//								} catch (CoreException e) {
+//									e.printStackTrace();
+//								}
+//							}
+//							String strPath = fsmFile.getLocation().toOSString();
+//							String xmlSplit[] = editor.getRtcParam().getFsmContents().split("\n");
+//							try {
+//								BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(strPath), "UTF-8"));
+//								for (String s : xmlSplit) {
+//									writer.write(s);
+//									writer.newLine();
+//								}
+//								writer.close();
+//							} catch (IOException e1) {
+//								e1.printStackTrace();
+//							}
+//						}
+//					}
+//					//
+//					String strXml = handler.convert2XML(editor.getGeneratorParam());
+//
+//					IFile orgRtcxml = project.getFile(IRtcBuilderConstants.DEFAULT_RTC_XML);
+//					if (orgRtcxml.exists()) {
+//						IFile renameFile = project.getFile(IRtcBuilderConstants.DEFAULT_RTC_XML + genTime);
+//						orgRtcxml.move(renameFile.getFullPath(), true, null);
+//						//バックアップ最大数以上のファイルは削除
+//						FileUtil.removeBackupFiles(project.getLocation().toOSString(), IRtcBuilderConstants.DEFAULT_RTC_XML);
+//					}
+//					IFile saveRtcxml = project.getFile(IRtcBuilderConstants.DEFAULT_RTC_XML);
+//					saveRtcxml.create(new ByteArrayInputStream(strXml.getBytes("UTF-8")), true, null);
+//
+//					//ISO
+//					RtcProfile rtcProfile = handler.convert2XMLProfile(editor.getRtcParam());
+//					RTC2ISOProfileHandler isoHandler = new RTC2ISOProfileHandler();
+//					SIM isoProfile = isoHandler.convertRtc2Iso(rtcProfile);
+//					String strIsoXml = isoHandler.convertToXmlIso(isoProfile);
+//					
+//					IFile orgIsoxml = project.getFile(IRtcBuilderConstants.DEFAULT_ISO_202_XML);
+//					if (orgIsoxml.exists()) {
+//						IFile renameIsoFile = project.getFile(IRtcBuilderConstants.DEFAULT_ISO_202_XML + genTime);
+//						orgIsoxml.move(renameIsoFile.getFullPath(), true, null);
+//						FileUtil.removeBackupFiles(project.getLocation().toOSString(), IRtcBuilderConstants.DEFAULT_ISO_202_XML);
+//					}
+//					IFile saveIsoxml = project.getFile(IRtcBuilderConstants.DEFAULT_ISO_202_XML);
+//					saveIsoxml.create(new ByteArrayInputStream(strIsoXml.getBytes("UTF-8")), true, null);
+//					//
+//					editor.getRtcParam().resetUpdated();
+//					editor.updateDirty();
+//				} catch (Exception e) {
+//					LOGGER.error("Fail to save rtc-profile", e);
+//				}
 			}
 
 		});
@@ -647,7 +637,7 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				((ROSBuilderEditor)editor).allUpdates();
-				String validateRtcParam = editor.validateParam();
+				String validateRtcParam = ((ROSBuilderEditor)editor).validateParam();
 				if (validateRtcParam != null) {
 					MessageDialog.openError(getSite().getShell(), "Error", validateRtcParam);
 					return;
@@ -849,7 +839,7 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				((ROSBuilderEditor)editor).allUpdates();
-				String validateRtcParam = editor.validateParam();
+				String validateRtcParam = ((ROSBuilderEditor)editor).validateParam();
 				if (validateRtcParam != null) {
 					MessageDialog.openError(getSite().getShell(), "Error", validateRtcParam);
 					return;
@@ -931,7 +921,6 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				ImportDialog dialog = new ImportDialog(getSite().getShell());
-//				dialog.setExtension(extension);
 				int ret = dialog.open();
 				if(ret != IDialogConstants.OK_ID) return;
 				

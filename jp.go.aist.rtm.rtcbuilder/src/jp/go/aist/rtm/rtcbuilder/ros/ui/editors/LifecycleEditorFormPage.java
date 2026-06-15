@@ -375,7 +375,19 @@ public class LifecycleEditorFormPage extends AbstractEditorFormPage {
 	}
 
 	public String validateParam() {
-		//入力パラメータチェックなし
+		List<String> existedList = new ArrayList<String>(); 
+		for(TimerParam each : timerList) {
+			if(each.getCallBack() == null || each.getCallBack().length() == 0) {
+				return Messages.getString("IMC.VALIDATE_LICYCLE_CALLBACK");
+			}
+			if(each.getRate() < 0.0) {
+				return Messages.getString("IMC.VALIDATE_LICYCLE_RATE");
+			}
+			if(existedList.contains(each.getCallBack())) {
+				return Messages.getString("IMC.VALIDATE_LICYCLE_CALLBACK_DUPL");
+			}
+			existedList.add(each.getCallBack());
+		}
 		return null;
 	}
 	//////////
@@ -433,8 +445,6 @@ public class LifecycleEditorFormPage extends AbstractEditorFormPage {
 		protected void setValue(Object element, Object value) {
 			if (element instanceof TimerParam == false) return;
 			
-			String modified = (String) value;
-
 			TimerParam elem = (TimerParam) element;
 			if(this.column == 0) {
 				try {

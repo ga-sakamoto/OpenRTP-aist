@@ -4,8 +4,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
-import jp.go.aist.rtm.rtcbuilder.generator.ProfileHandler;
-import jp.go.aist.rtm.rtcbuilder.generator.param.AbstractRecordedParam;
+import jp.go.aist.rtm.rtcbuilder.ParamBase;
 import jp.go.aist.rtm.rtcbuilder.generator.param.ActionsParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.GeneratorParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.PropertyParam;
@@ -13,7 +12,7 @@ import jp.go.aist.rtm.rtcbuilder.generator.param.RecordedList;
 import jp.go.aist.rtm.rtcbuilder.ros.IRtcBuilderConstantsROS;
 import jp.go.aist.rtm.rtcbuilder.ros.ProfileHandlerROS;
 
-public class ROSParam extends AbstractRecordedParam implements Serializable {
+public class ROSParam extends ParamBase implements Serializable {
 	private static final long serialVersionUID = -1249129059979166068L;
 
 	public static final String DEFAULT_DESCRIPTION = "TODO: package description";
@@ -59,7 +58,6 @@ public class ROSParam extends AbstractRecordedParam implements Serializable {
 	private String outputProject = null;
 	private RecordedList<PropertyParam> properties = new RecordedList<PropertyParam>();
 	/////
-	private RecordedList<String> langList = new RecordedList<String>();
 	private TargetEnvParam target_env = new TargetEnvParam();
 
 	private String rosxml;
@@ -72,6 +70,7 @@ public class ROSParam extends AbstractRecordedParam implements Serializable {
 		for (int intidx = IRtcBuilderConstantsROS.ACTIVITY_CONFIGURE; intidx < IRtcBuilderConstantsROS.ACTIVITY_DUMMY; intidx++) {
 			actions.add(new ActionsParam());
 		}
+		this.target_env.setRosVersion("2");
 		//
 		setUpdated(false);
 	}
@@ -86,6 +85,7 @@ public class ROSParam extends AbstractRecordedParam implements Serializable {
 		for (int intidx = IRtcBuilderConstantsROS.ACTIVITY_CONFIGURE; intidx < IRtcBuilderConstantsROS.ACTIVITY_DUMMY; intidx++) {
 			actions.add(new ActionsParam());
 		}
+		this.target_env.setRosVersion("2");
 		//
 		setUpdated(false);
 	}

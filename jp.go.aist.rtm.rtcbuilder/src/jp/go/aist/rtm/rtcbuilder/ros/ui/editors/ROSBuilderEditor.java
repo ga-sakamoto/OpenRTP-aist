@@ -284,19 +284,15 @@ public class ROSBuilderEditor extends RtcBuilderEditor implements IActionFilter 
 
 	public String validateParam() {
 		String result = null;
-//		for (int intIdx = 0; intIdx < this.pages.size(); intIdx++) {
-//			AbstractEditorFormPage page = (AbstractEditorFormPage) this.pages.get(intIdx);
-//			if (page == null) continue;
-//			if (page instanceof AbstractCustomFormPage) {
-//				String key = ((AbstractCustomFormPage) page).getManagerKey();
-//				if (!StringUtil.matchKey(getRtcParam().getLangList(), key)) continue;
-//			}
-//			result = page.validateParam();
-//			if (result != null) {
-//				this.setActivePage(intIdx);
-//				return result;
-//			}
-//		}
+		for (int intIdx = 0; intIdx < this.pages.size(); intIdx++) {
+			AbstractEditorFormPage page = (AbstractEditorFormPage) this.pages.get(intIdx);
+			if (page == null) continue;
+			result = page.validateParam();
+			if (result != null) {
+				this.setActivePage(intIdx);
+				return result;
+			}
+		}
 		return result;
 	}
 

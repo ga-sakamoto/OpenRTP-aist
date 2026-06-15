@@ -238,9 +238,9 @@ public class ParamUtilROS extends ParamUtil {
 			TopicParam topicp = new TopicParam();
 			topicp.setRole(topic.getTopicRole());
 			topicp.setName(topic.getTopicName());
-			topicp.setMessage_type(topic.getMessageType());
-			topicp.setReliability_type(topic.getQoSReliabilityType());
-			topicp.setHistory_type(topic.getQoSHistoryType());
+			topicp.setMessageType(topic.getMessageType());
+			topicp.setReliabilityType(topic.getQoSReliabilityType());
+			topicp.setHistoryType(topic.getQoSHistoryType());
 			topicp.setDepth(Integer.valueOf(topic.getQoSHistoryDepth().toString()));
 			topicp.setVar_callback_name(topic.getVariableCallbackName());
 
@@ -593,9 +593,9 @@ public class ParamUtilROS extends ParamUtil {
 		TopicExt topic = factory.createTopicExt();
 		topic.setTopicRole(topicType);
 		topic.setTopicName(topicp.getName());
-		topic.setMessageType(topicp.getMessage_type());
-		topic.setQoSReliabilityType(topicp.getReliability_type());
-		topic.setQoSHistoryType(topicp.getHistory_type());
+		topic.setMessageType(topicp.getMessageType());
+		topic.setQoSReliabilityType(topicp.getReliabilityType());
+		topic.setQoSHistoryType(topicp.getHistoryType());
 		topic.setQoSHistoryDepth(BigInteger.valueOf(topicp.getDepth()));
 		topic.setVariableCallbackName(topicp.getVar_callback_name());
 		//

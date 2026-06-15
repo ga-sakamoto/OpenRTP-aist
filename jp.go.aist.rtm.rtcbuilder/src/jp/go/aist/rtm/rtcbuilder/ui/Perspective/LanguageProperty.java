@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
+import jp.go.aist.rtm.rtcbuilder.ParamBase;
 import jp.go.aist.rtm.rtcbuilder.RtcBuilderPlugin;
 import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
 import jp.go.aist.rtm.rtcbuilder.manager.GenerateManager;
@@ -17,7 +18,7 @@ public abstract class LanguageProperty {
 	public abstract String getPluginId();
 	public abstract List<String> getNatures();
 	
-	public static LanguageProperty getLanguageProperty(RtcParam rtcParam) {
+	public static LanguageProperty getLanguageProperty(ParamBase rtcParam) {
 		LanguageProperty langProp = null;
 		if(rtcParam.isLanguageExist(IRtcBuilderConstants.LANG_CPP) ||
 				rtcParam.isLanguageExist(IRtcBuilderConstants.LANG_CPPWIN)) {
@@ -36,7 +37,7 @@ public abstract class LanguageProperty {
 		return langProp;
 	}
 	
-	public static LanguageProperty checkPlugin(RtcParam rtcParam) {
+	public static LanguageProperty checkPlugin(ParamBase rtcParam) {
 		LanguageProperty langProp = getLanguageProperty(rtcParam);
 		//Pluginの存在確認
 		if( langProp != null ) {

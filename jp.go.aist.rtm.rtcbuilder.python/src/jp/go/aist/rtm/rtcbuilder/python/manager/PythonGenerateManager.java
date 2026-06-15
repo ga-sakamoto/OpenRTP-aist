@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jp.go.aist.rtm.rtcbuilder.ParamBase;
 import jp.go.aist.rtm.rtcbuilder.fsm.StateParam;
 import jp.go.aist.rtm.rtcbuilder.generator.GeneratedResult;
 import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
@@ -49,7 +50,7 @@ public class PythonGenerateManager extends GenerateManager {
 	}
 
 	@Override
-	public LanguageProperty getLanguageProperty(RtcParam rtcParam) {
+	public LanguageProperty getLanguageProperty(ParamBase rtcParam) {
 		LanguageProperty langProp = null;
 		if (rtcParam.isLanguageExist(LANG_PYTHON)) {
 			langProp = new PythonProperty();
