@@ -283,9 +283,11 @@ public class LifecycleEditorFormPage extends AbstractEditorFormPage {
 		gd.grabExcessHorizontalSpace = true;
 		timerListTable.setLayoutData(gd);
 		
-		TableViewerColumn nameColumn = createColumn(timerListViewer, "Rate", 100);
+		TableViewerColumn nameColumn = createColumn(timerListViewer, "Name", 100);
 		nameColumn.setEditingSupport(new TimerCellModifier(timerListViewer, 0));
-		TableViewerColumn versionColumn = createColumn(timerListViewer, "Callback", 200);
+		TableViewerColumn rateColumn = createColumn(timerListViewer, "Rate", 100);
+		rateColumn.setEditingSupport(new TimerCellModifier(timerListViewer, 0));
+		TableViewerColumn versionColumn = createColumn(timerListViewer, "Callback", 100);
 		versionColumn.setEditingSupport(new TimerCellModifier(timerListViewer, 1));
 		TableViewerColumn otherColumn = createColumn(timerListViewer, "Description", 150);
 		otherColumn.setEditingSupport(new TimerCellModifier(timerListViewer, 2));
@@ -308,6 +310,7 @@ public class LifecycleEditorFormPage extends AbstractEditorFormPage {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				TimerParam elem = new TimerParam();
+				elem.setName("new_timer");
 				elem.setRate(0.0);
 				timerList.add(elem);
 				timerListViewer.refresh();
@@ -400,10 +403,12 @@ public class LifecycleEditorFormPage extends AbstractEditorFormPage {
 			if (element instanceof TimerParam == false) return null;
 			TimerParam elem = (TimerParam) element;
 			if (columnIndex == 0) {
-				return elem.getRate().toString();
+				return elem.getName();
 			} else if (columnIndex == 1) {
-				return elem.getCallBack();
+				return elem.getRate().toString();
 			} else if (columnIndex == 2) {
+				return elem.getCallBack();
+			} else if (columnIndex == 3) {
 				return elem.getDescription();
 			} else {
 				return "";
@@ -433,10 +438,12 @@ public class LifecycleEditorFormPage extends AbstractEditorFormPage {
 			TimerParam elem = (TimerParam) element;
 			String label = null;
 			if(this.column == 0) {
-				label = elem.getRate().toString();
+				label = elem.getName();
 			} else if(this.column == 1) {
-				label = elem.getCallBack();
+				label = elem.getRate().toString();
 			} else if(this.column == 2) {
+				label = elem.getCallBack();
+			} else if(this.column == 3) {
 				label = elem.getDescription();
 			}
 			return label;
@@ -447,14 +454,16 @@ public class LifecycleEditorFormPage extends AbstractEditorFormPage {
 			
 			TimerParam elem = (TimerParam) element;
 			if(this.column == 0) {
+				elem.setName((String) value);
+			} else if(this.column == 1) {
 				try {
 					double rate = Double.parseDouble((String) value);
 					elem.setRate(rate);
 				} catch (Exception ex) {
 				}
-			} else if(this.column == 1) {
-				elem.setCallBack((String) value);
 			} else if(this.column == 2) {
+				elem.setCallBack((String) value);
+			} else if(this.column == 3) {
 				elem.setDescription((String) value);
 			}
 			getViewer().update(element, null);

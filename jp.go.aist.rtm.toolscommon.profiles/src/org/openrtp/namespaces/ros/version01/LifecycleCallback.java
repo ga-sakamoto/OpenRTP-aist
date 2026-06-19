@@ -34,6 +34,7 @@ public class LifecycleCallback {
 
     @XmlAttribute(name = "implemented", namespace = "http://www.openrtp.org/namespaces/ros", required = true)
     protected boolean implemented;
+    protected String implementeds;
 
     /**
      * Gets the value of the implemented property.
@@ -51,4 +52,14 @@ public class LifecycleCallback {
         this.implemented = value;
     }
 
+    public void setImplementedbln(boolean value) {
+        this.implemented = value;
+    }
+    public String getImplemented() {
+        if(implementeds==null) implementeds = Boolean.valueOf(implemented).toString();
+        return implementeds;
+    }
+    public void setImplemented(String value) {
+    	implementeds = value;
+    }
 }

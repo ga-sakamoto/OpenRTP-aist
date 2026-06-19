@@ -206,6 +206,7 @@ public class ParamUtilROS extends ParamUtil {
 			rosParam.getTimers().clear();
 			for(Timer each : lifecycleExt.getTimers()) {
 				TimerParam elem = new TimerParam();
+				elem.setName(each.getTimerName());
 				elem.setRate(each.getRate());
 				elem.setCallBack(each.getCallBack());
 				elem.setDescription(each.getDescription());
@@ -561,6 +562,7 @@ public class ParamUtilROS extends ParamUtil {
 		
 		for(TimerParam each : param.getTimers()) {
 			Timer timer = factory.createTimer();
+			timer.setTimerName(each.getName());
 			timer.setRate(each.getRate());
 			timer.setCallBack(each.getCallBack());
 			timer.setDescription(each.getDescription());

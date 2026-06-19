@@ -33,6 +33,7 @@
 	</xsd:complexType>
 
 	<xsd:complexType name="timer">
+		<xsd:attribute name="timer_name" type="xsd:string" use="required"/>
 		<xsd:attribute name="rate" type="xsd:double" use="required"/>
 		<xsd:attribute name="call_back" type="xsd:string" use="required"/>
 		<xsd:attribute name="description" type="xsd:string" use="optional"/>

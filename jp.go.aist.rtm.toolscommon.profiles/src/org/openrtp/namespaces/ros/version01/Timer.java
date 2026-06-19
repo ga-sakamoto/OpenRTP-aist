@@ -16,6 +16,7 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;complexType name="timer">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;attribute name="timer_name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="rate" use="required" type="{http://www.w3.org/2001/XMLSchema}double" />
  *       &lt;attribute name="call_back" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="description" type="{http://www.w3.org/2001/XMLSchema}string" />
@@ -30,12 +31,38 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "timer")
 public class Timer {
 
+    @XmlAttribute(name = "timer_name", namespace = "http://www.openrtp.org/namespaces/ros_ext", required = true)
+    protected String timerName;
     @XmlAttribute(name = "rate", namespace = "http://www.openrtp.org/namespaces/ros_ext", required = true)
     protected double rate;
     @XmlAttribute(name = "call_back", namespace = "http://www.openrtp.org/namespaces/ros_ext", required = true)
     protected String callBack;
     @XmlAttribute(name = "description", namespace = "http://www.openrtp.org/namespaces/ros_ext")
     protected String description;
+
+    /**
+     * Gets the value of the timerName property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getTimerName() {
+        return timerName;
+    }
+
+    /**
+     * Sets the value of the timerName property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setTimerName(String value) {
+        this.timerName = value;
+    }
 
     /**
      * Gets the value of the rate property.
