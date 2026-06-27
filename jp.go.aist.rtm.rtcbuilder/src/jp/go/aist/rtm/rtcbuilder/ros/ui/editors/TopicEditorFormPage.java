@@ -1,9 +1,22 @@
 package jp.go.aist.rtm.rtcbuilder.ros.ui.editors;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
@@ -30,10 +43,13 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ScrollBar;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
@@ -74,13 +90,118 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 //	private String defaultPortType;
 //	private String defaultPortVarName;
 //	private String[] defaultTypeList;
-//	
-//	private List<DataParam> typeList = new ArrayList<DataParam>();
-//	private List<DataParam> currentList = new ArrayList<DataParam>();
 
-	public void setDefaultTypeList(String[] defaultTypeList) {
-//		this.defaultTypeList = defaultTypeList;
-	}
+
+    private List<String> defaultList = Arrays.asList(
+    	    "action_msgs/msg/GoalInfo", "action_msgs/msg/GoalStatus",
+    	    "action_msgs/msg/GoalStatusArray", "actuator_msgs/msg/Actuators",
+    	    "actuator_msgs/msg/ActuatorsAngularPosition", "actuator_msgs/msg/ActuatorsAngularVelocity",
+    	    "actuator_msgs/msg/ActuatorsLinearPosition", "actuator_msgs/msg/ActuatorsLinearVelocity",
+    	    "actuator_msgs/msg/ActuatorsNormalized", "actuator_msgs/msg/ActuatorsPosition",
+    	    "actuator_msgs/msg/ActuatorsVelocity", "builtin_interfaces/msg/Duration",
+    	    "builtin_interfaces/msg/Time", "diagnostic_msgs/msg/DiagnosticArray",
+    	    "diagnostic_msgs/msg/DiagnosticStatus", "diagnostic_msgs/msg/KeyValue",
+    	    "geometry_msgs/msg/Accel", "geometry_msgs/msg/AccelStamped",
+    	    "geometry_msgs/msg/AccelWithCovariance", "geometry_msgs/msg/AccelWithCovarianceStamped",
+    	    "geometry_msgs/msg/Inertia", "geometry_msgs/msg/InertiaStamped",
+    	    "geometry_msgs/msg/Point", "geometry_msgs/msg/Point32",
+    	    "geometry_msgs/msg/PointStamped", "geometry_msgs/msg/Polygon",
+    	    "geometry_msgs/msg/PolygonInstance", "geometry_msgs/msg/PolygonInstanceStamped",
+    	    "geometry_msgs/msg/PolygonStamped", "geometry_msgs/msg/Pose",
+    	    "geometry_msgs/msg/Pose2D", "geometry_msgs/msg/PoseArray",
+    	    "geometry_msgs/msg/PoseStamped", "geometry_msgs/msg/PoseWithCovariance",
+    	    "geometry_msgs/msg/PoseWithCovarianceStamped", "geometry_msgs/msg/Quaternion",
+    	    "geometry_msgs/msg/QuaternionStamped", "geometry_msgs/msg/Transform",
+    	    "geometry_msgs/msg/TransformStamped", "geometry_msgs/msg/Twist",
+    	    "geometry_msgs/msg/TwistStamped", "geometry_msgs/msg/TwistWithCovariance",
+    	    "geometry_msgs/msg/TwistWithCovarianceStamped", "geometry_msgs/msg/Vector3",
+    	    "geometry_msgs/msg/Vector3Stamped", "geometry_msgs/msg/VelocityStamped",
+    	    "geometry_msgs/msg/Wrench", "geometry_msgs/msg/WrenchStamped",
+    	    "gps_msgs/msg/GPSFix", "gps_msgs/msg/GPSStatus",
+    	    "lifecycle_msgs/msg/State", "lifecycle_msgs/msg/Transition",
+    	    "lifecycle_msgs/msg/TransitionDescription", "lifecycle_msgs/msg/TransitionEvent",
+    	    "map_msgs/msg/OccupancyGridUpdate", "map_msgs/msg/PointCloud2Update",
+    	    "map_msgs/msg/ProjectedMap", "map_msgs/msg/ProjectedMapInfo",
+    	    "nav_msgs/msg/Goals", "nav_msgs/msg/GridCells",
+    	    "nav_msgs/msg/MapMetaData", "nav_msgs/msg/OccupancyGrid",
+    	    "nav_msgs/msg/Odometry", "nav_msgs/msg/Path",
+    	    "nav_msgs/msg/Trajectory", "nav_msgs/msg/TrajectoryPoint",
+    	    "pcl_msgs/msg/ModelCoefficients", "pcl_msgs/msg/PointIndices",
+    	    "pcl_msgs/msg/PolygonMesh", "pcl_msgs/msg/Vertices",
+    	    "rcl_interfaces/msg/FloatingPointRange", "rcl_interfaces/msg/IntegerRange",
+    	    "rcl_interfaces/msg/ListParametersResult", "rcl_interfaces/msg/Log",
+    	    "rcl_interfaces/msg/LoggerLevel", "rcl_interfaces/msg/Parameter",
+    	    "rcl_interfaces/msg/ParameterDescriptor", "rcl_interfaces/msg/ParameterEvent",
+    	    "rcl_interfaces/msg/ParameterEventDescriptors", "rcl_interfaces/msg/ParameterType",
+    	    "rcl_interfaces/msg/ParameterValue", "rcl_interfaces/msg/SetLoggerLevelsResult",
+    	    "rcl_interfaces/msg/SetParametersResult", "rosgraph_msgs/msg/Clock",
+    	    "sensor_msgs/msg/BatteryState", "sensor_msgs/msg/CameraInfo",
+    	    "sensor_msgs/msg/ChannelFloat32" , "sensor_msgs/msg/CompressedImage",
+    	    "sensor_msgs/msg/FluidPressure", "sensor_msgs/msg/Illuminance",
+    	    "sensor_msgs/msg/Image", "sensor_msgs/msg/Imu",
+    	    "sensor_msgs/msg/JointState", "sensor_msgs/msg/Joy",
+    	    "sensor_msgs/msg/JoyFeedback", "sensor_msgs/msg/JoyFeedbackArray",
+    	    "sensor_msgs/msg/LaserEcho", "sensor_msgs/msg/LaserScan",
+    	    "sensor_msgs/msg/MagneticField", "sensor_msgs/msg/MultiDOFJointState",
+    	    "sensor_msgs/msg/MultiEchoLaserScan", "sensor_msgs/msg/NavSatFix",
+    	    "sensor_msgs/msg/NavSatStatus", "sensor_msgs/msg/PointCloud",
+    	    "sensor_msgs/msg/PointCloud2", "sensor_msgs/msg/PointField",
+    	    "sensor_msgs/msg/Range", "sensor_msgs/msg/RegionOfInterest",
+    	    "sensor_msgs/msg/RelativeHumidity", "sensor_msgs/msg/Temperature",
+    	    "sensor_msgs/msg/TimeReference", "shape_msgs/msg/Mesh",
+    	    "shape_msgs/msg/MeshTriangle", "shape_msgs/msg/Plane",
+    	    "shape_msgs/msg/SolidPrimitive", "statistics_msgs/msg/MetricsMessage",
+    	    "statistics_msgs/msg/StatisticDataPoint", "statistics_msgs/msg/StatisticDataType",
+    	    "std_msgs/msg/Bool", "std_msgs/msg/Byte",
+    	    "std_msgs/msg/ByteMultiArray", "std_msgs/msg/Char",
+    	    "std_msgs/msg/ColorRGBA", "std_msgs/msg/Empty",
+    	    "std_msgs/msg/Float32", "std_msgs/msg/Float32MultiArray",
+    	    "std_msgs/msg/Float64", "std_msgs/msg/Float64MultiArray",
+    	    "std_msgs/msg/Header", "std_msgs/msg/Int16",
+    	    "std_msgs/msg/Int16MultiArray", "std_msgs/msg/Int32",
+    	    "std_msgs/msg/Int32MultiArray", "std_msgs/msg/Int64",
+    	    "std_msgs/msg/Int64MultiArray", "std_msgs/msg/Int8",
+    	    "std_msgs/msg/Int8MultiArray", "std_msgs/msg/MultiArrayDimension",
+    	    "std_msgs/msg/MultiArrayLayout", "std_msgs/msg/String",
+    	    "std_msgs/msg/UInt16", "std_msgs/msg/UInt16MultiArray",
+    	    "std_msgs/msg/UInt32", "std_msgs/msg/UInt32MultiArray",
+    	    "std_msgs/msg/UInt64", "std_msgs/msg/UInt64MultiArray",
+    	    "std_msgs/msg/UInt8", "std_msgs/msg/UInt8MultiArray",
+    	    "stereo_msgs/msg/DisparityImage", "tf2_msgs/msg/TF2Error",
+    	    "tf2_msgs/msg/TFMessage", "trajectory_msgs/msg/JointTrajectory",
+    	    "trajectory_msgs/msg/JointTrajectoryPoint", "trajectory_msgs/msg/MultiDOFJointTrajectory",
+    	    "trajectory_msgs/msg/MultiDOFJointTrajectoryPoint", "unique_identifier_msgs/msg/UUID",
+    	    "vision_msgs/msg/BoundingBox2D", "vision_msgs/msg/BoundingBox2DArray",
+    	    "vision_msgs/msg/BoundingBox3D", "vision_msgs/msg/BoundingBox3DArray",
+    	    "vision_msgs/msg/Classification", "vision_msgs/msg/Detection2D",
+    	    "vision_msgs/msg/Detection2DArray", "vision_msgs/msg/Detection3D",
+    	    "vision_msgs/msg/Detection3DArray", "vision_msgs/msg/LabelInfo",
+    	    "vision_msgs/msg/ObjectHypothesis", "vision_msgs/msg/ObjectHypothesisWithPose",
+    	    "vision_msgs/msg/Point2D", "vision_msgs/msg/Pose2D",
+    	    "vision_msgs/msg/VisionClass", "vision_msgs/msg/VisionInfo",
+    	    "visualization_msgs/msg/ImageMarker", "visualization_msgs/msg/InteractiveMarker",
+    	    "visualization_msgs/msg/InteractiveMarkerControl", "visualization_msgs/msg/InteractiveMarkerFeedback",
+    	    "visualization_msgs/msg/InteractiveMarkerInit", "visualization_msgs/msg/InteractiveMarkerPose",
+    	    "visualization_msgs/msg/InteractiveMarkerUpdate", "visualization_msgs/msg/Marker",
+    	    "visualization_msgs/msg/MarkerArray", "visualization_msgs/msg/MenuEntry",
+    	    "visualization_msgs/msg/MeshFile", "visualization_msgs/msg/UVCoordinate",
+    	    "action_msgs/srv/CancelGoal", "diagnostic_msgs/srv/AddDiagnostics",
+    	    "diagnostic_msgs/srv/SelfTest", "example_interfaces/srv/AddTwoInts",
+    	    "lifecycle_msgs/srv/ChangeState", "lifecycle_msgs/srv/GetAvailableStates",
+    	    "lifecycle_msgs/srv/GetAvailableTransitions", "lifecycle_msgs/srv/GetState",
+    	    "map_msgs/srv/GetMapROI", "map_msgs/srv/GetPointMap",
+    	    "map_msgs/srv/GetPointMapROI", "map_msgs/srv/ProjectedMapsInfo",
+    	    "map_msgs/srv/SaveMap", "map_msgs/srv/SetMapProjections",
+    	    "nav_msgs/srv/GetMap", "nav_msgs/srv/GetPlan",
+    	    "nav_msgs/srv/LoadMap", "nav_msgs/srv/SetMap",
+    	    "sensor_msgs/srv/SetCameraInfo", "std_srvs/srv/Empty",
+    	    "std_srvs/srv/SetBool", "std_srvs/srv/Trigger",
+    	    "tf2_msgs/srv/FrameGraph", "visualization_msgs/srv/GetInteractiveMarkers",
+    	    "example_interfaces/action/Fibonacci", "tf2_msgs/action/LookupTransform",
+    	    "turtlesim/action/RotateAbsolute");
+    private List<String> typeList = new ArrayList<String>();
+	private List<String> currentList = new ArrayList<String>();
+
 	/**
 	 * コンストラクタ
 	 *
@@ -91,11 +212,7 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 		super(editor, "id", Messages.getString("IMC.ROS_TOPIC_SECTION"));
 		//
 		preSelection = null;
-		
-//		IPreferenceStore store = RtcBuilderPlugin.getDefault().getPreferenceStore();
-//		defaultPortName = ComponentPreferenceManager.getInstance().getDataPort_Name();
-//		defaultPortType = store.getString(ComponentPreferenceManager.Generate_DataPort_Type);
-//		defaultPortVarName = store.getString(ComponentPreferenceManager.Generate_DataPort_VarName);
+		updateDefaultValue();
 	}
 
 	public void updateDefaultValue() {
@@ -103,8 +220,12 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 //		defaultPortName = ComponentPreferenceManager.getInstance().getDataPort_Name();
 //		defaultPortType = store.getString(ComponentPreferenceManager.Generate_DataPort_Type);
 //		defaultPortVarName = store.getString(ComponentPreferenceManager.Generate_DataPort_VarName);
-//		//
-//		defaultTypeList = super.extractDataTypes();
+		
+		ROSParam rosParam = ((ROSBuilderEditor)editor).getROSParam();
+		typeList.clear();
+		typeList.addAll(defaultList);
+		typeList.addAll(extractROSEtcTypes(rosParam.getOutputProject(), "msg"));
+		typeList.sort(null);
 	}
 
 	/**
@@ -173,45 +294,37 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 		label.setForeground(getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_RED));
 		messageTypeCombo = new Combo(detailGroup, SWT.DROP_DOWN);
 		/////
-//		List<DataTypeParam> dataTypes = editor.getGeneratorParam().getDataTypeParams();
-//		typeList.clear();
-//		for(DataTypeParam each : dataTypes) {
-//			for(String eachType : each.getDefinedTypes()) {
-//				typeList.add(new DataParam(eachType, each.getDispPath()));
-//			}
-//		}
-//		Collections.sort(typeList, new DataParamComparator());
-//		currentList.clear();
-//		currentList.addAll(typeList);
-//		for(DataParam item : currentList) {
-//			messageTypeCombo.add(item.typeName);
-//		}
+		currentList.clear();
+		currentList.addAll(typeList);
+		for(String item : currentList) {
+			messageTypeCombo.add(item);
+		}
 		/////
 		messageTypeCombo.setText("");
 		messageTypeCombo.addKeyListener(new KeyListener() {
 			public void keyReleased(KeyEvent e) {
-//				String target = messageTypeCombo.getText();
-//				String[] keyList = target.split(" ");
-//				currentList.clear();
-//				for (DataParam each : typeList) {
-//					boolean isHit = true;
-//					for(String itemKey: keyList) {
-//					  if (each.typeName.contains(itemKey)==false) {
-//						  isHit = false;
-//						  break;
-//					  }
-//					}
-//					if (isHit) {
-//						currentList.add(each);
-//					}
-//				}
-//				Collections.sort(currentList, new DataParamComparator());
-//				messageTypeCombo.removeAll();
-//				for(DataParam item : currentList) {
-//					messageTypeCombo.add(item.typeName);
-//				}
-//				messageTypeCombo.setText(target);
-//				messageTypeCombo.setSelection(new Point(messageTypeCombo.getText().length(), messageTypeCombo.getText().length()) );
+				String target = messageTypeCombo.getText();
+				String[] keyList = target.split(" ");
+				currentList.clear();
+				for (String each : typeList) {
+					boolean isHit = true;
+					for(String itemKey: keyList) {
+					  if (each.contains(itemKey)==false) {
+						  isHit = false;
+						  break;
+					  }
+					}
+					if (isHit) {
+						currentList.add(each);
+					}
+				}
+				currentList.sort(null);
+				messageTypeCombo.removeAll();
+				for(String item : currentList) {
+					messageTypeCombo.add(item);
+				}
+				messageTypeCombo.setText(target);
+				messageTypeCombo.setSelection(new Point(messageTypeCombo.getText().length(), messageTypeCombo.getText().length()) );
 			}
 			public void keyPressed(KeyEvent e) { }
 		});
@@ -223,22 +336,39 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 		selectButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-//				defaultTypeList = extractDataTypes();
-//				/////
-//				List<DataTypeParam> dataTypes = editor.getGeneratorParam().getDataTypeParams();
-//				typeList.clear();
-//				messageTypeCombo.removeAll();
-//				for(DataTypeParam each : dataTypes) {
-//					for(String eachType : each.getDefinedTypes()) {
-//						typeList.add(new DataParam(eachType, each.getDispPath()));
-//					}
-//				}
-//				Collections.sort(typeList, new DataParamComparator());
-//				currentList.clear();
-//				currentList.addAll(typeList);
-//				for(DataParam item : currentList) {
-//					messageTypeCombo.add(item.typeName);
-//				}
+				Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+		        FileDialog fileDialog = new FileDialog(shell, SWT.OPEN);
+		        fileDialog.setText("Select msg file");
+		        fileDialog.setFilterExtensions(new String[] { "*.msg" });
+		        fileDialog.setFilterNames(new String[] { "Msg Files (*.msg)" });
+		        String selectedPath = fileDialog.open();
+		        if (selectedPath == null) return;
+		        
+	        	File srcFile = new File(selectedPath);
+	        	
+	    		ROSParam rosParam = ((ROSBuilderEditor)editor).getROSParam();
+	    		IWorkspaceRoot workspaceHandle = ResourcesPlugin.getWorkspace().getRoot();
+	    		IProject project = workspaceHandle.getProject(rosParam.getOutputProject());
+	    		IFolder targetFolder = project.getFolder("msg");
+	    		IFile destFile = targetFolder.getFile(srcFile.getName());
+	    		try (FileInputStream fis = new FileInputStream(srcFile)) {
+	                if (destFile.exists()) {
+	                    destFile.setContents(fis, IResource.FORCE, new NullProgressMonitor());
+	                } else {
+	                    destFile.create(fis, IResource.NONE, new NullProgressMonitor());
+	                }
+	                targetFolder.refreshLocal(IResource.DEPTH_ONE, null);
+	            } catch (IOException e1) {
+	            } catch (CoreException e2) {
+	            }
+	    		
+	    		updateDefaultValue();
+				messageTypeCombo.removeAll();
+				currentList.clear();
+				currentList.addAll(typeList);
+				for(String item : currentList) {
+					messageTypeCombo.add(item);
+				}
 			}
 		});
 		//
@@ -604,20 +734,4 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 			update();
 		}
 	}
-
-//	private class DataParam {
-//		private String typeName;
-//		private String idlPath;
-//		
-//		public DataParam(String typeName, String idlPath) {
-//			this.typeName = typeName;
-//			this.idlPath = idlPath;
-//		}
-//	}
-//	private class DataParamComparator implements Comparator<DataParam> {
-//		@Override
-//		public int compare(DataParam p1, DataParam p2) {
-//			return p1.typeName.compareTo(p2.typeName);
-//		}
-//	}
 }

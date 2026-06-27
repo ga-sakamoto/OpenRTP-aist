@@ -1,9 +1,21 @@
 package jp.go.aist.rtm.rtcbuilder.ros.ui.editors;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
@@ -29,10 +41,13 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ScrollBar;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
@@ -70,12 +85,9 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 //	private String defaultPortVarName;
 //	private String[] defaultTypeList;
 //	
-//	private List<DataParam> typeList = new ArrayList<DataParam>();
-//	private List<DataParam> currentList = new ArrayList<DataParam>();
+	private List<String> typeList = new ArrayList<String>();
+	private List<String> currentList = new ArrayList<String>();
 
-	public void setDefaultTypeList(String[] defaultTypeList) {
-//		this.defaultTypeList = defaultTypeList;
-	}
 	/**
 	 * コンストラクタ
 	 *
@@ -86,11 +98,7 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 		super(editor, "id", Messages.getString("IMC.ROS_ACTION_SECTION"));
 		//
 		preSelection = null;
-		
-//		IPreferenceStore store = RtcBuilderPlugin.getDefault().getPreferenceStore();
-//		defaultPortName = ComponentPreferenceManager.getInstance().getDataPort_Name();
-//		defaultPortType = store.getString(ComponentPreferenceManager.Generate_DataPort_Type);
-//		defaultPortVarName = store.getString(ComponentPreferenceManager.Generate_DataPort_VarName);
+		updateDefaultValue();
 	}
 
 	public void updateDefaultValue() {
@@ -99,7 +107,10 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 //		defaultPortType = store.getString(ComponentPreferenceManager.Generate_DataPort_Type);
 //		defaultPortVarName = store.getString(ComponentPreferenceManager.Generate_DataPort_VarName);
 //		//
-//		defaultTypeList = super.extractDataTypes();
+		ROSParam rosParam = ((ROSBuilderEditor)editor).getROSParam();
+		typeList.clear();
+		typeList.addAll(extractROSEtcTypes(rosParam.getOutputProject(), "action"));
+		typeList.sort(null);
 	}
 
 	/**
@@ -161,45 +172,37 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 		label.setForeground(getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_RED));
 		actionTypeCombo = new Combo(detailGroup, SWT.DROP_DOWN);
 		/////
-//		List<DataTypeParam> dataTypes = editor.getGeneratorParam().getDataTypeParams();
-//		typeList.clear();
-//		for(DataTypeParam each : dataTypes) {
-//			for(String eachType : each.getDefinedTypes()) {
-//				typeList.add(new DataParam(eachType, each.getDispPath()));
-//			}
-//		}
-//		Collections.sort(typeList, new DataParamComparator());
-//		currentList.clear();
-//		currentList.addAll(typeList);
-//		for(DataParam item : currentList) {
-//			actionTypeCombo.add(item.typeName);
-//		}
+		currentList.clear();
+		currentList.addAll(typeList);
+		for(String item : currentList) {
+			actionTypeCombo.add(item);
+		}
 		/////
 		actionTypeCombo.setText("");
 		actionTypeCombo.addKeyListener(new KeyListener() {
 			public void keyReleased(KeyEvent e) {
-//				String target = actionTypeCombo.getText();
-//				String[] keyList = target.split(" ");
-//				currentList.clear();
-//				for (DataParam each : typeList) {
-//					boolean isHit = true;
-//					for(String itemKey: keyList) {
-//					  if (each.typeName.contains(itemKey)==false) {
-//						  isHit = false;
-//						  break;
-//					  }
-//					}
-//					if (isHit) {
-//						currentList.add(each);
-//					}
-//				}
-//				Collections.sort(currentList, new DataParamComparator());
-//				actionTypeCombo.removeAll();
-//				for(DataParam item : currentList) {
-//					actionTypeCombo.add(item.typeName);
-//				}
-//				actionTypeCombo.setText(target);
-//				actionTypeCombo.setSelection(new Point(actionTypeCombo.getText().length(), actionTypeCombo.getText().length()) );
+				String target = actionTypeCombo.getText();
+				String[] keyList = target.split(" ");
+				currentList.clear();
+				for (String each : typeList) {
+					boolean isHit = true;
+					for(String itemKey: keyList) {
+					  if (each.contains(itemKey)==false) {
+						  isHit = false;
+						  break;
+					  }
+					}
+					if (isHit) {
+						currentList.add(each);
+					}
+				}
+				currentList.sort(null);
+				actionTypeCombo.removeAll();
+				for(String item : currentList) {
+					actionTypeCombo.add(item);
+				}
+				actionTypeCombo.setText(target);
+				actionTypeCombo.setSelection(new Point(actionTypeCombo.getText().length(), actionTypeCombo.getText().length()) );
 			}
 			public void keyPressed(KeyEvent e) { }
 		});
@@ -211,22 +214,39 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 		selectButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-//				defaultTypeList = extractDataTypes();
-//				/////
-//				List<DataTypeParam> dataTypes = editor.getGeneratorParam().getDataTypeParams();
-//				typeList.clear();
-//				actionTypeCombo.removeAll();
-//				for(DataTypeParam each : dataTypes) {
-//					for(String eachType : each.getDefinedTypes()) {
-//						typeList.add(new DataParam(eachType, each.getDispPath()));
-//					}
-//				}
-//				Collections.sort(typeList, new DataParamComparator());
-//				currentList.clear();
-//				currentList.addAll(typeList);
-//				for(DataParam item : currentList) {
-//					actionTypeCombo.add(item.typeName);
-//				}
+				Shell shell = PlatformUI.getWorkbench().getDisplay().getActiveShell();
+		        FileDialog fileDialog = new FileDialog(shell, SWT.OPEN);
+		        fileDialog.setText("Select action file");
+		        fileDialog.setFilterExtensions(new String[] { "*.action" });
+		        fileDialog.setFilterNames(new String[] { "Action Files (*.action)" });
+		        String selectedPath = fileDialog.open();
+		        if (selectedPath == null) return;
+		        
+	        	File srcFile = new File(selectedPath);
+	        	
+	    		ROSParam rosParam = ((ROSBuilderEditor)editor).getROSParam();
+	    		IWorkspaceRoot workspaceHandle = ResourcesPlugin.getWorkspace().getRoot();
+	    		IProject project = workspaceHandle.getProject(rosParam.getOutputProject());
+	    		IFolder targetFolder = project.getFolder("action");
+	    		IFile destFile = targetFolder.getFile(srcFile.getName());
+	    		try (FileInputStream fis = new FileInputStream(srcFile)) {
+	                if (destFile.exists()) {
+	                    destFile.setContents(fis, IResource.FORCE, new NullProgressMonitor());
+	                } else {
+	                    destFile.create(fis, IResource.NONE, new NullProgressMonitor());
+	                }
+	                targetFolder.refreshLocal(IResource.DEPTH_ONE, null);
+	            } catch (IOException e1) {
+	            } catch (CoreException e2) {
+	            }
+	    		
+	    		updateDefaultValue();
+				actionTypeCombo.removeAll();
+				currentList.clear();
+				currentList.addAll(typeList);
+				for(String item : currentList) {
+					actionTypeCombo.add(item);
+				}
 			}
 		});
 		/////
@@ -526,20 +546,4 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 			update();
 		}
 	}
-
-//	private class DataParam {
-//		private String typeName;
-//		private String idlPath;
-//		
-//		public DataParam(String typeName, String idlPath) {
-//			this.typeName = typeName;
-//			this.idlPath = idlPath;
-//		}
-//	}
-//	private class DataParamComparator implements Comparator<DataParam> {
-//		@Override
-//		public int compare(DataParam p1, DataParam p2) {
-//			return p1.typeName.compareTo(p2.typeName);
-//		}
-//	}
 }

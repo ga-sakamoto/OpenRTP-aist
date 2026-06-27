@@ -18,6 +18,15 @@ import jp.go.aist.rtm.rtcbuilder.model.component.BuildView;
 import jp.go.aist.rtm.rtcbuilder.util.FileUtil;
 import jp.go.aist.rtm.rtcbuilder.util.RTCUtil;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceProxy;
+import org.eclipse.core.resources.IResourceProxyVisitor;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -546,6 +555,39 @@ public abstract class AbstractEditorFormPage extends FormPage {
 		editor.getGeneratorParam().getDataTypeParams().addAll(sourceContents);
 		//
 		return defaultTypeList;
+	}
+	
+	protected List<String> extractROSEtcTypes(String projectName, String source) {
+		List<String> typeList = new ArrayList<String>();
+
+		IWorkspaceRoot workspaceHandle = ResourcesPlugin.getWorkspace().getRoot();
+		IProject project = workspaceHandle.getProject(projectName);
+		IFolder srcFolder = project.getFolder(source);
+		if (srcFolder.exists()) {
+			try {
+				srcFolder.refreshLocal(IResource.DEPTH_INFINITE, null);
+			    IResource[] members = srcFolder.members();
+			    String targetExtension = source;
+	
+			    for (IResource resource : members) {
+			        if (resource.getType() == IResource.FILE && targetExtension.equals(resource.getFileExtension())) {
+			        	IFile file = (IFile)resource;
+			        	String fullName = file.getName();
+			            String extension = file.getFileExtension();
+			            String nameWithoutExtension;
+
+			            if (extension != null && !extension.isEmpty()) {
+			                nameWithoutExtension = fullName.substring(0, fullName.length() - (extension.length() + 1));
+			            } else {
+			                nameWithoutExtension = fullName;
+			            }			        	
+			        	typeList.add(nameWithoutExtension);
+			        }
+			    }
+			} catch(CoreException ex) {
+			}
+		}
+	    return typeList;
 	}
 
 	abstract protected void update();
