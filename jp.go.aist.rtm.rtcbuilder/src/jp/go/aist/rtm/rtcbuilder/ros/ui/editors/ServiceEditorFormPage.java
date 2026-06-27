@@ -1,6 +1,5 @@
 package jp.go.aist.rtm.rtcbuilder.ros.ui.editors;
 
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -52,12 +51,7 @@ import jp.go.aist.rtm.rtcbuilder.util.StringUtil;
 public class ServiceEditorFormPage extends AbstractEditorFormPage {
 
 	private TableViewer serverTableViewer;
-	private Button serverAddButton;
-	private Button serverDeleteButton;
-	//
 	private TableViewer clientTableViewer;
-	private Button clientAddButton;
-	private Button clientDeleteButton;
 	//
 	private Text serviceNameText;
 	private Combo serviceTypeCombo;
@@ -117,9 +111,9 @@ public class ServiceEditorFormPage extends AbstractEditorFormPage {
 		final Composite composite = createSectionBaseWithLabel(toolkit, form,
 				Messages.getString("IMC.ROS_SERVICE_TITLE"), Messages.getString("IMC.ROS_SERVICE_EXPL"), 4);
 		serverTableViewer = createPortSection(toolkit, composite,
-				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_SERVICE_TBLLBL_SERVER"), 0, true);
+				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_SERVICE_TBLLBL_SERVER"), 0);
 		clientTableViewer = createPortSection(toolkit, composite,
-				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_SERVICE_TBLLBL_CLENT"), 1, false);
+				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_SERVICE_TBLLBL_CLENT"), 1);
 		createHintSection(toolkit, form);
 
 		createDetailSection(toolkit, form);
@@ -137,18 +131,15 @@ public class ServiceEditorFormPage extends AbstractEditorFormPage {
 		createHintLabel(Messages.getString("IMC.ROS_SERVICE_HINT_SERVER_TITLE"), Messages.getString("IMC.ROS_SERVICE_HINT_SERVER_DESC"), toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_SERVICE_HINT_CLIENT_TITLE"), Messages.getString("IMC.ROS_SERVICE_HINT_CLIENT_DESC"), toolkit, composite);
 		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_SERVICE_LBL_SERVICENAME"), Messages.getString("IMC.ROS_SERVICE_HINT_SERVICE_NAME_DESC"), toolkit, composite);
-		createHintLabel(Messages.getString("IMC.ROS_SERVICE_LBL_SERVICETYPE"), Messages.getString("IMC.ROS_SERVICE_HINT_SERVICE_TYPE_DESC"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_SERVICE_LBL_SERVICETYPE"), IMessageConstantsROS.SERVICE_HINT_SERVICE_TYPE_EXPL, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_TOPIC_LBL_VARNAME"), "", toolkit, composite);
-		createHintLabel(Messages.getString("IMC.ROS_SERVICE_HINT_VARNAME_SERVER_TITLE"), Messages.getString("IMC.ROS_SERVICE_HINT_VARNAME_SERVER_DESC"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_SERVICE_HINT_VARNAME_SERVER_TITLE"), IMessageConstantsROS.SERVICE_HINT_VAR_SERVER_EXPL, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_SERVICE_HINT_VARNAME_CLIENT_TITLE"), IMessageConstantsROS.SERVICE_HINT_VAR_CLIENT_EXPL, toolkit, composite);
 		//
 		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
 		createHintLabel(Messages.getString("IMC.HINT_DOCUMENT_TITLE"), "", toolkit, composite);
-		createHintLabel(Messages.getString("IMC.DATAPORT_LBL_DESCRIPTION"), Messages.getString("IMC.ROS_TOPIC_HINT_DOC_OVERVIEW"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_TOPIC_LBL_DESCRIPTION"), IMessageConstantsROS.SERVICE_HINT_OVERVIEW_EXPL, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_SERVICE_LBL_ARGUMENT"), IMessageConstantsROS.SERVICE_HINT_ARGUMENT_EXPL, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_SERVICE_LBL_RETURN"), IMessageConstantsROS.SERVICE_HINT_RETURN_EXPL, toolkit, composite);
 	}
@@ -251,7 +242,7 @@ public class ServiceEditorFormPage extends AbstractEditorFormPage {
 		documentGroup.setLayoutData(gd);
 		//
 		descriptionText = createLabelAndText(toolkit, documentGroup,
-				Messages.getString("IMC.DATAPORT_LBL_DESCRIPTION"), SWT.MULTI | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
+				Messages.getString("IMC.ROS_TOPIC_LBL_DESCRIPTION"), SWT.MULTI | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.heightHint = 50;
 		descriptionText.setLayoutData(gridData);
@@ -263,7 +254,7 @@ public class ServiceEditorFormPage extends AbstractEditorFormPage {
 	}
 
 	private TableViewer createPortSection(FormToolkit toolkit, Composite parent,
-			String columnLabel, final int initSel, boolean isInPort) {
+			String columnLabel, final int initSel) {
 
 		final TableViewer portParamTableViewer = createTableViewer(toolkit,	parent, 70);
 
@@ -350,14 +341,6 @@ public class ServiceEditorFormPage extends AbstractEditorFormPage {
 				}
 			}
 		});
-
-		if( isInPort ) {
-			serverAddButton = addButton;
-			serverDeleteButton = deleteButton;
-		} else {
-			clientAddButton = addButton;
-			clientDeleteButton = deleteButton;
-		}
 
 		return portParamTableViewer;
 	}

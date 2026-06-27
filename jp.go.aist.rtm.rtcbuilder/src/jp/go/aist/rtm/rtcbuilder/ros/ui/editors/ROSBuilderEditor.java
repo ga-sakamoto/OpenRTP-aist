@@ -8,8 +8,10 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -34,7 +36,6 @@ import org.openrtp.namespaces.ros.version01.RosProfile;
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
 import jp.go.aist.rtm.rtcbuilder.RtcBuilderPlugin;
 import jp.go.aist.rtm.rtcbuilder.generator.param.GeneratorParam;
-import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
 import jp.go.aist.rtm.rtcbuilder.manager.GenerateManager;
 import jp.go.aist.rtm.rtcbuilder.model.component.BuildView;
 import jp.go.aist.rtm.rtcbuilder.model.component.Component;
@@ -81,6 +82,7 @@ public class ROSBuilderEditor extends RtcBuilderEditor implements IActionFilter 
 	private ParameterEditorFormPage parameterFormPage;
 	private ROSDocumentEditorFormPage documentFormPage;
 	private ROSXmlEditorFormPage rosXmlFormPage;
+	private ROSContainerEditorFormPage containerFormPage;
 
 	//
 	private List<GenerateManager> managerList = null;
@@ -105,6 +107,8 @@ public class ROSBuilderEditor extends RtcBuilderEditor implements IActionFilter 
 		FileEditorInput fileEditorInput = ((FileEditorInput) result);
 		
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IWorkspaceRoot root = workspace.getRoot();
+
 		try {
 			ProfileHandlerROS handler = new ProfileHandlerROS();
 			generatorParam = handler.restorefromXMLFile(fileEditorInput.getPath().toOSString());
@@ -126,16 +130,23 @@ public class ROSBuilderEditor extends RtcBuilderEditor implements IActionFilter 
 			generatorParam.getROSParam().setOutputProject(title);
 		}
 		//
-		//TODO 未修正
-//		try {
-//			IProject project = root.getProject(this.getRtcParam().getOutputProject());
-//			IFolder idlDir  = project.getFolder("idl");
-//			if (!idlDir.exists()) {
-//				idlDir.create(true, true, null);
-//			}			
-//		} catch (Exception e) {
-//			createGeneratorParam();
-//		}
+		try {
+			IProject project = root.getProject(this.getROSParam().getOutputProject());
+			IFolder msgDir  = project.getFolder("msg");
+			if (!msgDir.exists()) {
+				msgDir.create(true, true, null);
+			}			
+			IFolder srvDir  = project.getFolder("srv");
+			if (!srvDir.exists()) {
+				srvDir.create(true, true, null);
+			}			
+			IFolder actionDir  = project.getFolder("action");
+			if (!actionDir.exists()) {
+				actionDir.create(true, true, null);
+			}			
+		} catch (Exception e) {
+			createGeneratorParam();
+		}
 		
 		setCallback();
 		//
@@ -157,20 +168,20 @@ public class ROSBuilderEditor extends RtcBuilderEditor implements IActionFilter 
 		param.setActionImplemented(IRtcBuilderConstantsROS.ACTIVITY_DEACTIVATE, true);
 	}
 
-	public void loadNewData(RtcParam param) {
-		this.generatorParam.setRtcParam(param);
-
-		title = "RtcBuilder";
-		if( buildview==null ) buildview = ComponentFactory.eINSTANCE.createBuildView();
-		updateEMFModuleName(this.getRtcParam().getName());
-		updateEMFDataPorts(this.getRtcParam().getInports(), this.getRtcParam().getOutports(),
-				this.getRtcParam().getEventports(), this.getRtcParam().getServicePorts());
-		//
-		if( basicFormPage != null )	 basicFormPage.load();
-		allPagesReLoad();
-
-		updateDirty();
-	}
+//	public void loadNewData(RtcParam param) {
+//		this.generatorParam.setRtcParam(param);
+//
+//		title = "RtcBuilder";
+//		if( buildview==null ) buildview = ComponentFactory.eINSTANCE.createBuildView();
+//		updateEMFModuleName(this.getROSParam().getNodeName());
+//		updateEMFDataPorts(this.getROSParam().getInports(), this.getRtcParam().getOutports(),
+//				this.getRtcParam().getEventports(), this.getRtcParam().getServicePorts());
+//		//
+//		if( basicFormPage != null )	 basicFormPage.load();
+//		allPagesReLoad();
+//
+//		updateDirty();
+//	}
 
 	private void createGeneratorParam(){
 		generatorParam = new GeneratorParam();
@@ -191,6 +202,19 @@ public class ROSBuilderEditor extends RtcBuilderEditor implements IActionFilter 
 			throws PartInitException {
 		IEditorInput newInput = load(input, site);
 		super.init(site, newInput);
+		
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IWorkspaceRoot root = workspace.getRoot();
+		try {
+			IProject project = root.getProject(this.getRtcParam().getOutputProject());
+			IFolder idlDir  = project.getFolder("idl");
+			if (idlDir.exists()) {
+				idlDir.delete(true, null);
+			}			
+		} catch (Exception e) {
+			createGeneratorParam();
+		}
+		
 		managerList = RtcBuilderPlugin.getDefault().getLoader().getManagerList();
 		// ページ切り替え時のイベントを管理
 		addPageChangedListener(pageChangedListener);
@@ -206,7 +230,7 @@ public class ROSBuilderEditor extends RtcBuilderEditor implements IActionFilter 
 	@Override
 	protected void addPages() {
 		try {
-			AbstractEditorFormPage[] defaultPages = new AbstractEditorFormPage[8];
+			AbstractEditorFormPage[] defaultPages = new AbstractEditorFormPage[9];
 			//
 			basicFormPage = new ROSBasicEditorFormPage(this);
 			defaultPages[0] = basicFormPage;
@@ -222,8 +246,10 @@ public class ROSBuilderEditor extends RtcBuilderEditor implements IActionFilter 
 			defaultPages[5] = parameterFormPage;
 			documentFormPage = new ROSDocumentEditorFormPage(this);
 			defaultPages[6] = documentFormPage;
+			containerFormPage = new ROSContainerEditorFormPage(this);
+			defaultPages[7] = containerFormPage;
 			rosXmlFormPage = new ROSXmlEditorFormPage(this);
-			defaultPages[7] = rosXmlFormPage;
+			defaultPages[8] = rosXmlFormPage;
 			//
 			List<List<AbstractEditorFormPage>> forms = new ArrayList<List<AbstractEditorFormPage>>();
 			forms.add(new ArrayList<AbstractEditorFormPage>());
@@ -480,7 +506,7 @@ public class ROSBuilderEditor extends RtcBuilderEditor implements IActionFilter 
 	 * エディタをダーティにする。
 	 */
 	public void updateDirty() {
-		setDirty(getRtcParam().isUpdated());
+		setDirty(getROSParam().isUpdated());
 		firePropertyChange(IEditorPart.PROP_DIRTY);
 	}
 
@@ -643,7 +669,7 @@ public class ROSBuilderEditor extends RtcBuilderEditor implements IActionFilter 
 	}
 
 	public void setEnabledInfoByLang() {
-		setEnabledInfoByLang(getRtcParam().getLanguage());
+		setEnabledInfoByLang(getROSParam().getLanguage());
 	}
 
 	@SuppressWarnings("deprecation")

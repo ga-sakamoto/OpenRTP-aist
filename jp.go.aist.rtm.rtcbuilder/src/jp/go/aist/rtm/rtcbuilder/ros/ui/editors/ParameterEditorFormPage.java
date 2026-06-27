@@ -147,9 +147,9 @@ public class ParameterEditorFormPage extends AbstractEditorFormPage {
 		readOnlyBtn = createRadioCheckButton(toolkit, detailGroup, Messages.getString("IMC.ROS_PARAMETER_READ_ONLT_LBL"), SWT.CHECK);
 		defaultValueText = createLabelAndText(toolkit, detailGroup,
 				IMessageConstants.REQUIRED + Messages.getString("IMC.CONFIGURATION_TBLLBL_DEFAULTVAL"), SWT.BORDER, SWT.COLOR_RED, 5);
-		minText = createLabelAndText(toolkit, detailGroup,"min:", SWT.BORDER, SWT.COLOR_BLACK);
-		maxText = createLabelAndText(toolkit, detailGroup, "max:", SWT.BORDER, SWT.COLOR_BLACK);
-		stepText = createLabelAndText(toolkit, detailGroup, "step:", SWT.BORDER, SWT.COLOR_BLACK);
+		minText = createLabelAndText(toolkit, detailGroup, Messages.getString("IMC.ROS_PARAMETER_MIN_LBL"), SWT.BORDER, SWT.COLOR_BLACK);
+		maxText = createLabelAndText(toolkit, detailGroup, Messages.getString("IMC.ROS_PARAMETER_MAX_LBL"), SWT.BORDER, SWT.COLOR_BLACK);
+		stepText = createLabelAndText(toolkit, detailGroup, Messages.getString("IMC.ROS_PARAMETER_STEP_LBL"), SWT.BORDER, SWT.COLOR_BLACK);
 		/////
 		Group documentGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
 		documentGroup.setLayout(new GridLayout(2, false));
@@ -280,26 +280,19 @@ public class ParameterEditorFormPage extends AbstractEditorFormPage {
 		//
 		createHintLabel(Messages.getString("IMC.ROS_PARAMETER_HINT_PARAMETER_TITLE"), IMessageConstantsROS.PARAMETER_HINT_PARAMETER_EXPL, toolkit, composite);
 		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
 		createHintLabel(Messages.getString("IMC.CONFIGURATION_HINT_PARAMNAME_TITLE"), Messages.getString("IMC.ROS_PARAMETER_HINT_PARAMETER_NAME_DESC"), toolkit, composite);
 		createHintLabel(Messages.getString("IMC.CONFIGURATION_HINT_PARAMTYPE_TITLE"), Messages.getString("IMC.ROS_PARAMETER_HINT_PARAMETER_TYPE_DESC"), toolkit, composite);
-		createHintLabel(Messages.getString("IMC.CONFIGURATION_HINT_DEFAULT_TITLE"), IMessageConstantsROS.PARAMETER_HINT_DEFAULT_EXPL, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_PARAMETER_READ_ONLT_LBL"), Messages.getString("IMC.ROS_PARAMETER_HINT_READ_ONLY_DESC"), toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
+		createHintLabel(Messages.getString("IMC.CONFIGURATION_HINT_DEFAULT_TITLE"), IMessageConstantsROS.PARAMETER_HINT_DEFAULT_EXPL, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_PARAMETER_MIN_LBL"), IMessageConstantsROS.PARAMETER_HINT_MIN_EXPL, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_PARAMETER_MAX_LBL"), IMessageConstantsROS.PARAMETER_HINT_MAX_EXPL, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_PARAMETER_STEP_LBL"), IMessageConstantsROS.PARAMETER_HINT_STEP_EXPL, toolkit, composite);
 		createHintSpace(toolkit, composite);
 		createHintLabel(Messages.getString("IMC.HINT_DOCUMENT_TITLE"), "", toolkit, composite);
 		createHintLabel(Messages.getString("IMC.CONFIGURATION_LBL_DATANAME"), Messages.getString("IMC.CONFIGURATION_HINT_DOC_NAME_DESC"), toolkit, composite);
 		createHintLabel(Messages.getString("IMC.CONFIGURATION_LBL_DEFAULT"), Messages.getString("IMC.CONFIGURATION_HINT_DOC_DEFAULT_DESC"), toolkit, composite);
-		createHintLabel(Messages.getString("IMC.CONFIGURATION_LBL_DESCRIPTION"), Messages.getString("IMC.CONFIGURATION_HINT_DOC_DESCRIPTION_DESC"), toolkit, composite);
-		createHintLabel(Messages.getString("IMC.CONFIGURATION_LBL_UNIT"), Messages.getString("IMC.CONFIGURATION_HINT_DOC_UNIT_DESC"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.CONFIGURATION_LBL_DESCRIPTION"), Messages.getString("IMC.ROS_PARAMETER_HINT_DESC_DESC"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.CONFIGURATION_LBL_UNIT"), IMessageConstantsROS.PARAMETER_HINT_DESC_EXPL, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.CONFIGURATION_LBL_RANGE"), IMessageConstants.CONFIGURATION_HINT_DOC_RANGE, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.CONFIGURATION_LBL_CONSTRAINT"), IMessageConstants.CONFIGURATION_HINT_DOC_CONSTRAINT, toolkit, composite);
 	}

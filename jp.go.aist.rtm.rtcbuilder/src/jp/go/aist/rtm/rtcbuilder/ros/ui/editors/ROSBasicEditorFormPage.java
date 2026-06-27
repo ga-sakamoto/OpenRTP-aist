@@ -269,7 +269,7 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 		nodeText = createLabelAndText(toolkit, composite,
 				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_BASIC_LBL_NODENAME"), SWT.NONE, SWT.COLOR_RED, 2);
 		classText = createLabelAndText(toolkit, composite,
-				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_BASIC_LBL_CLASSNAME"), SWT.NONE, SWT.COLOR_RED, 2);
+				Messages.getString("IMC.ROS_BASIC_LBL_CLASSNAME"), SWT.NONE, SWT.COLOR_BLACK, 2);
 		descriptionText = createLabelAndText(toolkit, composite, Messages.getString("IMC.BASIC_LBL_DESCRIPTION"), SWT.NONE, SWT.COLOR_BLACK, 2);
 		versionText = createLabelAndText(toolkit, composite,
 				IMessageConstants.REQUIRED + Messages.getString("IMC.BASIC_LBL_VERSION"), SWT.NONE, SWT.COLOR_RED, 2);
@@ -287,39 +287,24 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 		Composite composite = createHintSectionBase(toolkit, form, 7);
 		//
 		createHintLabel(Messages.getString("IMC.ROS_BASIC_LBL_PACKAGENAME"), IMessageConstantsROS.BASIC_HINT_PACKCGENAME_DESC, toolkit, composite);
-		createHintLabel(Messages.getString("IMC.ROS_BASIC_LBL_NODENAME"), Messages.getString("IMC.ROS_BASIC_HINT_NODE_NAME_DESC"), toolkit, composite);
-		createHintLabel(Messages.getString("IMC.ROS_BASIC_LBL_CLASSNAME"), Messages.getString("IMC.ROS_BASIC_HINT_CLASS_NAME_DESC"), toolkit, composite);
-		createHintLabel(Messages.getString("IMC.BASIC_HINT_DESCRIPTION_TITLE"), Messages.getString("IMC.ROS_BASIC_HINT_DESCRIPTION_DESC"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_BASIC_LBL_NODENAME"), IMessageConstantsROS.BASIC_HINT_NODENAME_DESC, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_BASIC_LBL_CLASSNAME"), IMessageConstantsROS.BASIC_HINT_CLASSNAME_DESC, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.BASIC_HINT_DESCRIPTION_TITLE"), IMessageConstantsROS.BASIC_HINT_DESCRIPTION_DESC, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.BASIC_HINT_VERSION_TITLE"), Messages.getString("IMC.ROS_BASIC_HINT_VERSION_DESC"), toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_BASIC_LBL_MAINTAINER"), Messages.getString("IMC.ROS_BASIC_HINT_MAINTAINER_DESC"), toolkit, composite);
 		createHintLabel(Messages.getString("IMC.BASIC_HINT_CATEGORY_TITLE"), IMessageConstantsROS.BASIC_HINT_CATEGORY_DESC, toolkit, composite);
 		//
 		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_BASIC_LBL_LICENSE"), IMessageConstantsROS.BASIC_HINT_LICENSE_DESC, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_BASIC_LBL_MAINTAINER_EMAIL"), Messages.getString("IMC.ROS_BASIC_HINT_MAINTAINER_MAIL_DESC"), toolkit, composite);
 		createHintSpace(toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_PACKAGE_TITLE"), IMessageConstantsROS.BASIC_HINT_DEPENDENCY_DESC, toolkit, composite);
 		//
 		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
 		createHintLabel(IMessageConstants.LANGUAGE_HINT_LANG_TITLE, IMessageConstantsROS.BASIC_HINT_LANGUAGE_DESC, toolkit, composite);
 		//
 		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintLabel(Messages.getString("IMC.BASIC_HINT_GENERATE_TITLE"), Messages.getString("IMC.ROS_BASIC_HINT_GENERATE_DESC"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.BASIC_HINT_GENERATE_TITLE"), IMessageConstantsROS.BASIC_HINT_CODE_GEN_DESC, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.BASIC_HINT_CODE_RESTORE_TITLE"), Messages.getString("IMC.BASIC_HINT_CODE_RESTORE_DESC"), toolkit, composite);
 		createHintLabel(Messages.getString("IMC.BASIC_HINT_ISO_PROFILE_TITLE"), Messages.getString("IMC.BASIC_HINT_ISO_PROFILE_DESC"), toolkit, composite);
 		createHintLabel(Messages.getString("IMC.BASIC_HINT_IMPORT_TITLE"), Messages.getString("IMC.ROS_BASIC_HINT_IMPORT_DESC"), toolkit, composite);

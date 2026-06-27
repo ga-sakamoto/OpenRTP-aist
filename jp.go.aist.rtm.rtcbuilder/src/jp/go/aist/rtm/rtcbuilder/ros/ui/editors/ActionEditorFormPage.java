@@ -1,6 +1,5 @@
 package jp.go.aist.rtm.rtcbuilder.ros.ui.editors;
 
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,15 +38,12 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
-import jp.go.aist.rtm.rtcbuilder.generator.param.DataPortParam;
-import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
 import jp.go.aist.rtm.rtcbuilder.nl.Messages;
 import jp.go.aist.rtm.rtcbuilder.ros.param.ActionParam;
 import jp.go.aist.rtm.rtcbuilder.ros.param.ROSParam;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.AbstractEditorFormPage;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.IMessageConstants;
 import jp.go.aist.rtm.rtcbuilder.util.StringUtil;
-import jp.go.aist.rtm.rtcbuilder.util.ValidationUtil;
 
 /**
  * Actionページ
@@ -55,12 +51,7 @@ import jp.go.aist.rtm.rtcbuilder.util.ValidationUtil;
 public class ActionEditorFormPage extends AbstractEditorFormPage {
 
 	private TableViewer serverTableViewer;
-	private Button serverAddButton;
-	private Button serverDeleteButton;
-	//
 	private TableViewer clientTableViewer;
-	private Button clientAddButton;
-	private Button clientDeleteButton;
 	//
 	private Text actionNameText;
 	private Combo actionTypeCombo;
@@ -121,9 +112,9 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 		final Composite composite = createSectionBaseWithLabel(toolkit, form,
 				Messages.getString("IMC.ROS_ACTION_TITLE"), Messages.getString("IMC.ROS_ACTION_EXPL"), 4);
 		serverTableViewer = createPortSection(toolkit, composite,
-				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_ACTION_TBLLBL_SERVER"), 0, true);
+				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_ACTION_TBLLBL_SERVER"), 0);
 		clientTableViewer = createPortSection(toolkit, composite,
-				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_ACTION_TBLLBL_CLENT"), 1, false);
+				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_ACTION_TBLLBL_CLENT"), 1);
 		createHintSection(toolkit, form);
 
 		createDetailSection(toolkit, form);
@@ -141,15 +132,13 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 		createHintLabel(Messages.getString("IMC.ROS_ACTION_HINT_SERVER_TITLE"), Messages.getString("IMC.ROS_ACTION_HINT_SERVER_DESC_"), toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_ACTION_HINT_CLIENT_TITLE"), Messages.getString("IMC.ROS_ACTION_HINT_CLIENT_DESC"), toolkit, composite);
 		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintLabel(Messages.getString("IMC.ROS_ACTION_LBL_ACTIONNAME"), Messages.getString("IMC.ROS_ACTION_HINT_ACTION_NAME_DESC"), toolkit, composite);
-		createHintLabel(Messages.getString("IMC.ROS_ACTION_LBL_ACTIONTYPE"), Messages.getString("IMC.ROS_ACTION_HINT_ACTION_TYPE_DESC"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_ACTION_LBL_ACTIONNAME"), IMessageConstantsROS.ACTION_HINT_NAME_EXPL, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_ACTION_LBL_ACTIONTYPE"), IMessageConstantsROS.ACTION_HINT_TYPE_EXPL, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_ACTION_LBL_CALLBACK"), IMessageConstantsROS.ACTION_HINT_CALLBACK_EXPL, toolkit, composite);
 		//
 		createHintSpace(toolkit, composite);
 		createHintLabel(Messages.getString("IMC.HINT_DOCUMENT_TITLE"), "", toolkit, composite);
-		createHintLabel(Messages.getString("IMC.DATAPORT_LBL_DESCRIPTION"), Messages.getString("IMC.ROS_ACTION_HINT_DESCRIPTION_DESC"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_TOPIC_LBL_DESCRIPTION"), IMessageConstantsROS.ACTION_HINT_DESC_EXPL, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_ACTION_LBL_GAOL"), Messages.getString("IMC.ROS_ACTION_HINT_GOAL_DESC"), toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_ACTION_LBL_FEEDBACK"), Messages.getString("IMC.ROS_ACTION_HINT_FEEDBACK_DESC"), toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_ACTION_LBL_RESULT"), Messages.getString("IMC.ROS_ACTION_HINT_RESULT_DESC"), toolkit, composite);
@@ -253,7 +242,7 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 		documentGroup.setLayoutData(gd);
 		//
 		descriptionText = createLabelAndText(toolkit, documentGroup,
-				Messages.getString("IMC.DATAPORT_LBL_DESCRIPTION"), SWT.MULTI | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
+				Messages.getString("IMC.ROS_TOPIC_LBL_DESCRIPTION"), SWT.MULTI | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.heightHint = 50;
 		descriptionText.setLayoutData(gridData);
@@ -268,7 +257,7 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 	}
 
 	private TableViewer createPortSection(FormToolkit toolkit, Composite parent,
-			String columnLabel, final int initSel, boolean isInPort) {
+			String columnLabel, final int initSel) {
 
 		final TableViewer actionTableViewer = createTableViewer(toolkit,	parent, 70);
 
@@ -356,14 +345,6 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 				}
 			}
 		});
-
-		if( isInPort ) {
-			serverAddButton = addButton;
-			serverDeleteButton = deleteButton;
-		} else {
-			clientAddButton = addButton;
-			clientDeleteButton = deleteButton;
-		}
 
 		return actionTableViewer;
 	}

@@ -68,7 +68,6 @@ public class LifecycleEditorFormPage extends AbstractEditorFormPage {
 	private Button deleteButton;
 	private List<TimerParam> timerList = new ArrayList<TimerParam>();
 
-
 	/**
 	 * コンストラクタ
 	 *
@@ -194,31 +193,26 @@ public class LifecycleEditorFormPage extends AbstractEditorFormPage {
 	private void createHintSection(FormToolkit toolkit, ScrolledForm form) {
 		Composite composite = createHintSectionBase(toolkit, form, 12);
 		//
-		createHintLabel(ACTIVITY_CONFIGURE, Messages.getString("IMC.ROS_LIFECYCLE_HINT_ON_CONFIGURE_DESC"), toolkit, composite);
-		createHintLabel(ACTIVITY_ACTIVATE, Messages.getString("IMC.ROS_LIFECYCLE_HINT_ON_ACTIVATE_DESC"), toolkit, composite);
-		createHintLabel(ACTIVITY_DEACTIVATE, Messages.getString("IMC.ROS_LIFECYCLE_HINT_ON_DEACTIVATE_DESC"), toolkit, composite);
-		createHintLabel(ACTIVITY_CLEANUP, Messages.getString("IMC.ROS_LIFECYCLE_HINT_ON_CLEANUP_DESC"), toolkit, composite);
-		createHintLabel(ACTIVITY_SHUTDOWN, Messages.getString("IMC.ROS_LIFECYCLE_HINT_ON_SHUTDOWN_DESC"), toolkit, composite);
-		createHintLabel(ACTIVITY_ERROR, Messages.getString("IMC.ROS_LIFECYCLE_HINT_ON_ERROR_DESC"), toolkit, composite);
+		createHintLabel(ACTIVITY_CONFIGURE, IMessageConstantsROS.LIFECYCLE_CONFIGURE_EXPL, toolkit, composite);
+		createHintLabel(ACTIVITY_ACTIVATE, IMessageConstantsROS.LIFECYCLE_ACTIVATE_EXPL, toolkit, composite);
+		createHintLabel(ACTIVITY_DEACTIVATE, IMessageConstantsROS.LIFECYCLE_DEACTIVATE_EXPL, toolkit, composite);
+		createHintLabel(ACTIVITY_CLEANUP, IMessageConstantsROS.LIFECYCLE_CLEANUP_EXPL, toolkit, composite);
+		createHintLabel(ACTIVITY_SHUTDOWN, IMessageConstantsROS.LIFECYCLE_SHUTDOWN_EXPL, toolkit, composite);
+		createHintLabel(ACTIVITY_ERROR, IMessageConstantsROS.LIFECYCLE_ERROR_EXPL, toolkit, composite);
 		//
 		createHintSpace(toolkit, composite);
 		//
-		createHintLabel(IMessageConstants.ACTIVITY_HINT_DESCRIPTION_TITLE, IMessageConstants.ACTIVITY_HINT_DESCRIPTION_DESC, toolkit, composite);
-		createHintLabel(IMessageConstants.ACTIVITY_HINT_PRECONDITION_TITLE, IMessageConstants.ACTIVITY_HINT_PRECONDITION_DESC, toolkit, composite);
-		createHintLabel(IMessageConstants.ACTIVITY_HINT_POSTCONDITION_TITLE, IMessageConstants.ACTIVITY_HINT_POSTCONDITION_DESC, toolkit, composite);
+		createHintLabel(IMessageConstants.ACTIVITY_HINT_DESCRIPTION_TITLE, Messages.getString("IMC.ROS_LIFECYCLE_HINT_DESCRIPTION_DESC"), toolkit, composite);
+		createHintLabel(IMessageConstants.ACTIVITY_HINT_PRECONDITION_TITLE, Messages.getString("IMC.ROS_LIFECYCLE_HINT_PRECONDITION_DESC"), toolkit, composite);
+		createHintLabel(IMessageConstants.ACTIVITY_HINT_POSTCONDITION_TITLE, Messages.getString("IMC.ROS_LIFECYCLE_HINT_POSTCONDITION_DESC"), toolkit, composite);
 		//
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
-		createHintSpace(toolkit, composite);
 		createHintSpace(toolkit, composite);
 		//
 		createHintLabel(Messages.getString("IMC.ROS_LIFECYCLE_LBL_TIMER"), IMessageConstantsROS.TIMER_DOCUMENT_EXPL, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_LIFECYCLE_LBL_TIMER_NAME"), IMessageConstantsROS.TIMER_NAME_EXPL, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_LIFECYCLE_LBL_TIMER_RATE"), Messages.getString("IMC.ROS_LIFECYCLE_HINT_TIMER_RATE_DESC"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_LIFECYCLE_LBL_TIMER_CALLBACK"), IMessageConstantsROS.TIMER_CALLBACK_EXPL, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_LIFECYCLE_LBL_TIMER_DESC"), IMessageConstantsROS.TIMER_DESC_EXPL, toolkit, composite);
 	}
 
 	private void createDocumentSection(FormToolkit toolkit, ScrolledForm form) {

@@ -52,12 +52,7 @@ import jp.go.aist.rtm.rtcbuilder.util.StringUtil;
 public class TopicEditorFormPage extends AbstractEditorFormPage {
 
 	private TableViewer subscribeTableViewer;
-	private Button subscribeAddButton;
-	private Button subscribeDeleteButton;
-	//
 	private TableViewer publishTableViewer;
-	private Button publishAddButton;
-	private Button publishDeleteButton;
 	//
 	private Text topicNameText;
 	private Combo messageTypeCombo;
@@ -122,9 +117,9 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 		final Composite composite = createSectionBaseWithLabel(toolkit, form,
 				Messages.getString("IMC.ROS_TOPIC_TITLE"), Messages.getString("IMC.ROS_TOPIC_EXPL"), 4);
 		subscribeTableViewer = createPortSection(toolkit, composite,
-				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_TOPIC_TBLLBL_INPORTNAME"), 0, true);
+				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_TOPIC_TBLLBL_INPORTNAME"), 0);
 		publishTableViewer = createPortSection(toolkit, composite,
-				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_TOPIC_TBLLBL_OUTPORTNAME"), 1, false);
+				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_TOPIC_TBLLBL_OUTPORTNAME"), 1);
 		createHintSection(toolkit, form);
 
 		createDetailSection(toolkit, form);
@@ -142,22 +137,23 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 		createHintLabel(Messages.getString("IMC.ROS_TOPIC_HINT_SUBSCRIBE_TITLE"), IMessageConstantsROS.TOPIC_HINT_SUBSCRIBE_EXPL, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_TOPIC_HINT_PUBLISH_TITLE"), Messages.getString("IMC.ROS_TOPIC_HINT_PUBLISH_DESC"), toolkit, composite);
 		createHintSpace(toolkit, composite);
-		createHintLabel(Messages.getString("IMC.ROS_TOPIC_LBL_TOPICNAME"), IMessageConstantsROS.TOPIC_HINT_TOPIC_NAME_EXPL, toolkit, composite);
-		createHintLabel(Messages.getString("IMC.ROS_TOPIC_LBL_DATATYPE"), Messages.getString("IMC.ROS_TOPIC_HINT_MESSAGE_TYPE_DESC"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_TOPIC_LBL_TOPICNAME"), Messages.getString("IMC.ROS_TOPIC_HINT_TOPIC_NAME_DESC"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_TOPIC_LBL_DATATYPE"), IMessageConstantsROS.TOPIC_HINT_MESSAGETYPE_EXPL, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_TOPIC_HINT_QoS_TITLE"), Messages.getString("IMC.ROS_TOPIC_HINT_QoS_DESC"), toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_TOPIC_HINT_RELIABILITY_TITLE"), IMessageConstantsROS.TOPIC_HINT_RELIABILITY_EXPL, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_TOPIC_HINT_HISTORY_TITLE"), IMessageConstantsROS.TOPIC_HINT_HISTORY_EXPL, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_TOPIC_HINT_DEPTH_TITLE"), IMessageConstantsROS.TOPIC_HINT_DEPTH_EXPL, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_TOPIC_LBL_VARNAME"), "", toolkit, composite);
-		createHintLabel(Messages.getString("IMC.ROS_TOPIC_HINT_VARNAME_SUBSCRIBE_TITLE"), Messages.getString("IMC.ROS_TOPIC_HINT_VARNAME_SUBSCRIBE_DESC"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_TOPIC_HINT_VARNAME_SUBSCRIBE_TITLE"), IMessageConstantsROS.TOPIC_HINT_VARNAME_SUBSCRIBE_EXPL, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_TOPIC_HINT_VARNAME_PUBLISH_TITLE"), IMessageConstantsROS.TOPIC_HINT_VARNAME_PUBLISH_EXPL, toolkit, composite);
 		//
 		createHintSpace(toolkit, composite);
 		createHintLabel(Messages.getString("IMC.HINT_DOCUMENT_TITLE"), "", toolkit, composite);
-		createHintLabel(Messages.getString("IMC.DATAPORT_LBL_DESCRIPTION"), Messages.getString("IMC.ROS_TOPIC_HINT_DOC_OVERVIEW"), toolkit, composite);
-		createHintLabel(Messages.getString("IMC.DATAPORT_LBL_PORTTYPE"), Messages.getString("IMC.ROS_TOPIC_HINT_DOC_DATATYPE"), toolkit, composite);
-		createHintLabel(Messages.getString("IMC.DATAPORT_LBL_SEMANTICS"), Messages.getString("IMC.ROS_TOPIC_HINT_DOC_DETAIL"), toolkit, composite);
-		createHintLabel(Messages.getString("IMC.DATAPORT_LBL_UNIT"), Messages.getString("IMC.ROS_TOPIC_HINT_DOC_UNIT"), toolkit, composite);
-		createHintLabel(Messages.getString("IMC.DATAPORT_LBL_OCCUR"), IMessageConstantsROS.TOPIC_HINT_DOC_OCCUR_EXPL, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_TOPIC_LBL_DESCRIPTION"), IMessageConstantsROS.TOPIC_HINT_DOC_OVERVIEW_EXPL, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_TOPIC_LBL_DATATYPE"), Messages.getString("IMC.ROS_TOPIC_HINT_DOC_DATATYPE"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_TOPIC_LBL_SEMANTICS"), Messages.getString("IMC.ROS_TOPIC_HINT_DOC_DETAIL"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_TOPIC_LBL_UNIT"), IMessageConstantsROS.TOPIC_HINT_DOC_UNIT_EXPL, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_TOPIC_LBL_OCCUR"), IMessageConstantsROS.TOPIC_HINT_DOC_OCCUR_EXPL, toolkit, composite);
 	}
 
 	private void createDetailSection(FormToolkit toolkit, ScrolledForm form) {
@@ -283,24 +279,24 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 		documentGroup.setLayoutData(gd);
 		//
 		descriptionText = createLabelAndText(toolkit, documentGroup,
-				Messages.getString("IMC.DATAPORT_LBL_DESCRIPTION"), SWT.MULTI | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
+				Messages.getString("IMC.ROS_TOPIC_LBL_DESCRIPTION"), SWT.MULTI | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.heightHint = 50;
 		descriptionText.setLayoutData(gridData);
 		typeText = createLabelAndText(toolkit, documentGroup,
-				Messages.getString("IMC.DATAPORT_LBL_PORTTYPE"), SWT.BORDER);
+				Messages.getString("IMC.ROS_TOPIC_LBL_DATATYPE"), SWT.BORDER);
 		semanticsText = createLabelAndText(toolkit, documentGroup,
-				Messages.getString("IMC.DATAPORT_LBL_SEMANTICS"), SWT.MULTI | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
+				Messages.getString("IMC.ROS_TOPIC_LBL_SEMANTICS"), SWT.MULTI | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
 		semanticsText.setLayoutData(gridData);
 		unitText = createLabelAndText(toolkit, documentGroup,
-				Messages.getString("IMC.DATAPORT_LBL_UNIT"), SWT.BORDER);
+				Messages.getString("IMC.ROS_TOPIC_LBL_UNIT"), SWT.BORDER);
 		occurrenceText = createLabelAndText(toolkit, documentGroup,
-				Messages.getString("IMC.DATAPORT_LBL_OCCUR"), SWT.MULTI | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
+				Messages.getString("IMC.ROS_TOPIC_LBL_OCCUR"), SWT.MULTI | SWT.V_SCROLL | SWT.WRAP | SWT.BORDER);
 		occurrenceText.setLayoutData(gridData);
 	}
 
 	private TableViewer createPortSection(FormToolkit toolkit, Composite parent,
-			String columnLabel, final int initSel, boolean isInPort) {
+			String columnLabel, final int initSel) {
 
 		final TableViewer topicTableViewer = createTableViewer(toolkit,	parent, 70);
 
@@ -397,15 +393,6 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 				}
 			}
 		});
-
-		if( isInPort ) {
-			subscribeAddButton = addButton;
-			subscribeDeleteButton = deleteButton;
-		} else {
-			publishAddButton = addButton;
-			publishDeleteButton = deleteButton;
-		}
-
 		return topicTableViewer;
 	}
 
