@@ -260,7 +260,7 @@ public class ParameterEditorFormPage extends AbstractEditorFormPage {
 					minText.setText(Double.valueOf(selectParam.getMin()).toString());
 					maxText.setText(Double.valueOf(selectParam.getMax()).toString());
 					stepText.setText(Double.valueOf(selectParam.getStep()).toString());
-					readOnlyBtn.setSelection(selectParam.isRead_only());
+					readOnlyBtn.setSelection(selectParam.isReadOnly());
 					//
 					descriptionText.setText(StringUtil.getDisplayDocText(selectParam.getDocDescription()));
 					datanameText.setText(StringUtil.getDisplayDocText(selectParam.getDocDataname()));
@@ -329,7 +329,7 @@ public class ParameterEditorFormPage extends AbstractEditorFormPage {
 				val = Double.parseDouble(StringUtil.getDocText(stepText.getText()));
 				target.setStep(val);
 			} catch(Exception ex) {}
-			target.setRead_only(readOnlyBtn.getSelection());
+			target.setReadOnly(readOnlyBtn.getSelection());
 			//
 			target.setDocDescription(StringUtil.getDocText(descriptionText.getText()));
 			target.setDocDataname(StringUtil.getDocText(datanameText.getText()));
@@ -376,41 +376,8 @@ public class ParameterEditorFormPage extends AbstractEditorFormPage {
 	}
 
 	public String validateParam() {
-		String result = null;
-
 		ROSParam rosParam = ((ROSBuilderEditor)editor).getROSParam();
-		Set<String> checkSet = new HashSet<String>();
-		Set<String> checkVarSet = new HashSet<String>();
-
-		for(ParameterParam param : rosParam.getParameters()) {
-			if( param.getName()==null || param.getName().length()==0 ) {
-				return Messages.getString("IMC.VALIDATE_PARAMETER_NAME1");
-			}
-//			if( !StringUtil.checkDigitAlphabet(config.getName()) ) {
-//				result = IMessageConstants.CONFIGURATION_VALIDATE_NAME2;
-//				return result;
-//			}
-			
-			if( param.getType()==null || param.getType().length()==0 ) {
-				return Messages.getString("IMC.VALIDATE_PARAMETER_TYPE");
-			}
-			if( param.getDefaultValue()==null || param.getDefaultValue().length()==0 ) {
-				return Messages.getString("IMC.VALIDATE_PARAMETER_DEFVALUE");
-			}
-
-			//重複
-			if( checkSet.contains(param.getName()) ) {
-				return Messages.getString("IMC.VALIDATE_PARAMETER_DUPLICATE");
-			}
-			checkSet.add(param.getName());
-			//変数重複
-//			if( checkVarSet.contains(config.getTmplVarName()) ) {
-//				result = IMessageConstants.CONFIGURATION_VALIDATE_VAR_DUPLICATE;
-//				return result;
-//			}
-//			checkVarSet.add(config.getTmplVarName());
-		}
-		return null;
+		return rosParam.validateParameterInfo();
 	}
 
 	private class ParameterLabelProvider extends LabelProvider implements

@@ -31,8 +31,10 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.part.FileEditorInput;
+import org.iso.iso22166.part202.profile.SIM;
 import org.openrtp.namespaces.ros.version01.RosProfile;
 
+import jp.ac.meijo_u.iso22166_part202.util.ROS2ISOProfileHandler;
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
 import jp.go.aist.rtm.rtcbuilder.RtcBuilderPlugin;
 import jp.go.aist.rtm.rtcbuilder.generator.param.GeneratorParam;
@@ -415,16 +417,15 @@ public class ROSBuilderEditor extends RtcBuilderEditor implements IActionFilter 
 			rosxml.create(new ByteArrayInputStream(xmlFile.getBytes("UTF-8")), true, null);
 			//
 			//ISO
-			//TODO 未修正
-//			ProfileHandler handler = new ProfileHandler();
-//			RtcProfile rtcProfile = handler.convert2XMLProfile(this.getRtcParam());
-//			RTC2ISOProfileHandler isoHandler = new RTC2ISOProfileHandler();
-//			SIM isoProfile = isoHandler.convertRtc2Iso(rtcProfile);
-//			String isoFile = isoHandler.convertToXmlIso(isoProfile);
-//			
-//			IFile isoxml = projectHandle.getFile(IRtcBuilderConstants.DEFAULT_ISO_202_XML);
-//			if( isoxml.exists()) isoxml.delete(true, null);
-//			isoxml.create(new ByteArrayInputStream(isoFile.getBytes("UTF-8")), true, null);
+			ProfileHandlerROS handler = new ProfileHandlerROS();
+			RosProfile rosProfile = handler.convert2XMLProfile(this.getROSParam());
+			ROS2ISOProfileHandler isoHandler = new ROS2ISOProfileHandler();
+			SIM isoProfile = isoHandler.convertROS2Iso(rosProfile);
+			String isoFile = isoHandler.convertToXmlIso(isoProfile);
+			
+			IFile isoxml = projectHandle.getFile(IRtcBuilderConstants.DEFAULT_ISO_202_XML);
+			if( isoxml.exists()) isoxml.delete(true, null);
+			isoxml.create(new ByteArrayInputStream(isoFile.getBytes("UTF-8")), true, null);
 			/////////
 			//
 			setInput(new FileEditorInput(rosxml));

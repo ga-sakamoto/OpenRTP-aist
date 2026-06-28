@@ -22,7 +22,7 @@
 	<xsd:complexType name="basic_info">
 		<xsd:attribute name="package_name" type="xsd:string" use="required"/>
 		<xsd:attribute name="node_name" type="xsd:string" use="required"/>
-		<xsd:attribute name="class_name" type="xsd:string" use="required"/>
+		<xsd:attribute name="class_name" type="xsd:string" use="optional"/>
 		<xsd:attribute name="description" type="xsd:string" use="optional"/>
 		<xsd:attribute name="version" type="xsd:string" use="required"/>
 		<xsd:attribute name="maintainer" type="xsd:string" use="required"/>

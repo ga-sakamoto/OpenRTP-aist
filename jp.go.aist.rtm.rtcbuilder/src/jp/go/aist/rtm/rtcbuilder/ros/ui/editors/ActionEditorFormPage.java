@@ -4,9 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -443,52 +441,8 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 	}
 
 	public String validateParam() {
-		String result = null;
-
 		ROSParam rosParam = ((ROSBuilderEditor)editor).getROSParam();
-		Set<String> checkSet = new HashSet<String>();
-		Set<String> checkVarSet = new HashSet<String>();
-
-		for(ActionParam action : rosParam.getActionServers()) {
-			result = checkAction(action, checkSet, checkVarSet);
-			if( result != null) return result;
-		}
-		//
-		for(ActionParam action : rosParam.getActionClients()) {
-			result = checkAction(action, checkSet, checkVarSet);
-			if( result != null) return result;
-		}
-
-		return null;
-	}
-
-	@SuppressWarnings("unchecked")
-	private String checkAction(ActionParam action, Set checkSet, Set checkVarSet) {
-		if( action.getName()==null || action.getName().length()==0 ) {
-			return Messages.getString("IMC.VALIDATE_ACTION_NAME");
-		}
-//		if( !StringUtil.checkDigitAlphabet(topic.getName()) ) {
-//			return IMessageConstants.DATAPORT_VALIDATE_PORTNAME2;
-//		}
-		//
-		if( action.getType()==null || action.getType().length()==0 ) {
-			return Messages.getString("IMC.VALIDATE_ACTION_TYPE");
-		}
-		//名称重複
-		if( checkSet.contains(action.getName()) ) {
-			return Messages.getString("IMC.VALIDATE_ACTION_DUPLICATE");
-		}
-		checkSet.add(action.getName());
-		//変数名重複
-//		if( checkVarSet.contains(dataport.getTmplVarName()) ) {
-//			return IMessageConstants.DATAPORT_VALIDATE_VAR_DUPLICATE;
-//		}
-//		checkVarSet.add(dataport.getTmplVarName());
-		//型存在チェック
-//		if(Arrays.asList(defaultTypeList).contains(dataport.getType().trim())==false) {
-//			return IMessageConstants.DATAPORT_VALIDATE_PORTTYPE_INVALID;
-//		}
-		return null;
+		return rosParam.validateActionInfo();
 	}
 
 	private class ActionParamLabelProvider extends LabelProvider implements ITableLabelProvider {

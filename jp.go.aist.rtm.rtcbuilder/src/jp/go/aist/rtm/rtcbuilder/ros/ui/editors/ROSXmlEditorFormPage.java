@@ -120,7 +120,6 @@ public class ROSXmlEditorFormPage extends AbstractEditorFormPage {
 		ruler.addDecorator(0, lineCol);
 		
 		ROSXmlViewer = new SourceViewer(composite, ruler , SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-		// RTCXmlViewer.addTextListener(new SourceTextListener());
 		ROSXmlViewer.getTextWidget().addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
 				if( (e.stateMask & SWT.CTRL)!=0 && e.keyCode == KEYCODE_A ) {

@@ -372,20 +372,8 @@ public class LifecycleEditorFormPage extends AbstractEditorFormPage {
 	}
 
 	public String validateParam() {
-		List<String> existedList = new ArrayList<String>(); 
-		for(TimerParam each : timerList) {
-			if(each.getCallBack() == null || each.getCallBack().length() == 0) {
-				return Messages.getString("IMC.VALIDATE_LICYCLE_CALLBACK");
-			}
-			if(each.getRate() < 0.0) {
-				return Messages.getString("IMC.VALIDATE_LICYCLE_RATE");
-			}
-			if(existedList.contains(each.getCallBack())) {
-				return Messages.getString("IMC.VALIDATE_LICYCLE_CALLBACK_DUPL");
-			}
-			existedList.add(each.getCallBack());
-		}
-		return null;
+		ROSParam rosParam = ((ROSBuilderEditor)editor).getROSParam();
+		return rosParam.validateLifecycleInfo();
 	}
 	//////////
 	private class TimerLabelProvider extends LabelProvider implements ITableLabelProvider {

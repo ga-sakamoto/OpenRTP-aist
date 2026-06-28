@@ -6,6 +6,8 @@ import java.util.List;
 
 import jp.go.aist.rtm.rtcbuilder.generator.param.AbstractRecordedParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.PropertyParam;
+import jp.go.aist.rtm.rtcbuilder.nl.Messages;
+import jp.go.aist.rtm.rtcbuilder.util.StringUtil;
 
 public class ActionParam extends AbstractRecordedParam implements Serializable {
 	private static final long serialVersionUID = -5584413830295784662L;
@@ -13,12 +15,12 @@ public class ActionParam extends AbstractRecordedParam implements Serializable {
 	private String name;
 	private String role;
 	private String type;
-	private String callback_name;
+	private String callbackName;
 	//
-	private String doc_description;
-	private String doc_goal;
-	private String doc_feedback;
-	private String doc_result;
+	private String docDescription;
+	private String docGoal;
+	private String docFeedback;
+	private String docResult;
 	//Properties
 	private List<PropertyParam> properties = new ArrayList<PropertyParam>();
 	
@@ -26,12 +28,12 @@ public class ActionParam extends AbstractRecordedParam implements Serializable {
 		this.name = "";
 		this.role = "";
 		this.type = "";
-		this.callback_name = "";
+		this.callbackName = "";
 		//
-		this.doc_description = "";
-		this.doc_goal = "";
-		this.doc_feedback = "";
-		this.doc_result = "";
+		this.docDescription = "";
+		this.docGoal = "";
+		this.docFeedback = "";
+		this.docResult = "";
 		//
 		setUpdated(false);
 	}
@@ -61,46 +63,77 @@ public class ActionParam extends AbstractRecordedParam implements Serializable {
 	}
 
 	public String getCallbackName() {
-		return callback_name;
+		return callbackName;
 	}
 	public void setCallbackName(String callback_name) {
-		checkUpdated(this.callback_name, callback_name);
-		this.callback_name = callback_name;
+		checkUpdated(this.callbackName, callback_name);
+		this.callbackName = callback_name;
 	}
 
 	public String getDocDescription() {
-		return doc_description;
+		return docDescription;
 	}
 	public void setDocDescription(String doc_description) {
-		checkUpdated(this.doc_description, doc_description);
-		this.doc_description = doc_description;
+		checkUpdated(this.docDescription, doc_description);
+		this.docDescription = doc_description;
 	}
 
 	public String getDocGoal() {
-		return doc_goal;
+		return docGoal;
 	}
 	public void setDocGoal(String doc_goal) {
-		checkUpdated(this.doc_goal, doc_goal);
-		this.doc_goal = doc_goal;
+		checkUpdated(this.docGoal, doc_goal);
+		this.docGoal = doc_goal;
 	}
 
 	public String getDocFeedback() {
-		return doc_feedback;
+		return docFeedback;
 	}
 	public void setDocFeedback(String doc_feedback) {
-		checkUpdated(this.doc_feedback, doc_feedback);
-		this.doc_feedback = doc_feedback;
+		checkUpdated(this.docFeedback, doc_feedback);
+		this.docFeedback = doc_feedback;
 	}
 
 	public String getDocResult() {
-		return doc_result;
+		return docResult;
 	}
 	public void setDocResult(String doc_result) {
-		checkUpdated(this.doc_result, doc_result);
-		this.doc_result = doc_result;
+		checkUpdated(this.docResult, doc_result);
+		this.docResult = doc_result;
 	}
 
 	public List<PropertyParam> getProperties() {
 		return properties;
+	}
+	/////
+	public String validateInfo() {
+		if(this.name == null || this.name.length() == 0) {
+			return Messages.getString("IMC.VALIDATE_ACTION_NAME1");
+		}
+		if( !StringUtil.checkDigitSmallAlphabetUｓSlash(this.name) ) {
+			return Messages.getString("IMC.VALIDATE_ACTION_NAME2");
+		}
+		if( this.name.endsWith("/") ) {
+			return Messages.getString("IMC.VALIDATE_ACTION_NAME3");
+		}
+		if( this.name.contains("//") || this.name.contains("__") ) {
+			return Messages.getString("IMC.VALIDATE_ACTION_NAME4");
+		}
+		
+		if(this.type == null || this.type.length() == 0) {
+			return Messages.getString("IMC.VALIDATE_ACTION_TYPE");
+		}
+		
+		if(this.callbackName == null || this.callbackName.length() == 0) {
+			return Messages.getString("IMC.VALIDATE_ACTION_CALLBACK");
+		}
+
+		return null;
+	}
+	
+	public void convertInfo() {
+		if(this.callbackName == null || this.callbackName.length() == 0) {
+			this.callbackName = this.name;
+		}
 	}
 }

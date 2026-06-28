@@ -243,17 +243,17 @@ public class ParamUtilROS extends ParamUtil {
 			topicp.setReliabilityType(topic.getQoSReliabilityType());
 			topicp.setHistoryType(topic.getQoSHistoryType());
 			topicp.setDepth(Integer.valueOf(topic.getQoSHistoryDepth().toString()));
-			topicp.setVar_callback_name(topic.getVariableCallbackName());
+			topicp.setVarCallbackName(topic.getVariableCallbackName());
 
 			if(topic instanceof TopicDoc) {
 				TopicDoc topicDoc = (TopicDoc)topic;
 				DocTopic docTopic = topicDoc.getDoc();
 				if( docTopic!=null ) {
-					topicp.setDoc_description(docTopic.getDescription());
-					topicp.setDoc_type(docTopic.getType());
-					topicp.setDoc_semantics(docTopic.getSemantics());
-					topicp.setDoc_unit(docTopic.getUnit());
-					topicp.setDoc_occurrence(docTopic.getOccurrence());
+					topicp.setDocDescription(docTopic.getDescription());
+					topicp.setDocType(docTopic.getType());
+					topicp.setDocSemantics(docTopic.getSemantics());
+					topicp.setDocUnit(docTopic.getUnit());
+					topicp.setDocOccurrence(docTopic.getOccurrence());
 				}
 			}
 			if(topic instanceof TopicExt) {
@@ -287,7 +287,7 @@ public class ParamUtilROS extends ParamUtil {
 			servicep.setRole(service.getServiceRole());
 			servicep.setName(service.getServiceName());
 			servicep.setType(service.getServiceType());
-			servicep.setVar_callback_name(service.getVariableCallbackName());
+			servicep.setVarCallbackName(service.getVariableCallbackName());
 			if(service instanceof ServiceDoc) {
 				ServiceDoc serviceDoc = (ServiceDoc)service;
 				DocService doc = serviceDoc.getDoc();
@@ -367,7 +367,7 @@ public class ParamUtilROS extends ParamUtil {
 			paramp.setName(param.getParameterName());
 			paramp.setType(param.getDataType());
 			paramp.setDefaultValue(param.getDefaultValue());
-			paramp.setRead_only(param.isReadOnly());
+			paramp.setReadOnly(param.isReadOnly());
 			
 			String constraint = param.getConstraint();
 			String[] elems = constraint.split("\\|");
@@ -599,14 +599,14 @@ public class ParamUtilROS extends ParamUtil {
 		topic.setQoSReliabilityType(topicp.getReliabilityType());
 		topic.setQoSHistoryType(topicp.getHistoryType());
 		topic.setQoSHistoryDepth(BigInteger.valueOf(topicp.getDepth()));
-		topic.setVariableCallbackName(topicp.getVar_callback_name());
+		topic.setVariableCallbackName(topicp.getVarCallbackName());
 		//
 		DocTopic doctopic = factory.createDocTopic();
-		doctopic.setDescription(topicp.getDoc_description());
-		doctopic.setType(topicp.getDoc_type());
-		doctopic.setSemantics(topicp.getDoc_semantics());
-		doctopic.setUnit(topicp.getDoc_unit());
-		doctopic.setOccurrence(topicp.getDoc_occurrence());
+		doctopic.setDescription(topicp.getDocDescription());
+		doctopic.setType(topicp.getDocType());
+		doctopic.setSemantics(topicp.getDocSemantics());
+		doctopic.setUnit(topicp.getDocUnit());
+		doctopic.setOccurrence(topicp.getDocOccurrence());
 		if( checkNotNull(doctopic.getDescription()) ||
 			 checkNotNull(doctopic.getType()) ||
 			 checkNotNull(doctopic.getSemantics()) ||
@@ -688,7 +688,7 @@ public class ParamUtilROS extends ParamUtil {
 		param.setParameterName(paramp.getName());
 		param.setDataType(paramp.getType());
 		param.setDefaultValue(paramp.getDefaultValue());
-		param.setReadOnly(paramp.isRead_only());
+		param.setReadOnly(paramp.isReadOnly());
 		StringBuilder builder = new StringBuilder();
 		builder.append(paramp.getMin()).append("|");
 		builder.append(paramp.getMax()).append("|");

@@ -8,11 +8,14 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 import org.openrtp.namespaces.ros.version01.RosProfile;
+import org.openrtp.namespaces.rtc.version03.RtcProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jp.go.aist.rtm.rtcbuilder.IRTCBMessageConstants;
 import jp.go.aist.rtm.rtcbuilder.generator.param.GeneratorParam;
+import jp.go.aist.rtm.rtcbuilder.generator.param.ParamUtil;
+import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
 import jp.go.aist.rtm.rtcbuilder.manager.GenerateManager;
 import jp.go.aist.rtm.rtcbuilder.ros.param.ROSParam;
 import jp.go.aist.rtm.toolscommon.profiles.util.XmlHandlerROS;
@@ -43,6 +46,21 @@ public class ProfileHandlerROS {
 		XmlHandlerROS handler = new XmlHandlerROS();
 		xmlFile = handler.convertToXmlROS(profile);
 		return xmlFile;
+	}
+
+	public String convert2ROSXML(ROSParam target) throws Exception {
+	    String xmlFile = "";
+	    ParamUtilROS putil = new ParamUtilROS();
+		RosProfile profile = putil.convertToROSModule(target);
+		XmlHandlerROS handler = new XmlHandlerROS();
+		xmlFile = handler.convertToXmlROS(profile);
+		return xmlFile;
+	}
+
+	public RosProfile convert2XMLProfile(ROSParam target) throws Exception {
+	    ParamUtilROS putil = new ParamUtilROS();
+	    RosProfile profile = putil.convertToROSModule(target);
+		return profile;
 	}
 
 	public boolean validateROSXml(String targetString) throws Exception {

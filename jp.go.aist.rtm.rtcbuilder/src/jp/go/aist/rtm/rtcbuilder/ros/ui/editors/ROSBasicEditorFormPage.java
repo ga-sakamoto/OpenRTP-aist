@@ -20,7 +20,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -68,7 +67,6 @@ import jp.go.aist.rtm.rtcbuilder.RtcBuilderPlugin;
 import jp.go.aist.rtm.rtcbuilder.factory.ExportCreator;
 import jp.go.aist.rtm.rtcbuilder.generator.ProfileHandler;
 import jp.go.aist.rtm.rtcbuilder.generator.param.GeneratorParam;
-import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
 import jp.go.aist.rtm.rtcbuilder.manager.GenerateManager;
 import jp.go.aist.rtm.rtcbuilder.nl.Messages;
 import jp.go.aist.rtm.rtcbuilder.ros.param.PackageParam;
@@ -81,9 +79,7 @@ import jp.go.aist.rtm.rtcbuilder.ui.dialog.ImportDialog;
 import jp.go.aist.rtm.rtcbuilder.ui.dialog.RestoreDialog;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.AbstractEditorFormPage;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.IMessageConstants;
-import jp.go.aist.rtm.rtcbuilder.ui.preference.ComponentPreferenceManager;
 import jp.go.aist.rtm.rtcbuilder.util.FileUtil;
-import jp.go.aist.rtm.rtcbuilder.util.StringUtil;
 import jp.go.aist.rtm.toolscommon.profiles.util.XmlHandler;
 
 /**
@@ -223,41 +219,8 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 	 * @return
 	 */
 	public String validateParam() {
-		String packageName = packageText.getText(); 
-		if (packageName.length() == 0) {
-			return Messages.getString("IMC.VALIDATE_BASIC_PACKAGE_NAME1");
-		}
-		if( !StringUtil.checkDigitAlphabet(packageName) ) {
-			return Messages.getString("IMC.VALIDATE_BASIC_PACKAGE_NAME2");
-		}
-
-		if (nodeText.getText().length() == 0) {
-			return Messages.getString("IMC.VALIDATE_BASIC_NODE_NAME1");
-		}
-		if (versionText.getText().length() == 0) {
-			return Messages.getString("IMC.VALIDATE_BASIC_VERSION1");
-		}
-		if (maintainerText.getText().length() == 0) {
-			return Messages.getString("IMC.VALIDATE_BASIC_MAINTAINER1");
-		}
-		if (categoryCombo.getText().length() == 0) {
-			return Messages.getString("IMC.VALIDATE_BASIC_CATEGORY1");
-		}
-
-		if (licenseCombo.getText().length() == 0) {
-			return Messages.getString("IMC.VALIDATE_BASIC_LICENSE1");
-		}
-		if (contactText.getText().length() == 0) {
-			return Messages.getString("IMC.VALIDATE_BASIC_CONTACT1");
-		}
-		//Language
 		ROSParam rosParam = ((ROSBuilderEditor)editor).getROSParam();
-
-		if( rosParam.getLangList()==null || rosParam.getLangList().size()==0 ) {
-			return Messages.getString("IMC.VALIDATE_BASIC_LANGUAGE");
-		}
-
-		return null;
+		return rosParam.validateBasicInfo();
 	}
 
 	private void createModuleSection(FormToolkit toolkit, ScrolledForm form) {
@@ -422,6 +385,15 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 					MessageDialog.openError(getSite().getShell(), "Error", validateRtcParam);
 					return;
 				}
+				ROSParam rosParam = ((ROSBuilderEditor)editor).getROSParam();
+				if(rosParam.validateNames()) {
+        			if (!MessageDialog.openQuestion(getSite().getShell(),
+        											"Caution",
+        											Messages.getString("IMC.VALIDATE_CAUTION_NAME_DUPLICATE1") + System.getProperty("line.separator")
+        											+ Messages.getString("IMC.VALIDATE_CAUTION_NAME_DUPLICATE2")) )
+        				return;
+				}
+				
 				//対象プロジェクトの確認
 				IProject project = checkTargetProject(editor.getRtcParam().getOutputProject(), true);
 				if( project==null) return;
@@ -430,6 +402,8 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 				} catch (CoreException e1) {
 					throw new RuntimeException(IRTCBMessageConstants.ERROR_GENERATE_FAILED);
 				}
+				//
+				rosParam.convertInfo();
 				//
 //				editor.addDefaultComboValue();
 //				GuiRtcBuilder rtcBuilder = new GuiRtcBuilder();
@@ -594,23 +568,6 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 			}
 		}
 		return project;
-	}
-
-	private void setPrefixSuffix(RtcParam param) {
-		IPreferenceStore store = RtcBuilderPlugin.getDefault().getPreferenceStore();
-		param.setCommonPrefix(ComponentPreferenceManager.getInstance().getBasic_Prefix());
-		param.setCommonSuffix(store.getString(ComponentPreferenceManager.Generate_Basic_Suffix));
-		param.setConfigurationPrefix(store.getString(ComponentPreferenceManager.Generate_Configuration_Prefix));
-		param.setConfigurationSuffix(store.getString(ComponentPreferenceManager.Generate_Configuration_Suffix));
-		//
-		param.setDataPortPrefix(store.getString(ComponentPreferenceManager.Generate_DataPort_Prefix));
-		param.setDataPortSuffix(store.getString(ComponentPreferenceManager.Generate_DataPort_Suffix));
-		param.setServicePortPrefix(store.getString(ComponentPreferenceManager.Generate_ServicePort_Prefix));
-		param.setServicePortSuffix(store.getString(ComponentPreferenceManager.Generate_ServicePort_Suffix));
-		param.setServiceIFPrefix(store.getString(ComponentPreferenceManager.Generate_ServiceIF_Prefix));
-		param.setServiceIFSuffix(store.getString(ComponentPreferenceManager.Generate_ServiceIF_Suffix));
-		param.setEventPortPrefix(store.getString(ComponentPreferenceManager.Generate_EventPort_Prefix));
-		param.setEventPortSuffix(store.getString(ComponentPreferenceManager.Generate_EventPort_Suffix));
 	}
 
 	private void createIsoProfileSection(FormToolkit toolkit, ScrolledForm form) {

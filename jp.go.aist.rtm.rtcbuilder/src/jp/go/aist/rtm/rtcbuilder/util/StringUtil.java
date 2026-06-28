@@ -27,6 +27,39 @@ public class StringUtil {
 	    return true;
 	}
 
+	public static boolean checkDigitSmallAlphabetUS(String source) {
+		if(source==null) return true;
+	    for(int intIdx = 0; intIdx < source.length(); intIdx++) {
+	        char target = source.charAt(intIdx);
+	        if( (target < '0' || target > '9') &&    //数字チェック
+	            (target < 'a' || target > 'z') &&    //小文字アルファベットチェック
+	            (target != '_') ) {
+	             return false;
+	        }
+	    }
+	    return true;
+	}
+
+	public static boolean checkDigitSmallAlphabetUｓSlash(String source) {
+		if(source==null) return true;
+	    for(int intIdx = 0; intIdx < source.length(); intIdx++) {
+	        char target = source.charAt(intIdx);
+	        if( (target < '0' || target > '9') &&    //数字チェック
+	            (target < 'a' || target > 'z') &&    //小文字アルファベットチェック
+	            (target != '_') && (target != '/')) {
+	             return false;
+	        }
+	    }
+	    return true;
+	}
+
+	public static boolean checkSmallAlphabetFirst(String source) {
+		if(source==null || source.isEmpty()) return true;
+		char firstChar = source.charAt(0);
+		if (firstChar >= 'a' && firstChar <= 'z') return true;
+	    return false;
+	}
+
 	public static boolean checkProhibitedChar(String source) {
 		if(source.length()==0) return true;
 		Pattern p = Pattern.compile("^[\\p{Alnum}|_]*$");
@@ -233,4 +266,24 @@ public class StringUtil {
         
         return source;
 	}
+	
+	public static String convertCamelCase(String source) {
+		if (source == null || source.isEmpty()) {
+            return source;
+        }
+		
+		StringBuilder sb = new StringBuilder();
+        String[] words = source.toLowerCase().split("_");
+
+        for (int index = 0; index < words.length; index++) {
+            String word = words[index];
+            if (word.isEmpty()) {
+                continue;
+            }
+            sb.append(Character.toUpperCase(word.charAt(0)));
+            sb.append(word.substring(1));
+        }
+
+        return sb.toString();
+    }
 }

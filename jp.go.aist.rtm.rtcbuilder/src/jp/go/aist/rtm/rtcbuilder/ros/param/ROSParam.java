@@ -1,16 +1,21 @@
 package jp.go.aist.rtm.rtcbuilder.ros.param;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import jp.go.aist.rtm.rtcbuilder.ParamBase;
 import jp.go.aist.rtm.rtcbuilder.generator.param.ActionsParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.GeneratorParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.PropertyParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.RecordedList;
+import jp.go.aist.rtm.rtcbuilder.nl.Messages;
 import jp.go.aist.rtm.rtcbuilder.ros.IRtcBuilderConstantsROS;
 import jp.go.aist.rtm.rtcbuilder.ros.ProfileHandlerROS;
+import jp.go.aist.rtm.rtcbuilder.util.StringUtil;
 
 public class ROSParam extends ParamBase implements Serializable {
 	private static final long serialVersionUID = -1249129059979166068L;
@@ -25,33 +30,33 @@ public class ROSParam extends ParamBase implements Serializable {
 
 	private String schemaVersion;
 
-	private String package_name;
-	private String node_name;
-	private String class_name;
+	private String packageName;
+	private String nodeName;
+	private String className;
 	private String description;
 	private String version;
 	private String maintainer;	
 	private String category;
 
 	private String license;
-	private String contact_address;
+	private String contactAddress;
 	
-	private String doc_algorithm;
-	private String doc_in_out;
-	private String doc_creator;
-	private String doc_reference;
+	private String docAlgorithm;
+	private String docInOut;
+	private String docCreator;
+	private String docReference;
 
 	private RecordedList<ActionsParam> actions;
 	private RecordedList<TimerParam> timers = new RecordedList<TimerParam>();
 	///
-	private RecordedList<TopicParam> topic_subscribes = new RecordedList<TopicParam>();
-	private RecordedList<TopicParam> topic_publishes = new RecordedList<TopicParam>();
+	private RecordedList<TopicParam> topicSubscribes = new RecordedList<TopicParam>();
+	private RecordedList<TopicParam> topicPublishes = new RecordedList<TopicParam>();
 	///
-	private RecordedList<ServiceParam> service_servers = new RecordedList<ServiceParam>();
-	private RecordedList<ServiceParam> service_clients = new RecordedList<ServiceParam>();
+	private RecordedList<ServiceParam> serviceServers = new RecordedList<ServiceParam>();
+	private RecordedList<ServiceParam> serviceClients = new RecordedList<ServiceParam>();
 	///
-	private RecordedList<ActionParam> action_servers = new RecordedList<ActionParam>();
-	private RecordedList<ActionParam> action_clients = new RecordedList<ActionParam>();
+	private RecordedList<ActionParam> actionServers = new RecordedList<ActionParam>();
+	private RecordedList<ActionParam> actionClients = new RecordedList<ActionParam>();
 	///
 	private RecordedList<ParameterParam> parameters = new RecordedList<ParameterParam>();
 
@@ -96,7 +101,7 @@ public class ROSParam extends ParamBase implements Serializable {
 		this.maintainer = ROSParam.DEFAULT_MAINTAINER;
 		
 		this.license = ROSParam.DEFAULT_LICENSE;
-		this.contact_address = ROSParam.DEFAULT_CONTACT_ADDRESS;
+		this.contactAddress = ROSParam.DEFAULT_CONTACT_ADDRESS;
 		//
 		this.actions.get(IRtcBuilderConstantsROS.ACTIVITY_CONFIGURE).setImplemaented(true);
 		this.actions.get(IRtcBuilderConstantsROS.ACTIVITY_ACTIVATE).setImplemaented(true);
@@ -112,27 +117,27 @@ public class ROSParam extends ParamBase implements Serializable {
 	}
 	
 	public String getPackageName() {
-		return package_name;
+		return packageName;
 	}
 	public void setPackageName(String package_name) {
-		checkUpdated(this.package_name, package_name);
-		this.package_name = package_name;
+		checkUpdated(this.packageName, package_name);
+		this.packageName = package_name;
 	}
 	
 	public String getNodeName() {
-		return node_name;
+		return nodeName;
 	}
 	public void setNodeName(String node_name) {
-		checkUpdated(this.node_name, node_name);
-		this.node_name = node_name;
+		checkUpdated(this.nodeName, node_name);
+		this.nodeName = node_name;
 	}
 	
 	public String getClass_name() {
-		return class_name;
+		return className;
 	}
 	public void setClass_name(String class_name) {
-		checkUpdated(this.class_name, class_name);
-		this.class_name = class_name;
+		checkUpdated(this.className, class_name);
+		this.className = class_name;
 	}
 	
 	public String getDescription() {
@@ -176,43 +181,43 @@ public class ROSParam extends ParamBase implements Serializable {
 	}
 	
 	public String getContactAddress() {
-		return contact_address;
+		return contactAddress;
 	}
 	public void setContactAddress(String contact_address) {
-		checkUpdated(this.contact_address, contact_address);
-		this.contact_address = contact_address;
+		checkUpdated(this.contactAddress, contact_address);
+		this.contactAddress = contact_address;
 	}
 	
 	public String getDocAlgorithm() {
-		return doc_algorithm;
+		return docAlgorithm;
 	}
 	public void setDocAlgorithm(String doc_algorithm) {
-		checkUpdated(this.doc_algorithm, doc_algorithm);
-		this.doc_algorithm = doc_algorithm;
+		checkUpdated(this.docAlgorithm, doc_algorithm);
+		this.docAlgorithm = doc_algorithm;
 	}
 	
 	public String getDocInOut() {
-		return doc_in_out;
+		return docInOut;
 	}
 	public void setDocInOut(String doc_in_out) {
-		checkUpdated(this.doc_in_out, doc_in_out);
-		this.doc_in_out = doc_in_out;
+		checkUpdated(this.docInOut, doc_in_out);
+		this.docInOut = doc_in_out;
 	}
 	
 	public String getDocCreator() {
-		return doc_creator;
+		return docCreator;
 	}
 	public void setDocCreator(String doc_creator) {
-		checkUpdated(this.doc_creator, doc_creator);
-		this.doc_creator = doc_creator;
+		checkUpdated(this.docCreator, doc_creator);
+		this.docCreator = doc_creator;
 	}
 	
 	public String getDocReference() {
-		return doc_reference;
+		return docReference;
 	}
 	public void setDocReference(String doc_reference) {
-		checkUpdated(this.doc_reference, doc_reference);
-		this.doc_reference = doc_reference;
+		checkUpdated(this.docReference, doc_reference);
+		this.docReference = doc_reference;
 	}
 	
 	public String getOutputProject() {
@@ -290,26 +295,26 @@ public class ROSParam extends ParamBase implements Serializable {
 	}
 	/////
 	public List<TopicParam> getTopicSubscribes() {
-		return topic_subscribes;
+		return topicSubscribes;
 	}
 	
 	public List<TopicParam> getTopicPublishes() {
-		return topic_publishes;
+		return topicPublishes;
 	}
 	/////
 	public List<ServiceParam> getServiceServers() {
-		return service_servers;
+		return serviceServers;
 	}
 
 	public List<ServiceParam> getServiceClients() {
-		return service_clients;
+		return serviceClients;
 	}
 	/////
 	public List<ActionParam> getActionServers() {
-		return action_servers;
+		return actionServers;
 	}
 	public List<ActionParam> getActionClients() {
-		return action_clients;
+		return actionClients;
 	}
 	/////
 	public List<ParameterParam> getParameters() {
@@ -389,13 +394,13 @@ public class ROSParam extends ParamBase implements Serializable {
 		if (this.actions.isUpdated()) {
 			return true;
 		}
-		if (this.topic_subscribes.isUpdated() || this.topic_publishes.isUpdated()) {
+		if (this.topicSubscribes.isUpdated() || this.topicPublishes.isUpdated()) {
 			return true;
 		}
-		if (this.service_servers.isUpdated() || this.service_clients.isUpdated()) {
+		if (this.serviceServers.isUpdated() || this.serviceClients.isUpdated()) {
 			return true;
 		}
-		if (this.action_servers.isUpdated() || this.action_clients.isUpdated()) {
+		if (this.actionServers.isUpdated() || this.actionClients.isUpdated()) {
 			return true;
 		}
 		if (this.parameters.isUpdated()) {
@@ -418,14 +423,14 @@ public class ROSParam extends ParamBase implements Serializable {
 		//
 		this.actions.resetUpdated();
 		//
-		this.topic_subscribes.resetUpdated();
-		this.topic_publishes.resetUpdated();
+		this.topicSubscribes.resetUpdated();
+		this.topicPublishes.resetUpdated();
 		//
-		this.service_servers.resetUpdated();
-		this.service_clients.resetUpdated();
+		this.serviceServers.resetUpdated();
+		this.serviceClients.resetUpdated();
 		//
-		this.action_servers.resetUpdated();
-		this.action_clients.resetUpdated();
+		this.actionServers.resetUpdated();
+		this.actionClients.resetUpdated();
 		//
 		this.parameters.resetUpdated();
 		//
@@ -434,5 +439,277 @@ public class ROSParam extends ParamBase implements Serializable {
 		this.target_env.resetUpdated();
 		
 //		this.containerSettings.resetUpdated();
+	}
+	//////////
+	public String validateBasicInfo() {
+		if ( this.packageName == null || this.packageName.length() == 0) {
+			return Messages.getString("IMC.VALIDATE_BASIC_PACKAGE_NAME1");
+		}
+		if( !StringUtil.checkDigitSmallAlphabetUS(this.packageName) ) {
+			return Messages.getString("IMC.VALIDATE_BASIC_PACKAGE_NAME2");
+		}
+		if( !StringUtil.checkSmallAlphabetFirst(this.packageName) ) {
+			return Messages.getString("IMC.VALIDATE_BASIC_PACKAGE_NAME3");
+		}
+		
+		if ( this.nodeName == null || this.nodeName.length() == 0) {
+			return Messages.getString("IMC.VALIDATE_BASIC_NODE_NAME1");
+		}
+		if( !StringUtil.checkDigitSmallAlphabetUS(this.nodeName) ) {
+			return Messages.getString("IMC.VALIDATE_BASIC_NODE_NAME2");
+		}
+		if( !StringUtil.checkSmallAlphabetFirst(this.nodeName) ) {
+			return Messages.getString("IMC.VALIDATE_BASIC_NODE_NAME3");
+		}
+
+		if ( this.version == null || this.version.length() == 0) {
+			return Messages.getString("IMC.VALIDATE_BASIC_VERSION1");
+		}
+
+		if ( this.maintainer == null || this.maintainer.length() == 0) {
+			return Messages.getString("IMC.VALIDATE_BASIC_MAINTAINER1");
+		}
+
+		if ( this.category == null || this.category.length() == 0) {
+			return Messages.getString("IMC.VALIDATE_BASIC_CATEGORY1");
+		}
+
+		if ( this.license == null || this.license.length() == 0) {
+			return Messages.getString("IMC.VALIDATE_BASIC_LICENSE1");
+		}
+
+		if ( this.contactAddress == null || this.contactAddress.length() == 0) {
+			return Messages.getString("IMC.VALIDATE_BASIC_CONTACT1");
+		}
+		
+		if(this.langList == null || this.langList.size() == 0) {
+			return Messages.getString("IMC.VALIDATE_BASIC_LANGUAGE");
+		}
+
+		return null;
+	}
+	
+	public String validateLifecycleInfo() {
+		Set<String> checkSet = new HashSet<String>();
+		Set<String> checkCBSet = new HashSet<String>();
+		for(TimerParam each : this.timers) {
+			String result = each.validateInfo();
+			if(result != null) return result;
+			
+			if(checkSet.contains(each.getName())) {
+				return Messages.getString("IMC.VALIDATE_LICYCLE_TIMER_NAME_DUPL");
+			}
+			checkSet.add(each.getName());
+
+			if(checkCBSet.contains(each.getCallBack())) {
+				return Messages.getString("IMC.VALIDATE_LICYCLE_CALLBACK_DUPL");
+			}
+			checkCBSet.add(each.getCallBack());
+		}
+
+		return null;
+	}
+	
+	public String validateTopicInfo() {
+		Set<String> checkSet = new HashSet<String>();
+		Set<String> checkVarSet = new HashSet<String>();
+		
+		for(TopicParam each : this.topicSubscribes) {
+			String result = each.validateInfo();
+			if(result != null) return result;
+			
+			if( checkSet.contains(each.getName()) ) {
+				return Messages.getString("IMC.VALIDATE_TOPIC_DUPLICATE");
+			}
+			checkSet.add(each.getName());
+
+			if( checkSet.contains(each.getVarCallbackName()) ) {
+				return Messages.getString("IMC.VALIDATE_TOPIC_DUPLICATE");
+			}
+			checkVarSet.add(each.getVarCallbackName());
+		}
+		for(TopicParam each : this.topicPublishes) {
+			String result = each.validateInfo();
+			if(result != null) return result;
+			
+			if( checkSet.contains(each.getName()) ) {
+				return Messages.getString("IMC.VALIDATE_TOPIC_DUPLICATE");
+			}
+			checkSet.add(each.getName());
+
+			if( checkSet.contains(each.getVarCallbackName()) ) {
+				return Messages.getString("IMC.VALIDATE_TOPIC_DUPLICATE");
+			}
+			checkVarSet.add(each.getVarCallbackName());
+		}
+
+		return null;
+	}
+	
+	public String validateServiceInfo() {
+		Set<String> checkSet = new HashSet<String>();
+		Set<String> checkVarSet = new HashSet<String>();
+		
+		for(ServiceParam each : this.serviceServers) {
+			String result = each.validateInfo();
+			if(result != null) return result;
+			
+			if( checkSet.contains(each.getName()) ) {
+				return Messages.getString("IMC.VALIDATE_SERVICE_DUPLICATE");
+			}
+			checkSet.add(each.getName());
+
+			if( checkSet.contains(each.getVarCallbackName()) ) {
+				return Messages.getString("IMC.VALIDATE_SERVICE_CALLBACK_DUPLICATE");
+			}
+			checkVarSet.add(each.getVarCallbackName());
+		}
+		for(ServiceParam each : this.serviceClients) {
+			String result = each.validateInfo();
+			if(result != null) return result;
+			
+			if( checkSet.contains(each.getName()) ) {
+				return Messages.getString("IMC.VALIDATE_SERVICE_DUPLICATE");
+			}
+			checkSet.add(each.getName());
+
+			if( checkSet.contains(each.getVarCallbackName()) ) {
+				return Messages.getString("IMC.VALIDATE_SERVICE_CALLBACK_DUPLICATE");
+			}
+			checkVarSet.add(each.getVarCallbackName());
+		}
+
+		return null;
+	}
+	
+	public String validateActionInfo() {
+		Set<String> checkSet = new HashSet<String>();
+		Set<String> checkVarSet = new HashSet<String>();
+		
+		for(ActionParam each : this.actionServers) {
+			String result = each.validateInfo();
+			if(result != null) return result;
+			
+			if( checkSet.contains(each.getName()) ) {
+				return Messages.getString("IMC.VALIDATE_ACTION_DUPLICATE");
+			}
+			checkSet.add(each.getName());
+
+			if( checkSet.contains(each.getCallbackName()) ) {
+				return Messages.getString("IMC.VALIDATE_ACTION_CALLBACK_DUPLICATE");
+			}
+			checkVarSet.add(each.getCallbackName());
+		}
+		for(ActionParam each : this.actionClients) {
+			String result = each.validateInfo();
+			if(result != null) return result;
+			
+			if( checkSet.contains(each.getName()) ) {
+				return Messages.getString("IMC.VALIDATE_ACTION_DUPLICATE");
+			}
+			checkSet.add(each.getName());
+
+			if( checkSet.contains(each.getCallbackName()) ) {
+				return Messages.getString("IMC.VALIDATE_ACTION_CALLBACK_DUPLICATE");
+			}
+			checkVarSet.add(each.getCallbackName());
+		}
+
+		return null;
+	}
+	
+	public String validateParameterInfo() {
+		Set<String> checkSet = new HashSet<String>();
+		
+		for(ParameterParam each : this.parameters) {
+			String result = each.validateInfo();
+			if(result != null) return result;
+			
+			if( checkSet.contains(each.getName()) ) {
+				return Messages.getString("IMC.VALIDATE_PARAMETER_DUPLICATE");
+			}
+			checkSet.add(each.getName());
+		}
+		
+		return null;
+	}
+	
+	public boolean validateNames() {
+		Set<String> checkSet = new HashSet<String>();
+		
+		for(TopicParam each : this.topicSubscribes) {
+			if( checkSet.contains(each.getName()) ) {
+				return true;
+			}
+			checkSet.add(each.getName());
+		}
+		for(TopicParam each : this.topicPublishes) {
+			if( checkSet.contains(each.getName()) ) {
+				return true;
+			}
+			checkSet.add(each.getName());
+		}
+		
+		for(ServiceParam each : this.serviceServers) {
+			if( checkSet.contains(each.getName()) ) {
+				return true;
+			}
+			checkSet.add(each.getName());
+		}
+		for(ServiceParam each : this.serviceClients) {
+			if( checkSet.contains(each.getName()) ) {
+				return true;
+			}
+			checkSet.add(each.getName());
+		}
+		
+		for(ActionParam each : this.actionServers) {
+			if( checkSet.contains(each.getName()) ) {
+				return true;
+			}
+			checkSet.add(each.getName());
+		}
+		for(ActionParam each : this.actionClients) {
+			if( checkSet.contains(each.getName()) ) {
+				return true;
+			}
+			checkSet.add(each.getName());
+		}
+
+		for(ParameterParam each : this.parameters) {
+			if( checkSet.contains(each.getName()) ) {
+				return true;
+			}
+			checkSet.add(each.getName());
+		}
+
+		return false;
+	}
+	/////
+	public void convertInfo() {
+		if(this.className == null || this.className.length() == 0) {
+			this.className = StringUtil.convertCamelCase(this.nodeName);
+		}
+		
+		for(TopicParam each : this.topicSubscribes) {
+			each.convertInfo();
+		}
+		for(TopicParam each : this.topicPublishes) {
+			each.convertInfo();
+		}
+		
+		for(ServiceParam each : this.serviceServers) {
+			each.convertInfo();
+		}
+		for(ServiceParam each : this.serviceClients) {
+			each.convertInfo();
+		}
+		
+		for(ActionParam each : this.actionServers) {
+			each.convertInfo();
+		}
+		for(ActionParam each : this.actionClients) {
+			each.convertInfo();
+		}
 	}
 }

@@ -5,9 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -512,13 +510,13 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 					historyCombo.setText(selectParam.getHistoryType());
 					depthText.setText(selectParam.getDepth().toString());
 					depthText.setEnabled(historyCombo.getSelectionIndex() == 0);
-					variableNameText.setText(selectParam.getVar_callback_name());
+					variableNameText.setText(selectParam.getVarCallbackName());
 					
-					descriptionText.setText(StringUtil.getDisplayDocText(selectParam.getDoc_description()));
-					typeText.setText(StringUtil.getDisplayDocText(selectParam.getDoc_type()));
-					semanticsText.setText(StringUtil.getDisplayDocText(selectParam.getDoc_semantics()));
-					unitText.setText(StringUtil.getDisplayDocText(selectParam.getDoc_unit()));
-					occurrenceText.setText(StringUtil.getDisplayDocText(selectParam.getDoc_occurrence()));
+					descriptionText.setText(StringUtil.getDisplayDocText(selectParam.getDocDescription()));
+					typeText.setText(StringUtil.getDisplayDocText(selectParam.getDocType()));
+					semanticsText.setText(StringUtil.getDisplayDocText(selectParam.getDocSemantics()));
+					unitText.setText(StringUtil.getDisplayDocText(selectParam.getDocUnit()));
+					occurrenceText.setText(StringUtil.getDisplayDocText(selectParam.getDocOccurrence()));
 					preSelection = selectParam;
 				}
 			}
@@ -539,13 +537,13 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 			} catch (Exception ex){
 			}
 			
-			selectParam.setVar_callback_name(variableNameText.getText());
+			selectParam.setVarCallbackName(variableNameText.getText());
 
-			selectParam.setDoc_description(StringUtil.getDocText(descriptionText.getText()));
-			selectParam.setDoc_type(StringUtil.getDocText(typeText.getText()));
-			selectParam.setDoc_semantics(StringUtil.getDocText(semanticsText.getText()));
-			selectParam.setDoc_unit(StringUtil.getDocText(unitText.getText()));
-			selectParam.setDoc_occurrence(StringUtil.getDocText(occurrenceText.getText()));
+			selectParam.setDocDescription(StringUtil.getDocText(descriptionText.getText()));
+			selectParam.setDocType(StringUtil.getDocText(typeText.getText()));
+			selectParam.setDocSemantics(StringUtil.getDocText(semanticsText.getText()));
+			selectParam.setDocUnit(StringUtil.getDocText(unitText.getText()));
+			selectParam.setDocOccurrence(StringUtil.getDocText(occurrenceText.getText()));
 		}
 		//
 		ROSParam rosParam = ((ROSBuilderEditor)editor).getROSParam();
@@ -573,13 +571,13 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 				preSelection.setDepth(depth);
 			} catch (Exception ex){
 			}
-			preSelection.setVar_callback_name(variableNameText.getText());
+			preSelection.setVarCallbackName(variableNameText.getText());
 			//
-			preSelection.setDoc_description(StringUtil.getDocText(descriptionText.getText()));
-			preSelection.setDoc_type(StringUtil.getDocText(typeText.getText()));
-			preSelection.setDoc_semantics(StringUtil.getDocText(semanticsText.getText()));
-			preSelection.setDoc_unit(StringUtil.getDocText(unitText.getText()));
-			preSelection.setDoc_occurrence(StringUtil.getDocText(occurrenceText.getText()));
+			preSelection.setDocDescription(StringUtil.getDocText(descriptionText.getText()));
+			preSelection.setDocType(StringUtil.getDocText(typeText.getText()));
+			preSelection.setDocSemantics(StringUtil.getDocText(semanticsText.getText()));
+			preSelection.setDocUnit(StringUtil.getDocText(unitText.getText()));
+			preSelection.setDocOccurrence(StringUtil.getDocText(occurrenceText.getText()));
 		}
 	}
 
@@ -625,58 +623,8 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 	}
 
 	public String validateParam() {
-		String result = null;
-
 		ROSParam rosParam = ((ROSBuilderEditor)editor).getROSParam();
-		Set<String> checkSet = new HashSet<String>();
-		Set<String> checkVarSet = new HashSet<String>();
-
-		for(TopicParam topic : rosParam.getTopicSubscribes()) {
-			result = checkTopic(topic, checkSet, checkVarSet);
-			if( result != null) return result;
-		}
-		//
-		for(TopicParam topic : rosParam.getTopicPublishes()) {
-			result = checkTopic(topic, checkSet, checkVarSet);
-			if( result != null) return result;
-		}
-
-		return null;
-	}
-
-	@SuppressWarnings("unchecked")
-	private String checkTopic(TopicParam topic, Set checkSet, Set checkVarSet) {
-		if( topic.getName()==null || topic.getName().length()==0 ) {
-			return Messages.getString("IMC.VALIDATE_TOPIC_NAME");
-		}
-//		if( !StringUtil.checkDigitAlphabet(topic.getName()) ) {
-//			return IMessageConstants.DATAPORT_VALIDATE_PORTNAME2;
-//		}
-		//
-		if( topic.getMessageType()==null || topic.getMessageType().length()==0 ) {
-			return Messages.getString("IMC.VALIDATE_TOPIC_TYPE");
-		}
-		
-		if(topic.getHistoryType().equals("KeepLast")) {
-			if(topic.getDepth() < 1) {
-				return Messages.getString("IMC.VALIDATE_TOPIC_DEPTH");
-			}
-		}
-		//名称重複
-		if( checkSet.contains(topic.getName()) ) {
-			return Messages.getString("IMC.VALIDATE_TOPIC_DUPLICATE");
-		}
-		checkSet.add(topic.getName());
-		//変数名重複
-//		if( checkVarSet.contains(dataport.getTmplVarName()) ) {
-//			return IMessageConstants.DATAPORT_VALIDATE_VAR_DUPLICATE;
-//		}
-//		checkVarSet.add(dataport.getTmplVarName());
-		//型存在チェック
-//		if(Arrays.asList(defaultTypeList).contains(dataport.getType().trim())==false) {
-//			return IMessageConstants.DATAPORT_VALIDATE_PORTTYPE_INVALID;
-//		}
-		return null;
+		return rosParam.validateTopicInfo();
 	}
 
 	private class TopicParamLabelProvider extends LabelProvider implements ITableLabelProvider {

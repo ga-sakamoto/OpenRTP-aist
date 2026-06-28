@@ -6,42 +6,44 @@ import java.util.List;
 
 import jp.go.aist.rtm.rtcbuilder.generator.param.AbstractRecordedParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.PropertyParam;
+import jp.go.aist.rtm.rtcbuilder.nl.Messages;
+import jp.go.aist.rtm.rtcbuilder.util.StringUtil;
 
 public class TopicParam extends AbstractRecordedParam implements Serializable {
 	private static final long serialVersionUID = 533482869407934299L;
 
 	private String name;
 	private String role;
-	private String message_type;
+	private String messageType;
 
-	private String reliability_type;
-	private String history_type;
+	private String reliabilityType;
+	private String historyType;
 	private Integer depth;
 
-	private String var_callback_name;
+	private String varCallbackName;
 	//
-	private String doc_description;
-	private String doc_type;
-	private String doc_semantics;
-	private String doc_unit;
-	private String doc_occurrence;
+	private String docDescription;
+	private String docType;
+	private String docSemantics;
+	private String docUnit;
+	private String docOccurrence;
 	//Properties
 	private List<PropertyParam> properties = new ArrayList<PropertyParam>();
 
 	public TopicParam() {
 		this.name = "";
 		this.role = "";
-		this.message_type = "";
-		this.reliability_type = "";
-		this.history_type = "";
+		this.messageType = "";
+		this.reliabilityType = "";
+		this.historyType = "";
 		this.depth = 0;
-		this.var_callback_name = "";
+		this.varCallbackName = "";
 		//
-		this.doc_description = "";
-		this.doc_type = "";
-		this.doc_semantics = "";
-		this.doc_unit = "";
-		this.doc_occurrence = "";
+		this.docDescription = "";
+		this.docType = "";
+		this.docSemantics = "";
+		this.docUnit = "";
+		this.docOccurrence = "";
 		//
 		setUpdated(false);
 	}
@@ -63,27 +65,27 @@ public class TopicParam extends AbstractRecordedParam implements Serializable {
 	}
 
 	public String getMessageType() {
-		return message_type;
+		return messageType;
 	}
 	public void setMessageType(String message_type) {
-		checkUpdated(this.message_type, message_type);
-		this.message_type = message_type;
+		checkUpdated(this.messageType, message_type);
+		this.messageType = message_type;
 	}
 
 	public String getReliabilityType() {
-		return reliability_type;
+		return reliabilityType;
 	}
 	public void setReliabilityType(String reliability_type) {
-		checkUpdated(this.reliability_type, reliability_type);
-		this.reliability_type = reliability_type;
+		checkUpdated(this.reliabilityType, reliability_type);
+		this.reliabilityType = reliability_type;
 	}
 
 	public String getHistoryType() {
-		return history_type;
+		return historyType;
 	}
 	public void setHistoryType(String history_type) {
-		checkUpdated(this.history_type, history_type);
-		this.history_type = history_type;
+		checkUpdated(this.historyType, history_type);
+		this.historyType = history_type;
 	}
 
 	public Integer getDepth() {
@@ -94,55 +96,90 @@ public class TopicParam extends AbstractRecordedParam implements Serializable {
 		this.depth = depth;
 	}
 
-	public String getVar_callback_name() {
-		return var_callback_name;
+	public String getVarCallbackName() {
+		return varCallbackName;
 	}
-	public void setVar_callback_name(String var_callback_name) {
-		checkUpdated(this.var_callback_name, var_callback_name);
-		this.var_callback_name = var_callback_name;
-	}
-
-	public String getDoc_description() {
-		return doc_description;
-	}
-	public void setDoc_description(String doc_description) {
-		checkUpdated(this.doc_description, doc_description);
-		this.doc_description = doc_description;
+	public void setVarCallbackName(String var_callback_name) {
+		checkUpdated(this.varCallbackName, var_callback_name);
+		this.varCallbackName = var_callback_name;
 	}
 
-	public String getDoc_type() {
-		return doc_type;
+	public String getDocDescription() {
+		return docDescription;
 	}
-	public void setDoc_type(String doc_type) {
-		checkUpdated(this.doc_type, doc_type);
-		this.doc_type = doc_type;
-	}
-
-	public String getDoc_semantics() {
-		return doc_semantics;
-	}
-	public void setDoc_semantics(String doc_semantics) {
-		checkUpdated(this.doc_semantics, doc_semantics);
-		this.doc_semantics = doc_semantics;
+	public void setDocDescription(String doc_description) {
+		checkUpdated(this.docDescription, doc_description);
+		this.docDescription = doc_description;
 	}
 
-	public String getDoc_unit() {
-		return doc_unit;
+	public String getDocType() {
+		return docType;
 	}
-	public void setDoc_unit(String doc_unit) {
-		checkUpdated(this.doc_unit, doc_unit);
-		this.doc_unit = doc_unit;
+	public void setDocType(String doc_type) {
+		checkUpdated(this.docType, doc_type);
+		this.docType = doc_type;
 	}
 
-	public String getDoc_occurrence() {
-		return doc_occurrence;
+	public String getDocSemantics() {
+		return docSemantics;
 	}
-	public void setDoc_occurrence(String doc_occurrence) {
-		checkUpdated(this.doc_occurrence, doc_occurrence);
-		this.doc_occurrence = doc_occurrence;
+	public void setDocSemantics(String doc_semantics) {
+		checkUpdated(this.docSemantics, doc_semantics);
+		this.docSemantics = doc_semantics;
+	}
+
+	public String getDocUnit() {
+		return docUnit;
+	}
+	public void setDocUnit(String doc_unit) {
+		checkUpdated(this.docUnit, doc_unit);
+		this.docUnit = doc_unit;
+	}
+
+	public String getDocOccurrence() {
+		return docOccurrence;
+	}
+	public void setDocOccurrence(String doc_occurrence) {
+		checkUpdated(this.docOccurrence, doc_occurrence);
+		this.docOccurrence = doc_occurrence;
 	}
 
 	public List<PropertyParam> getProperties() {
 		return properties;
+	}
+	/////
+	public String validateInfo() {
+		if(this.name == null || this.name.length() == 0) {
+			return Messages.getString("IMC.VALIDATE_TOPIC_NAME1");
+		}
+		if( !StringUtil.checkDigitSmallAlphabetUｓSlash(this.name) ) {
+			return Messages.getString("IMC.VALIDATE_TOPIC_NAME2");
+		}
+		if( this.name.endsWith("/") ) {
+			return Messages.getString("IMC.VALIDATE_TOPIC_NAME3");
+		}
+		if( this.name.contains("//") || this.name.contains("__") ) {
+			return Messages.getString("IMC.VALIDATE_TOPIC_NAME4");
+		}
+		
+		if(this.messageType == null || this.messageType.length() == 0) {
+			return Messages.getString("IMC.VALIDATE_TOPIC_TYPE");
+		}
+		
+		if(this.historyType !=null ) {
+			if(this.historyType.equals("KeepLast")) {
+				if(this.depth < 1) {
+					return Messages.getString("IMC.VALIDATE_TOPIC_DEPTH");
+				}
+			}
+		}
+
+		return null;
+	}
+	
+	public void convertInfo() {
+		if(this.varCallbackName == null || this.varCallbackName.length() == 0) {
+			this.varCallbackName = this.name;
+		}
 	}
 }

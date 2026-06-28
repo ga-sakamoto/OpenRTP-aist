@@ -6,6 +6,8 @@ import java.util.List;
 
 import jp.go.aist.rtm.rtcbuilder.generator.param.AbstractRecordedParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.PropertyParam;
+import jp.go.aist.rtm.rtcbuilder.nl.Messages;
+import jp.go.aist.rtm.rtcbuilder.util.StringUtil;
 
 public class ServiceParam extends AbstractRecordedParam implements Serializable {
 	private static final long serialVersionUID = -5584413830295784662L;
@@ -13,11 +15,11 @@ public class ServiceParam extends AbstractRecordedParam implements Serializable 
 	private String name;
 	private String role;
 	private String type;
-	private String var_callback_name;
+	private String varCallbackName;
 	//
-	private String doc_description;
-	private String doc_argument;
-	private String doc_return;
+	private String docDescription;
+	private String docArgument;
+	private String docReturn;
 	//Properties
 	private List<PropertyParam> properties = new ArrayList<PropertyParam>();
 
@@ -25,11 +27,11 @@ public class ServiceParam extends AbstractRecordedParam implements Serializable 
 		this.name = "";
 		this.role = "";
 		this.type = "";
-		this.var_callback_name = "";
+		this.varCallbackName = "";
 		//
-		this.doc_description = "";
-		this.doc_argument = "";
-		this.doc_return = "";
+		this.docDescription = "";
+		this.docArgument = "";
+		this.docReturn = "";
 		//
 		setUpdated(false);
 	}
@@ -59,39 +61,66 @@ public class ServiceParam extends AbstractRecordedParam implements Serializable 
 	}
 
 	public String getVarCallbackName() {
-		return var_callback_name;
+		return varCallbackName;
 	}
-	public void setVar_callback_name(String var_callback_name) {
-		checkUpdated(this.var_callback_name, var_callback_name);
-		this.var_callback_name = var_callback_name;
+	public void setVarCallbackName(String var_callback_name) {
+		checkUpdated(this.varCallbackName, var_callback_name);
+		this.varCallbackName = var_callback_name;
 	}
 
 	public String getDocDescription() {
-		return doc_description;
+		return docDescription;
 	}
 	public void setDocDescription(String doc_description) {
-		checkUpdated(this.doc_description, doc_description);
-		this.doc_description = doc_description;
+		checkUpdated(this.docDescription, doc_description);
+		this.docDescription = doc_description;
 	}
 
 	public String getDocArgument() {
-		return doc_argument;
+		return docArgument;
 	}
 	public void setDocArgument(String doc_argument) {
-		checkUpdated(this.doc_argument, doc_argument);
-		this.doc_argument = doc_argument;
+		checkUpdated(this.docArgument, doc_argument);
+		this.docArgument = doc_argument;
 	}
 
 	public String getDocReturn() {
-		return doc_return;
+		return docReturn;
 	}
 
 	public void setDocReturn(String doc_return) {
-		checkUpdated(this.doc_return, doc_return);
-		this.doc_return = doc_return;
+		checkUpdated(this.docReturn, doc_return);
+		this.docReturn = doc_return;
 	}
 
 	public List<PropertyParam> getProperties() {
 		return properties;
+	}
+	/////
+	public String validateInfo() {
+		if(this.name == null || this.name.length() == 0) {
+			return Messages.getString("IMC.VALIDATE_SERVICE_NAME1");
+		}
+		if( !StringUtil.checkDigitSmallAlphabetUｓSlash(this.name) ) {
+			return Messages.getString("IMC.VALIDATE_SERVICE_NAME2");
+		}
+		if( this.name.endsWith("/") ) {
+			return Messages.getString("IMC.VALIDATE_SERVICE_NAME3");
+		}
+		if( this.name.contains("//") || this.name.contains("__") ) {
+			return Messages.getString("IMC.VALIDATE_SERVICE_NAME4");
+		}
+		
+		if( this.type==null || this.type.length()==0 ) {
+			return Messages.getString("IMC.VALIDATE_SERVICE_TYPE");
+		}
+
+		return null;
+	}
+	
+	public void convertInfo() {
+		if(this.varCallbackName == null || this.varCallbackName.length() == 0) {
+			this.varCallbackName = this.name;
+		}
 	}
 }

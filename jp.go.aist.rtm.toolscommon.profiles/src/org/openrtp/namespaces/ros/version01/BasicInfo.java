@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;attribute name="package_name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="node_name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="class_name" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="class_name" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="description" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="version" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       &lt;attribute name="maintainer" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
@@ -42,7 +42,7 @@ public class BasicInfo {
     protected String packageName;
     @XmlAttribute(name = "node_name", namespace = "http://www.openrtp.org/namespaces/ros", required = true)
     protected String nodeName;
-    @XmlAttribute(name = "class_name", namespace = "http://www.openrtp.org/namespaces/ros", required = true)
+    @XmlAttribute(name = "class_name", namespace = "http://www.openrtp.org/namespaces/ros")
     protected String className;
     @XmlAttribute(name = "description", namespace = "http://www.openrtp.org/namespaces/ros")
     protected String description;

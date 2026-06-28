@@ -368,7 +368,7 @@ public class ServiceEditorFormPage extends AbstractEditorFormPage {
 	public void update() {
 		if (selectParam != null) {
 			selectParam.setType(serviceTypeCombo.getText());
-			selectParam.setVar_callback_name(variableNameText.getText());
+			selectParam.setVarCallbackName(variableNameText.getText());
 			
 			selectParam.setDocDescription(StringUtil.getDocText(descriptionText.getText()));
 			selectParam.setDocArgument(StringUtil.getDocText(argumentText.getText()));
@@ -434,52 +434,8 @@ public class ServiceEditorFormPage extends AbstractEditorFormPage {
 	}
 
 	public String validateParam() {
-		String result = null;
-
 		ROSParam rosParam = ((ROSBuilderEditor)editor).getROSParam();
-		Set<String> checkSet = new HashSet<String>();
-		Set<String> checkVarSet = new HashSet<String>();
-
-		for(ServiceParam service : rosParam.getServiceServers()) {
-			result = checkService(service, checkSet, checkVarSet);
-			if( result != null) return result;
-		}
-		//
-		for(ServiceParam service : rosParam.getServiceServers()) {
-			result = checkService(service, checkSet, checkVarSet);
-			if( result != null) return result;
-		}
-
-		return null;
-	}
-
-	@SuppressWarnings("unchecked")
-	private String checkService(ServiceParam service, Set checkSet, Set checkVarSet) {
-		if( service.getName()==null || service.getName().length()==0 ) {
-			return Messages.getString("IMC.VALIDATE_SERVICE_NAME1");
-		}
-//		if( !StringUtil.checkDigitAlphabet(topic.getName()) ) {
-//			return IMessageConstants.DATAPORT_VALIDATE_PORTNAME2;
-//		}
-		//
-		if( service.getType()==null || service.getType().length()==0 ) {
-			return Messages.getString("IMC.VALIDATE_SERVICE_TYPE");
-		}
-		//名称重複
-		if( checkSet.contains(service.getName()) ) {
-			return Messages.getString("IMC.VALIDATE_SERVICE_DUPLICATE");
-		}
-		checkSet.add(service.getName());
-		//変数名重複
-//		if( checkVarSet.contains(dataport.getTmplVarName()) ) {
-//			return IMessageConstants.DATAPORT_VALIDATE_VAR_DUPLICATE;
-//		}
-//		checkVarSet.add(dataport.getTmplVarName());
-		//型存在チェック
-//		if(Arrays.asList(defaultTypeList).contains(dataport.getType().trim())==false) {
-//			return IMessageConstants.DATAPORT_VALIDATE_PORTTYPE_INVALID;
-//		}
-		return null;
+		return rosParam.validateServiceInfo();
 	}
 
 	private class ServiceParamLabelProvider extends LabelProvider implements ITableLabelProvider {
