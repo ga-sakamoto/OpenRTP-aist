@@ -244,7 +244,7 @@ public class RtcBuilderEditor extends FormEditor implements IActionFilter {
 			throws PartInitException {
 		IEditorInput newInput = load(input, site);
 		super.init(site, newInput);
-		managerList = RtcBuilderPlugin.getDefault().getLoader().getManagerList();
+		managerList = RtcBuilderPlugin.getDefault().getLoader().getManagerList(IRtcBuilderConstants.MIDDLEWARE_RTM);
 		// ページ切り替え時のイベントを管理
 		addPageChangedListener(pageChangedListener);
 	}

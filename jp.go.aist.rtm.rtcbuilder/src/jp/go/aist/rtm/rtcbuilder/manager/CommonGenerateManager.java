@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
 import jp.go.aist.rtm.rtcbuilder.fsm.StateParam;
 import jp.go.aist.rtm.rtcbuilder.generator.GeneratedResult;
 import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
@@ -31,6 +32,11 @@ public class CommonGenerateManager extends GenerateManager {
 	@Override
 	public String getLangArgList() {
 		return null;
+	}
+
+	@Override
+	public String getTargetMiddleware() {
+		return IRtcBuilderConstants.MIDDLEWARE_RTM;
 	}
 
 	/**

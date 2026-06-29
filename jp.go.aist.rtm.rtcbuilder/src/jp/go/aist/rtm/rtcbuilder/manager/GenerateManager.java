@@ -22,6 +22,8 @@ public abstract class GenerateManager {
 	// スケルトンコードの生成
 	public abstract List<GeneratedResult> generateTemplateCode(RtcParam rtcParam);
 
+	public abstract String getTargetMiddleware();
+
 	// 生成対象言語用開発プラグイン情報の取得
 	public LanguageProperty getLanguageProperty(ParamBase rtcParam) {
 		return null;

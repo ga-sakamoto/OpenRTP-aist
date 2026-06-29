@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jp.go.aist.rtm.rtcbuilder.IRTCBMessageConstants;
+import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
 import jp.go.aist.rtm.rtcbuilder.RtcBuilderPlugin;
 import jp.go.aist.rtm.rtcbuilder.generator.param.GeneratorParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.ParamUtil;
@@ -36,7 +37,7 @@ public class ProfileHandler {
 
 	public ProfileHandler() {
 		super();
-		managerList = RtcBuilderPlugin.getDefault().getLoader().getManagerList();
+		managerList = RtcBuilderPlugin.getDefault().getLoader().getManagerList(IRtcBuilderConstants.MIDDLEWARE_RTM);
 	}
 
 	public ProfileHandler(boolean source) {

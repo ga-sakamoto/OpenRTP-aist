@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import jp.go.aist.rtm.rtcbuilder.IRTCBMessageConstants;
+import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
 import jp.go.aist.rtm.rtcbuilder.ParamBase;
 import jp.go.aist.rtm.rtcbuilder.fsm.StateParam;
 import jp.go.aist.rtm.rtcbuilder.generator.GeneratedResult;
@@ -49,6 +50,11 @@ public class ProcessingGenerateManager extends GenerateManager {
 	@Override
 	public String getLangArgList() {
 		return LANG_PROCESSING_ARG;
+	}
+
+	@Override
+	public String getTargetMiddleware() {
+		return IRtcBuilderConstants.MIDDLEWARE_RTM;
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
 import jp.go.aist.rtm.rtcbuilder.container.param.ContainerParam;
 import jp.go.aist.rtm.rtcbuilder.container.param.setting.ContainerConfig;
 import jp.go.aist.rtm.rtcbuilder.generator.GeneratedResult;
@@ -35,6 +36,11 @@ public class ContainerGenerateManager extends GenerateManager {
 	@Override
 	public String getLangArgList() {
 		return null;
+	}
+
+	@Override
+	public String getTargetMiddleware() {
+		return IRtcBuilderConstants.MIDDLEWARE_ALL;
 	}
 
 	/**

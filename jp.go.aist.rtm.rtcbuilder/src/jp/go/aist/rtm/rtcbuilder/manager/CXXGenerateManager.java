@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.ui.PlatformUI;
 
 import jp.go.aist.rtm.rtcbuilder.IRTCBMessageConstants;
+import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
 import jp.go.aist.rtm.rtcbuilder.fsm.StateParam;
 import jp.go.aist.rtm.rtcbuilder.generator.GeneratedResult;
 import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
@@ -40,6 +41,11 @@ public class CXXGenerateManager extends GenerateManager {
 	@Override
 	public String getLangArgList() {
 		return LANG_CPP_ARG;
+	}
+
+	@Override
+	public String getTargetMiddleware() {
+		return IRtcBuilderConstants.MIDDLEWARE_RTM;
 	}
 
 	/**

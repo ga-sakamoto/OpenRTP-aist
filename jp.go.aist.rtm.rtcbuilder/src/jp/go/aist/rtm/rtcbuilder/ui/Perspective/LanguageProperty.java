@@ -25,7 +25,7 @@ public abstract class LanguageProperty {
 			langProp = new CppProperty();
 		}
 		if(langProp==null) {
-			List<GenerateManager> managerList = RtcBuilderPlugin.getDefault().getLoader().getManagerList();
+			List<GenerateManager> managerList = RtcBuilderPlugin.getDefault().getLoader().getManagerList(IRtcBuilderConstants.MIDDLEWARE_RTM);
 			if( managerList != null ) {
 				for( Iterator<GenerateManager> iter = managerList.iterator(); iter.hasNext(); ) {
 					GenerateManager manager = iter.next();

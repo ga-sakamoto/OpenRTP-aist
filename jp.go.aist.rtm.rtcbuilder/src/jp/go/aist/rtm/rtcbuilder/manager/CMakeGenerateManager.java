@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import jp.go.aist.rtm.rtcbuilder.IRTCBMessageConstants;
+import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
 import jp.go.aist.rtm.rtcbuilder.generator.GeneratedResult;
 import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
 import jp.go.aist.rtm.rtcbuilder.template.TemplateHelper;
@@ -34,6 +35,11 @@ public class CMakeGenerateManager extends GenerateManager {
 	@Override
 	public String getLangArgList() {
 		return LANG_CPP_ARG;
+	}
+
+	@Override
+	public String getTargetMiddleware() {
+		return IRtcBuilderConstants.MIDDLEWARE_RTM;
 	}
 
 	@Override

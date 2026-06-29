@@ -169,10 +169,10 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 		createExportImportSection(toolkit, form);
 		//
 		managerList = RtcBuilderPlugin.getDefault().getLoader()
-				.getManagerList();
+				.getManagerList(IRtcBuilderConstants.MIDDLEWARE_ROS);
 		if (managerList != null) {
 			for (String key : RtcBuilderPlugin.getDefault().getLoader()
-					.getManagerKeyList()) {
+					.getManagerKeyList(IRtcBuilderConstants.MIDDLEWARE_ROS)) {
 				Button extRadio = createRadioCheckButton(toolkit, LangGroup,
 						key, SWT.RADIO);
 				extRadio.addSelectionListener(createLanguageRadioListner());
@@ -405,7 +405,6 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 				//
 				rosParam.convertInfo();
 				//
-//				editor.addDefaultComboValue();
 //				GuiRtcBuilder rtcBuilder = new GuiRtcBuilder();
 //				List<GenerateManager> managerList = RtcBuilderPlugin
 //						.getDefault().getLoader().getManagerList();

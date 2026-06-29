@@ -188,10 +188,10 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 		createExportImportSection(toolkit, form);
 		//
 		managerList = RtcBuilderPlugin.getDefault().getLoader()
-				.getManagerList();
+				.getManagerList(IRtcBuilderConstants.MIDDLEWARE_RTM);
 		if (managerList != null) {
 			for (String key : RtcBuilderPlugin.getDefault().getLoader()
-					.getManagerKeyList()) {
+					.getManagerKeyList(IRtcBuilderConstants.MIDDLEWARE_RTM)) {
 				Button extRadio = createRadioCheckButton(toolkit, LangGroup,
 						key, SWT.RADIO);
 				extRadio.addSelectionListener(createLanguageRadioListner());
@@ -444,7 +444,7 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 				editor.addDefaultComboValue();
 				GuiRtcBuilder rtcBuilder = new GuiRtcBuilder();
 				List<GenerateManager> managerList = RtcBuilderPlugin
-						.getDefault().getLoader().getManagerList();
+						.getDefault().getLoader().getManagerList(IRtcBuilderConstants.MIDDLEWARE_RTM);
 				if (managerList != null) {
 					for (GenerateManager manager : managerList) {
 						rtcBuilder.addGenerateManager(manager);
@@ -509,7 +509,7 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 				//
 				editor.addDefaultComboValue();
 				GuiRtcBuilder rtcBuilder = new GuiRtcBuilder();
-				List<GenerateManager> managerList = RtcBuilderPlugin.getDefault().getLoader().getManagerList();
+				List<GenerateManager> managerList = RtcBuilderPlugin.getDefault().getLoader().getManagerList(IRtcBuilderConstants.MIDDLEWARE_RTM);
 				if (managerList != null) {
 					for (GenerateManager manager : managerList) {
 						rtcBuilder.addGenerateManager(manager);

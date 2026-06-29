@@ -217,7 +217,8 @@ public class ROSBuilderEditor extends RtcBuilderEditor implements IActionFilter 
 			createGeneratorParam();
 		}
 		
-		managerList = RtcBuilderPlugin.getDefault().getLoader().getManagerList();
+		if(managerList != null) managerList.clear();
+		managerList = RtcBuilderPlugin.getDefault().getLoader().getManagerList(IRtcBuilderConstants.MIDDLEWARE_ROS);
 		// ページ切り替え時のイベントを管理
 		addPageChangedListener(pageChangedListener);
 	}
