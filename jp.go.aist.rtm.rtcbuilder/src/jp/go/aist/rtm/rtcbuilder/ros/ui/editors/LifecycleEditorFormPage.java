@@ -277,7 +277,7 @@ public class LifecycleEditorFormPage extends AbstractEditorFormPage {
 		gd.grabExcessHorizontalSpace = true;
 		timerListTable.setLayoutData(gd);
 		
-		TableViewerColumn nameColumn = createColumn(timerListViewer, "Name", 100);
+		TableViewerColumn nameColumn = createColumn(timerListViewer, "Timer Name", 100);
 		nameColumn.setEditingSupport(new TimerCellModifier(timerListViewer, 0));
 		TableViewerColumn rateColumn = createColumn(timerListViewer, "Rate", 100);
 		rateColumn.setEditingSupport(new TimerCellModifier(timerListViewer, 0));

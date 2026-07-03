@@ -195,6 +195,15 @@ public interface IMessageConstantsROS {
 			Messages.getString("IMC.ROS_ACTION_HINT_DESCRIPTION_DESC_P2")
 	});
 	
+	public static final String TOPIC_VARNAME = StringUtil.connectMessageWithSepalator( new String[]{
+			Messages.getString("IMC.ROS_TOPIC_LBL_VARNAME_1"),
+			Messages.getString("IMC.ROS_TOPIC_LBL_VARNAME_2")
+	});
+	public static final String TOPIC_HINT_QoS_DESC = StringUtil.connectMessageWithSepalator( new String[]{
+			Messages.getString("IMC.ROS_TOPIC_HINT_QoS_DESC_P1"),
+			Messages.getString("IMC.ROS_TOPIC_HINT_QoS_DESC_P2")
+	});
+
 	public static final String PARAMETER_DOCUMENT_EXPL = StringUtil.connectMessageWithSepalator( new String[]{
 			Messages.getString("IMC.ROS_PARAMETER_DOCUMENT_EXPL_P1"),
 			Messages.getString("IMC.ROS_PARAMETER_DOCUMENT_EXPL_P2")
@@ -209,15 +218,18 @@ public interface IMessageConstantsROS {
 	});
 	public static final String PARAMETER_HINT_MIN_EXPL = StringUtil.connectMessageWithSepalator( new String[]{
 			Messages.getString("IMC.ROS_PARAMETER_HINT_MIN_DESC_P1"),
-			Messages.getString("IMC.ROS_PARAMETER_HINT_MIN_DESC_P2")
+			Messages.getString("IMC.ROS_PARAMETER_HINT_MIN_DESC_P2"),
+			Messages.getString("IMC.ROS_PARAMETER_HINT_MIN_DESC_P3")
 	});
 	public static final String PARAMETER_HINT_MAX_EXPL = StringUtil.connectMessageWithSepalator( new String[]{
 			Messages.getString("IMC.ROS_PARAMETER_HINT_MAX_DESC_P1"),
-			Messages.getString("IMC.ROS_PARAMETER_HINT_MAX_DESC_P2")
+			Messages.getString("IMC.ROS_PARAMETER_HINT_MAX_DESC_P2"),
+			Messages.getString("IMC.ROS_PARAMETER_HINT_MAX_DESC_P3")
 	});
 	public static final String PARAMETER_HINT_STEP_EXPL = StringUtil.connectMessageWithSepalator( new String[]{
 			Messages.getString("IMC.ROS_PARAMETER_HINT_STEP_DESC_P1"),
-			Messages.getString("IMC.ROS_PARAMETER_HINT_STEP_DESC_P2")
+			Messages.getString("IMC.ROS_PARAMETER_HINT_STEP_DESC_P2"),
+			Messages.getString("IMC.ROS_PARAMETER_HINT_STEP_DESC_P3")
 	});
 	public static final String PARAMETER_HINT_DESC_EXPL = StringUtil.connectMessageWithSepalator( new String[]{
 			Messages.getString("IMC.ROS_PARAMETER_HINT_DESC_DESC_P1"),
@@ -228,5 +240,4 @@ public interface IMessageConstantsROS {
 			Messages.getString("IMC.ROSXML_CAUTION_P1"),
 			Messages.getString("IMC.ROSXML_CAUTION_P2")
 	});
-
 }

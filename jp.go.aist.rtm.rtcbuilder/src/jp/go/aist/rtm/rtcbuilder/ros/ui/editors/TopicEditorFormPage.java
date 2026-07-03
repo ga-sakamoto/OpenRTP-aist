@@ -258,11 +258,11 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 		createHintSpace(toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_TOPIC_LBL_TOPICNAME"), Messages.getString("IMC.ROS_TOPIC_HINT_TOPIC_NAME_DESC"), toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_TOPIC_LBL_DATATYPE"), IMessageConstantsROS.TOPIC_HINT_MESSAGETYPE_EXPL, toolkit, composite);
-		createHintLabel(Messages.getString("IMC.ROS_TOPIC_HINT_QoS_TITLE"), Messages.getString("IMC.ROS_TOPIC_HINT_QoS_DESC"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_TOPIC_HINT_QoS_TITLE"), IMessageConstantsROS.TOPIC_HINT_QoS_DESC, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_TOPIC_HINT_RELIABILITY_TITLE"), IMessageConstantsROS.TOPIC_HINT_RELIABILITY_EXPL, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_TOPIC_HINT_HISTORY_TITLE"), IMessageConstantsROS.TOPIC_HINT_HISTORY_EXPL, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_TOPIC_HINT_DEPTH_TITLE"), IMessageConstantsROS.TOPIC_HINT_DEPTH_EXPL, toolkit, composite);
-		createHintLabel(Messages.getString("IMC.ROS_TOPIC_LBL_VARNAME"), "", toolkit, composite);
+		createHintLabel(IMessageConstantsROS.TOPIC_VARNAME, "", toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_TOPIC_HINT_VARNAME_SUBSCRIBE_TITLE"), IMessageConstantsROS.TOPIC_HINT_VARNAME_SUBSCRIBE_EXPL, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_TOPIC_HINT_VARNAME_PUBLISH_TITLE"), IMessageConstantsROS.TOPIC_HINT_VARNAME_PUBLISH_EXPL, toolkit, composite);
 		//
@@ -396,7 +396,7 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 				Messages.getString("IMC.ROS_TOPIC_LBL_DEPTH"), SWT.BORDER);
 		/////
 		variableNameText = createLabelAndText(toolkit, detailGroup,
-				Messages.getString("IMC.ROS_TOPIC_LBL_VARNAME"), SWT.NONE, SWT.COLOR_BLACK, 2, 2);
+				IMessageConstantsROS.TOPIC_VARNAME, SWT.NONE, SWT.COLOR_BLACK, 2, 2);
 
 		/////
 		Group documentGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);

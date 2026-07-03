@@ -144,7 +144,7 @@ public class ServiceEditorFormPage extends AbstractEditorFormPage {
 		createHintSpace(toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_SERVICE_LBL_SERVICENAME"), Messages.getString("IMC.ROS_SERVICE_HINT_SERVICE_NAME_DESC"), toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_SERVICE_LBL_SERVICETYPE"), IMessageConstantsROS.SERVICE_HINT_SERVICE_TYPE_EXPL, toolkit, composite);
-		createHintLabel(Messages.getString("IMC.ROS_TOPIC_LBL_VARNAME"), "", toolkit, composite);
+		createHintLabel(IMessageConstantsROS.TOPIC_VARNAME, "", toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_SERVICE_HINT_VARNAME_SERVER_TITLE"), IMessageConstantsROS.SERVICE_HINT_VAR_SERVER_EXPL, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_SERVICE_HINT_VARNAME_CLIENT_TITLE"), IMessageConstantsROS.SERVICE_HINT_VAR_CLIENT_EXPL, toolkit, composite);
 		//
@@ -251,7 +251,7 @@ public class ServiceEditorFormPage extends AbstractEditorFormPage {
 		});
 		/////
 		variableNameText = createLabelAndText(toolkit, detailGroup,
-				Messages.getString("IMC.ROS_TOPIC_LBL_VARNAME"), SWT.NONE, SWT.COLOR_BLACK, 2, 2);
+				IMessageConstantsROS.TOPIC_VARNAME, SWT.NONE, SWT.COLOR_BLACK, 2, 2);
 
 		/////
 		Group documentGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
