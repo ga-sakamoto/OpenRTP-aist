@@ -155,7 +155,7 @@ public class ParamUtilROS extends ParamUtil {
 
 		rosParam.setPackageName(basic.getPackageName());
 		rosParam.setNodeName(basic.getNodeName());
-		rosParam.setClass_name(basic.getClassName());
+		rosParam.setClassName(basic.getClassName());
 		rosParam.setDescription(basic.getDescription());
 		rosParam.setVersion(basic.getVersion());
 		rosParam.setMaintainer(basic.getMaintainer());
@@ -525,7 +525,7 @@ public class ParamUtilROS extends ParamUtil {
 		org.openrtp.namespaces.ros.version01.BasicInfoExt basic = factory.createBasicInfoExt();
 		basic.setPackageName(param.getPackageName());
 		basic.setNodeName(param.getNodeName());
-		basic.setClassName(param.getClass_name());
+		basic.setClassName(param.getClassName());
 		basic.setDescription(param.getDescription());
 		basic.setVersion(param.getVersion());
 		basic.setMaintainer(param.getMaintainer());

@@ -70,7 +70,8 @@ public class PythonGenerateManager extends GenerateManager {
 	 * @param generatorParam
 	 * @return 出力結果のリスト
 	 */
-	public List<GeneratedResult> generateTemplateCode(RtcParam rtcParam) {
+	public List<GeneratedResult> generateTemplateCode(ParamBase baseParam) {
+		RtcParam rtcParam = (RtcParam)baseParam;
 		List<GeneratedResult> result = new ArrayList<GeneratedResult>();
 
 		if (!rtcParam.isLanguageExist(LANG_PYTHON)) {

@@ -1,0 +1,88 @@
+cmake_minimum_required(VERSION 3.8)
+project(${rosParam.packageName})
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+find_package(ament_cmake REQUIRED)
+${sharp} Core dependencies
+find_package(lifecycle_msgs REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rclcpp_lifecycle REQUIRED)
+#if( ${rosParam.parameters.size()}>0 )
+# Parameter / descriptor dependencies
+find_package(rcl_interfaces REQUIRED)
+#end
+#if( ${rosParam.topicSubscribes.size()}>0 || ${rosParam.topicPublishes.size()}>0 )
+${sharp} Topic message dependencies
+#foreach($topic in ${rosParam.topicPublishes})
+find_package(${tmpltHelper.getMessageBasename(${topic.messageType})} REQUIRED)
+#end
+#foreach($topic in ${rosParam.topicSubscribes})
+find_package(${tmpltHelper.getMessageBasename(${topic.messageType})} REQUIRED)
+#end
+#end
+#if( ${rosParam.serviceClients.size()}>0 || ${rosParam.serviceServers.size()}>0 )
+${sharp} Service dependencies
+#foreach($type in ${tmpltHelper.getServicePackage(${rosParam})})
+find_package($type REQUIRED)
+#end
+#end
+#if( ${rosParam.actionClients.size()}>0 || ${rosParam.actionServers.size()}>0 )
+${sharp} Action dependencies
+find_package(action_msgs REQUIRED)
+#foreach($type in ${tmpltHelper.getActionPackage(${rosParam})})
+find_package($type REQUIRED)
+#end
+find_package(rclcpp_action REQUIRED)
+#end
+add_library(${dol}{PROJECT_NAME}_lib src/${rosParam.nodeName}.cpp)
+target_include_directories(${dol}{PROJECT_NAME}_lib PUBLIC
+  ${dol}<BUILD_INTERFACE:${dol}{CMAKE_CURRENT_SOURCE_DIR}/include>
+  ${dol}<INSTALL_INTERFACE:include>
+)
+ament_target_dependencies(${dol}{PROJECT_NAME}_lib
+  lifecycle_msgs
+  rclcpp
+  rclcpp_lifecycle
+#if( ${rosParam.parameters.size()}>0 )
+  rcl_interfaces
+#end
+#if( ${rosParam.topicSubscribes.size()}>0 || ${rosParam.topicPublishes.size()}>0 )
+#foreach($topic in ${rosParam.topicPublishes})
+  ${tmpltHelper.getMessageBasename(${topic.messageType})}
+#end
+#foreach($topic in ${rosParam.topicSubscribes})
+  ${tmpltHelper.getMessageBasename(${topic.messageType})}
+#end
+#end
+#if( ${rosParam.serviceClients.size()}>0 || ${rosParam.serviceServers.size()}>0 )
+#foreach($type in ${tmpltHelper.getServicePackage(${rosParam})})
+  $type
+#end
+#end
+#if( ${rosParam.actionClients.size()}>0 || ${rosParam.actionServers.size()}>0 )
+  action_msgs
+#foreach($type in ${tmpltHelper.getActionPackage(${rosParam})})
+  $type
+#end
+  rclcpp_action
+#end
+)
+
+add_executable(${rosParam.nodeName} src/main.cpp)
+target_link_libraries(${rosParam.nodeName} ${dol}{PROJECT_NAME}_lib)
+
+install(TARGETS ${dol}{PROJECT_NAME}_lib ${rosParam.nodeName}
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION lib/${dol}{PROJECT_NAME}
+)
+install(DIRECTORY include/ DESTINATION include)
+install(DIRECTORY launch/ DESTINATION share/${dol}{PROJECT_NAME}/launch)
+install(DIRECTORY config/ DESTINATION share/${dol}{PROJECT_NAME}/config)
+
+install(FILES LICENSE README.md DESTINATION share/${dol}{PROJECT_NAME})
+
+ament_package()

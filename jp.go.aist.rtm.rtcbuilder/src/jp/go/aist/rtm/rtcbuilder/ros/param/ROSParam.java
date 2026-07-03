@@ -132,10 +132,10 @@ public class ROSParam extends ParamBase implements Serializable {
 		this.nodeName = node_name;
 	}
 	
-	public String getClass_name() {
+	public String getClassName() {
 		return className;
 	}
-	public void setClass_name(String class_name) {
+	public void setClassName(String class_name) {
 		checkUpdated(this.className, class_name);
 		this.className = class_name;
 	}

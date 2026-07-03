@@ -1,0 +1,11 @@
+${rosParam.nodeName}:
+#if( ${rosParam.parameters.size()}==0 )
+  # No ROS parameters defined in UI
+  ros__parameters: {}
+#else
+  ros__parameters:
+#foreach($param in ${rosParam.parameters})
+    # Summary: ${param.docDescription}
+    ${param.name}: ${param.defaultValue}
+#end
+#end

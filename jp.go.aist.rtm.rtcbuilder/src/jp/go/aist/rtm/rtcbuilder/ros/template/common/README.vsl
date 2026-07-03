@@ -1,0 +1,208 @@
+${sharp} ${rosParam.packageName}
+
+${rosParam.description}
+
+${sharp}${sharp} Package Summary
+
+- Package: `${rosParam.packageName}`
+- Node executable: `${rosParam.nodeName}`
+- Node class: `${rosParam.className}`
+- Language: `${rosParam.langList.get(0)}`
+- License: `${rosParam.license}`
+
+
+${sharp}${sharp} Generated Files
+
+- `package.xml`
+- `LICENSE`
+- `README.md`
+- `launch/${rosParam.nodeName}.launch.py`
+- `config/params.yaml`
+- `CMakeLists.txt`
+- `include/${rosParam.packageName}/${rosParam.nodeName}.hpp`
+- `src/${rosParam.nodeName}.cpp`
+- `src/main.cpp`
+
+${sharp}${sharp} Build
+
+From the generated workspace directory:
+
+```bash
+cd ./generated_sample_template_package/${rosParam.packageName}/cpp/template
+colcon build --merge-install --symlink-install --packages-select ${rosParam.packageName}
+source install/setup.bash
+```
+
+${sharp}${sharp} Run
+
+```bash
+ros2 launch ${rosParam.packageName} ${rosParam.nodeName}.launch.py
+```
+
+${sharp}${sharp} Lifecycle Operation
+
+This package generates a ROS 2 Lifecycle node. After launch, configure and activate it:
+
+```bash
+ros2 lifecycle get /${rosParam.nodeName}
+ros2 lifecycle set /${rosParam.nodeName} configure
+ros2 lifecycle set /${rosParam.nodeName} activate
+```
+
+To stop active publishers and timers:
+
+```bash
+ros2 lifecycle set /${rosParam.nodeName} deactivate
+```
+
+${sharp}${sharp} Topics
+
+#if( ${rosParam.topicSubscribes.size()}==0 && ${rosParam.topicPublishes.size()}==0 )
+None.
+#else
+| Direction | Name | Type | QoS | Callback / Variable | Summary |
+| --- | --- | --- | --- | --- | --- |
+#foreach($topic in ${rosParam.topicPublishes})
+| Publish | ${topic.name} | ${topic.messageType} | ${topic.reliabilityType}, ${topic.historyType}, depth=${topic.depth} | Publisher variable: ${topic.varCallbackName} | ${topic.docDescription} |
+#end
+#foreach($topic in ${rosParam.topicSubscribes})
+| Subscribe | ${topic.name} | ${topic.messageType} | ${topic.reliabilityType}, ${topic.historyType}, depth=${topic.depth} | Callback: ${topic.varCallbackName} | ${topic.docDescription} |
+#end
+Useful commands:
+
+```bash
+ros2 topic list
+#foreach($topic in ${rosParam.topicPublishes})
+ros2 topic info ${topic.name}
+ros2 topic echo ${topic.name}
+#end
+#foreach($topic in ${rosParam.topicSubscribes})
+ros2 topic info ${topic.name}
+${sharp} ros2 topic pub ${topic.name} ${topic.messageType} '<yaml-message>'
+#end
+```
+#end
+
+${sharp}${sharp} Services
+
+#if( ${rosParam.serviceClients.size()}==0 && ${rosParam.serviceServers.size()}==0 )
+None.
+#else
+| Role | Name | Type | Callback / Variable | Summary |
+| --- | --- | --- | --- | --- |
+#foreach($service in ${rosParam.serviceClients})
+| Client | ${service.name} | ${service.type} | ${service.varCallbackName} | ${service.docDescription} |
+#end
+#foreach($service in ${rosParam.serviceServers})
+| Server | ${service.name} | ${service.type} | ${service.varCallbackName} | ${service.docDescription} |
+#end
+Useful commands:
+
+```bash
+ros2 service list
+#foreach($service in ${rosParam.serviceClients})
+ros2 service type ${service.name}
+#end
+#foreach($service in ${rosParam.serviceServers})
+ros2 service type ${service.name}
+${sharp} ros2 service call ${service.name} ${service.type} '<yaml-request>'
+#end
+```
+#end
+
+${sharp}${sharp} Actions
+
+#if( ${rosParam.actionClients.size()}==0 && ${rosParam.actionServers.size()}==0 )
+None.
+#else
+| Role | Name | Type | Callback Base | Summary |
+| --- | --- | --- | --- | --- |
+#foreach($action in ${rosParam.actionClients})
+| Client | ${action.name} | ${action.type} | ${action.callbackName} | ${action.docDescription} |
+#end
+#foreach($action in ${rosParam.actionServers})
+| Server | ${action.name} | ${action.type} | ${action.callbackName} | ${action.docDescription} |
+#end
+Useful commands:
+
+```bash
+ros2 action list
+#foreach($action in ${rosParam.actionClients})
+ros2 action info ${action.name}
+#end
+#foreach($action in ${rosParam.actionServers})
+ros2 action info ${action.name}
+${sharp} ros2 action send_goal ${action.name} ${action.type} '<yaml-goal>' --feedback
+#end
+```
+#end
+#if( ${rosParam.actionClients.size()}>0 )
+${sharp}${sharp} Action Client Note
+
+Action Client helper `send_<action_name>_goal()` は自動実行されません。
+Timer、Topic、Serviceなど任意の処理から呼び出してください。
+
+#end
+
+${sharp}${sharp} Parameters
+
+#if( ${rosParam.parameters.size()}==0 )
+None.
+
+This package does not define user parameters.
+
+#else
+| Name | Type | Default | ReadOnly | Min | Max | Step | Summary |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+#foreach($param in ${rosParam.parameters})
+| ${param.name} | ${param.type} | ${param.defaultValue} | ${param.readOnly} | ${tmpltHelper.convZero(${param.min})} | ${tmpltHelper.convZero(${param.max})} | ${tmpltHelper.convZero(${param.step})} | ${param.docDescription} |
+#end
+
+Parameter values are generated in `config/params.yaml`.
+
+`min`, `max`, and `step` are preserved as ROS Profile / documentation information only. They are
+not used for automatic runtime checks in the generated node. If the node must reject out-of-range
+values, implement the required validation manually in `on_set_parameters()`.
+
+Useful commands:
+
+```bash
+ros2 param list /${rosParam.nodeName}
+ros2 param dump /${rosParam.nodeName}
+# ros2 param set /${rosParam.nodeName} <parameter_name> <value>
+```
+#end
+
+${sharp}${sharp} Timers
+
+#if( ${rosParam.timers.size()}==0 )
+None.
+#else
+| Name | Period | Callback | Description |
+| --- | --- | --- | --- |
+#foreach($timer in ${rosParam.timers})
+| ${timer.name} | ${timer.rate} sec | ${timer.callBack} | ${timer.description} |
+#end
+
+Timers are created during `on_configure`, started during `on_activate`, and stopped during `on_deactivate`.
+#end
+
+${sharp}${sharp} Manual Editing Guide
+
+- Add topic receive logic in generated subscriber callbacks.
+- Add publish logic after the lifecycle node is active. Lifecycle publishers should publish after activation.
+- Add service server behavior in generated service callback functions.
+- Fill service client request fields before calling the generated client helper.
+- Fill action goal, feedback, and result fields according to the selected action type.
+- Add timer behavior in generated timer callbacks.
+- Keep reusable helper functions near the generated callback that uses them, or add a clearly named user helper section.
+
+${sharp}${sharp} Quick Evaluation Checklist
+
+```bash
+colcon build --merge-install --symlink-install --packages-select ${rosParam.packageName}
+source install/setup.bash
+ros2 launch ${rosParam.packageName} ${rosParam.nodeName}.launch.py
+ros2 lifecycle set /${rosParam.nodeName} configure
+ros2 lifecycle set /${rosParam.nodeName} activate
+```

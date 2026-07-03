@@ -13,6 +13,7 @@ import java.util.UUID;
 
 import jp.go.aist.rtm.rtcbuilder.IRTCBMessageConstants;
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
+import jp.go.aist.rtm.rtcbuilder.ParamBase;
 import jp.go.aist.rtm.rtcbuilder.generator.GeneratedResult;
 import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
 import jp.go.aist.rtm.rtcbuilder.template.TemplateHelper;
@@ -43,7 +44,8 @@ public class CMakeGenerateManager extends GenerateManager {
 	}
 
 	@Override
-	public List<GeneratedResult> generateTemplateCode(RtcParam rtcParam) {
+	public List<GeneratedResult> generateTemplateCode(ParamBase baseParam) {
+		RtcParam rtcParam = (RtcParam)baseParam;
 		List<GeneratedResult> result = new ArrayList<GeneratedResult>();
 
 		if (!validateRtcParam(rtcParam)) {

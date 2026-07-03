@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>eval4_action_server_cpp_pkg</name>
+  <version>0.0.1</version>
+  <description>C++ action server node using example_interfaces Fibonacci action.</description>
+  <maintainer email="todo@example.com">rsdlab</maintainer>
+  <license>Proprietary</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <!-- Core dependencies -->
+  <depend>lifecycle_msgs</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_lifecycle</depend>
+
+  <!-- Action dependencies -->
+  <depend>action_msgs</depend>
+  <depend>example_interfaces</depend>
+  <depend>rclcpp_action</depend>
+
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>ament_index_python</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
+import jp.go.aist.rtm.rtcbuilder.ParamBase;
 import jp.go.aist.rtm.rtcbuilder.fsm.StateParam;
 import jp.go.aist.rtm.rtcbuilder.generator.GeneratedResult;
 import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
@@ -45,7 +46,9 @@ public class CommonGenerateManager extends GenerateManager {
 	 * @param generatorParam
 	 * @return 出力結果のリスト
 	 */
-	public List<GeneratedResult> generateTemplateCode(RtcParam rtcParam) {
+	public List<GeneratedResult> generateTemplateCode(ParamBase param) {
+		RtcParam rtcParam = (RtcParam)param;
+		
 		Map<String, Object> contextMap = new HashMap<String, Object>();
 		contextMap.put("template", TEMPLATE_PATH);
 		contextMap.put("rtcParam", rtcParam);

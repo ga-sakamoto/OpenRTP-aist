@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>${rosParam.packageName}</name>
+  <version>${rosParam.version}</version>
+  <description>${rosParam.description}</description>
+  <maintainer email="${rosParam.contactAddress}">${rosParam.maintainer}</maintainer>
+  <license>${rosParam.license}</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <!-- Core dependencies -->
+  <depend>lifecycle_msgs</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_lifecycle</depend>
+
+#if( ${rosParam.parameters.size()}>0 )
+  <!-- Parameter / descriptor dependencies -->
+  <depend>rcl_interfaces</depend>
+#end
+
+#if( ${rosParam.topicSubscribes.size()}>0 || ${rosParam.topicPublishes.size()}>0 )
+  <!-- Topic message dependencies -->
+#foreach($topic in ${rosParam.topicPublishes})
+  <depend>${tmpltHelper.getMessageBasename(${topic.messageType})}</depend>
+#end
+#foreach($topic in ${rosParam.topicSubscribes})
+  <depend>${tmpltHelper.getMessageBasename(${topic.messageType})}</depend>
+#end
+#end
+#if( ${rosParam.serviceClients.size()}>0 || ${rosParam.serviceServers.size()}>0 )
+  <!-- Service dependencies -->
+  <depend>std_srvs</depend>
+#end
+#if( ${rosParam.actionClients.size()}>0 || ${rosParam.actionServers.size()}>0 )
+  <!-- Action dependencies -->
+  <depend>action_msgs</depend>
+  <depend>example_interfaces</depend>
+  <depend>rclcpp_action</depend>
+#end
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>ament_index_python</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

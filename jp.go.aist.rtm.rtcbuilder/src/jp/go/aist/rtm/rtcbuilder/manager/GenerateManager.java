@@ -20,7 +20,7 @@ public abstract class GenerateManager {
 	public abstract String getLangArgList();
 
 	// スケルトンコードの生成
-	public abstract List<GeneratedResult> generateTemplateCode(RtcParam rtcParam);
+	public abstract List<GeneratedResult> generateTemplateCode(ParamBase rtcParam);
 
 	public abstract String getTargetMiddleware();
 

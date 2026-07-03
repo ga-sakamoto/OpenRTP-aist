@@ -15,9 +15,9 @@ public class ParameterParam extends AbstractRecordedParam implements Serializabl
 	private String name;
 	private String type;
 	private String defaultValue;
-	private double min;
-	private double max;
-	private double step;
+	private Double min;
+	private Double max;
+	private Double step;
 	private boolean readOnly;
 	//
 	private String docDescription;
@@ -33,9 +33,9 @@ public class ParameterParam extends AbstractRecordedParam implements Serializabl
 		this.name = "";
 		this.type = "";
 		this.defaultValue = "";
-		this.min = 0.0;
-		this.max = 0.0;
-		this.step = 0.0;
+		this.min = null;
+		this.max = null;
+		this.step = null;
 		this.readOnly = false;
 		//
 		this.docDataname = "";
@@ -72,26 +72,26 @@ public class ParameterParam extends AbstractRecordedParam implements Serializabl
 		this.defaultValue = default_value;
 	}
 
-	public double getMin() {
+	public Double getMin() {
 		return min;
 	}
-	public void setMin(double min) {
+	public void setMin(Double min) {
 		checkUpdated(this.min, min);
 		this.min = min;
 	}
 
-	public double getMax() {
+	public Double getMax() {
 		return max;
 	}
-	public void setMax(double max) {
+	public void setMax(Double max) {
 		checkUpdated(this.max, max);
 		this.max = max;
 	}
 
-	public double getStep() {
+	public Double getStep() {
 		return step;
 	}
-	public void setStep(double step) {
+	public void setStep(Double step) {
 		checkUpdated(this.step, step);
 		this.step = step;
 	}

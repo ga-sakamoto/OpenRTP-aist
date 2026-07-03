@@ -61,6 +61,7 @@ import jp.go.aist.rtm.rtcbuilder.manager.CommonGenerateManager;
 import jp.go.aist.rtm.rtcbuilder.manager.ContainerGenerateManager;
 import jp.go.aist.rtm.rtcbuilder.manager.GenerateManager;
 import jp.go.aist.rtm.rtcbuilder.nl.Messages;
+import jp.go.aist.rtm.rtcbuilder.ros.param.ROSParam;
 import jp.go.aist.rtm.rtcbuilder.ui.compare.GeneratedCautionDialog;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.IMessageConstants;
 import jp.go.aist.rtm.rtcbuilder.ui.preference.ComponentPreferenceManager;
@@ -252,6 +253,24 @@ public class Generator {
 		return result;
 	}
 
+	public List<GeneratedResult> generateTemplateCodeROS(GeneratorParam generatorParam) throws Exception {
+		List<GeneratedResult> result = new ArrayList<GeneratedResult>();
+
+		ROSParam rosParam =  generatorParam.getROSParam();
+		
+		for (String key : generateManagerList.keySet()) {
+			GenerateManager manager = generateManagerList.get(key);
+			if (!"Common".equals(manager.getManagerKey())
+					&& !rosParam.getLangList().contains(
+							manager.getManagerKey())) {
+				continue;
+			}
+			result.addAll(manager.generateTemplateCode(rosParam));
+		}
+
+		return result;
+	}
+
 	/**
 	 * バリデートを行う
 	 *
@@ -351,6 +370,11 @@ public class Generator {
 		}
 	}
 
+	public void validateROS(ROSParam rosParam) {
+		if( rosParam.getOutputProject() == null ) {
+			throw new RuntimeException(IRTCBMessageConstants.VALIDATE_ERROR_OUTPUTPROJECT);
+		}
+	}
 	/**
 	 * 参照されているServiceが存在するか確認する
 	 *
@@ -709,6 +733,22 @@ public class Generator {
 		}
 	}
 
+	private void writeFileROS(List<GeneratedResult> generatedResultList,
+			ROSParam rosParam, String genTime, MergeHandler handler) throws IOException, CoreException {
+
+		IWorkspaceRoot workspaceHandle = ResourcesPlugin.getWorkspace().getRoot();
+		IProject project = workspaceHandle.getProject(rosParam.getOutputProject());
+		if(!project.exists()) {
+			return;
+		}
+
+		for (GeneratedResult generatedResult : generatedResultList) {
+			if (generatedResult.getName().equals("") == false) {
+				writeFile(generatedResult, project, handler, genTime);
+			}
+		}	
+	}
+
 	private void writeFile(GeneratedResult generatedResult, IProject outputProject,
 			MergeHandler handler, String genTime) throws IOException {
 
@@ -815,6 +855,14 @@ public class Generator {
 		validate(rtcParam);
 		List<GeneratedResult> generatedResult = generateTemplateCode(generatorParam, idlDirs);
 		writeFile(generatedResult, rtcParam, genTime, handler);
+	}
+
+	public void doGenerateWriteROS(GeneratorParam generatorParam, String genTime, MergeHandler handler) throws Exception {
+		warningMessage = "";
+		ROSParam rosParam =  generatorParam.getROSParam();
+		validateROS(rosParam);
+		List<GeneratedResult> generatedResult = generateTemplateCodeROS(generatorParam);
+		writeFileROS(generatedResult, rosParam, genTime, handler);
 	}
 
 	/**

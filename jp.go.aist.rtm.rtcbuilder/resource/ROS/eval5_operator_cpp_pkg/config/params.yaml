@@ -1,0 +1,4 @@
+eval5_operator_node:
+  ros__parameters:
+    # Summary: Commanded linear speed.
+    command_speed: 0.5

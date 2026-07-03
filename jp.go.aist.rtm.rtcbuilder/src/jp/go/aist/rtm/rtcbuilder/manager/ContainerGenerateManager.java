@@ -11,6 +11,7 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
+import jp.go.aist.rtm.rtcbuilder.ParamBase;
 import jp.go.aist.rtm.rtcbuilder.container.param.ContainerParam;
 import jp.go.aist.rtm.rtcbuilder.container.param.setting.ContainerConfig;
 import jp.go.aist.rtm.rtcbuilder.generator.GeneratedResult;
@@ -49,7 +50,9 @@ public class ContainerGenerateManager extends GenerateManager {
 	 * @param generatorParam
 	 * @return 出力結果のリスト
 	 */
-	public List<GeneratedResult> generateTemplateCode(RtcParam rtcParam) {
+	public List<GeneratedResult> generateTemplateCode(ParamBase baseParam) {
+		RtcParam rtcParam = (RtcParam)baseParam;
+		
 		if(rtcParam.getContainerSettings() == null || rtcParam.getContainerSettings().size() == 0) {
 			return new ArrayList<GeneratedResult>();
 		}

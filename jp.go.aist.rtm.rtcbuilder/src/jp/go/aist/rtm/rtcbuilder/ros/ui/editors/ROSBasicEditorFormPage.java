@@ -61,6 +61,7 @@ import org.slf4j.LoggerFactory;
 import jp.ac.meijo_u.iso22166_part202.util.ISO2RTCProfileHandler;
 import jp.ac.meijo_u.iso22166_part202.util.RTC2ISOProfileHandler;
 import jp.go.aist.rtm.rtcbuilder.Generator.MergeHandler;
+import jp.go.aist.rtm.rtcbuilder.GuiRtcBuilder;
 import jp.go.aist.rtm.rtcbuilder.IRTCBMessageConstants;
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
 import jp.go.aist.rtm.rtcbuilder.RtcBuilderPlugin;
@@ -69,6 +70,8 @@ import jp.go.aist.rtm.rtcbuilder.generator.ProfileHandler;
 import jp.go.aist.rtm.rtcbuilder.generator.param.GeneratorParam;
 import jp.go.aist.rtm.rtcbuilder.manager.GenerateManager;
 import jp.go.aist.rtm.rtcbuilder.nl.Messages;
+import jp.go.aist.rtm.rtcbuilder.ros.manager.CXXGenerateManager;
+import jp.go.aist.rtm.rtcbuilder.ros.manager.CommonGenerateManager;
 import jp.go.aist.rtm.rtcbuilder.ros.param.PackageParam;
 import jp.go.aist.rtm.rtcbuilder.ros.param.ROSParam;
 import jp.go.aist.rtm.rtcbuilder.ui.Perspective.LanguageProperty;
@@ -405,21 +408,21 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 				//
 				rosParam.convertInfo();
 				//
-//				GuiRtcBuilder rtcBuilder = new GuiRtcBuilder();
-//				List<GenerateManager> managerList = RtcBuilderPlugin
-//						.getDefault().getLoader().getManagerList();
-//				if (managerList != null) {
-//					for (GenerateManager manager : managerList) {
-//						rtcBuilder.addGenerateManager(manager);
-//					}
-//				}
-//				GeneratorParam generatorParam = editor.getGeneratorParam();
-//				//TODO 複数コンポーネント対応版とする場合には複数設定
-//				generatorParam.getRtcParam().getServiceClassParams().clear();
-//				setPrefixSuffix(generatorParam.getRtcParam());
-//				RTCUtil.getIDLPathes(editor.getRtcParam());
-//				String genTime = DATE_FORMAT.format(new GregorianCalendar().getTime());
-//				if (rtcBuilder.doGenerateWrite(generatorParam, editor.getRtcParam().getIdlSearchPathList(), !isDynamicFSM, genTime)) {
+				GuiRtcBuilder rtcBuilder = new GuiRtcBuilder();
+				rtcBuilder.clearGenerateManager();
+				rtcBuilder.addGenerateManager(new CommonGenerateManager());
+				rtcBuilder.addGenerateManager(new CXXGenerateManager());
+				
+				List<GenerateManager> managerList = RtcBuilderPlugin
+						.getDefault().getLoader().getManagerList(IRtcBuilderConstants.MIDDLEWARE_ROS);
+				if (managerList != null) {
+					for (GenerateManager manager : managerList) {
+						rtcBuilder.addGenerateManager(manager);
+					}
+				}
+				GeneratorParam generatorParam = editor.getGeneratorParam();
+				String genTime = DATE_FORMAT.format(new GregorianCalendar().getTime());
+				if (rtcBuilder.doGenerateWriteROS(generatorParam, true, genTime)) {
 //					LanguageProperty langProp = LanguageProperty.checkPlugin(editor.getRtcParam());
 //					if(langProp != null) {
 //						try {
@@ -451,7 +454,7 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 //					}
 //				}
 //        		//
-//			}
+			}
 
 			// Profileを保存
 //			private void saveRtcProfile(IProject project, String genTime) {
@@ -933,7 +936,7 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 
 		rosParam.setPackageName(getText(packageText.getText()));
 		rosParam.setNodeName(getText(nodeText.getText()));
-		rosParam.setClass_name(getText(classText.getText()));
+		rosParam.setClassName(getText(classText.getText()));
 		rosParam.setDescription(getText(descriptionText.getText()));
 		rosParam.setVersion(getText(versionText.getText()));
 		rosParam.setMaintainer(getText(maintainerText.getText()));
@@ -982,7 +985,7 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 
 		packageText.setText(getValue(rosParam.getPackageName()));
 		nodeText.setText(getValue(rosParam.getNodeName()));
-		classText.setText(getValue(rosParam.getClass_name()));
+		classText.setText(getValue(rosParam.getClassName()));
 		descriptionText.setText(getValue(rosParam.getDescription()));
 		versionText.setText(getValue(rosParam.getVersion()));
 		maintainerText.setText(getValue(rosParam.getMaintainer()));
