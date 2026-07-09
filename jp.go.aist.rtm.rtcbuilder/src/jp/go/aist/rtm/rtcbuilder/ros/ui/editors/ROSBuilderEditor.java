@@ -55,9 +55,11 @@ import jp.go.aist.rtm.rtcbuilder.ros.param.ActionParam;
 import jp.go.aist.rtm.rtcbuilder.ros.param.ROSParam;
 import jp.go.aist.rtm.rtcbuilder.ros.param.ServiceParam;
 import jp.go.aist.rtm.rtcbuilder.ros.param.TopicParam;
+import jp.go.aist.rtm.rtcbuilder.ros.ui.preference.ROSPreferenceManager;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.AbstractEditorFormPage;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.IMessageConstants;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.RtcBuilderEditor;
+import jp.go.aist.rtm.rtcbuilder.ui.preference.DocumentPreferenceManager;
 
 /**
  * RtcBuilderエディタ
@@ -191,6 +193,13 @@ public class ROSBuilderEditor extends RtcBuilderEditor implements IActionFilter 
 		rosParam.setSchemaVersion(IRtcBuilderConstantsROS.SCHEMA_VERSION_ROS);
 		//
 		rosParam.initialize();
+		rosParam.setMaintainer(ROSPreferenceManager.getMaintainerNameValue());
+		rosParam.setContactAddress(ROSPreferenceManager.getMaintainerAddressValue());
+		ArrayList<String> docs = ROSPreferenceManager.getDocumentValue();
+		for(int index=0; index<IRtcBuilderConstantsROS.ACTIVITY_CAN_EDIT_NUM; index++) {
+			rosParam.setActionImplemented(index + 3, docs.get(index));
+		}
+		
 		rosParam.resetUpdated();
 		generatorParam.setROSParam(rosParam);
 		buildview = ComponentFactory.eINSTANCE.createBuildView();

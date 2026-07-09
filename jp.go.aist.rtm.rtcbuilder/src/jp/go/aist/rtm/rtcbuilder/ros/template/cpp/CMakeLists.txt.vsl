@@ -14,28 +14,38 @@ find_package(rclcpp_lifecycle REQUIRED)
 # Parameter / descriptor dependencies
 find_package(rcl_interfaces REQUIRED)
 #end
-#if( ${rosParam.topicSubscribes.size()}>0 || ${rosParam.topicPublishes.size()}>0 )
+#if( ${tmpltHelper.getTopicTypes(${rosParam}).size()} > 0 )
 ${sharp} Topic message dependencies
-#foreach($topic in ${rosParam.topicPublishes})
-find_package(${tmpltHelper.getMessageBasename(${topic.messageType})} REQUIRED)
-#end
-#foreach($topic in ${rosParam.topicSubscribes})
-find_package(${tmpltHelper.getMessageBasename(${topic.messageType})} REQUIRED)
+#foreach($topic in ${tmpltHelper.getTopicTypes(${rosParam})})
+find_package(${tmpltHelper.getMessageBasename(${topic})} REQUIRED)
 #end
 #end
-#if( ${rosParam.serviceClients.size()}>0 || ${rosParam.serviceServers.size()}>0 )
+#if( ${tmpltHelper.getServiceTypes(${rosParam}).size()} > 0 )
 ${sharp} Service dependencies
+#if( ${rosParam.extSrvFiles.size()}>0 )
+find_package(${rosParam.packageName}_interfaces REQUIRED)
+#end
+#if( ${tmpltHelper.getServicePackage(${rosParam}).size()}>0 )
 #foreach($type in ${tmpltHelper.getServicePackage(${rosParam})})
-find_package($type REQUIRED)
+find_package(${type} REQUIRED)
+#end
 #end
 #end
 #if( ${rosParam.actionClients.size()}>0 || ${rosParam.actionServers.size()}>0 )
 ${sharp} Action dependencies
 find_package(action_msgs REQUIRED)
+#if( ${tmpltHelper.getActionPackage(${rosParam}).size()}>0 )
 #foreach($type in ${tmpltHelper.getActionPackage(${rosParam})})
 find_package($type REQUIRED)
 #end
+#end
 find_package(rclcpp_action REQUIRED)
+#end
+#if( ${rosParam.targetEnv.getLibraries().size()}>0 )
+${sharp} Extra dependencies
+#foreach($ext in ${rosParam.targetEnv.getLibraries()})
+find_package(${ext.name} REQUIRED)
+#end
 #end
 add_library(${dol}{PROJECT_NAME}_lib src/${rosParam.nodeName}.cpp)
 target_include_directories(${dol}{PROJECT_NAME}_lib PUBLIC
@@ -49,25 +59,15 @@ ament_target_dependencies(${dol}{PROJECT_NAME}_lib
 #if( ${rosParam.parameters.size()}>0 )
   rcl_interfaces
 #end
-#if( ${rosParam.topicSubscribes.size()}>0 || ${rosParam.topicPublishes.size()}>0 )
-#foreach($topic in ${rosParam.topicPublishes})
-  ${tmpltHelper.getMessageBasename(${topic.messageType})}
-#end
-#foreach($topic in ${rosParam.topicSubscribes})
-  ${tmpltHelper.getMessageBasename(${topic.messageType})}
-#end
-#end
-#if( ${rosParam.serviceClients.size()}>0 || ${rosParam.serviceServers.size()}>0 )
-#foreach($type in ${tmpltHelper.getServicePackage(${rosParam})})
+#foreach($type in ${tmpltHelper.getIfTypes(${rosParam})})
   $type
-#end
 #end
 #if( ${rosParam.actionClients.size()}>0 || ${rosParam.actionServers.size()}>0 )
   action_msgs
-#foreach($type in ${tmpltHelper.getActionPackage(${rosParam})})
-  $type
-#end
   rclcpp_action
+#end
+#foreach($ext in ${rosParam.targetEnv.getLibraries()})
+  ${ext.name}
 #end
 )
 
@@ -84,5 +84,23 @@ install(DIRECTORY launch/ DESTINATION share/${dol}{PROJECT_NAME}/launch)
 install(DIRECTORY config/ DESTINATION share/${dol}{PROJECT_NAME}/config)
 
 install(FILES LICENSE README.md DESTINATION share/${dol}{PROJECT_NAME})
+
+${sharp} Optional local Debian package generation with CPack.
+${sharp} This block is commented out so normal colcon builds are not affected.
+${sharp} For ROS 2 release workflows, prefer bloom.
+${sharp} To try local .deb generation, uncomment this block after checking package metadata,
+${sharp} then run cpack -G DEB from the CMake build directory.
+${sharp}
+${sharp} string(REPLACE "_" "-" DEBIAN_PROJECT_NAME "${dol}{PROJECT_NAME}")
+${sharp} set(CPACK_GENERATOR "DEB")
+${sharp} set(CPACK_PACKAGE_NAME "ros-${dol}ENV{ROS_DISTRO}-${dol}{DEBIAN_PROJECT_NAME}")
+${sharp} set(CPACK_PACKAGE_VERSION "${rosParam.version}")
+${sharp} set(CPACK_PACKAGE_CONTACT "${rosParam.contactAddress}")
+${sharp} set(CPACK_DEBIAN_PACKAGE_MAINTAINER "${rosParam.maintainer}")
+${sharp} set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
+${sharp} set(CPACK_DEBIAN_PACKAGE_SECTION "devel")
+${sharp} set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
+${sharp} set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+${sharp} include(CPack)
 
 ament_package()

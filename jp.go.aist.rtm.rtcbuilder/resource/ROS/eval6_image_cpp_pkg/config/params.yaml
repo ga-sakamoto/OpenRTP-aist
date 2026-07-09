@@ -1,7 +1,0 @@
-eval6_image_node:
-  ros__parameters:
-    # Summary: Enable image processing and debug publish.
-    enable_processing: true
-
-    # Summary: Scale factor for debug image processing.
-    debug_scale: 1.0

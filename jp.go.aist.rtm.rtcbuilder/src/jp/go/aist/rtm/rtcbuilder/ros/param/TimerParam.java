@@ -9,15 +9,19 @@ import jp.go.aist.rtm.rtcbuilder.util.StringUtil;
 public class TimerParam extends AbstractRecordedParam implements Serializable {
 	private static final long serialVersionUID = -5584413630295784662L;
 	
+	private final String DEFAULT_NAME = "main_timer";
+	private final Double DEFAULT_RATE = 1.0;
+	private final String DEFAULT_CALLBACK = "timer_callback";
+
 	private String name;
 	private Double rate;
 	private String callBack;
 	private String description;
 	
 	public TimerParam() {
-		this.name = "";
-		this.rate = 0.0;
-		this.callBack = "";
+		this.name = this.DEFAULT_NAME;
+		this.rate = this.DEFAULT_RATE;
+		this.callBack = this.DEFAULT_CALLBACK;
 		this.description = "";
 	}
 

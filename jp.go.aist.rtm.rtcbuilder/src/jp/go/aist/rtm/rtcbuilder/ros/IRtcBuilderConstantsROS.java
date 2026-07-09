@@ -4,6 +4,13 @@ package jp.go.aist.rtm.rtcbuilder.ros;
 public interface IRtcBuilderConstantsROS {
 	public static final String SCHEMA_VERSION_ROS = "0.1";
 	
+	public static final String LICENSE_APACHE = "Apache-2.0";
+	public static final String LICENSE_MIT = "MIT";
+	public static final String LICENSE_BSD = "BSD-3-Clause";
+	public static final String LICENSE_GPL = "GPL-3.0";
+	public static final String LICENSE_LGPL = "LGPL-3.0";
+	public static final String LICENSE_PROPRIETARY = "Proprietary";
+
 	public static final String SPEC_TOPIC_SUBSCRIBE = "Subscribe";
 	public static final String SPEC_TOPIC_PUBLISH = "Publish";
 	public static final String SPEC_SERVICE_SERVER = "Server";
@@ -23,4 +30,6 @@ public interface IRtcBuilderConstantsROS {
 	public static final int ACTIVITY_SHUTDOWN = 4;
 	public static final int ACTIVITY_ERROR = 5;
 	public static final int ACTIVITY_DUMMY = 6;
+
+	public static final int ACTIVITY_CAN_EDIT_NUM = 3;
 }

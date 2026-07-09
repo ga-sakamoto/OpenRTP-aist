@@ -12,6 +12,8 @@ import jp.go.aist.rtm.rtcbuilder.util.StringUtil;
 public class ParameterParam extends AbstractRecordedParam implements Serializable {
 	private static final long serialVersionUID = -7557513141707055620L;
 
+	private final String DEFAULT_PARAM_NAME = "parameter_name";
+
 	private String name;
 	private String type;
 	private String defaultValue;
@@ -30,7 +32,7 @@ public class ParameterParam extends AbstractRecordedParam implements Serializabl
 	private List<PropertyParam> properties = new ArrayList<PropertyParam>();
 	
 	public ParameterParam() {
-		this.name = "";
+		this.name = this.DEFAULT_PARAM_NAME;
 		this.type = "";
 		this.defaultValue = "";
 		this.min = null;
@@ -150,6 +152,16 @@ public class ParameterParam extends AbstractRecordedParam implements Serializabl
 	public void setDocConstraint(String doc_constraint) {
 		checkUpdated(this.docConstraint, doc_constraint);
 		this.docConstraint = doc_constraint;
+	}
+
+	public boolean isDocExist() {
+		if( (docDataname==null || docDataname.equals("")) &&
+			(docDefault==null || docDefault.equals("")) &&
+			(docUnit==null || docUnit.equals("")) &&
+			(docRange==null || docRange.equals("")) &&
+			(docConstraint==null || docConstraint.equals("")) )
+				return false;
+		return true;
 	}
 
 	public List<PropertyParam> getProperties() {

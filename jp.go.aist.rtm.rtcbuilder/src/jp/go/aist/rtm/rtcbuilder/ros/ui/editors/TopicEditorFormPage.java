@@ -15,6 +15,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.EditingSupport;
@@ -44,6 +45,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -52,8 +54,10 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
+import jp.go.aist.rtm.rtcbuilder.IRTCBMessageConstants;
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
 import jp.go.aist.rtm.rtcbuilder.nl.Messages;
+import jp.go.aist.rtm.rtcbuilder.ros.IRtcBuilderConstantsROS;
 import jp.go.aist.rtm.rtcbuilder.ros.param.ROSParam;
 import jp.go.aist.rtm.rtcbuilder.ros.param.TopicParam;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.AbstractEditorFormPage;
@@ -84,12 +88,6 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 	private TopicParam preSelection;
 	private TopicParam selectParam;
 	//
-//	private String defaultPortName;
-//	private String defaultPortType;
-//	private String defaultPortVarName;
-//	private String[] defaultTypeList;
-
-
     private List<String> defaultList = Arrays.asList(
     	    "action_msgs/msg/GoalInfo", "action_msgs/msg/GoalStatus",
     	    "action_msgs/msg/GoalStatusArray", "actuator_msgs/msg/Actuators",
@@ -214,11 +212,6 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 	}
 
 	public void updateDefaultValue() {
-//		IPreferenceStore store = RtcBuilderPlugin.getDefault().getPreferenceStore();
-//		defaultPortName = ComponentPreferenceManager.getInstance().getDataPort_Name();
-//		defaultPortType = store.getString(ComponentPreferenceManager.Generate_DataPort_Type);
-//		defaultPortVarName = store.getString(ComponentPreferenceManager.Generate_DataPort_VarName);
-		
 		ROSParam rosParam = ((ROSBuilderEditor)editor).getROSParam();
 		typeList.clear();
 		typeList.addAll(defaultList);
@@ -236,9 +229,11 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 		final Composite composite = createSectionBaseWithLabel(toolkit, form,
 				Messages.getString("IMC.ROS_TOPIC_TITLE"), Messages.getString("IMC.ROS_TOPIC_EXPL"), 4);
 		subscribeTableViewer = createPortSection(toolkit, composite,
-				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_TOPIC_TBLLBL_INPORTNAME"), 0);
+				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_TOPIC_TBLLBL_INPORTNAME"), 0,
+				IRtcBuilderConstantsROS.SPEC_TOPIC_SUBSCRIBE);
 		publishTableViewer = createPortSection(toolkit, composite,
-				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_TOPIC_TBLLBL_OUTPORTNAME"), 1);
+				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_TOPIC_TBLLBL_OUTPORTNAME"), 1,
+				IRtcBuilderConstantsROS.SPEC_TOPIC_PUBLISH);
 		createHintSection(toolkit, form);
 
 		createDetailSection(toolkit, form);
@@ -349,6 +344,13 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 	    		IProject project = workspaceHandle.getProject(rosParam.getOutputProject());
 	    		IFolder targetFolder = project.getFolder("msg");
 	    		IFile destFile = targetFolder.getFile(srcFile.getName());
+	    		if(destFile.exists()) {
+					MessageBox message = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
+					message.setText("File Copy");
+					message.setMessage(Messages.getString("IMC.FILE_OVERWRITE"));
+					if( message.open() != SWT.YES) return;
+	    		}
+	    		
 	    		try (FileInputStream fis = new FileInputStream(srcFile)) {
 	                if (destFile.exists()) {
 	                    destFile.setContents(fis, IResource.FORCE, new NullProgressMonitor());
@@ -424,7 +426,7 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 	}
 
 	private TableViewer createPortSection(FormToolkit toolkit, Composite parent,
-			String columnLabel, final int initSel) {
+			String columnLabel, final int initSel, String role) {
 
 		final TableViewer topicTableViewer = createTableViewer(toolkit,	parent, 70);
 
@@ -457,11 +459,7 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 			public void widgetSelected(SelectionEvent e) {
 				String selected = messageTypeCombo.getText();
 				updateDefaultValue();
-				TopicParam selectParam = new TopicParam();
-				selectParam.setName("new_topic");
-				selectParam.setReliabilityType("Reliable");
-				selectParam.setHistoryType("KeepLast");
-				selectParam.setDepth(10);
+				TopicParam selectParam = new TopicParam(role);
 				((List) topicTableViewer.getInput()).add(selectParam);
 				topicTableViewer.refresh();
 				update();

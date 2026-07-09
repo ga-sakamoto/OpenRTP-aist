@@ -7,10 +7,19 @@ import java.util.List;
 import jp.go.aist.rtm.rtcbuilder.generator.param.AbstractRecordedParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.PropertyParam;
 import jp.go.aist.rtm.rtcbuilder.nl.Messages;
+import jp.go.aist.rtm.rtcbuilder.ros.IRtcBuilderConstantsROS;
 import jp.go.aist.rtm.rtcbuilder.util.StringUtil;
 
 public class TopicParam extends AbstractRecordedParam implements Serializable {
 	private static final long serialVersionUID = 533482869407934299L;
+
+	private final String DEFAULT_SUBSCRIBE_NAME = "sub_topic";
+	private final String DEFAULT_PUBLISH_NAME = "pub_topic";
+	private final String DEFAULT_RELIABILITY = "Reliable";
+	private final String DEFAULT_HISTORY = "KeepLast";
+	private final Integer DEFAULT_DEPTH = 10;
+	private final String DEFAULT_SUBSCRIBE_CALLBACK = "subscribe_callback";
+	private final String DEFAULT_PUBLISH_VARIABLE = "publish_variable";
 
 	private String name;
 	private String role;
@@ -38,6 +47,31 @@ public class TopicParam extends AbstractRecordedParam implements Serializable {
 		this.historyType = "";
 		this.depth = 0;
 		this.varCallbackName = "";
+		//
+		this.docDescription = "";
+		this.docType = "";
+		this.docSemantics = "";
+		this.docUnit = "";
+		this.docOccurrence = "";
+		//
+		setUpdated(false);
+	}
+
+	public TopicParam(String role) {
+		this.role = role;
+
+		this.messageType = "";
+		this.reliabilityType = this.DEFAULT_RELIABILITY;
+		this.historyType = this.DEFAULT_HISTORY;
+		this.depth = this.DEFAULT_DEPTH;
+		
+		if(role.equals(IRtcBuilderConstantsROS.SPEC_TOPIC_SUBSCRIBE)) {
+			this.name = this.DEFAULT_SUBSCRIBE_NAME;
+			this.varCallbackName = this.DEFAULT_SUBSCRIBE_CALLBACK;
+		} else if(role.equals(IRtcBuilderConstantsROS.SPEC_TOPIC_PUBLISH)) {
+			this.name = this.DEFAULT_PUBLISH_NAME;
+			this.varCallbackName = this.DEFAULT_PUBLISH_VARIABLE;
+		}
 		//
 		this.docDescription = "";
 		this.docType = "";
@@ -144,6 +178,15 @@ public class TopicParam extends AbstractRecordedParam implements Serializable {
 		this.docOccurrence = doc_occurrence;
 	}
 
+	public boolean isDocExist() {
+		if( (docType==null || docType.equals("")) &&
+			(docSemantics==null || docSemantics.equals("")) &&
+			(docUnit==null || docUnit.equals("")) &&
+			(docOccurrence==null || docOccurrence.equals("")) )
+				return false;
+		return true;
+	}
+
 	public List<PropertyParam> getProperties() {
 		return properties;
 	}
@@ -179,7 +222,11 @@ public class TopicParam extends AbstractRecordedParam implements Serializable {
 	
 	public void convertInfo() {
 		if(this.varCallbackName == null || this.varCallbackName.length() == 0) {
-			this.varCallbackName = this.name;
+			if(role.equals(IRtcBuilderConstantsROS.SPEC_TOPIC_SUBSCRIBE)) {
+				this.varCallbackName = this.name + "_callback";
+			} else if(role.equals(IRtcBuilderConstantsROS.SPEC_TOPIC_PUBLISH)) {
+				this.varCallbackName = this.name + "_publisher";
+			}
 		}
 	}
 }

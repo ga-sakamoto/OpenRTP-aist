@@ -1,4 +1,0 @@
-eval2_controller_node:
-  ros__parameters:
-    # Summary: Maximum linear speed used by the controller.
-    max_speed: 1.0

@@ -1,4 +1,0 @@
-eval5_robot_node:
-  ros__parameters:
-    # Summary: Maximum linear speed.
-    max_speed: 1.0

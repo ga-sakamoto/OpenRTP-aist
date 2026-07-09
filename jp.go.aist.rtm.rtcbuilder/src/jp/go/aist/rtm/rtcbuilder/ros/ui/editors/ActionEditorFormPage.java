@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -52,6 +53,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
 import jp.go.aist.rtm.rtcbuilder.nl.Messages;
+import jp.go.aist.rtm.rtcbuilder.ros.IRtcBuilderConstantsROS;
 import jp.go.aist.rtm.rtcbuilder.ros.param.ActionParam;
 import jp.go.aist.rtm.rtcbuilder.ros.param.ROSParam;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.AbstractEditorFormPage;
@@ -78,11 +80,6 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 	private ActionParam preSelection;
 	private ActionParam selectParam;
 	//
-//	private String defaultPortName;
-//	private String defaultPortType;
-//	private String defaultPortVarName;
-//	private String[] defaultTypeList;
-//	
 	private List<String> typeList = new ArrayList<String>();
 	private List<String> currentList = new ArrayList<String>();
 
@@ -100,11 +97,6 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 	}
 
 	public void updateDefaultValue() {
-//		IPreferenceStore store = RtcBuilderPlugin.getDefault().getPreferenceStore();
-//		defaultPortName = ComponentPreferenceManager.getInstance().getDataPort_Name();
-//		defaultPortType = store.getString(ComponentPreferenceManager.Generate_DataPort_Type);
-//		defaultPortVarName = store.getString(ComponentPreferenceManager.Generate_DataPort_VarName);
-//		//
 		ROSParam rosParam = ((ROSBuilderEditor)editor).getROSParam();
 		typeList.clear();
 		typeList.addAll(extractROSEtcTypes(rosParam.getOutputProject(), "action"));
@@ -121,9 +113,11 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 		final Composite composite = createSectionBaseWithLabel(toolkit, form,
 				Messages.getString("IMC.ROS_ACTION_TITLE"), Messages.getString("IMC.ROS_ACTION_EXPL"), 4);
 		serverTableViewer = createPortSection(toolkit, composite,
-				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_ACTION_TBLLBL_SERVER"), 0);
+				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_ACTION_TBLLBL_SERVER"), 0,
+				IRtcBuilderConstantsROS.SPEC_ACTION_SERVER);
 		clientTableViewer = createPortSection(toolkit, composite,
-				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_ACTION_TBLLBL_CLENT"), 1);
+				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_ACTION_TBLLBL_CLENT"), 1,
+				IRtcBuilderConstantsROS.SPEC_ACTION_CLIENT);
 		createHintSection(toolkit, form);
 
 		createDetailSection(toolkit, form);
@@ -227,6 +221,13 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 	    		IProject project = workspaceHandle.getProject(rosParam.getOutputProject());
 	    		IFolder targetFolder = project.getFolder("action");
 	    		IFile destFile = targetFolder.getFile(srcFile.getName());
+	    		if(destFile.exists()) {
+					MessageBox message = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
+					message.setText("File Copy");
+					message.setMessage(Messages.getString("IMC.FILE_OVERWRITE"));
+					if( message.open() != SWT.YES) return;
+	    		}
+
 	    		try (FileInputStream fis = new FileInputStream(srcFile)) {
 	                if (destFile.exists()) {
 	                    destFile.setContents(fis, IResource.FORCE, new NullProgressMonitor());
@@ -275,7 +276,7 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 	}
 
 	private TableViewer createPortSection(FormToolkit toolkit, Composite parent,
-			String columnLabel, final int initSel) {
+			String columnLabel, final int initSel, String role) {
 
 		final TableViewer actionTableViewer = createTableViewer(toolkit,	parent, 70);
 
@@ -308,8 +309,7 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 			public void widgetSelected(SelectionEvent e) {
 				String selected = actionTypeCombo.getText();
 				updateDefaultValue();
-				ActionParam selectParam = new ActionParam();
-				selectParam.setName("new_action");
+				ActionParam selectParam = new ActionParam(role);
 				((List) actionTableViewer.getInput()).add(selectParam);
 				actionTableViewer.refresh();
 				update();

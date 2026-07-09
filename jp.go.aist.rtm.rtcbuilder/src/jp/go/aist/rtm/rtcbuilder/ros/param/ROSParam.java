@@ -1,7 +1,6 @@
 package jp.go.aist.rtm.rtcbuilder.ros.param;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -20,11 +19,11 @@ import jp.go.aist.rtm.rtcbuilder.util.StringUtil;
 public class ROSParam extends ParamBase implements Serializable {
 	private static final long serialVersionUID = -1249129059979166068L;
 
-	public static final String DEFAULT_DESCRIPTION = "TODO: package description";
+	public static final String DEFAULT_PACKAGE_NAME = "package_name";
+	public static final String DEFAULT_NODE_NAME = "node_name";
+	public static final String DEFAULT_DESCRIPTION = "package description";
 	public static final String DEFAULT_VERSION = "0.0.1";
-	public static final String DEFAULT_MAINTAINER = "TODO Maintainer";
-	public static final String DEFAULT_LICENSE = "Apache-2.0";
-	public static final String DEFAULT_CONTACT_ADDRESS = "todo@example.com";
+	public static final String DEFAULT_CATEGORY = "Robot";
 	
 	private GeneratorParam parent;
 
@@ -67,6 +66,10 @@ public class ROSParam extends ParamBase implements Serializable {
 
 	private String rosxml;
 
+	private RecordedList<String> extMsgFiles = new RecordedList<String>();
+	private RecordedList<String> extSrvFiles = new RecordedList<String>();
+	private RecordedList<String> extActionFiles = new RecordedList<String>();
+
 	public ROSParam() {
 		ProfileHandlerROS handler = new ProfileHandlerROS();
 		rosxml = handler.createInitialROSXml();
@@ -96,13 +99,12 @@ public class ROSParam extends ParamBase implements Serializable {
 	}
 
 	public void initialize() {
+		this.packageName = ROSParam.DEFAULT_PACKAGE_NAME;
+		this.nodeName = ROSParam.DEFAULT_NODE_NAME;
 		this.description = ROSParam.DEFAULT_DESCRIPTION;
 		this.version = ROSParam.DEFAULT_VERSION;
-		this.maintainer = ROSParam.DEFAULT_MAINTAINER;
+		this.category = ROSParam.DEFAULT_CATEGORY;
 		
-		this.license = ROSParam.DEFAULT_LICENSE;
-		this.contactAddress = ROSParam.DEFAULT_CONTACT_ADDRESS;
-		//
 		this.actions.get(IRtcBuilderConstantsROS.ACTIVITY_CONFIGURE).setImplemaented(true);
 		this.actions.get(IRtcBuilderConstantsROS.ACTIVITY_ACTIVATE).setImplemaented(true);
 		this.actions.get(IRtcBuilderConstantsROS.ACTIVITY_DEACTIVATE).setImplemaented(true);
@@ -220,6 +222,15 @@ public class ROSParam extends ParamBase implements Serializable {
 		this.docReference = doc_reference;
 	}
 	
+	public boolean isDocExist() {
+		if( (docAlgorithm==null || docAlgorithm.equals("")) &&
+			(docInOut==null || docInOut.equals("")) &&
+			(docCreator==null || docCreator.equals("")) &&
+			(docReference==null || docReference.equals("")) )
+				return false;
+		return true;
+	}
+
 	public String getOutputProject() {
 		return outputProject;
 	}
@@ -288,6 +299,18 @@ public class ROSParam extends ParamBase implements Serializable {
 	}
 	public void setDocActionPostCondition(int actionId, String postcond) {
 		actions.get(actionId).setPostCondition(postcond);
+	}
+
+	public boolean isCallbackDocExist(int actionId) {
+		String overview = actions.get(actionId).getOverView();
+		String preCond = actions.get(actionId).getPreCondition();
+		String postCond = actions.get(actionId).getPostCondition();
+
+		if( (overview==null || overview.equals("")) &&
+			(preCond==null || preCond.equals("")) &&
+			(postCond==null || postCond.equals("")) )
+				return false;
+		return true;
 	}
 
 	public List<TimerParam> getTimers() {
@@ -386,6 +409,16 @@ public class ROSParam extends ParamBase implements Serializable {
 		prop.setValue(value);
 	}
 	
+	public List<String> getExtMsgFiles() {
+		return extMsgFiles;
+	}
+	public List<String> getExtSrvFiles() {
+		return extSrvFiles;
+	}
+	public List<String> getExtActionFiles() {
+		return extActionFiles;
+	}
+	///////
 	@Override
 	public boolean isUpdated() {
 		if (super.isUpdated()) {

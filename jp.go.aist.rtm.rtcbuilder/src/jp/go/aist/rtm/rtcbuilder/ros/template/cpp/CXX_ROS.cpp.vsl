@@ -1,3 +1,15 @@
+#if( ${rosParam.isDocExist()} )
+// -*- C++ -*-
+/*!
+ * @file  ${rosParam.nodeName}.hpp
+ * @brief ${rosParam.description}
+ *
+ * @author ${rosParam.maintainer} <${rosParam.contactAddress}>
+ * ${rosParam.docCreator}
+ *
+ */
+
+#end
 ${sharp}include "${rosParam.packageName}/${rosParam.nodeName}.hpp"
 
 ${sharp}include <chrono>
@@ -27,9 +39,20 @@ ${rosParam.className}::${rosParam.className}(const rclcpp::NodeOptions & options
 void ${rosParam.className}::declare_parameters()
 {
 #foreach($param in ${rosParam.parameters})
+#if( ${param.isDocExist()} )
+  // ${param.docDescription}
+  // - Name: ${param.docDataname}
+  // - DefaultValue: ${param.docDefault}
+  // - Unit: ${param.docUnit}
+  // - Range: ${param.docRange}
+  // - Constraint: ${param.docConstraint}
+#end
   rcl_interfaces::msg::ParameterDescriptor desc_${param.name};
   desc_${param.name}.description = "${param.docDescription}";
-  this->declare_parameter("${param.name}", ${param.defaultValue}, desc_${param.name});
+#if( $param.readOnly )
+  desc_${param.name}.read_only = true;
+#end
+  this->declare_parameter("${param.name}", ${tmpltHelper.quoteDefaultWithType(${param})}, desc_${param.name});
 #end
   param_cb_handle_ = this->add_on_set_parameters_callback(std::bind(&${rosParam.className}::on_set_parameters, this, std::placeholders::_1));
 }
@@ -42,11 +65,11 @@ rcl_interfaces::msg::SetParametersResult ${rosParam.className}::on_set_parameter
   for (const auto & param : params) {
 #foreach($param in ${rosParam.parameters})
     if (param.get_name() == "${param.name}") {
-      // TODO: Parameter変更時に必要な内部状態の更新処理を実装する。
-      // Note: min / max / step は自動制約にしない。必要な制約はここで明示的に実装する。
-      const ${param.type} value = param.as_${param.type}();
+      // TODO: Update internal state when this parameter changes.
+      // Note: min / max / step are documentation metadata only. Add explicit validation here if needed.
+      const ${tmpltHelper.convType(${param.type})} value = param.as_${param.type}();
       (void)value;
-      // TODO: 必要に応じてParameter値をメンバ変数や処理設定へ反映する。
+      // TODO: Store the parameter value in member variables or runtime settings as needed.
     }
 #end
   }
@@ -59,31 +82,36 @@ rcl_interfaces::msg::SetParametersResult ${rosParam.className}::on_set_parameter
 // Lifecycle callbacks
 // ============================================================
 
+#if( ${rosParam.isCallbackDocExist(0)} )
+/*!
+ * ${rosParam.getDocActionOverView(0)}
+ */
+#end
 CallbackReturn ${rosParam.className}::on_configure(const rclcpp_lifecycle::State &)
 {
   RCLCPP_INFO(this->get_logger(), "[on_configure] called.");
-  // TODO: このLifecycle遷移で必要な初期化処理を実装する。
+  // TODO: Implement initialization required for this lifecycle transition.
 #if( ${rosParam.topicPublishes.size()}>0 )
 #foreach($topic in ${rosParam.topicPublishes})
-  // Topic Publisher: ${topic.name}
-  // Type: ${topic.messageType}
-  // Summary: ${topic.docDescription}
-  ${topic.varCallbackName}_ = this->create_publisher<${tmpltHelper.convMessageType(${topic.messageType})}>("${topic.name}", rclcpp::QoS(${topic.depth}).reliable());
+  // Publish Topic: ${topic.name}
+  // Type: ${tmpltHelper.convTopicType(${topic.messageType}, ${rosParam})}
+  // Description: ${topic.docDescription}
+  ${topic.varCallbackName}_ = this->create_publisher<${tmpltHelper.slash2Cc(${tmpltHelper.convTopicType(${topic.messageType}, ${rosParam})})}>("${topic.name}", rclcpp::QoS(${topic.depth}).reliable());
 #end
 #end
 #if( ${rosParam.topicSubscribes.size()}>0 )
 #foreach($topic in ${rosParam.topicSubscribes})
-  ${topic.name}_sub_ = this->create_subscription<${tmpltHelper.convMessageType(${topic.messageType})}>("${topic.name}", rclcpp::QoS(${topic.depth}).reliable(), std::bind(&${rosParam.className}::${topic.varCallbackName}, this, std::placeholders::_1));
+  ${topic.name}_sub_ = this->create_subscription<${tmpltHelper.slash2Cc(${topic.messageType})}>("${topic.name}", rclcpp::QoS(${topic.depth}).reliable(), std::bind(&${rosParam.className}::${topic.varCallbackName}, this, std::placeholders::_1));
 #end
 #end
 #if( ${rosParam.serviceClients.size()}>0 )
 #foreach($service in ${rosParam.serviceClients})
-  ${service.varCallbackName}_ = this->create_client<${tmpltHelper.convMessageType(${service.type})}>("${service.name}");
+  ${service.varCallbackName}_ = this->create_client<${tmpltHelper.slash2Cc(${tmpltHelper.convServiceType(${service.type}, ${rosParam})})}>("${service.name}");
 #end
 #end
 #if( ${rosParam.serviceServers.size()}>0 )
 #foreach($service in ${rosParam.serviceServers})
-  ${service.name}_srv_ = this->create_service<${tmpltHelper.convMessageType(${service.type})}>("${service.name}", std::bind(&${rosParam.className}::${service.name}_callback, this, std::placeholders::_1, std::placeholders::_2));
+  ${service.name}_srv_ = this->create_service<${tmpltHelper.slash2Cc(${tmpltHelper.convServiceType(${service.type}, ${rosParam})})}>("${service.name}", std::bind(&${rosParam.className}::handle_${service.name}, this, std::placeholders::_1, std::placeholders::_2));
 #end
 #end
 #if( ${rosParam.actionClients.size()}>0 )
@@ -109,10 +137,15 @@ CallbackReturn ${rosParam.className}::on_configure(const rclcpp_lifecycle::State
   return CallbackReturn::SUCCESS;
 }
 
+#if( ${rosParam.isCallbackDocExist(1)} )
+/*!
+ * ${rosParam.getDocActionOverView(1)}
+ */
+#end
 CallbackReturn ${rosParam.className}::on_activate(const rclcpp_lifecycle::State &)
 {
   RCLCPP_INFO(this->get_logger(), "[on_activate] called.");
-  // TODO: Active状態で開始する処理を実装する。
+  // TODO: Start processing required while the node is active.
 #if( ${rosParam.topicPublishes.size()}>0 )
 #foreach($topic in ${rosParam.topicPublishes})
   if (${topic.varCallbackName}_) { ${topic.varCallbackName}_->on_activate(); }
@@ -126,10 +159,15 @@ CallbackReturn ${rosParam.className}::on_activate(const rclcpp_lifecycle::State 
   return CallbackReturn::SUCCESS;
 }
 
+#if( ${rosParam.isCallbackDocExist(2)} )
+/*!
+ * ${rosParam.getDocActionOverView(2)}
+ */
+#end
 CallbackReturn ${rosParam.className}::on_deactivate(const rclcpp_lifecycle::State &)
 {
   RCLCPP_INFO(this->get_logger(), "[on_deactivate] called.");
-  // TODO: Inactive状態へ戻る際に停止する処理を実装する。
+  // TODO: Stop processing before returning to the inactive state.
 #if( ${rosParam.topicPublishes.size()}>0 )
 #foreach($topic in ${rosParam.topicPublishes})
   if (${topic.varCallbackName}_) { ${topic.varCallbackName}_->on_deactivate(); }
@@ -143,12 +181,19 @@ CallbackReturn ${rosParam.className}::on_deactivate(const rclcpp_lifecycle::Stat
   return CallbackReturn::SUCCESS;
 }
 
+#if( ${rosParam.isCallbackDocExist(3)} )
+/*!
+ * ${rosParam.getDocActionOverView(3)}
+ */
+#end
+#if(${rosParam.IsNotImplemented(3)})// Optional: on_cleanup. Enable the declaration in the header before using this definition.
+#end
 #if(${rosParam.IsNotImplemented(3)})// #end##
 CallbackReturn ${rosParam.className}::on_cleanup(const rclcpp_lifecycle::State &)
 #if(${rosParam.IsNotImplemented(3)})// #end##
 {
 #if(${rosParam.IsNotImplemented(3)})// #end  RCLCPP_INFO(this->get_logger(), "[on_cleanup] called.");
-#if(${rosParam.IsNotImplemented(3)})// #end  // TODO: Cleanup時に解放するリソースを実装する。
+#if(${rosParam.IsNotImplemented(3)})// #end  // TODO: Release resources when the node is cleaned up.
 #if( ${rosParam.topicPublishes.size()}>0 )
 #foreach($topic in ${rosParam.topicPublishes})
 #if(${rosParam.IsNotImplemented(3)})// #end  ${topic.varCallbackName}_.reset();
@@ -187,21 +232,35 @@ CallbackReturn ${rosParam.className}::on_cleanup(const rclcpp_lifecycle::State &
 #if(${rosParam.IsNotImplemented(3)})// #end  return CallbackReturn::SUCCESS;
 #if(${rosParam.IsNotImplemented(3)})// #end}
 
+#if( ${rosParam.isCallbackDocExist(4)} )
+/*!
+ * ${rosParam.getDocActionOverView(4)}
+ */
+#end
+#if(${rosParam.IsNotImplemented(3)})// Optional: on_shutdown. Enable the declaration in the header before using this definition.
+#end
 #if(${rosParam.IsNotImplemented(4)})// #end##
 CallbackReturn ${rosParam.className}::on_shutdown(const rclcpp_lifecycle::State &)
 #if(${rosParam.IsNotImplemented(4)})// #end##
 {
 #if(${rosParam.IsNotImplemented(4)})// #end  RCLCPP_INFO(this->get_logger(), "[on_shutdown] called.");
-#if(${rosParam.IsNotImplemented(4)})// #end  // TODO: Shutdown時に必要な終了処理を実装する。
+#if(${rosParam.IsNotImplemented(4)})// #end  // TODO: Implement shutdown handling.
 #if(${rosParam.IsNotImplemented(4)})// #end  return CallbackReturn::SUCCESS;
 #if(${rosParam.IsNotImplemented(4)})// #end}
 
+#if( ${rosParam.isCallbackDocExist(5)} )
+/*!
+ * ${rosParam.getDocActionOverView(5)}
+ */
+#end
+#if(${rosParam.IsNotImplemented(3)})// Optional: on_error. Enable the declaration in the header before using this definition.
+#end
 #if(${rosParam.IsNotImplemented(5)})// #end##
 CallbackReturn ${rosParam.className}::on_error(const rclcpp_lifecycle::State &)
 #if(${rosParam.IsNotImplemented(5)})// #end##
 {
 #if(${rosParam.IsNotImplemented(5)})// #end  RCLCPP_INFO(this->get_logger(), "[on_error] called.");
-#if(${rosParam.IsNotImplemented(5)})// #end  // TODO: Error時の復旧・停止処理を実装する。
+#if(${rosParam.IsNotImplemented(5)})// #end  // TODO: Implement error recovery or safe-stop handling.
 #if(${rosParam.IsNotImplemented(5)})// #end  return CallbackReturn::SUCCESS;
 #if(${rosParam.IsNotImplemented(5)})// #end}
 #if( ${rosParam.topicSubscribes.size()}>0 )
@@ -210,13 +269,13 @@ CallbackReturn ${rosParam.className}::on_error(const rclcpp_lifecycle::State &)
 // ============================================================
 
 #foreach($topic in ${rosParam.topicSubscribes})
-void ${rosParam.className}::${topic.varCallbackName}(const ${tmpltHelper.convMessageType(${topic.messageType})}::SharedPtr msg)
+void ${rosParam.className}::${topic.varCallbackName}(const ${tmpltHelper.slash2Cc(${topic.messageType})}::SharedPtr msg)
 {
-  // Topic Subscriber callback: ${topic.name}
-  // Type: ${topic.messageType}
-  // Summary: ${topic.docDescription}
-  // TODO: 受信したmsgを使って、このノードの処理を実装する。
-  // Note: このcallbackは対象Topicにメッセージが届くたびに呼ばれる。
+  // Subscribe Topic: ${topic.name}
+  // Type: ${tmpltHelper.convTopicType(${topic.messageType}, ${rosParam})}
+  // Description: ${topic.docDescription}
+  // TODO: Use the received message to implement this node's behavior.
+  // Note: This callback is called each time a message arrives on the subscribed topic.
   (void)msg;
 }
 
@@ -228,20 +287,20 @@ void ${rosParam.className}::${topic.varCallbackName}(const ${tmpltHelper.convMes
 // ============================================================
 
 #foreach($service in ${rosParam.serviceClients})
-void ${rosParam.className}::${service.varCallbackName}_service()
+void ${rosParam.className}::call_${service.name}_service()
 {
-  // Service Client call: ${service.name}
-  // Type: ${service.type}
-  // Summary: ${service.docDescription}
-  // Service Client helper: requestを作成してServerへ非同期送信する。
+  // Service Client: ${service.name}
+  // Type: ${tmpltHelper.convServiceType(${service.type}, ${rosParam})}
+  // Description: ${service.docDescription}
+  // Service Client helper: create a request and send it asynchronously to the server.
   if (!${service.varCallbackName}_) {
     RCLCPP_WARN(this->get_logger(), "Service client is not configured.");
     return;
   }
-  auto request = std::make_shared<${tmpltHelper.convMessageType(${service.type})}::Request>();
-  // TODO: このService呼び出し関数を呼び出すタイミングを実装する。
-  // TODO: 使用するService型に合わせてrequestフィールドを設定する。
-  // Note: request設定後、async_send_request()でService Serverへ送信する。
+  auto request = std::make_shared<${tmpltHelper.slash2Cc(${tmpltHelper.convServiceType(${service.type}, ${rosParam})})}::Request>();
+  // TODO: Call this helper at the appropriate time in your node logic.
+  // TODO: Fill the request fields according to the selected service type.
+  // Note: After filling the request, async_send_request() sends it to the service server.
   auto future = ${service.varCallbackName}_->async_send_request(request);
   (void)future;
 }
@@ -249,13 +308,13 @@ void ${rosParam.className}::${service.varCallbackName}_service()
 #end
 
 #foreach($service in ${rosParam.serviceServers})
-void ${rosParam.className}::${service.name}_callback(const std::shared_ptr<${tmpltHelper.convMessageType(${service.type})}::Request> request, std::shared_ptr<${tmpltHelper.convMessageType(${service.type})}::Response> response)
+void ${rosParam.className}::handle_${service.name}(const std::shared_ptr<${tmpltHelper.slash2Cc(${tmpltHelper.convServiceType(${service.type}, ${rosParam})})}::Request> request, std::shared_ptr<${tmpltHelper.slash2Cc(${tmpltHelper.convServiceType(${service.type}, ${rosParam})})}::Response> response)
 {
-  // Service Server callback: ${service.name}
-  // Type: ${service.type}
-  // Summary: ${service.docDescription}
-  // TODO: requestを読み取り、Serviceで実行する処理を実装する。
-  // TODO: responseに返す値を設定する。
+  // Service Server: ${service.name}
+  // Type: ${tmpltHelper.convServiceType(${service.type}, ${rosParam})}
+  // Description: ${service.docDescription}
+  // TODO: Read the request and implement the service behavior.
+  // TODO: Fill the response fields before returning.
   (void)request;
   (void)response;
 }
@@ -270,26 +329,26 @@ void ${rosParam.className}::${service.name}_callback(const std::shared_ptr<${tmp
 #foreach($action in ${rosParam.actionClients})
 void ${rosParam.className}::send_${action.name}_goal()
 {
-  // Action Client goal sender: ${action.name}
-  // Type: ${action.type}
-  // Summary: ${action.docDescription}
-  // Action Client helper: Goalを作成してAction Serverへ送信する。
+  // Action Client: ${action.name}
+  // Type: ${tmpltHelper.convActionType(${action.type}, ${rosParam})}
+  // Description: ${action.docDescription}
+  // Action Client helper: create a goal and send it to the action server.
   if (!${action.name}_client_) {
     RCLCPP_WARN(this->get_logger(), "Action client is not configured.");
     return;
   }
-  // TODO: このGoal送信関数を呼び出すタイミングを実装する。
-  // Note: Action型ごとにGoalフィールドが異なるため、生成器では具体値を設定しない。
-  // TODO: Goalを作成し、response / feedback / result callbackを設定して送信する。
+  // TODO: Call this goal-sending helper at the appropriate time in your node logic.
+  // Note: Goal fields differ by action type, so this generator does not set concrete values.
+  // TODO: Create a goal, configure response / feedback / result callbacks, and send it.
   RCLCPP_WARN(this->get_logger(), "Goal send skeleton is disabled. Implement goal send code before use.");
   return;
 }
 
-void ${rosParam.className}::send_${action.name}_goal_response(rclcpp_action::ClientGoalHandle<${tmpltHelper.capitalize(${action.name})}>::SharedPtr goal_handle)
+void ${rosParam.className}::${action.name}_action_response(rclcpp_action::ClientGoalHandle<${tmpltHelper.capitalize(${action.name})}>::SharedPtr goal_handle)
 {
-  // Action Client goal response callback: ${action.name}
-  // Type: ${action.type}
-  // Summary: ${action.docDescription}
+  // Action Client: ${action.name}
+  // Type: ${tmpltHelper.convActionType(${action.type}, ${rosParam})}
+  // Description: ${action.docDescription}
   if (!goal_handle) {
     RCLCPP_ERROR(this->get_logger(), "Goal rejected");
     return;
@@ -297,21 +356,21 @@ void ${rosParam.className}::send_${action.name}_goal_response(rclcpp_action::Cli
   RCLCPP_INFO(this->get_logger(), "Goal accepted");
 }
 
-void ${rosParam.className}::send_${action.name}_goal_feedback(rclcpp_action::ClientGoalHandle<${tmpltHelper.capitalize(${action.name})}>::SharedPtr, const std::shared_ptr<const ${tmpltHelper.capitalize(${action.name})}::Feedback> feedback)
+void ${rosParam.className}::${action.name}_action_feedback(rclcpp_action::ClientGoalHandle<${tmpltHelper.capitalize(${action.name})}>::SharedPtr, const std::shared_ptr<const ${tmpltHelper.capitalize(${action.name})}::Feedback> feedback)
 {
-  // Action Client feedback callback: ${action.name}
-  // Type: ${action.type}
-  // Summary: ${action.docDescription}
-  // TODO: 必要に応じてFeedbackを使った処理を実装する。
+  // Action Client: ${action.name}
+  // Type: ${tmpltHelper.convActionType(${action.type}, ${rosParam})}
+  // Description: ${action.docDescription}
+  // TODO: Use feedback data as needed.
   (void)feedback;
 }
 
-void ${rosParam.className}::send_${action.name}_goal_result(const rclcpp_action::ClientGoalHandle<${tmpltHelper.capitalize(${action.name})}>::WrappedResult & result)
+void ${rosParam.className}::${action.name}_action_result(const rclcpp_action::ClientGoalHandle<${tmpltHelper.capitalize(${action.name})}>::WrappedResult & result)
 {
-  // Action Client result callback: ${action.name}
-  // Type: ${action.type}
-  // Summary: ${action.docDescription}
-  // TODO: 必要に応じてResultを使った処理を実装する。
+  // Action Client: ${action.name}
+  // Type: ${tmpltHelper.convActionType(${action.type}, ${rosParam})}
+  // Description: ${action.docDescription}
+  // TODO: Use result data as needed.
   (void)result;
 }
 
@@ -319,9 +378,9 @@ void ${rosParam.className}::send_${action.name}_goal_result(const rclcpp_action:
 #foreach($action in ${rosParam.actionServers})
 rclcpp_action::GoalResponse ${rosParam.className}::handle_goal_${action.name}(const rclcpp_action::GoalUUID & uuid, std::shared_ptr<const ${tmpltHelper.capitalize(${action.name})}::Goal> goal)
 {
-  // Action Server goal callback: ${action.name}
-  // Type: ${action.type}
-  // Summary: ${action.docDescription}
+  // Action Server: ${action.name}
+  // Type: ${tmpltHelper.convActionType(${action.type}, ${rosParam})}
+  // Description: ${action.docDescription}
   (void)uuid;
   (void)goal;
   return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
@@ -329,31 +388,31 @@ rclcpp_action::GoalResponse ${rosParam.className}::handle_goal_${action.name}(co
 
 rclcpp_action::CancelResponse ${rosParam.className}::handle_cancel_${action.name}(const std::shared_ptr<GoalHandle${tmpltHelper.capitalize(${action.name})}> goal_handle)
 {
-  // Action Server cancel callback: ${action.name}
-  // Type: ${action.type}
-  // Summary: ${action.docDescription}
+  // Action Server: ${action.name}
+  // Type: ${tmpltHelper.convActionType(${action.type}, ${rosParam})}
+  // Description: ${action.docDescription}
   (void)goal_handle;
   return rclcpp_action::CancelResponse::ACCEPT;
 }
 
 void ${rosParam.className}::handle_accepted_${action.name}(const std::shared_ptr<GoalHandle${tmpltHelper.capitalize(${action.name})}> goal_handle)
 {
-  // Action Server accepted callback: ${action.name}
-  // Type: ${action.type}
-  // Summary: ${action.docDescription}
-  std::thread{std::bind(&${rosParam.className}::${action.name}, this, std::placeholders::_1), goal_handle}.detach();
+  // Action Server: ${action.name}
+  // Type: ${tmpltHelper.convActionType(${action.type}, ${rosParam})}
+  // Description: ${action.docDescription}
+  std::thread{std::bind(&${rosParam.className}::execute_${action.name}, this, std::placeholders::_1), goal_handle}.detach();
 }
 
-void ${rosParam.className}::${action.name}(const std::shared_ptr<GoalHandle${tmpltHelper.capitalize(${action.name})}> goal_handle)
+void ${rosParam.className}::execute_${action.name}(const std::shared_ptr<GoalHandle${tmpltHelper.capitalize(${action.name})}> goal_handle)
 {
-  // Action Server execute callback: ${action.name}
-  // Type: ${action.type}
-  // Summary: ${action.docDescription}
+  // Action Server: ${action.name}
+  // Type: ${tmpltHelper.convActionType(${action.type}, ${rosParam})}
+  // Description: ${action.docDescription}
   const auto goal = goal_handle->get_goal();
   auto result = std::make_shared<${tmpltHelper.capitalize(${action.name})}::Result>();
 
-  // TODO: Goalを読み取り、Actionの実行処理を実装する。
-  // TODO: 必要に応じてFeedbackとResultを設定する。
+  // TODO: Read the goal and implement the action execution logic.
+  // TODO: Set feedback and result fields as needed.
   (void)goal;
 
   goal_handle->succeed(result);
@@ -373,7 +432,7 @@ void ${rosParam.className}::${timer.callBack}()
   // Period: ${timer.rate} sec
   // Callback: ${timer.callBack}()
   // Description: ${timer.description}
-  // TODO: 上記の周期処理を実装する。
+  // TODO: Implement the periodic behavior described above.
 }
 
 #end

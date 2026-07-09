@@ -70,6 +70,7 @@ import jp.go.aist.rtm.rtcbuilder.generator.ProfileHandler;
 import jp.go.aist.rtm.rtcbuilder.generator.param.GeneratorParam;
 import jp.go.aist.rtm.rtcbuilder.manager.GenerateManager;
 import jp.go.aist.rtm.rtcbuilder.nl.Messages;
+import jp.go.aist.rtm.rtcbuilder.ros.IRtcBuilderConstantsROS;
 import jp.go.aist.rtm.rtcbuilder.ros.manager.CXXGenerateManager;
 import jp.go.aist.rtm.rtcbuilder.ros.manager.CommonGenerateManager;
 import jp.go.aist.rtm.rtcbuilder.ros.param.PackageParam;
@@ -281,7 +282,12 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 		Composite composite = createSectionBaseWithLabel(toolkit, form,
 				Messages.getString("IMC.ROS_SPECIFIC_TITLE"), Messages.getString("IMC.ROS_SPECIFIC_EXPL"), 3);
 
-		String[] licenseList = { "Apache-2.0", "MIT", "BSD-3-Clause", "GPL-3.0", "LGPL-3.0", "Proprietary" };
+		String[] licenseList = { IRtcBuilderConstantsROS.LICENSE_APACHE,
+								 IRtcBuilderConstantsROS.LICENSE_MIT,
+								 IRtcBuilderConstantsROS.LICENSE_BSD,
+								 IRtcBuilderConstantsROS.LICENSE_GPL,
+								 IRtcBuilderConstantsROS.LICENSE_LGPL,
+								 IRtcBuilderConstantsROS.LICENSE_PROPRIETARY };
 		licenseCombo = createCombo(toolkit, composite,
 				Messages.getString("IMC.ROS_BASIC_LBL_LICENSE"), licenseList, SWT.COLOR_BLACK, 2);
 		contactText = createLabelAndText(toolkit, composite,

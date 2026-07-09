@@ -51,6 +51,8 @@ import jp.go.aist.rtm.rtcbuilder.ros.param.ServiceParam;
 import jp.go.aist.rtm.rtcbuilder.ros.param.TargetEnvParam;
 import jp.go.aist.rtm.rtcbuilder.ros.param.TimerParam;
 import jp.go.aist.rtm.rtcbuilder.ros.param.TopicParam;
+import jp.go.aist.rtm.rtcbuilder.ros.ui.preference.ROSPreferenceManager;
+import jp.go.aist.rtm.rtcbuilder.ui.preference.DocumentPreferenceManager;
 
 public class ParamUtilROS extends ParamUtil {
 	public static RosProfile initialROSXml() {
@@ -69,14 +71,17 @@ public class ParamUtilROS extends ParamUtil {
 	
 	private static BasicInfoExt initBasicInfoROS(ObjectFactory factory) {
 		org.openrtp.namespaces.ros.version01.BasicInfoExt basic = factory.createBasicInfoExt();
+		basic.setPackageName(ROSParam.DEFAULT_PACKAGE_NAME);
+		basic.setNodeName(ROSParam.DEFAULT_NODE_NAME);
 		basic.setDescription(ROSParam.DEFAULT_DESCRIPTION);
 		basic.setVersion(ROSParam.DEFAULT_VERSION);
-		basic.setMaintainer(ROSParam.DEFAULT_MAINTAINER);
-		
-		org.openrtp.namespaces.ros.version01.DocBasic docBasicDoc = factory.createDocBasic();
-		docBasicDoc.setLicense(ROSParam.DEFAULT_LICENSE);
-		docBasicDoc.setContactAddress(ROSParam.DEFAULT_CONTACT_ADDRESS);
-		basic.setDoc(docBasicDoc);
+		basic.setCategory(ROSParam.DEFAULT_CATEGORY);
+
+		basic.setMaintainer(ROSPreferenceManager.getMaintainerNameValue());
+
+		org.openrtp.namespaces.ros.version01.DocBasic doc = factory.createDocBasic();
+		doc.setContactAddress(ROSPreferenceManager.getMaintainerAddressValue());
+		basic.setDoc(doc);
 
 		return basic;
 	}
@@ -85,6 +90,7 @@ public class ParamUtilROS extends ParamUtil {
 		LifeCycleExt lifeCycle = factory.createLifeCycleExt();
 		//
 		LifecycleCallbackExt lifeCycleCallback = null;
+		ArrayList<String> docs = ROSPreferenceManager.getDocumentValue();
 
 		{
 			lifeCycleCallback = factory.createLifecycleCallbackExt();
@@ -103,17 +109,29 @@ public class ParamUtilROS extends ParamUtil {
 		}
 		{
 			lifeCycleCallback = factory.createLifecycleCallbackExt();
-			lifeCycleCallback.setImplemented(false);
+			if(0 < docs.size()) {
+				lifeCycleCallback.setImplemented(Boolean.valueOf(docs.get(0)));
+			} else {
+				lifeCycleCallback.setImplemented(false);
+			}
 			lifeCycle.setOnCleanup(lifeCycleCallback);
 		}
 		{
 			lifeCycleCallback = factory.createLifecycleCallbackExt();
-			lifeCycleCallback.setImplemented(false);
+			if(1 < docs.size()) {
+				lifeCycleCallback.setImplemented(Boolean.valueOf(docs.get(1)));
+			} else {
+				lifeCycleCallback.setImplemented(false);
+			}
 			lifeCycle.setOnShutdown(lifeCycleCallback);
 		}
 		{
 			lifeCycleCallback = factory.createLifecycleCallbackExt();
-			lifeCycleCallback.setImplemented(false);
+			if(2 < docs.size()) {
+				lifeCycleCallback.setImplemented(Boolean.valueOf(docs.get(2)));
+			} else {
+				lifeCycleCallback.setImplemented(false);
+			}
 			lifeCycle.setOnError(lifeCycleCallback);
 		}
 

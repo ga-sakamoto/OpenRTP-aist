@@ -7,10 +7,15 @@ import java.util.List;
 import jp.go.aist.rtm.rtcbuilder.generator.param.AbstractRecordedParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.PropertyParam;
 import jp.go.aist.rtm.rtcbuilder.nl.Messages;
+import jp.go.aist.rtm.rtcbuilder.ros.IRtcBuilderConstantsROS;
 import jp.go.aist.rtm.rtcbuilder.util.StringUtil;
 
 public class ActionParam extends AbstractRecordedParam implements Serializable {
 	private static final long serialVersionUID = -5584413830295784662L;
+
+	private final String DEFAULT_SERVER_NAME = "server_action";
+	private final String DEFAULT_CLIENT_NAME = "client_action";
+	private final String DEFAULT_CALLBACK = "action_callback";
 
 	private String name;
 	private String role;
@@ -29,6 +34,24 @@ public class ActionParam extends AbstractRecordedParam implements Serializable {
 		this.role = "";
 		this.type = "";
 		this.callbackName = "";
+		//
+		this.docDescription = "";
+		this.docGoal = "";
+		this.docFeedback = "";
+		this.docResult = "";
+		//
+		setUpdated(false);
+	}
+
+	public ActionParam(String role) {
+		this.role = role;
+		this.type = "";
+		this.callbackName = this.DEFAULT_CALLBACK;
+		if(role.equals(IRtcBuilderConstantsROS.SPEC_ACTION_SERVER)) {
+			this.name = this.DEFAULT_SERVER_NAME;
+		} else if(role.equals(IRtcBuilderConstantsROS.SPEC_ACTION_CLIENT)) {
+			this.name = this.DEFAULT_CLIENT_NAME;
+		}
 		//
 		this.docDescription = "";
 		this.docGoal = "";
@@ -102,6 +125,14 @@ public class ActionParam extends AbstractRecordedParam implements Serializable {
 		this.docResult = doc_result;
 	}
 
+	public boolean isDocExist() {
+		if( (docGoal==null || docGoal.equals("")) &&
+			(docFeedback==null || docFeedback.equals("")) &&
+			(docResult==null || docResult.equals("")) )
+				return false;
+		return true;
+	}
+
 	public List<PropertyParam> getProperties() {
 		return properties;
 	}
@@ -133,7 +164,7 @@ public class ActionParam extends AbstractRecordedParam implements Serializable {
 	
 	public void convertInfo() {
 		if(this.callbackName == null || this.callbackName.length() == 0) {
-			this.callbackName = this.name;
+			this.callbackName = this.name + "_action";
 		}
 	}
 }

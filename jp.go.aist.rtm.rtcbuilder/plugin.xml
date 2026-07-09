@@ -131,6 +131,11 @@
            class="jp.go.aist.rtm.rtcbuilder.ui.preference.CodeGenerateConfigPreferencePage"
            id="jp.go.aist.rtm.rtcbuilder.ui.preferencePage.codeGenerate.Configuration"
            name="%preferecePagesConfigurationName"/>
+
+     <page
+           class="jp.go.aist.rtm.rtcbuilder.ros.ui.preference.ROSBuilderPreferencePage"
+           id="jp.go.aist.rtm.rosbuilder.ui.preferencePage"
+           name="%preferecePagesNameROS"/>
   </extension>
 <!--  <extension
         point="org.eclipse.core.runtime.contentTypes">

@@ -1,8 +1,6 @@
 package jp.go.aist.rtm.rtcbuilder.ros.ui.editors;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -36,15 +34,12 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
-import jp.go.aist.rtm.rtcbuilder.generator.param.ConfigSetParam;
-import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
 import jp.go.aist.rtm.rtcbuilder.nl.Messages;
 import jp.go.aist.rtm.rtcbuilder.ros.param.ParameterParam;
 import jp.go.aist.rtm.rtcbuilder.ros.param.ROSParam;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.AbstractEditorFormPage;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.IMessageConstants;
 import jp.go.aist.rtm.rtcbuilder.util.StringUtil;
-import jp.go.aist.rtm.rtcbuilder.util.ValidationUtil;
 
 /**
  * Parameterページ
@@ -70,12 +65,6 @@ public class ParameterEditorFormPage extends AbstractEditorFormPage {
 	private ParameterParam preSelection;
 	private ParameterParam selectParam;
 	//
-//	private String defaultConfigName;
-//	private String defaultConfigType;
-//	private String defaultConfigVarName;
-//	private String defaultConfigDefault;
-//	private String defaultConfigConstraint;
-//	private String defaultConfigUnit;
 	private String[] defaultTypeList = {"double", "int", "string", "bool"};
 
 	/**
@@ -88,17 +77,6 @@ public class ParameterEditorFormPage extends AbstractEditorFormPage {
 		super(editor, "id", Messages.getString("IMC.ROS_PARAMETER_SECTION"));
 		//
 		preSelection = null;
-		updateDefaultValue();
-	}
-
-	private void updateDefaultValue() {
-//		IPreferenceStore store = RtcBuilderPlugin.getDefault().getPreferenceStore();
-//		defaultConfigName = ComponentPreferenceManager.getInstance().getConfiguration_Name();
-//		defaultConfigType = store.getString(ComponentPreferenceManager.Generate_Configuration_Type);
-//		defaultConfigVarName = store.getString(ComponentPreferenceManager.Generate_Configuration_VarName);
-//		defaultConfigDefault = store.getString(ComponentPreferenceManager.Generate_Configuration_Default);
-//		defaultConfigConstraint = store.getString(ComponentPreferenceManager.Generate_Configuration_Constraint);
-//		defaultConfigUnit = store.getString(ComponentPreferenceManager.Generate_Configuration_Unit);
 	}
 
 	/**
@@ -210,9 +188,7 @@ public class ParameterEditorFormPage extends AbstractEditorFormPage {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				String selected = typeCombo.getText();
-				updateDefaultValue();
 				ParameterParam selectParam = new ParameterParam();
-				selectParam.setName("new_param");
 				((List) parameterTableViewer.getInput()).add(selectParam);
 				parameterTableViewer.refresh();
 				update();
@@ -257,9 +233,21 @@ public class ParameterEditorFormPage extends AbstractEditorFormPage {
 					stepText.setEnabled(isEnable);
 
 					defaultValueText.setText(selectParam.getDefaultValue());
-					minText.setText(Double.valueOf(selectParam.getMin()).toString());
-					maxText.setText(Double.valueOf(selectParam.getMax()).toString());
-					stepText.setText(Double.valueOf(selectParam.getStep()).toString());
+					if(selectParam.getMin() != null) {
+						minText.setText(Double.valueOf(selectParam.getMin()).toString());
+					} else {
+						minText.setText("");
+					}
+					if(selectParam.getMax() != null) {
+						maxText.setText(Double.valueOf(selectParam.getMax()).toString());
+					} else {
+						maxText.setText("");
+					}
+					if(selectParam.getStep() != null) {
+						stepText.setText(Double.valueOf(selectParam.getStep()).toString());
+					} else {
+						stepText.setText("");
+					}
 					readOnlyBtn.setSelection(selectParam.isReadOnly());
 					//
 					descriptionText.setText(StringUtil.getDisplayDocText(selectParam.getDocDescription()));

@@ -7,11 +7,17 @@ import java.util.List;
 import jp.go.aist.rtm.rtcbuilder.generator.param.AbstractRecordedParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.PropertyParam;
 import jp.go.aist.rtm.rtcbuilder.nl.Messages;
+import jp.go.aist.rtm.rtcbuilder.ros.IRtcBuilderConstantsROS;
 import jp.go.aist.rtm.rtcbuilder.util.StringUtil;
 
 public class ServiceParam extends AbstractRecordedParam implements Serializable {
 	private static final long serialVersionUID = -5584413830295784662L;
 	
+	private final String DEFAULT_SERVER_NAME = "server_service";
+	private final String DEFAULT_CLIENT_NAME = "client_service";
+	private final String DEFAULT_SERVER_CALLBACK = "service_callback";
+	private final String DEFAULT_CLIENT_VARIABLE = "client_variable";
+
 	private String name;
 	private String role;
 	private String type;
@@ -28,6 +34,25 @@ public class ServiceParam extends AbstractRecordedParam implements Serializable 
 		this.role = "";
 		this.type = "";
 		this.varCallbackName = "";
+		//
+		this.docDescription = "";
+		this.docArgument = "";
+		this.docReturn = "";
+		//
+		setUpdated(false);
+	}
+
+	public ServiceParam(String role) {
+		this.role = role;
+		this.type = "";
+		
+		if(role.equals(IRtcBuilderConstantsROS.SPEC_SERVICE_SERVER)) {
+			this.name = this.DEFAULT_SERVER_NAME;
+			this.varCallbackName = this.DEFAULT_SERVER_CALLBACK;
+		} else if(role.equals(IRtcBuilderConstantsROS.SPEC_SERVICE_CLIENT)) {
+			this.name = this.DEFAULT_CLIENT_NAME;
+			this.varCallbackName = this.DEFAULT_CLIENT_VARIABLE;
+		}
 		//
 		this.docDescription = "";
 		this.docArgument = "";
@@ -93,6 +118,13 @@ public class ServiceParam extends AbstractRecordedParam implements Serializable 
 		this.docReturn = doc_return;
 	}
 
+	public boolean isDocExist() {
+		if( (docArgument==null || docArgument.equals("")) &&
+			(docReturn==null || docReturn.equals("")) )
+				return false;
+		return true;
+	}
+
 	public List<PropertyParam> getProperties() {
 		return properties;
 	}
@@ -120,7 +152,11 @@ public class ServiceParam extends AbstractRecordedParam implements Serializable 
 	
 	public void convertInfo() {
 		if(this.varCallbackName == null || this.varCallbackName.length() == 0) {
-			this.varCallbackName = this.name;
+			if(role.equals(IRtcBuilderConstantsROS.SPEC_SERVICE_SERVER)) {
+				this.varCallbackName = this.name;
+			} else if(role.equals(IRtcBuilderConstantsROS.SPEC_SERVICE_CLIENT)) {
+				this.varCallbackName = this.name + "_client";
+			}
 		}
 	}
 }

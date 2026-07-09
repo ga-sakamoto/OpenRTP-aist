@@ -304,8 +304,6 @@ public class LifecycleEditorFormPage extends AbstractEditorFormPage {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				TimerParam elem = new TimerParam();
-				elem.setName("new_timer");
-				elem.setRate(0.0);
 				timerList.add(elem);
 				timerListViewer.refresh();
 				update();

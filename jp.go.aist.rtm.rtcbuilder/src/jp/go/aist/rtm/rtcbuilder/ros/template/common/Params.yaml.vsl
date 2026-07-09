@@ -5,7 +5,15 @@ ${rosParam.nodeName}:
 #else
   ros__parameters:
 #foreach($param in ${rosParam.parameters})
-    # Summary: ${param.docDescription}
-    ${param.name}: ${param.defaultValue}
+    ${sharp} Parameter: ${param.name}
+    ${sharp} Type: ${param.type}
+    ${sharp} Description: ${param.docDescription}
+#if(${param.min})    ${sharp} Min: ${param.min}
+#end
+#if(${param.max})    ${sharp} Max: ${param.max}
+#end
+#if(${param.step})    ${sharp} Step: ${param.step}
+#end
+    ${param.name}: ${tmpltHelper.quoteDefault(${param})}
 #end
 #end

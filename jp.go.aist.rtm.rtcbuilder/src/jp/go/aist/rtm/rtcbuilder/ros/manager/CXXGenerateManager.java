@@ -10,22 +10,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.ui.PlatformUI;
-
 import jp.go.aist.rtm.rtcbuilder.IRTCBMessageConstants;
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
 import jp.go.aist.rtm.rtcbuilder.ParamBase;
-import jp.go.aist.rtm.rtcbuilder.fsm.StateParam;
 import jp.go.aist.rtm.rtcbuilder.generator.GeneratedResult;
-import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
-import jp.go.aist.rtm.rtcbuilder.generator.param.idl.IdlFileParam;
 import jp.go.aist.rtm.rtcbuilder.manager.GenerateManager;
-import jp.go.aist.rtm.rtcbuilder.nl.Messages;
 import jp.go.aist.rtm.rtcbuilder.ros.param.ROSParam;
 import jp.go.aist.rtm.rtcbuilder.ros.template.TemplateHelperROS;
-import jp.go.aist.rtm.rtcbuilder.template.TemplateHelper;
 import jp.go.aist.rtm.rtcbuilder.template.TemplateUtil;
 
 /**
@@ -80,42 +71,54 @@ public class CXXGenerateManager extends GenerateManager {
 	public List<GeneratedResult> generateTemplateCode(
 			Map<String, Object> contextMap) {
 		List<GeneratedResult> result = new ArrayList<GeneratedResult>();
-		ROSParam rosParam = (ROSParam) contextMap.get("rosParam");
 
 		result.add(generateCMakeLists(contextMap));
 		result.add(generateSourceMain(contextMap));
 		result.add(generateHeader(contextMap));
 		result.add(generateSource(contextMap));
 
+		result.add(generateInterfaceCMakeLists(contextMap));
+
 		return result;
 	}
 	
 	public GeneratedResult generateCMakeLists(Map<String, Object> contextMap) {
-		String outfile = "CMakeLists.txt";
+		ROSParam rosParam = (ROSParam) contextMap.get("rosParam");
+		String outfile = rosParam.getPackageName() + "/CMakeLists.txt";
 		String infile = "";
 		infile = "cpp/CMakeLists.txt.vsl";
 		return generate(infile, outfile, contextMap);
 	}
 
 	public GeneratedResult generateSourceMain(Map<String, Object> contextMap) {
-		String outfile = "src/main.cpp";
+		ROSParam rosParam = (ROSParam) contextMap.get("rosParam");
+		String outfile = rosParam.getPackageName() + "/src/main.cpp";
 		String infile = "cpp/CXX_Main.cpp.vsl";
 		return generate(infile, outfile, contextMap);
 	}
 
 	public GeneratedResult generateHeader(Map<String, Object> contextMap) {
 		ROSParam rosParam = (ROSParam) contextMap.get("rosParam");
-		String outfile = "include/" + rosParam.getPackageName() + "/" + rosParam.getNodeName() + ".hpp";
+		String outfile = rosParam.getPackageName() + "/include/" + rosParam.getPackageName() + "/" + rosParam.getNodeName() + ".hpp";
 		String infile = "cpp/CXX_ROS.hpp.vsl";
 		return generate(infile, outfile, contextMap);
 	}
 
 	public GeneratedResult generateSource(Map<String, Object> contextMap) {
 		ROSParam rosParam = (ROSParam) contextMap.get("rosParam");
-		String outfile = "src/" + rosParam.getNodeName() + ".cpp";
+		String outfile = rosParam.getPackageName() + "/src/" + rosParam.getNodeName() + ".cpp";
 		String infile = "cpp/CXX_ROS.cpp.vsl";
 		return generate(infile, outfile, contextMap);
 	}
+	
+	public GeneratedResult generateInterfaceCMakeLists(Map<String, Object> contextMap) {
+		ROSParam rosParam = (ROSParam) contextMap.get("rosParam");
+		String outfile = rosParam.getPackageName() + "_interfaces/CMakeLists.txt";
+		String infile = "";
+		infile = "cpp/interface_CMakeLists.txt.vsl";
+		return generate(infile, outfile, contextMap);
+	}
+
 	/////
 	public GeneratedResult generate(String infile, String outfile,
 			Map<String, Object> contextMap) {
