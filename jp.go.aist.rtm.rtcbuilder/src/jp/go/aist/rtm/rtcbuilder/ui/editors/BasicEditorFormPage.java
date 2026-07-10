@@ -77,6 +77,7 @@ import jp.go.aist.rtm.rtcbuilder.generator.param.PropertyParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
 import jp.go.aist.rtm.rtcbuilder.manager.GenerateManager;
 import jp.go.aist.rtm.rtcbuilder.nl.Messages;
+import jp.go.aist.rtm.rtcbuilder.ros.IRtcBuilderConstantsROS;
 import jp.go.aist.rtm.rtcbuilder.ui.Perspective.LanguageProperty;
 import jp.go.aist.rtm.rtcbuilder.ui.compare.CompareResultDialog;
 import jp.go.aist.rtm.rtcbuilder.ui.compare.CompareTarget;
@@ -667,7 +668,6 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 					LOGGER.error("Fail to save rtc-profile", e);
 				}
 			}
-
 		});
 	}
 
@@ -846,6 +846,7 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 			public void widgetSelected(SelectionEvent e) {
 				RestoreDialog dialog = new RestoreDialog(getSite().getShell());
 				dialog.setTargetProject(editor.getRtcParam().getOutputProject());
+				dialog.setTargetFile(IRtcBuilderConstants.DEFAULT_RTC_XML);
 				int ret = dialog.open();
 				if(ret != IDialogConstants.OK_ID) return;
 				
@@ -965,6 +966,7 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
         		ExportCreator export = new ExportCreator();
         		if(!export.canCreateProfileName(editor)) {
     				ExportDialog dialog = new ExportDialog(getSite().getShell());
+    				dialog.setTargetKind("RtcProfile");
     				int ret = dialog.open();
     				if(ret != IDialogConstants.OK_ID) return;
 
@@ -1053,6 +1055,7 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 			public void widgetSelected(SelectionEvent e) {
 				ImportExtension extension = getTargetImportExtension();
 				ImportDialog dialog = new ImportDialog(getSite().getShell());
+				dialog.setTargetKind("RtcProfile");
 				dialog.setExtension(extension);
 				int ret = dialog.open();
 				if(ret != IDialogConstants.OK_ID) return;
@@ -1172,7 +1175,6 @@ public class BasicEditorFormPage extends AbstractEditorFormPage {
 				extractDataTypes();
 				load();
 				//
-//				editor.getRtcParam().resetUpdated();
 				editor.updateDirty();
 			}
 		});

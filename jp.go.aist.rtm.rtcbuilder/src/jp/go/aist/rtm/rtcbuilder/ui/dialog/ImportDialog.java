@@ -21,6 +21,8 @@ import jp.go.aist.rtm.rtcbuilder.nl.Messages;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.IMessageConstants;
 
 public class ImportDialog extends Dialog {
+	private String targetKind = "";
+
 	private String selectedKind = "";
 	private String selectedFile = "";
 	
@@ -30,6 +32,9 @@ public class ImportDialog extends Dialog {
 	
 	private ImportExtension extension;
 
+	public void setTargetKind(String source) {
+		this.targetKind = source;
+	}
 	public void setExtension(ImportExtension source) {
 		this.extension = source;
 	}
@@ -83,7 +88,7 @@ public class ImportDialog extends Dialog {
 		
 		rtcBtn = new Button(kindComposite, SWT.RADIO);
 		gd = new GridData(GridData.BEGINNING, SWT.CENTER, false, false);
-		rtcBtn.setText("RtcProfile");
+		rtcBtn.setText(targetKind);
 		rtcBtn.setLayoutData(gd);
 		
 		isoBtn = new Button(kindComposite, SWT.RADIO);

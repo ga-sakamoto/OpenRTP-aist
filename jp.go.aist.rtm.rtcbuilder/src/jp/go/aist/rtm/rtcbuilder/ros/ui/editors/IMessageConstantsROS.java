@@ -240,4 +240,9 @@ public interface IMessageConstantsROS {
 			Messages.getString("IMC.ROSXML_CAUTION_P1"),
 			Messages.getString("IMC.ROSXML_CAUTION_P2")
 	});
+
+	public static final String PROFIE_LOAD_ERROR = StringUtil.connectMessageWithSepalator( new String[]{
+			Messages.getString("IMC.ERROR_PROFILE_RESTORE_P1"),
+			Messages.getString("IMC.ERROR_PROFILE_RESTORE_P2")
+	});
 }

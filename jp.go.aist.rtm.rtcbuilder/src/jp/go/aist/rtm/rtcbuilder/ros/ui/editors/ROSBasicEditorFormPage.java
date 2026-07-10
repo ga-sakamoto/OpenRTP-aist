@@ -54,23 +54,23 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.iso.iso22166.part202.profile.SIM;
-import org.openrtp.namespaces.rtc.version03.RtcProfile;
+import org.openrtp.namespaces.ros.version01.RosProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import jp.ac.meijo_u.iso22166_part202.util.ISO2RTCProfileHandler;
-import jp.ac.meijo_u.iso22166_part202.util.RTC2ISOProfileHandler;
+import jp.ac.meijo_u.iso22166_part202.util.ISO2ROSProfileHandler;
+import jp.ac.meijo_u.iso22166_part202.util.ROS2ISOProfileHandler;
 import jp.go.aist.rtm.rtcbuilder.Generator.MergeHandler;
 import jp.go.aist.rtm.rtcbuilder.GuiRtcBuilder;
 import jp.go.aist.rtm.rtcbuilder.IRTCBMessageConstants;
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
 import jp.go.aist.rtm.rtcbuilder.RtcBuilderPlugin;
 import jp.go.aist.rtm.rtcbuilder.factory.ExportCreator;
-import jp.go.aist.rtm.rtcbuilder.generator.ProfileHandler;
 import jp.go.aist.rtm.rtcbuilder.generator.param.GeneratorParam;
 import jp.go.aist.rtm.rtcbuilder.manager.GenerateManager;
 import jp.go.aist.rtm.rtcbuilder.nl.Messages;
 import jp.go.aist.rtm.rtcbuilder.ros.IRtcBuilderConstantsROS;
+import jp.go.aist.rtm.rtcbuilder.ros.ProfileHandlerROS;
 import jp.go.aist.rtm.rtcbuilder.ros.manager.CXXGenerateManager;
 import jp.go.aist.rtm.rtcbuilder.ros.manager.CommonGenerateManager;
 import jp.go.aist.rtm.rtcbuilder.ros.param.PackageParam;
@@ -84,7 +84,7 @@ import jp.go.aist.rtm.rtcbuilder.ui.dialog.RestoreDialog;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.AbstractEditorFormPage;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.IMessageConstants;
 import jp.go.aist.rtm.rtcbuilder.util.FileUtil;
-import jp.go.aist.rtm.toolscommon.profiles.util.XmlHandler;
+import jp.go.aist.rtm.toolscommon.profiles.util.XmlHandlerROS;
 
 /**
  * Basic Profile 設定ページ
@@ -404,7 +404,7 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 				}
 				
 				//対象プロジェクトの確認
-				IProject project = checkTargetProject(editor.getRtcParam().getOutputProject(), true);
+				IProject project = checkTargetProject(((ROSBuilderEditor)editor).getROSParam().getOutputProject(), true);
 				if( project==null) return;
 				try {
 					project.refreshLocal(IResource.DEPTH_INFINITE, null);
@@ -413,6 +413,21 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 				}
 				//
 				rosParam.convertInfo();
+				File dirMsg = new File(project.getLocation().toOSString() + File.separator + "msg");
+				rosParam.getExtMsgFiles().clear();
+				for(File each : FileUtil.listAllFiles(dirMsg)) {
+					rosParam.getExtMsgFiles().add(each.getName());
+				}
+				File dirSrv = new File(project.getLocation().toOSString() + File.separator + "srv");
+				rosParam.getExtSrvFiles().clear();
+				for(File each : FileUtil.listAllFiles(dirSrv)) {
+					rosParam.getExtSrvFiles().add(each.getName());
+				}
+				File dirAction = new File(project.getLocation().toOSString() + File.separator + "action");
+				rosParam.getExtActionFiles().clear();
+				for(File each : FileUtil.listAllFiles(dirAction)) {
+					rosParam.getExtActionFiles().add(each.getName());
+				}
 				//
 				GuiRtcBuilder rtcBuilder = new GuiRtcBuilder();
 				rtcBuilder.clearGenerateManager();
@@ -429,113 +444,77 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 				GeneratorParam generatorParam = editor.getGeneratorParam();
 				String genTime = DATE_FORMAT.format(new GregorianCalendar().getTime());
 				if (rtcBuilder.doGenerateWriteROS(generatorParam, true, genTime)) {
-//					LanguageProperty langProp = LanguageProperty.checkPlugin(editor.getRtcParam());
-//					if(langProp != null) {
-//						try {
-//							IProjectDescription description = project.getDescription();
-//							String[] ids = description.getNatureIds();
-//							String[] newIds = new String[ids.length + langProp.getNatures().size()];
-//							System.arraycopy(ids, 0, newIds, 0, ids.length);
-//							for( int intIdx=0; intIdx<langProp.getNatures().size(); intIdx++ ) {
-//								newIds[ids.length+intIdx] = langProp.getNatures().get(intIdx);
-//							}
-//							description.setNatureIds(newIds);
-//							project.setDescription(description, null);
-//						} catch (CoreException e1) {
-//							LOGGER.error(
-//									"Fail to get/set description for project",
-//									e1);
-//						}
-//					}
-//					//
-//					saveRtcProfile(project, genTime);
-//					switchPerspective();
-//	        		editor.getRtcParam().resetUpdated();
-//	        		editor.updateDirty();
-//					//
-//					try {
-//						project.refreshLocal(IResource.DEPTH_INFINITE, null);
-//					} catch (CoreException e1) {
-//						throw new RuntimeException(IRTCBMessageConstants.ERROR_GENERATE_FAILED);
-//					}
-//				}
-//        		//
+					LanguageProperty langProp = LanguageProperty.checkPlugin(((ROSBuilderEditor)editor).getROSParam());
+					if(langProp != null) {
+						try {
+							IProjectDescription description = project.getDescription();
+							String[] ids = description.getNatureIds();
+							String[] newIds = new String[ids.length + langProp.getNatures().size()];
+							System.arraycopy(ids, 0, newIds, 0, ids.length);
+							for( int intIdx=0; intIdx<langProp.getNatures().size(); intIdx++ ) {
+								newIds[ids.length+intIdx] = langProp.getNatures().get(intIdx);
+							}
+							description.setNatureIds(newIds);
+							project.setDescription(description, null);
+						} catch (CoreException e1) {
+							LOGGER.error(
+									"Fail to get/set description for project",
+									e1);
+						}
+					}
+					//
+					saveROSProfile(project, genTime);
+					switchPerspective();
+					((ROSBuilderEditor)editor).getROSParam().resetUpdated();
+	        		editor.updateDirty();
+					//
+					try {
+						project.refreshLocal(IResource.DEPTH_INFINITE, null);
+					} catch (CoreException e1) {
+						throw new RuntimeException(IRTCBMessageConstants.ERROR_GENERATE_FAILED);
+					}
+				}
 			}
 
 			// Profileを保存
-//			private void saveRtcProfile(IProject project, String genTime) {
-//				ProfileHandler handler = new ProfileHandler();
-//				try {
-//					ExportCreator export = new ExportCreator();
-//					export.preExport(editor);
-//					//
-//					////FSM
-//					if(editor.getRtcParam().getFsmParam()!=null) {
-//						String fsmName = editor.getRtcParam().getName() + "FSM.scxml";
-//						IFile fsmFile  = project.getFile(fsmName);
-//						if(editor.getRtcParam().getFsmContents().trim().length()==0) {
-//							try {
-//								fsmFile.delete(true, null);
-//							} catch (CoreException e) {
-//								e.printStackTrace();
-//							}
-//						} else {
-//							if(fsmFile.exists()==false) {
-//								try {
-//									fsmFile.create(null, true, null);
-//								} catch (CoreException e) {
-//									e.printStackTrace();
-//								}
-//							}
-//							String strPath = fsmFile.getLocation().toOSString();
-//							String xmlSplit[] = editor.getRtcParam().getFsmContents().split("\n");
-//							try {
-//								BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(strPath), "UTF-8"));
-//								for (String s : xmlSplit) {
-//									writer.write(s);
-//									writer.newLine();
-//								}
-//								writer.close();
-//							} catch (IOException e1) {
-//								e1.printStackTrace();
-//							}
-//						}
-//					}
-//					//
-//					String strXml = handler.convert2XML(editor.getGeneratorParam());
-//
-//					IFile orgRtcxml = project.getFile(IRtcBuilderConstants.DEFAULT_RTC_XML);
-//					if (orgRtcxml.exists()) {
-//						IFile renameFile = project.getFile(IRtcBuilderConstants.DEFAULT_RTC_XML + genTime);
-//						orgRtcxml.move(renameFile.getFullPath(), true, null);
-//						//バックアップ最大数以上のファイルは削除
-//						FileUtil.removeBackupFiles(project.getLocation().toOSString(), IRtcBuilderConstants.DEFAULT_RTC_XML);
-//					}
-//					IFile saveRtcxml = project.getFile(IRtcBuilderConstants.DEFAULT_RTC_XML);
-//					saveRtcxml.create(new ByteArrayInputStream(strXml.getBytes("UTF-8")), true, null);
-//
-//					//ISO
-//					RtcProfile rtcProfile = handler.convert2XMLProfile(editor.getRtcParam());
-//					RTC2ISOProfileHandler isoHandler = new RTC2ISOProfileHandler();
-//					SIM isoProfile = isoHandler.convertRtc2Iso(rtcProfile);
-//					String strIsoXml = isoHandler.convertToXmlIso(isoProfile);
-//					
-//					IFile orgIsoxml = project.getFile(IRtcBuilderConstants.DEFAULT_ISO_202_XML);
-//					if (orgIsoxml.exists()) {
-//						IFile renameIsoFile = project.getFile(IRtcBuilderConstants.DEFAULT_ISO_202_XML + genTime);
-//						orgIsoxml.move(renameIsoFile.getFullPath(), true, null);
-//						FileUtil.removeBackupFiles(project.getLocation().toOSString(), IRtcBuilderConstants.DEFAULT_ISO_202_XML);
-//					}
-//					IFile saveIsoxml = project.getFile(IRtcBuilderConstants.DEFAULT_ISO_202_XML);
-//					saveIsoxml.create(new ByteArrayInputStream(strIsoXml.getBytes("UTF-8")), true, null);
-//					//
-//					editor.getRtcParam().resetUpdated();
-//					editor.updateDirty();
-//				} catch (Exception e) {
-//					LOGGER.error("Fail to save rtc-profile", e);
-//				}
-			}
+			private void saveROSProfile(IProject project, String genTime) {
+				ProfileHandlerROS handler = new ProfileHandlerROS();
+				try {
+					ExportCreator export = new ExportCreator();
+					export.preExport(editor);
+					//
+					String strXml = handler.convert2ROSXML(editor.getGeneratorParam());
 
+					IFile orgROSxml = project.getFile(IRtcBuilderConstantsROS.DEFAULT_ROS_XML);
+					if (orgROSxml.exists()) {
+						IFile renameFile = project.getFile(IRtcBuilderConstantsROS.DEFAULT_ROS_XML + genTime);
+						orgROSxml.move(renameFile.getFullPath(), true, null);
+						FileUtil.removeBackupFiles(project.getLocation().toOSString(), IRtcBuilderConstants.DEFAULT_RTC_XML);
+					}
+					IFile saveROSxml = project.getFile(IRtcBuilderConstantsROS.DEFAULT_ROS_XML);
+					saveROSxml.create(new ByteArrayInputStream(strXml.getBytes("UTF-8")), true, null);
+
+					//ISO
+					RosProfile rosProfile = handler.convert2XMLProfile(((ROSBuilderEditor)editor).getROSParam());
+					ROS2ISOProfileHandler isoHandler = new ROS2ISOProfileHandler();
+					SIM isoProfile = isoHandler.convertROS2Iso(rosProfile);
+					String strIsoXml = isoHandler.convertToXmlIso(isoProfile);
+//					
+					IFile orgIsoxml = project.getFile(IRtcBuilderConstants.DEFAULT_ISO_202_XML);
+					if (orgIsoxml.exists()) {
+						IFile renameIsoFile = project.getFile(IRtcBuilderConstants.DEFAULT_ISO_202_XML + genTime);
+						orgIsoxml.move(renameIsoFile.getFullPath(), true, null);
+						FileUtil.removeBackupFiles(project.getLocation().toOSString(), IRtcBuilderConstants.DEFAULT_ISO_202_XML);
+					}
+					IFile saveIsoxml = project.getFile(IRtcBuilderConstants.DEFAULT_ISO_202_XML);
+					saveIsoxml.create(new ByteArrayInputStream(strIsoXml.getBytes("UTF-8")), true, null);
+					//
+					((ROSBuilderEditor)editor).getROSParam().resetUpdated();
+					editor.updateDirty();
+				} catch (Exception e) {
+					LOGGER.error("Fail to save rtc-profile", e);
+				}
+			}
 		});
 	}
 
@@ -559,7 +538,7 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 			try {
 				project.create(null);
 				project.open(null);
-				LanguageProperty langProp = LanguageProperty.checkPlugin(editor.getRtcParam());
+				LanguageProperty langProp = LanguageProperty.checkPlugin(((ROSBuilderEditor)editor).getROSParam());
 				if(langProp != null) {
 					IProjectDescription description = project.getDescription();
 					String[] ids = description.getNatureIds();
@@ -587,19 +566,19 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				((ROSBuilderEditor)editor).allUpdates();
-				String validateRtcParam = ((ROSBuilderEditor)editor).validateParam();
-				if (validateRtcParam != null) {
-					MessageDialog.openError(getSite().getShell(), "Error", validateRtcParam);
+				String validateROSParam = ((ROSBuilderEditor)editor).validateParam();
+				if (validateROSParam != null) {
+					MessageDialog.openError(getSite().getShell(), "Error", validateROSParam);
 					return;
 				}
-				IProject project = checkTargetProject(editor.getRtcParam().getOutputProject(), true);
+				IProject project = checkTargetProject(((ROSBuilderEditor)editor).getROSParam().getOutputProject(), true);
 				if( project==null) return;
 
-				ProfileHandler handler = new ProfileHandler();
+				ProfileHandlerROS handler = new ProfileHandlerROS();
 				try {
-					RtcProfile rtcProfile = handler.convert2XMLProfile(editor.getRtcParam());
-					RTC2ISOProfileHandler isoHandler = new RTC2ISOProfileHandler();
-					SIM isoProfile = isoHandler.convertRtc2Iso(rtcProfile);
+					RosProfile rosProfile = handler.convert2XMLProfile(((ROSBuilderEditor)editor).getROSParam());
+					ROS2ISOProfileHandler isoHandler = new ROS2ISOProfileHandler();
+					SIM isoProfile = isoHandler.convertROS2Iso(rosProfile);
 					String strIsoXml = isoHandler.convertToXmlIso(isoProfile);
 	
 					IFile orgIsoxml = project.getFile(IRtcBuilderConstants.DEFAULT_ISO_202_XML);
@@ -640,10 +619,10 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
     				return;
 				
 				IWorkspaceRoot workspaceHandle = ResourcesPlugin.getWorkspace().getRoot();
-				String targetProject = editor.getRtcParam().getOutputProject();
+				String targetProject = ((ROSBuilderEditor)editor).getROSParam().getOutputProject();
 				IProject project = workspaceHandle.getProject(targetProject);
 				File dir = new File(project.getLocation().toOSString());
-				List<File> files = listAllFiles(dir);
+				List<File> files = FileUtil.listAllFiles(dir);
 				for(File target : files) {
 					String name = target.getName();
 					if(name.length() < 14) continue;
@@ -659,22 +638,6 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 		});
 	}
 	
-	private List<File> listAllFiles(File dir) {
-	    List<File> result = new ArrayList<>();
-	    File[] files = dir.listFiles();
-	    if (files != null) {
-	        for (File each : files) {
-	        	if(each.isFile()) {
-	        		result.add(each);
-	        	}
-	            if (each.isDirectory()) {
-	                result.addAll(listAllFiles(each));
-	            }
-	        }
-	    }
-	    return result;
-	}
-	
 	private void createCodeRestoreButton(FormToolkit toolkit) {
 		codeRestoreButton = toolkit.createButton(codeRestoreSection,
 				Messages.getString("IMC.BASIC_BTN_CODE_RESTORE"), SWT.NONE);
@@ -682,13 +645,14 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				RestoreDialog dialog = new RestoreDialog(getSite().getShell());
-				dialog.setTargetProject(editor.getRtcParam().getOutputProject());
+				dialog.setTargetProject(((ROSBuilderEditor)editor).getROSParam().getOutputProject());
+				dialog.setTargetFile(IRtcBuilderConstantsROS.DEFAULT_ROS_XML);
 				int ret = dialog.open();
 				if(ret != IDialogConstants.OK_ID) return;
 				
 				String targetTimeStamp = dialog.getTimeStamp();
 				IWorkspaceRoot workspaceHandle = ResourcesPlugin.getWorkspace().getRoot();
-				IProject project = workspaceHandle.getProject(editor.getRtcParam().getOutputProject());
+				IProject project = workspaceHandle.getProject(((ROSBuilderEditor)editor).getROSParam().getOutputProject());
 				File dir = new File(project.getLocation().toOSString());
 				List<File> targetList = parseDirectory(dir, targetTimeStamp);
 				boolean isRestore = false;
@@ -802,6 +766,7 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
         		ExportCreator export = new ExportCreator();
         		if(!export.canCreateProfileName(editor)) {
     				ExportDialog dialog = new ExportDialog(getSite().getShell());
+    				dialog.setTargetKind("ROSProfile");
     				int ret = dialog.open();
     				if(ret != IDialogConstants.OK_ID) return;
 
@@ -816,11 +781,11 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 
 				if(outputIso) {
 	        		try {
-	            		ProfileHandler handlerTemp = new ProfileHandler();
-						RtcProfile profile = handlerTemp.convert2XMLProfile(editor.getGeneratorParam().getRtcParam());
+	            		ProfileHandlerROS handlerTemp = new ProfileHandlerROS();
+						RosProfile profile = handlerTemp.convert2XMLProfile(editor.getGeneratorParam().getROSParam());
 	
-						RTC2ISOProfileHandler handler202 = new RTC2ISOProfileHandler();
-						SIM result = handler202.convertRtc2Iso(profile);
+						ROS2ISOProfileHandler handler202 = new ROS2ISOProfileHandler();
+						SIM result = handler202.convertROS2Iso(profile);
 						handler202.saveXmlIso(result, selectedFileNameIso);
 					} catch (Exception e3) {
 						e3.printStackTrace();
@@ -831,22 +796,18 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 		        	try {
 		        		export.preExport(editor);
 
-		            	if (getFileExtension(selectedFileNameRtc).equals(IRtcBuilderConstants.YAML_EXTENSION)) {
-		            		ProfileHandler handler = new ProfileHandler();
-		            		handler.createYaml(selectedFileNameRtc, editor.getGeneratorParam());
-		            	} else {
-		            		ProfileHandler handler = new ProfileHandler();
-		            		try {
-		        				handler.validateXml(handler.convert2XML(editor.getGeneratorParam()));
-		        			} catch (JAXBException ex) {
-		            			if (!MessageDialog.openQuestion(getSite().getShell(),ex.getMessage(),
-		            					IMessageConstants.PROFILE_VALIDATE_ERROR_MESSAGE + System.getProperty("line.separator") + ex.getCause().toString()) )
-		            				return ;// 「いいえ」のときは保存しない
-		            		}// 通常のExceptionは外側でcatchする
-		        			handler.storeToXML(selectedFileNameRtc, editor.getGeneratorParam());
-		            	}
+	            		ProfileHandlerROS handler = new ProfileHandlerROS();
+	            		try {
+	        				handler.validateROSXml(handler.convert2ROSXML(editor.getGeneratorParam()));
+	        			} catch (JAXBException ex) {
+	            			if (!MessageDialog.openQuestion(getSite().getShell(),ex.getMessage(),
+	            					IMessageConstants.PROFILE_VALIDATE_ERROR_MESSAGE + System.getProperty("line.separator") + ex.getCause().toString()) )
+	            				return ;// 「いいえ」のときは保存しない
+	            		}// 通常のExceptionは外側でcatchする
+	        			handler.storeToXML(selectedFileNameRtc, editor.getGeneratorParam());
+	        			
 		        		export.postExport(selectedFileNameRtc, editor);
-		        		editor.getRtcParam().resetUpdated();
+		        		((ROSBuilderEditor)editor).getROSParam().resetUpdated();
 		        		editor.updateDirty();
 
 					} catch (Exception e1) {
@@ -871,6 +832,7 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				ImportDialog dialog = new ImportDialog(getSite().getShell());
+				dialog.setTargetKind("ROSProfile");
 				int ret = dialog.open();
 				if(ret != IDialogConstants.OK_ID) return;
 				
@@ -879,18 +841,11 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 
 				if (targetKind.equals("RTC")) {
 		        	try {
-		        		String origProject = editor.getRtcParam().getOutputProject();
-		        		ProfileHandler handler = new ProfileHandler();
-			        	if (getFileExtension(selectedFileName).equals(IRtcBuilderConstants.YAML_EXTENSION)) {
-			        		GeneratorParam genParam = handler.readYaml(selectedFileName);
-							String xmlFile = handler.convert2XML(genParam);
-							editor.setGeneratorParam(genParam);
-							editor.getRtcParam().setRtcXml(xmlFile);
-			        	} else {
-							GeneratorParam genParam = handler.restorefromXMLFile(selectedFileName);
-							editor.setGeneratorParam(genParam);
-						}
-						editor.getRtcParam().setOutputProject(origProject);
+		        		String origProject = ((ROSBuilderEditor)editor).getROSParam().getOutputProject();
+		        		ProfileHandlerROS handler = new ProfileHandlerROS();
+						GeneratorParam genParam = handler.restorefromXMLFile(selectedFileName);
+						editor.setGeneratorParam(genParam);
+						((ROSBuilderEditor)editor).getROSParam().setOutputProject(origProject);
 					} catch (Exception e1) {
 						MessageDialog.openError(getSite().getShell(), "Error",
 								Messages.getString("IMC.BASIC_IMPORT_ERROR"));
@@ -898,20 +853,20 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 		        	}
 				} else {
 		        	try {
-		        		String origProject = editor.getRtcParam().getOutputProject();
-		        		ISO2RTCProfileHandler isoHandler = new ISO2RTCProfileHandler();
-		        		ProfileHandler handler = new ProfileHandler();
+		        		String origProject = ((ROSBuilderEditor)editor).getROSParam().getOutputProject();
+		        		ISO2ROSProfileHandler isoHandler = new ISO2ROSProfileHandler();
+		        		ProfileHandlerROS handler = new ProfileHandlerROS();
 		        		
 	        			SIM profile = isoHandler.restoreFromFileIso(selectedFileName);
-	        			RtcProfile rtcProfile = isoHandler.convertIso2Rtc(profile);
-	        			XmlHandler xmlHandler = new XmlHandler();
-	        			String xmlFile = xmlHandler.convertToXmlRtc(rtcProfile);
+	        			RosProfile rosProfile = isoHandler.convertIso2Ros(profile);
+	        			XmlHandlerROS xmlHandler = new XmlHandlerROS();
+	        			String xmlFile = xmlHandler.convertToXmlROS(rosProfile);
 	        			
-						GeneratorParam genParam = handler.restorefromRtcProfile(rtcProfile);
+						GeneratorParam genParam = handler.restorefromROSProfile(rosProfile);
 						editor.setGeneratorParam(genParam);
-						editor.getRtcParam().setRtcXml(xmlFile);
+						((ROSBuilderEditor)editor).getROSParam().setROSXml(xmlFile);
 
-						editor.getRtcParam().setOutputProject(origProject);
+						((ROSBuilderEditor)editor).getROSParam().setOutputProject(origProject);
 					} catch (Exception e1) {
 						MessageDialog.openError(getSite().getShell(), "Error",
 								Messages.getString("IMC.BASIC_IMPORT_ERROR"));
@@ -923,15 +878,15 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 						Messages.getString("IMC.BASIC_IMPORT_DONE"));
 				//
 				((ROSBuilderEditor)editor).allPagesReLoad();
-				editor.updateEMFModuleName(editor.getRtcParam().getName());
-				editor.updateEMFDataPorts(
-						editor.getRtcParam().getInports(), editor.getRtcParam().getOutports(),
-						editor.getRtcParam().getEventports(), editor.getRtcParam().getServicePorts());
-				editor.setEnabledInfoByLang();
+				ROSParam rosParam = ((ROSBuilderEditor)editor).getROSParam();
+				((ROSBuilderEditor)editor).updateEMFPorts(
+						rosParam.getTopicSubscribes(), rosParam.getTopicPublishes(),
+						rosParam.getServiceServers(), rosParam.getServiceClients(),
+						rosParam.getActionServers(), rosParam.getActionClients());
+				((ROSBuilderEditor)editor).setEnabledInfoByLang();
 				extractDataTypes();
 				load();
 				//
-//				editor.getRtcParam().resetUpdated();
 				editor.updateDirty();
 			}
 		});

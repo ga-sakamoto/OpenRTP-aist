@@ -144,7 +144,6 @@ public class ProfileHandler {
 	}
 
 	public void storeToXML(String filePath, GeneratorParam generatorParam) throws Exception {
-
 	    ParamUtil putil = new ParamUtil();
 		RtcProfile profile = putil.convertToModule(generatorParam, managerList);
 		XmlHandler handler = new XmlHandler();

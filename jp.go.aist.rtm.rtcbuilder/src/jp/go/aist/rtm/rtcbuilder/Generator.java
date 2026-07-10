@@ -11,7 +11,9 @@ import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
@@ -746,7 +748,40 @@ public class Generator {
 			if (generatedResult.getName().equals("") == false) {
 				writeFile(generatedResult, project, handler, genTime);
 			}
-		}	
+		}
+		File dirIf = new File(project.getLocation().toOSString() + File.separator + rosParam.getPackageName() + "_interfaces");
+		
+		File dirMsg = new File(project.getLocation().toOSString() + File.separator + "msg");
+		File dirTargetMsg = new File(dirIf + File.separator + "msg");
+		if(dirTargetMsg.exists() == false) {
+			Files.createDirectories(dirTargetMsg.toPath());
+		}
+		for(File each : FileUtil.listAllFiles(dirMsg)) {
+			Path inputPath = FileSystems.getDefault().getPath(dirMsg + File.separator + each.getName());
+			Path outputPath = FileSystems.getDefault().getPath(dirTargetMsg + File.separator + each.getName());			        				
+			Files.copy(inputPath, outputPath, StandardCopyOption.REPLACE_EXISTING);
+		}
+		File dirSrv = new File(project.getLocation().toOSString() + File.separator + "srv");
+		File dirTargetSrv = new File(dirIf + File.separator + "srv");
+		if(dirTargetSrv.exists() == false) {
+			Files.createDirectories(dirTargetSrv.toPath());
+		}
+		for(File each : FileUtil.listAllFiles(dirSrv)) {
+			Path inputPath = FileSystems.getDefault().getPath(dirSrv + File.separator + each.getName());
+			Path outputPath = FileSystems.getDefault().getPath(dirTargetSrv + File.separator + each.getName());			        				
+			Files.copy(inputPath, outputPath, StandardCopyOption.REPLACE_EXISTING);
+		}
+		File dirAction = new File(project.getLocation().toOSString() + File.separator + "action");
+		File dirTargetAction = new File(dirIf + File.separator + "action");
+		if(dirTargetAction.exists() == false) {
+			Files.createDirectories(dirTargetAction.toPath());
+		}
+		for(File each : FileUtil.listAllFiles(dirAction)) {
+			Path inputPath = FileSystems.getDefault().getPath(dirAction + File.separator + each.getName());
+			Path outputPath = FileSystems.getDefault().getPath(dirTargetAction + File.separator + each.getName());			        				
+			Files.copy(inputPath, outputPath, StandardCopyOption.REPLACE_EXISTING);
+		}
+		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 	}
 
 	private void writeFile(GeneratedResult generatedResult, IProject outputProject,

@@ -1,10 +1,13 @@
 package jp.go.aist.rtm.rtcbuilder.ros;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.List;
 
 import org.openrtp.namespaces.ros.version01.RosProfile;
@@ -18,6 +21,8 @@ import jp.go.aist.rtm.rtcbuilder.generator.param.ParamUtil;
 import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
 import jp.go.aist.rtm.rtcbuilder.manager.GenerateManager;
 import jp.go.aist.rtm.rtcbuilder.ros.param.ROSParam;
+import jp.go.aist.rtm.rtcbuilder.ros.ui.editors.IMessageConstantsROS;
+import jp.go.aist.rtm.toolscommon.profiles.util.XmlHandler;
 import jp.go.aist.rtm.toolscommon.profiles.util.XmlHandlerROS;
 
 public class ProfileHandlerROS {
@@ -39,6 +44,21 @@ public class ProfileHandlerROS {
 		return result;
 	}
 	
+	public GeneratorParam restorefromROSProfile(RosProfile profile) throws Exception {
+		GeneratorParam generatorParam = null;
+		try {
+			generatorParam = new GeneratorParam();
+			ParamUtilROS putil = new ParamUtilROS();
+			ROSParam rosParam = putil.convertFromROSModule(profile, generatorParam, managerList, isDirect);
+			generatorParam.setROSParam(rosParam);
+		} catch (FileNotFoundException e) {
+			throw new Exception(IMessageConstantsROS.PROFIE_LOAD_ERROR, e);
+		} catch (IOException e) {
+			throw new Exception(IMessageConstantsROS.PROFIE_LOAD_ERROR, e);
+		}
+		return generatorParam;
+	}
+
 	public String convert2ROSXML(GeneratorParam generatorParam) throws Exception {
 	    String xmlFile = "";
 	    ParamUtilROS putil = new ParamUtilROS();
@@ -102,5 +122,22 @@ public class ProfileHandlerROS {
 			throw new Exception(IRTCBMessageConstants.ERROR_PROFILE_RESTORE, e);
 		}
 		return generatorParam;
+	}
+	
+	public void storeToXML(String filePath, GeneratorParam generatorParam) throws Exception {
+	    ParamUtilROS putil = new ParamUtilROS();
+		RosProfile profile = putil.convertToROSModule(generatorParam);
+		XmlHandlerROS handler = new XmlHandlerROS();
+
+		String xmlString = handler.convertToXmlROS(profile);
+		try( BufferedWriter outputFile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath), "UTF-8")) ) {
+			String lineSeparator = System.getProperty( "line.separator" );
+			if( lineSeparator==null || lineSeparator.equals("") ) lineSeparator = "\n";
+			String splitStr[] = xmlString.split(lineSeparator);
+			for(int intIdx=0;intIdx<splitStr.length;intIdx++) {
+				outputFile.write(splitStr[intIdx]);
+				outputFile.newLine();
+			}
+		}
 	}
 }

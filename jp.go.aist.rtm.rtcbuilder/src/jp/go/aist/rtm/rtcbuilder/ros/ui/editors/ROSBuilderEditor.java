@@ -59,7 +59,6 @@ import jp.go.aist.rtm.rtcbuilder.ros.ui.preference.ROSPreferenceManager;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.AbstractEditorFormPage;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.IMessageConstants;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.RtcBuilderEditor;
-import jp.go.aist.rtm.rtcbuilder.ui.preference.DocumentPreferenceManager;
 
 /**
  * RtcBuilderエディタ
@@ -172,21 +171,6 @@ public class ROSBuilderEditor extends RtcBuilderEditor implements IActionFilter 
 		param.setActionImplemented(IRtcBuilderConstantsROS.ACTIVITY_DEACTIVATE, true);
 	}
 
-//	public void loadNewData(RtcParam param) {
-//		this.generatorParam.setRtcParam(param);
-//
-//		title = "RtcBuilder";
-//		if( buildview==null ) buildview = ComponentFactory.eINSTANCE.createBuildView();
-//		updateEMFModuleName(this.getROSParam().getNodeName());
-//		updateEMFDataPorts(this.getROSParam().getInports(), this.getRtcParam().getOutports(),
-//				this.getRtcParam().getEventports(), this.getRtcParam().getServicePorts());
-//		//
-//		if( basicFormPage != null )	 basicFormPage.load();
-//		allPagesReLoad();
-//
-//		updateDirty();
-//	}
-
 	private void createGeneratorParam(){
 		generatorParam = new GeneratorParam();
 		ROSParam rosParam = new ROSParam(generatorParam);
@@ -217,7 +201,7 @@ public class ROSBuilderEditor extends RtcBuilderEditor implements IActionFilter 
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IWorkspaceRoot root = workspace.getRoot();
 		try {
-			IProject project = root.getProject(this.getRtcParam().getOutputProject());
+			IProject project = root.getProject(this.getROSParam().getOutputProject());
 			IFolder idlDir  = project.getFolder("idl");
 			if (idlDir.exists()) {
 				idlDir.delete(true, null);
