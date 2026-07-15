@@ -100,7 +100,7 @@ public:
    *
    * @pre ${rosParam.getDocActionPreCondition(0)}
    * @post ${rosParam.getDocActionPostCondition(0)}
-   * 
+   *
    */
 #end
   rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
@@ -112,7 +112,7 @@ public:
    *
    * @pre ${rosParam.getDocActionPreCondition(1)}
    * @post ${rosParam.getDocActionPostCondition(1)}
-   * 
+   *
    */
 #end
   rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
@@ -124,7 +124,7 @@ public:
    *
    * @pre ${rosParam.getDocActionPreCondition(2)}
    * @post ${rosParam.getDocActionPostCondition(2)}
-   * 
+   *
    */
 #end
   rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
@@ -136,7 +136,7 @@ public:
    *
    * @pre ${rosParam.getDocActionPreCondition(3)}
    * @post ${rosParam.getDocActionPostCondition(3)}
-   * 
+   *
    */
 #end
  #if(${rosParam.IsNotImplemented(3)}) // Optional: on_cleanup. Uncomment this declaration and the matching definition to use it.
@@ -150,7 +150,7 @@ public:
    *
    * @pre ${rosParam.getDocActionPreCondition(4)}
    * @post ${rosParam.getDocActionPostCondition(4)}
-   * 
+   *
    */
 #end
  #if(${rosParam.IsNotImplemented(4)}) // Optional: on_shutdown. Uncomment this declaration and the matching definition to use it.
@@ -164,7 +164,7 @@ public:
    *
    * @pre ${rosParam.getDocActionPreCondition(5)}
    * @post ${rosParam.getDocActionPostCondition(5)}
-   * 
+   *
    */
 #end
  #if(${rosParam.IsNotImplemented(5)}) // Optional: on_error. Uncomment this declaration and the matching definition to use it.
@@ -231,11 +231,13 @@ private:
   void call_${service.name}_service();
 #end
 #foreach($service in ${rosParam.serviceServers})
+#if( ${service.isDocExist()} )
   /*!
    * ${service.docDescription}
    * - Argument: ${service.docArgument}
    * - Return: ${service.docReturn}
    */
+#end
   rclcpp::Service<${tmpltHelper.slash2Cc(${tmpltHelper.convServiceType(${service.type}, ${rosParam})})}>::SharedPtr ${service.name}_srv_;
   void handle_${service.name}(const std::shared_ptr<${tmpltHelper.slash2Cc(${tmpltHelper.convServiceType(${service.type}, ${rosParam})})}::Request> request, std::shared_ptr<${tmpltHelper.slash2Cc(${tmpltHelper.convServiceType(${service.type}, ${rosParam})})}::Response> response);
 #end

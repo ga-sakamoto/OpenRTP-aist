@@ -224,7 +224,7 @@ public class BasicTest extends TestBase {
 		checkCode(result, resourceDir, "eval2_controller_cpp_pkg/src/main.cpp");
 		checkCode(result, resourceDir, "eval2_controller_cpp_pkg/src/eval2_controller_node.cpp");
 		//eval2_controller_cpp_pkg_interfaces
-//		checkCode(result, resourceDir, "eval2_controller_cpp_pkg_interfaces/README.md");
+		checkCode(result, resourceDir, "eval2_controller_cpp_pkg_interfaces/README.md");
 		checkCode(result, resourceDir, "eval2_controller_cpp_pkg_interfaces/package.xml");
 		checkCode(result, resourceDir, "eval2_controller_cpp_pkg_interfaces/CMakeLists.txt");
 		checkCode(result, resourceDir, "eval2_controller_cpp_pkg_interfaces/LICENSE");
@@ -316,7 +316,7 @@ public class BasicTest extends TestBase {
 		checkCode(result, resourceDir, "eval2_controller_cpp_pkg/src/main.cpp");
 		checkCode(result, resourceDir, "eval2_controller_cpp_pkg/src/eval2_controller_node.cpp");
 		//eval2_controller_cpp_pkg_interfaces
-//		checkCode(result, resourceDir, "eval2_controller_cpp_pkg_interfaces/README.md");
+		checkCode(result, resourceDir, "eval2_controller_cpp_pkg_interfaces/README.md");
 		checkCode(result, resourceDir, "eval2_controller_cpp_pkg_interfaces/package.xml");
 		checkCode(result, resourceDir, "eval2_controller_cpp_pkg_interfaces/CMakeLists.txt");
 		checkCode(result, resourceDir, "eval2_controller_cpp_pkg_interfaces/LICENSE");

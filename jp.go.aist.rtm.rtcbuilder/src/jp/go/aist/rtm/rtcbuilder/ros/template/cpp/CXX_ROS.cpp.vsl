@@ -49,7 +49,7 @@ void ${rosParam.className}::declare_parameters()
 #end
   rcl_interfaces::msg::ParameterDescriptor desc_${param.name};
   desc_${param.name}.description = "${param.docDescription}";
-#if( $param.readOnly )
+#if( ${param.readOnly} )
   desc_${param.name}.read_only = true;
 #end
   this->declare_parameter("${param.name}", ${tmpltHelper.quoteDefaultWithType(${param})}, desc_${param.name});

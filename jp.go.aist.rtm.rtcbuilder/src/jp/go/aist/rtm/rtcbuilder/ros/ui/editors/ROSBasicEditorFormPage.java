@@ -431,16 +431,20 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 				//
 				GuiRtcBuilder rtcBuilder = new GuiRtcBuilder();
 				rtcBuilder.clearGenerateManager();
-				rtcBuilder.addGenerateManager(new CommonGenerateManager());
-				rtcBuilder.addGenerateManager(new CXXGenerateManager());
 				
 				List<GenerateManager> managerList = RtcBuilderPlugin
 						.getDefault().getLoader().getManagerList(IRtcBuilderConstants.MIDDLEWARE_ROS);
-				if (managerList != null) {
+				if (managerList == null) {
+					rtcBuilder.addGenerateManager(new CommonGenerateManager());
+					rtcBuilder.addGenerateManager(new CXXGenerateManager());
+				} else {
 					for (GenerateManager manager : managerList) {
-						rtcBuilder.addGenerateManager(manager);
+						if(rosParam.getLangList().contains(manager.getManagerKey())) {
+							rtcBuilder.addGenerateManager(manager);
+						}
 					}
 				}
+				
 				GeneratorParam generatorParam = editor.getGeneratorParam();
 				String genTime = DATE_FORMAT.format(new GregorianCalendar().getTime());
 				if (rtcBuilder.doGenerateWriteROS(generatorParam, true, genTime)) {

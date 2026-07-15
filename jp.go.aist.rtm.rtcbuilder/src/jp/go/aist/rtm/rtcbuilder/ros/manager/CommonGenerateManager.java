@@ -26,7 +26,7 @@ public class CommonGenerateManager extends GenerateManager {
 
 	static final String TEMPLATE_PATH = "jp/go/aist/rtm/rtcbuilder/ros/template";
 
-	static final String MSG_ERROR_GENERATE_FILE = "Common generation error. [{0}]";
+	protected static final String MSG_ERROR_GENERATE_FILE = "Common generation error. [{0}]";
 
 	@Override
 	public String getManagerKey() {
@@ -85,7 +85,7 @@ public class CommonGenerateManager extends GenerateManager {
 	public GeneratedResult generatePackageXML(Map<String, Object> contextMap) {
 		ROSParam rosParam = (ROSParam) contextMap.get("rosParam");
 		String outfile = rosParam.getPackageName() + "/package.xml";
-		String infile = "common/Packcage.xml.vsl";
+		String infile = "common/Package.xml.vsl";
 		return generate(infile, outfile, contextMap);
 	}
 

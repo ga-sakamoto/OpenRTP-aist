@@ -28,7 +28,8 @@ public:
    *
    * @pre preCond1
    * @post postCond1
-   *   */
+   *
+   */
   rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
   on_configure(const rclcpp_lifecycle::State & state) override;
   /***
@@ -36,7 +37,8 @@ public:
    *
    * @pre preCond2
    * @post postCond2
-   *   */
+   *
+   */
   rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
   on_activate(const rclcpp_lifecycle::State & state) override;
   /***
@@ -44,7 +46,8 @@ public:
    *
    * @pre preCond3
    * @post postCond3
-   *   */
+   *
+   */
   rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
   on_deactivate(const rclcpp_lifecycle::State & state) override;
   /***
@@ -52,7 +55,8 @@ public:
    *
    * @pre preCond4
    * @post postCond4
-   *   */
+   *
+   */
   rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
   on_cleanup(const rclcpp_lifecycle::State & state) override;
   /***
@@ -60,7 +64,8 @@ public:
    *
    * @pre preCond5
    * @post postCond5
-   *   */
+   *
+   */
   rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
   on_shutdown(const rclcpp_lifecycle::State & state) override;
   /***
@@ -68,7 +73,8 @@ public:
    *
    * @pre preCond6
    * @post postCond6
-   *   */
+   *
+   */
   rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface::CallbackReturn
   on_error(const rclcpp_lifecycle::State & state) override;
 private:
