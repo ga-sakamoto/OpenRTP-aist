@@ -280,11 +280,11 @@ public class LifecycleEditorFormPage extends AbstractEditorFormPage {
 		TableViewerColumn nameColumn = createColumn(timerListViewer, "Timer Name", 100);
 		nameColumn.setEditingSupport(new TimerCellModifier(timerListViewer, 0));
 		TableViewerColumn rateColumn = createColumn(timerListViewer, "Rate", 100);
-		rateColumn.setEditingSupport(new TimerCellModifier(timerListViewer, 0));
+		rateColumn.setEditingSupport(new TimerCellModifier(timerListViewer, 1));
 		TableViewerColumn versionColumn = createColumn(timerListViewer, "Callback", 100);
-		versionColumn.setEditingSupport(new TimerCellModifier(timerListViewer, 1));
+		versionColumn.setEditingSupport(new TimerCellModifier(timerListViewer, 2));
 		TableViewerColumn otherColumn = createColumn(timerListViewer, "Description", 150);
-		otherColumn.setEditingSupport(new TimerCellModifier(timerListViewer, 2));
+		otherColumn.setEditingSupport(new TimerCellModifier(timerListViewer, 3));
 
 		timerListViewer.setLabelProvider(new TimerLabelProvider());
 		timerListViewer.setInput(timerList);

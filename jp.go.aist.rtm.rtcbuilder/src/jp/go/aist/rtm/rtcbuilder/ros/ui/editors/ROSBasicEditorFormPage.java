@@ -126,7 +126,6 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 
 	private Composite generateSection;
 	private Composite codeRestoreSection;
-	private Composite outputProjectSection;
 	private Composite isoProfileSection;
 	private Composite profileSection;
 	
@@ -224,6 +223,8 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 	 */
 	public String validateParam() {
 		ROSParam rosParam = ((ROSBuilderEditor)editor).getROSParam();
+		rosParam.convertInfo();
+		load();
 		return rosParam.validateBasicInfo();
 	}
 
@@ -395,11 +396,19 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 					return;
 				}
 				ROSParam rosParam = ((ROSBuilderEditor)editor).getROSParam();
-				if(rosParam.validateNames()) {
+				List<String> warnings = rosParam.validateWarnings();
+				if(0<warnings.size()) {
+					StringBuilder builder = new StringBuilder();
+					for(String each : warnings) {
+						if(0 < builder.length()) {
+							builder.append(System.getProperty("line.separator"));
+						}
+						builder.append(each);
+					}
+					builder.append(Messages.getString("IMC.VALIDATE_CAUTION_NAME_DUPLICATE"));
         			if (!MessageDialog.openQuestion(getSite().getShell(),
         											"Caution",
-        											Messages.getString("IMC.VALIDATE_CAUTION_NAME_DUPLICATE1") + System.getProperty("line.separator")
-        											+ Messages.getString("IMC.VALIDATE_CAUTION_NAME_DUPLICATE2")) )
+        											builder.toString()) )
         				return;
 				}
 				

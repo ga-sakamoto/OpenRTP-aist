@@ -195,8 +195,11 @@ public class TopicParam extends AbstractRecordedParam implements Serializable {
 		if(this.name == null || this.name.length() == 0) {
 			return Messages.getString("IMC.VALIDATE_TOPIC_NAME1");
 		}
-		if( !StringUtil.checkDigitSmallAlphabetUｓSlash(this.name) ) {
+		if( !StringUtil.checkHyphenSpaceDotJpn(this.name) ) {
 			return Messages.getString("IMC.VALIDATE_TOPIC_NAME2");
+		}
+		if( this.name.equals("/") ) {
+			return Messages.getString("IMC.VALIDATE_TOPIC_NAME5");
 		}
 		if( this.name.endsWith("/") ) {
 			return Messages.getString("IMC.VALIDATE_TOPIC_NAME3");
@@ -204,9 +207,22 @@ public class TopicParam extends AbstractRecordedParam implements Serializable {
 		if( this.name.contains("//") || this.name.contains("__") ) {
 			return Messages.getString("IMC.VALIDATE_TOPIC_NAME4");
 		}
+		if( !StringUtil.checkStartedWithDigitFast(this.name) ) {
+			return Messages.getString("IMC.VALIDATE_TOPIC_NAME6");
+		}
+		if( !StringUtil.checkInvalidTilde(this.name) ) {
+			return Messages.getString("IMC.VALIDATE_TOPIC_NAME7");
+		}
 		
 		if(this.messageType == null || this.messageType.length() == 0) {
-			return Messages.getString("IMC.VALIDATE_TOPIC_TYPE");
+			return Messages.getString("IMC.VALIDATE_TOPIC_TYPE1");
+		}
+		if( !StringUtil.checkInvalidFormat(this.messageType) ) {
+			return Messages.getString("IMC.VALIDATE_TOPIC_TYPE2");
+		}
+		if(this.messageType.endsWith("srv") || this.messageType.endsWith("action")
+				 || this.messageType.contains(" ") || this.messageType.contains("･")) {
+			return Messages.getString("IMC.VALIDATE_TOPIC_TYPE3");
 		}
 		
 		if(this.historyType !=null ) {
@@ -215,6 +231,16 @@ public class TopicParam extends AbstractRecordedParam implements Serializable {
 					return Messages.getString("IMC.VALIDATE_TOPIC_DEPTH");
 				}
 			}
+		}
+
+		if(this.varCallbackName == null || this.varCallbackName.length() == 0) {
+			return Messages.getString("IMC.VALIDATE_TOPIC_CALLBACK1");
+		}
+		if( !StringUtil.checkValidIdentifier(this.varCallbackName) ) {
+			return Messages.getString("IMC.VALIDATE_TOPIC_CALLBACK2");
+		}
+		if( !StringUtil.checkValidIdentifierCode(this.varCallbackName) ) {
+			return Messages.getString("IMC.VALIDATE_TOPIC_CALLBACK3");
 		}
 
 		return null;

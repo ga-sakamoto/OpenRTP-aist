@@ -133,8 +133,11 @@ public class ServiceParam extends AbstractRecordedParam implements Serializable 
 		if(this.name == null || this.name.length() == 0) {
 			return Messages.getString("IMC.VALIDATE_SERVICE_NAME1");
 		}
-		if( !StringUtil.checkDigitSmallAlphabetUｓSlash(this.name) ) {
+		if( !StringUtil.checkHyphenSpaceDotJpn(this.name) ) {
 			return Messages.getString("IMC.VALIDATE_SERVICE_NAME2");
+		}
+		if( this.name.equals("/") ) {
+			return Messages.getString("IMC.VALIDATE_SERVICE_NAME5");
 		}
 		if( this.name.endsWith("/") ) {
 			return Messages.getString("IMC.VALIDATE_SERVICE_NAME3");
@@ -142,9 +145,29 @@ public class ServiceParam extends AbstractRecordedParam implements Serializable 
 		if( this.name.contains("//") || this.name.contains("__") ) {
 			return Messages.getString("IMC.VALIDATE_SERVICE_NAME4");
 		}
+		if( !StringUtil.checkStartedWithDigitFast(this.name) ) {
+			return Messages.getString("IMC.VALIDATE_SERVICE_NAME6");
+		}
 		
 		if( this.type==null || this.type.length()==0 ) {
-			return Messages.getString("IMC.VALIDATE_SERVICE_TYPE");
+			return Messages.getString("IMC.VALIDATE_SERVICE_TYPE1");
+		}
+		if( !StringUtil.checkInvalidFormat(this.type) ) {
+			return Messages.getString("IMC.VALIDATE_SERVICE_TYPE2");
+		}
+		if(this.type.endsWith("msg") || this.type.endsWith("action")
+				 || this.type.contains(" ") || this.type.contains("･")) {
+			return Messages.getString("IMC.VALIDATE_SERVICE_TYPE3");
+		}
+
+		if(this.varCallbackName == null || this.varCallbackName.length() == 0) {
+			return Messages.getString("IMC.VALIDATE_SERVICE_CALLBACK1");
+		}
+		if( !StringUtil.checkValidIdentifier(this.varCallbackName) ) {
+			return Messages.getString("IMC.VALIDATE_SERVICE_CALLBACK2");
+		}
+		if( !StringUtil.checkValidIdentifierCode(this.varCallbackName) ) {
+			return Messages.getString("IMC.VALIDATE_TOPIC_CALLBACK3");
 		}
 
 		return null;

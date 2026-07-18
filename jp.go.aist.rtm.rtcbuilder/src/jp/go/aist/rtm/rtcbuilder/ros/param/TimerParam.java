@@ -61,21 +61,24 @@ public class TimerParam extends AbstractRecordedParam implements Serializable {
 		if(this.name == null || this.name.length() == 0) {
 			return Messages.getString("IMC.VALIDATE_LICYCLE_TIMER_NAME1");
 		}
-		if( !StringUtil.checkDigitSmallAlphabetUS(this.name) ) {
-			return Messages.getString("IMC.VALIDATE_LICYCLE_TIMER_NAME2");
-		}
-		if( !StringUtil.checkSmallAlphabetFirst(this.name) ) {
-			return Messages.getString("IMC.VALIDATE_LICYCLE_TIMER_NAME3");
-		}
+//		if( !StringUtil.checkDigitSmallAlphabetUS(this.name) ) {
+//			return Messages.getString("IMC.VALIDATE_LICYCLE_TIMER_NAME2");
+//		}
+//		if( !StringUtil.checkSmallAlphabetFirst(this.name) ) {
+//			return Messages.getString("IMC.VALIDATE_LICYCLE_TIMER_NAME3");
+//		}
 		
 		if(this.callBack == null || this.callBack.length() == 0) {
 			return Messages.getString("IMC.VALIDATE_LICYCLE_CALLBACK1");
 		}
-		if( !StringUtil.checkDigitSmallAlphabetUS(this.callBack) ) {
-			return Messages.getString("IMC.VALIDATE_LICYCLE_CALLBACK2");
-		}
-		if( !StringUtil.checkSmallAlphabetFirst(this.callBack) ) {
-			return Messages.getString("IMC.VALIDATE_LICYCLE_CALLBACK3");
+//		if( !StringUtil.checkDigitSmallAlphabetUS(this.callBack) ) {
+//			return Messages.getString("IMC.VALIDATE_LICYCLE_CALLBACK2");
+//		}
+//		if( !StringUtil.checkSmallAlphabetFirst(this.callBack) ) {
+//			return Messages.getString("IMC.VALIDATE_LICYCLE_CALLBACK3");
+//		}
+		if( !StringUtil.checkValidIdentifier(this.callBack) ) {
+			return Messages.getString("IMC.VALIDATE_LICYCLE_CALLBACK4");
 		}
 		
 		if(this.rate < 0.0) {

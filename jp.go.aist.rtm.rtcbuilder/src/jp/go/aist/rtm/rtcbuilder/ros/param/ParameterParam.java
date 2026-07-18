@@ -172,13 +172,13 @@ public class ParameterParam extends AbstractRecordedParam implements Serializabl
 		if(this.name == null || this.name.length() == 0) {
 			return Messages.getString("IMC.VALIDATE_PARAMETER_NAME1");
 		}
-		if( !StringUtil.checkDigitSmallAlphabetUｓSlash(this.name) ) {
+		if( !StringUtil.checkHyphenSpaceSlashJpn(this.name) ) {
 			return Messages.getString("IMC.VALIDATE_PARAMETER_NAME2");
 		}
-		if( this.name.endsWith("/") ) {
+		if( this.name.contains("__") ) {
 			return Messages.getString("IMC.VALIDATE_PARAMETER_NAME3");
 		}
-		if( this.name.contains("//") || this.name.contains("__") ) {
+		if( !StringUtil.checkStartedWithDigitFast(this.name) ) {
 			return Messages.getString("IMC.VALIDATE_PARAMETER_NAME4");
 		}
 		
@@ -187,7 +187,26 @@ public class ParameterParam extends AbstractRecordedParam implements Serializabl
 		}
 		
 		if(this.defaultValue == null || this.defaultValue.length() == 0) {
-			return Messages.getString("IMC.VALIDATE_PARAMETER_DEFVALUE");
+			return Messages.getString("IMC.VALIDATE_PARAMETER_DEFVALUE1");
+		}
+		if(this.type.equals("double")) {
+			try {
+				Double.parseDouble(this.defaultValue);
+			} catch(Exception ex) {
+				return Messages.getString("IMC.VALIDATE_PARAMETER_DEFVALUE2");
+			}
+		} else if(this.type.equals("int")) {
+			try {
+				Integer.parseInt(this.defaultValue);
+			} catch(Exception ex) {
+				return Messages.getString("IMC.VALIDATE_PARAMETER_DEFVALUE2");
+			}
+		} else if(this.type.equals("bool")) {
+			try {
+				Boolean.parseBoolean(this.defaultValue);
+			} catch(Exception ex) {
+				return Messages.getString("IMC.VALIDATE_PARAMETER_DEFVALUE2");
+			}
 		}
 
 		return null;

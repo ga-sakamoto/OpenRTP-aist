@@ -1,6 +1,7 @@
 package jp.go.aist.rtm.rtcbuilder.ros.param;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -478,25 +479,44 @@ public class ROSParam extends ParamBase implements Serializable {
 		if ( this.packageName == null || this.packageName.length() == 0) {
 			return Messages.getString("IMC.VALIDATE_BASIC_PACKAGE_NAME1");
 		}
-		if( !StringUtil.checkDigitSmallAlphabetUS(this.packageName) ) {
+		if( !StringUtil.checkHyphenSpaceSlashDotJpn(this.packageName) ) {
 			return Messages.getString("IMC.VALIDATE_BASIC_PACKAGE_NAME2");
 		}
-		if( !StringUtil.checkSmallAlphabetFirst(this.packageName) ) {
+		if( !StringUtil.hasUppercase(this.packageName) ) {
+			return Messages.getString("IMC.VALIDATE_BASIC_PACKAGE_NAME6");
+		}
+		if( !StringUtil.checkMultiUnderBar(this.packageName) ) {
+			return Messages.getString("IMC.VALIDATE_BASIC_PACKAGE_NAME4");
+		}
+		if( !StringUtil.checkStartedWithDigitOrUnderscoreFast(this.packageName) ) {
 			return Messages.getString("IMC.VALIDATE_BASIC_PACKAGE_NAME3");
+		}
+		if(this.packageName.length() == 1) {
+			return Messages.getString("IMC.VALIDATE_BASIC_PACKAGE_NAME5");
 		}
 		
 		if ( this.nodeName == null || this.nodeName.length() == 0) {
 			return Messages.getString("IMC.VALIDATE_BASIC_NODE_NAME1");
 		}
-		if( !StringUtil.checkDigitSmallAlphabetUS(this.nodeName) ) {
+		if( !StringUtil.checkHyphenSpaceSlashDotJpn(this.nodeName) ) {
 			return Messages.getString("IMC.VALIDATE_BASIC_NODE_NAME2");
 		}
-		if( !StringUtil.checkSmallAlphabetFirst(this.nodeName) ) {
+		if( !StringUtil.checkStartedWithDigitFast(this.nodeName) ) {
 			return Messages.getString("IMC.VALIDATE_BASIC_NODE_NAME3");
 		}
+		if( !StringUtil.checkMultiUnderBar(this.nodeName) ) {
+			return Messages.getString("IMC.VALIDATE_BASIC_PACKAGE_NAME4");
+		}
 
+		if( !StringUtil.checkValidIdentifier(this.className) ) {
+			return Messages.getString("IMC.VALIDATE_BASIC_CLASS_NAME");
+		}
+		
 		if ( this.version == null || this.version.length() == 0) {
 			return Messages.getString("IMC.VALIDATE_BASIC_VERSION1");
+		}
+		if( !StringUtil.checkInvalidRosVersion(this.version) ) {
+			return Messages.getString("IMC.VALIDATE_BASIC_VERSION2");
 		}
 
 		if ( this.maintainer == null || this.maintainer.length() == 0) {
@@ -517,6 +537,15 @@ public class ROSParam extends ParamBase implements Serializable {
 		
 		if(this.langList == null || this.langList.size() == 0) {
 			return Messages.getString("IMC.VALIDATE_BASIC_LANGUAGE");
+		}
+		
+		for(PackageParam each : this.target_env.getLibraries()) {
+			if( !StringUtil.checkHyphenSpaceSlashDotJpn(each.getName()) ) {
+				return Messages.getString("IMC.VALIDATE_BASIC_DEPENDENCY1");
+			}
+			if( !StringUtil.checkStartedWithDigitFast(each.getName()) ) {
+				return Messages.getString("IMC.VALIDATE_BASIC_DEPENDENCY2");
+			}
 		}
 
 		return null;
@@ -667,56 +696,100 @@ public class ROSParam extends ParamBase implements Serializable {
 		return null;
 	}
 	
-	public boolean validateNames() {
-		Set<String> checkSet = new HashSet<String>();
+	public List<String> validateWarnings() {
+		List<String> result = new ArrayList<String>();
 		
+		if( !StringUtil.hasUppercase(this.nodeName) ) {
+			result.add(Messages.getString("IMC.CAUTION_BASIC_NODE_NAME"));
+		}
+		
+		if( !StringUtil.checkStartedWithUnderscoreFast(this.className) ) {
+			result.add(Messages.getString("IMC.CAUTION_BASIC_CLASS_NAME"));
+		}
+
+		Set<String> checkSet = new HashSet<String>();
+		boolean isDuplicated = false;
+		boolean isTopicCapital = false;
 		for(TopicParam each : this.topicSubscribes) {
 			if( checkSet.contains(each.getName()) ) {
-				return true;
+				isDuplicated = true;
+			}
+			if(StringUtil.hasUppercase(each.getName())) {
+				isTopicCapital = true;
 			}
 			checkSet.add(each.getName());
 		}
 		for(TopicParam each : this.topicPublishes) {
 			if( checkSet.contains(each.getName()) ) {
-				return true;
+				isDuplicated = true;
+			}
+			if(StringUtil.hasUppercase(each.getName())) {
+				isTopicCapital = true;
 			}
 			checkSet.add(each.getName());
 		}
-		
+		if(isTopicCapital) {
+			result.add(Messages.getString("IMC.CAUTION_TOPIC_NAME"));
+		}
+		//		
+		boolean isServiceCapital = false;
 		for(ServiceParam each : this.serviceServers) {
 			if( checkSet.contains(each.getName()) ) {
-				return true;
+				isDuplicated = true;
+			}
+			if(StringUtil.hasUppercase(each.getName())) {
+				isServiceCapital = true;
 			}
 			checkSet.add(each.getName());
 		}
 		for(ServiceParam each : this.serviceClients) {
 			if( checkSet.contains(each.getName()) ) {
-				return true;
+				isDuplicated = true;
+			}
+			if(StringUtil.hasUppercase(each.getName())) {
+				isServiceCapital = true;
 			}
 			checkSet.add(each.getName());
 		}
-		
+		if(isServiceCapital) {
+			result.add(Messages.getString("IMC.CAUTION_SERVICE_NAME"));
+		}
+		//		
+		boolean isActionCapital = false;
 		for(ActionParam each : this.actionServers) {
 			if( checkSet.contains(each.getName()) ) {
-				return true;
+				isDuplicated = true;
+			}
+			if(StringUtil.hasUppercase(each.getName())) {
+				isActionCapital = true;
 			}
 			checkSet.add(each.getName());
 		}
 		for(ActionParam each : this.actionClients) {
 			if( checkSet.contains(each.getName()) ) {
-				return true;
+				isDuplicated = true;
+			}
+			if(StringUtil.hasUppercase(each.getName())) {
+				isActionCapital = true;
 			}
 			checkSet.add(each.getName());
+		}
+		if(isActionCapital) {
+			result.add(Messages.getString("IMC.CAUTION_ACTION_NAME"));
+		}
+		
+		if(isDuplicated) {
+			result.add(Messages.getString("IMC.VALIDATE_CAUTION_NAME_DUPLICATE1"));
 		}
 
 		for(ParameterParam each : this.parameters) {
-			if( checkSet.contains(each.getName()) ) {
-				return true;
+			if(StringUtil.hasUppercase(each.getName())) {
+				result.add(Messages.getString("IMC.CAUTION_PARAMETER_NAME"));
+				break;
 			}
-			checkSet.add(each.getName());
 		}
 
-		return false;
+		return result;
 	}
 	/////
 	public void convertInfo() {

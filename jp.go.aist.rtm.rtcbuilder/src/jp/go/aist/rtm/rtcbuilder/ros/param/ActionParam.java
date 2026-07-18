@@ -141,8 +141,11 @@ public class ActionParam extends AbstractRecordedParam implements Serializable {
 		if(this.name == null || this.name.length() == 0) {
 			return Messages.getString("IMC.VALIDATE_ACTION_NAME1");
 		}
-		if( !StringUtil.checkDigitSmallAlphabetUｓSlash(this.name) ) {
+		if( !StringUtil.checkHyphenSpaceDotJpn(this.name) ) {
 			return Messages.getString("IMC.VALIDATE_ACTION_NAME2");
+		}
+		if( this.name.equals("/") ) {
+			return Messages.getString("IMC.VALIDATE_ACTION_NAME5");
 		}
 		if( this.name.endsWith("/") ) {
 			return Messages.getString("IMC.VALIDATE_ACTION_NAME3");
@@ -150,13 +153,29 @@ public class ActionParam extends AbstractRecordedParam implements Serializable {
 		if( this.name.contains("//") || this.name.contains("__") ) {
 			return Messages.getString("IMC.VALIDATE_ACTION_NAME4");
 		}
-		
+		if( !StringUtil.checkStartedWithDigitFast(this.name) ) {
+			return Messages.getString("IMC.VALIDATE_ACTION_NAME6");
+		}
+
 		if(this.type == null || this.type.length() == 0) {
 			return Messages.getString("IMC.VALIDATE_ACTION_TYPE");
 		}
+		if( !StringUtil.checkInvalidFormat(this.type) ) {
+			return Messages.getString("IMC.VALIDATE_ACTION_TYPE2");
+		}
+		if(this.type.endsWith("msg") || this.type.endsWith("action")
+				 || this.type.contains(" ") || this.type.contains("･")) {
+			return Messages.getString("IMC.VALIDATE_ACTION_TYPE3");
+		}
 		
 		if(this.callbackName == null || this.callbackName.length() == 0) {
-			return Messages.getString("IMC.VALIDATE_ACTION_CALLBACK");
+			return Messages.getString("IMC.VALIDATE_ACTION_CALLBACK1");
+		}
+		if( !StringUtil.checkValidIdentifier(this.callbackName) ) {
+			return Messages.getString("IMC.VALIDATE_ACTION_CALLBACK2");
+		}
+		if( !StringUtil.checkValidIdentifierCode(this.callbackName) ) {
+			return Messages.getString("IMC.VALIDATE_ACTION_CALLBACK3");
 		}
 
 		return null;
