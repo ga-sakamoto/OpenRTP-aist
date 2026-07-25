@@ -4,17 +4,8 @@ import java.util.List;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Middleware {
-    public String name;
-    public String type;
-    
-    @JsonProperty("has_language_selection")
-    public boolean hasLanguageSelection;
-    
-    public List<Version> versions;
-    
-    @JsonProperty("supported_os")
-    public List<String> supportedOs; // OpenRTMなどで使用
+public class MiddlewareDetail {
+public List<Version> versions;
     
     @JsonProperty("workspace_presets")
     public List<String> workspacePresets;

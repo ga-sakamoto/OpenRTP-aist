@@ -55,7 +55,6 @@ import jp.go.aist.rtm.rtcbuilder.container.param.ContainerParam;
 import jp.go.aist.rtm.rtcbuilder.container.param.LibraryParam;
 import jp.go.aist.rtm.rtcbuilder.container.param.RepositoryParam;
 import jp.go.aist.rtm.rtcbuilder.container.param.setting.ContainerConfig;
-import jp.go.aist.rtm.rtcbuilder.container.param.setting.Middleware;
 import jp.go.aist.rtm.rtcbuilder.container.param.setting.Version;
 import jp.go.aist.rtm.rtcbuilder.generator.param.RecordedList;
 import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
@@ -98,7 +97,7 @@ public class ContainerEditorFormPage extends AbstractEditorFormPage {
 
 	private ContainerParam selectedParam;
 	private ContainerConfig containerSettings;
-	private Middleware selectedMiddleware;
+//	private Middleware selectedMiddleware;
 	private Version selectedVersion;
 	
 	private Composite presetComposite;
@@ -121,29 +120,29 @@ public class ContainerEditorFormPage extends AbstractEditorFormPage {
 	 */
 	public ContainerEditorFormPage(RtcBuilderEditor editor) {
 		super(editor, "id", Messages.getString("IMessageConstants.CONTAINER_SECTION"));
-		
-		configText = ContainerPreferenceManager.getInstance().getSettings();
-		
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			containerSettings = mapper.readValue(configText, ContainerConfig.class);
-			selectedMiddleware = containerSettings.middlewares.get(0);
-			selectedVersion = selectedMiddleware.versions.get(0);
-		} catch (Exception e) {
-			containerSettings = new ContainerConfig();
-			selectedMiddleware = new Middleware();
-			selectedVersion = new Version();
-		}
-		
-		URL url = RtcBuilderPlugin.getDefault().getBundle().getEntry("/");
-		ImageDescriptor hintIcon;
-		try {
-			hintIcon = ImageDescriptor.createFromURL(new URL(url ,"icons/question.png"));
-			smallInfo = hintIcon.createImage();
-		} catch (MalformedURLException e) {
-		}
-		/////
-		paramList = editor.getRtcParam().getContainerSettings();
+//		
+//		configText = ContainerPreferenceManager.getInstance().getSettings();
+//		
+//		ObjectMapper mapper = new ObjectMapper();
+//		try {
+//			containerSettings = mapper.readValue(configText, ContainerConfig.class);
+//			selectedMiddleware = containerSettings.middlewares.get(0);
+//			selectedVersion = selectedMiddleware.versions.get(0);
+//		} catch (Exception e) {
+//			containerSettings = new ContainerConfig();
+//			selectedMiddleware = new Middleware();
+//			selectedVersion = new Version();
+//		}
+//		
+//		URL url = RtcBuilderPlugin.getDefault().getBundle().getEntry("/");
+//		ImageDescriptor hintIcon;
+//		try {
+//			hintIcon = ImageDescriptor.createFromURL(new URL(url ,"icons/question.png"));
+//			smallInfo = hintIcon.createImage();
+//		} catch (MalformedURLException e) {
+//		}
+//		/////
+//		paramList = editor.getRtcParam().getContainerSettings();
 	}
 
 	/**
@@ -214,60 +213,60 @@ public class ContainerEditorFormPage extends AbstractEditorFormPage {
 		configButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				FileDialog dialog = new FileDialog(getSite().getShell(),SWT.OPEN);
-		        dialog.setText(Messages.getString("IMC.CONTAINER_SETTING_BTN"));
-				String[] names = new String[] { Messages.getString("IMessageConstants.FILETYPE_JSON") };
-				String[] exts = new String[] { "*.json" };
-				dialog.setFilterNames(names);
-				dialog.setFilterExtensions(exts);
-				
-				String selectedFileName = dialog.open();
-				if(selectedFileName==null) return;
-				
-				ObjectMapper mapper = new ObjectMapper();
-				try {
-					byte[] bytes = Files.readAllBytes(Paths.get(selectedFileName));
-					String content = new String(bytes, StandardCharsets.UTF_8);
+//				FileDialog dialog = new FileDialog(getSite().getShell(),SWT.OPEN);
+//		        dialog.setText(Messages.getString("IMC.CONTAINER_SETTING_BTN"));
+//				String[] names = new String[] { Messages.getString("IMessageConstants.FILETYPE_JSON") };
+//				String[] exts = new String[] { "*.json" };
+//				dialog.setFilterNames(names);
+//				dialog.setFilterExtensions(exts);
+//				
+//				String selectedFileName = dialog.open();
+//				if(selectedFileName==null) return;
+//				
+//				ObjectMapper mapper = new ObjectMapper();
+//				try {
+//					byte[] bytes = Files.readAllBytes(Paths.get(selectedFileName));
+//					String content = new String(bytes, StandardCharsets.UTF_8);
+////					ContainerPreferenceManager.getInstance().setSettings(content);
+//					
+//					containerSettings = mapper.readValue(content, ContainerConfig.class);
+//					selectedMiddleware = containerSettings.middlewares.get(0);
+//					selectedVersion = selectedMiddleware.versions.get(0);
+//					
 //					ContainerPreferenceManager.getInstance().setSettings(content);
-					
-					containerSettings = mapper.readValue(content, ContainerConfig.class);
-					selectedMiddleware = containerSettings.middlewares.get(0);
-					selectedVersion = selectedMiddleware.versions.get(0);
-					
-					ContainerPreferenceManager.getInstance().setSettings(content);
-
-					cautionLabel.setVisible(false);
-				    GridData gd = (GridData) cautionLabel.getLayoutData();
-				    gd.exclude = true;
-				    cautionLabel.getParent().layout(true, true);
-				    updateEnable(true);
-				    
-					List<String> midList = new ArrayList<String>();
-					for(Middleware each : containerSettings.middlewares) {
-						midList.add(each.name);
-					}
-					middlewareCombo.setItems(midList.toArray(new String[0]));
-					middlewareCombo.select(0);
-					if(0 < paramList.size()) {
-						targetListViewer.setSelection(new StructuredSelection(targetListViewer.getElementAt(0)));
-					    presetComposite.layout();
-					}
-					
-					MessageDialog.openInformation(getSite().getShell(),
-							"Information",
-							Messages.getString("IMC.CONTAINER_INFO_SETTING"));
-				    
-				} catch (Exception ex) {
-				    GridData gd = (GridData) cautionLabel.getLayoutData();
-				    gd.exclude = false;
-				    cautionLabel.setVisible(true);
-				    cautionLabel.getParent().layout(true, true);
-				    updateEnable(false);
-				    
-					MessageDialog.openWarning(getSite().getShell(),
-							"Error",
-							Messages.getString("IMC.CONTAINER_CAUTION_SETTING"));
-				}
+//
+//					cautionLabel.setVisible(false);
+//				    GridData gd = (GridData) cautionLabel.getLayoutData();
+//				    gd.exclude = true;
+//				    cautionLabel.getParent().layout(true, true);
+//				    updateEnable(true);
+//				    
+//					List<String> midList = new ArrayList<String>();
+//					for(Middleware each : containerSettings.middlewares) {
+//						midList.add(each.name);
+//					}
+//					middlewareCombo.setItems(midList.toArray(new String[0]));
+//					middlewareCombo.select(0);
+//					if(0 < paramList.size()) {
+//						targetListViewer.setSelection(new StructuredSelection(targetListViewer.getElementAt(0)));
+//					    presetComposite.layout();
+//					}
+//					
+//					MessageDialog.openInformation(getSite().getShell(),
+//							"Information",
+//							Messages.getString("IMC.CONTAINER_INFO_SETTING"));
+//				    
+//				} catch (Exception ex) {
+//				    GridData gd = (GridData) cautionLabel.getLayoutData();
+//				    gd.exclude = false;
+//				    cautionLabel.setVisible(true);
+//				    cautionLabel.getParent().layout(true, true);
+//				    updateEnable(false);
+//				    
+//					MessageDialog.openWarning(getSite().getShell(),
+//							"Error",
+//							Messages.getString("IMC.CONTAINER_CAUTION_SETTING"));
+//				}
 		    }
 		});
 		//
@@ -466,50 +465,50 @@ public class ContainerEditorFormPage extends AbstractEditorFormPage {
 		
 		targetListViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
-				int selectionIndex = targetListViewer.getTable().getSelectionIndex();
-				if(selectionIndex < 0) return;
-				
-				selectedParam = paramList.get(selectionIndex);
-				Optional<Middleware> result = containerSettings.middlewares.stream()
-											    .filter(item -> item.name.equals(selectedParam.getMiddleware()))
-											    .findFirst();
-				if(result.isPresent() == false) {
-					return;
-				}
-				selectedMiddleware = result.get();
-				
-				Optional<Version> resultVer = selectedMiddleware.versions.stream()
-											    .filter(item -> item.id.equals(selectedParam.getMdlVersion()))
-											    .findFirst();
-				if(resultVer.isPresent() == false) {
-					return;
-				}
-				selectedVersion = resultVer.get();
-				
-				middlewareCombo.setText(selectedMiddleware.name);
-				middlewareComboSelected(toolkit, false);
-				midVersionCombo.setText(selectedVersion.id);
-				midVersionComboSelected();
-				
-				workspaceText.setText(selectedParam.getWorkspace());
-				languageCombo.setText(selectedParam.getLanguage());
-				configCombo.setText(selectedParam.getConfiguration());
-				/////
-				librariesList = selectedParam.getLibraries();
-				for(String each : selectedMiddleware.defaultLibs) {
-					boolean exists = librariesList.stream()
-										.anyMatch(item -> each.equals(item.getName()));
-					if(exists) continue;
-					LibraryParam elem = new LibraryParam();
-					elem.setName(each);
-					librariesList.add(elem);
-				}
-				librariesListViewer.setInput(librariesList);
-				/////
-				urlText.setText("");
-				branchText.setText("");
-				repositoriesList = selectedParam.getRepositories();
-				repositoryListViewer.setInput(repositoriesList);
+//				int selectionIndex = targetListViewer.getTable().getSelectionIndex();
+//				if(selectionIndex < 0) return;
+//				
+//				selectedParam = paramList.get(selectionIndex);
+//				Optional<Middleware> result = containerSettings.middlewares.stream()
+//											    .filter(item -> item.name.equals(selectedParam.getMiddleware()))
+//											    .findFirst();
+//				if(result.isPresent() == false) {
+//					return;
+//				}
+//				selectedMiddleware = result.get();
+//				
+//				Optional<Version> resultVer = selectedMiddleware.versions.stream()
+//											    .filter(item -> item.id.equals(selectedParam.getMdlVersion()))
+//											    .findFirst();
+//				if(resultVer.isPresent() == false) {
+//					return;
+//				}
+//				selectedVersion = resultVer.get();
+//				
+//				middlewareCombo.setText(selectedMiddleware.name);
+//				middlewareComboSelected(toolkit, false);
+//				midVersionCombo.setText(selectedVersion.id);
+//				midVersionComboSelected();
+//				
+//				workspaceText.setText(selectedParam.getWorkspace());
+//				languageCombo.setText(selectedParam.getLanguage());
+//				configCombo.setText(selectedParam.getConfiguration());
+//				/////
+//				librariesList = selectedParam.getLibraries();
+//				for(String each : selectedMiddleware.defaultLibs) {
+//					boolean exists = librariesList.stream()
+//										.anyMatch(item -> each.equals(item.getName()));
+//					if(exists) continue;
+//					LibraryParam elem = new LibraryParam();
+//					elem.setName(each);
+//					librariesList.add(elem);
+//				}
+//				librariesListViewer.setInput(librariesList);
+//				/////
+//				urlText.setText("");
+//				branchText.setText("");
+//				repositoriesList = selectedParam.getRepositories();
+//				repositoryListViewer.setInput(repositoriesList);
 			}
 		});
 		
@@ -528,18 +527,18 @@ public class ContainerEditorFormPage extends AbstractEditorFormPage {
 		addTargetButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Middleware newMid = containerSettings.middlewares.get(0);
-				Version newVersion = newMid.versions.get(0);
-				
-				ContainerParam elem = new ContainerParam();
-				elem.setMiddleware(newMid.name);
-				elem.setMdlVersion(newVersion.id);
-				elem.setOsVersion(newVersion.os);
-				paramList.add(elem);
-				updateEnable(true);
-				targetListViewer.refresh();
-				targetListViewer.setSelection(new StructuredSelection(targetListViewer.getElementAt(paramList.size() - 1)));
-				update();
+//				Middleware newMid = containerSettings.middlewares.get(0);
+//				Version newVersion = newMid.versions.get(0);
+//				
+//				ContainerParam elem = new ContainerParam();
+//				elem.setMiddleware(newMid.name);
+//				elem.setMdlVersion(newVersion.id);
+//				elem.setOsVersion(newVersion.os);
+//				paramList.add(elem);
+//				updateEnable(true);
+//				targetListViewer.refresh();
+//				targetListViewer.setSelection(new StructuredSelection(targetListViewer.getElementAt(paramList.size() - 1)));
+//				update();
 			}
 		});
 		
@@ -593,11 +592,11 @@ public class ContainerEditorFormPage extends AbstractEditorFormPage {
 		sctEnv.setClient(composite);
 
 		List<String> midList = new ArrayList<String>();
-		if(containerSettings.middlewares != null) {
-			for(Middleware each : containerSettings.middlewares) {
-				midList.add(each.name);
-			}
-		}
+//		if(containerSettings.middlewares != null) {
+//			for(Middleware each : containerSettings.middlewares) {
+//				midList.add(each.name);
+//			}
+//		}
 		middlewareCombo = createLabelAndCombo(toolkit, composite,
 				Messages.getString("IMC.CONTAINER_MIDDLEWARE_NAME"),
 				midList.toArray(new String[0]),
@@ -614,11 +613,11 @@ public class ContainerEditorFormPage extends AbstractEditorFormPage {
 		});
 		
 		List<String> versionList = new ArrayList<String>();
-		if(selectedMiddleware.versions != null) {
-			for(Version each : selectedMiddleware.versions) {
-				versionList.add(each.id);
-			}
-		}
+//		if(selectedMiddleware.versions != null) {
+//			for(Version each : selectedMiddleware.versions) {
+//				versionList.add(each.id);
+//			}
+//		}
 		
 		midVersionCombo = createLabelAndCombo(toolkit, composite,
 				Messages.getString("IMC.CONTAINER_MIDDLEWARE_Version"),
@@ -654,142 +653,142 @@ public class ContainerEditorFormPage extends AbstractEditorFormPage {
 	}
 	
 	private void middlewareComboSelected(FormToolkit toolkit, boolean updateLibs ) {
-		int selected = middlewareCombo.getSelectionIndex();
-		if(selected < 0) return;
-		
-		selectedMiddleware = containerSettings.middlewares.get(selected);
-		
-		midVersionCombo.removeAll();
-		List<String> versionList = new ArrayList<String>();
-		for(Version each : selectedMiddleware.versions) {
-			versionList.add(each.id);
-		}
-		midVersionCombo.setItems(versionList.toArray(new String[0]));
-		midVersionCombo.select(0);
-		midVersionComboSelected();
-		
-		if(selectedMiddleware.type.equals("free")) {
-			osVersionCombo.removeAll();
-			osVersionCombo.setItems(selectedMiddleware.supportedOs.toArray(new String[0]));
-			osVersionCombo.setEnabled(true);
-			osVersionCombo.setBackground(getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
-			osVersionCombo.select(0);
-		} else {
-			List<String> osList = new ArrayList<String>();
-			for(Version each : selectedMiddleware.versions) {
-				osList.add(each.os);
-			}
-			osVersionCombo.setItems(osList.toArray(new String[0]));
-			osVersionCombo.setEnabled(false);
-			osVersionCombo.setBackground(getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
-			osVersionCombo.select(0);
-			midVersionComboSelected();
-		}
-		
-		languageCombo.setEnabled(selectedMiddleware.hasLanguageSelection);
-		languageCombo.removeAll();
-		if(selectedMiddleware.hasLanguageSelection) {
-			languageCombo.setItems(LANGUAGE_ITEMS);
-		} else {
-			languageCombo.add("C++");
-		}
-		languageCombo.select(0);
-		
-		configCombo.setEnabled(selectedMiddleware.type.equals("link"));
-		configCombo.removeAll();
-		if(selectedMiddleware.type.equals("link")) {
-			configCombo.setItems(CONFIGURATION_ITEMS);
-		} else {
-			configCombo.add("Std");
-		}
-		configCombo.select(0);
-		/////
-		Map<String, List<String>> selectedPreset = selectedMiddleware.functionalPresets;
-		for(Button each : presetButtons) {
-			each.dispose();
-		}
-		for(Label each : presetLabels) {
-			each.dispose();
-		}
-		for (String key : selectedPreset.keySet()) {
-			List<String> elems = selectedPreset.get(key);
-			Button chkPreset = createRadioCheckButton(toolkit, presetComposite, key, SWT.CHECK);
-			if(selectedParam != null && selectedParam.getPreSets().contains(key)) {
-				chkPreset.setSelection(true);
-			}
-			presetButtons.add(chkPreset);
-			chkPreset.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					if(chkPreset.getSelection()) {
-						if(selectedParam != null) {
-							if(selectedParam.getPreSets().contains(key) == false) {
-								selectedParam.getPreSets().add(key);
-							}
-						}
-					} else {
-						if(selectedParam != null) {
-							selectedParam.getPreSets().remove(key);
-						}
-					}
-					for(String each : elems) {
-						boolean exists = librariesList.stream()
-								.anyMatch(item -> each.equals(item.getName()));
-						if(chkPreset.getSelection()) {
-							if(exists) continue;
-							LibraryParam elem = new LibraryParam();
-							elem.resetUpdated();
-							elem.setName(each);
-							librariesList.add(elem);
-							
-						} else {
-							if(exists==false) continue;
-							librariesList.removeIf(item -> each.equals(item.getName()));
-						}
-					}
-					librariesListViewer.refresh();
-					update();
-				}
-			});
-			
-			StringBuilder builder = new StringBuilder();
-			for(String each : elems) {
-				if(0 < builder.length()) {
-					builder.append(System.lineSeparator());
-				}
-				builder.append(each);
-			}
-
-			Label helpLabel = new Label(presetComposite, SWT.NONE);
-			helpLabel.setImage(smallInfo);
-			helpLabel.setToolTipText(builder.toString());
-			helpLabel.setCursor(getSite().getShell().getDisplay().getSystemCursor(SWT.CURSOR_HAND));
-			presetLabels.add(helpLabel);
-
-		}
-		presetComposite.layout();
-		
-		if(updateLibs) {
-			librariesList.clear();
-			for(String each : selectedMiddleware.defaultLibs) {
-				boolean exists = librariesList.stream()
-						.anyMatch(item -> each.equals(item.getName()));
-				if(exists) continue;
-				LibraryParam elem = new LibraryParam();
-				elem.setName(each);
-				librariesList.add(elem);
-			}
-			librariesListViewer.refresh();
-			/////
-			repositoriesList.clear();
-			repositoryListViewer.refresh();
-		}
+//		int selected = middlewareCombo.getSelectionIndex();
+//		if(selected < 0) return;
+//		
+//		selectedMiddleware = containerSettings.middlewares.get(selected);
+//		
+//		midVersionCombo.removeAll();
+//		List<String> versionList = new ArrayList<String>();
+//		for(Version each : selectedMiddleware.versions) {
+//			versionList.add(each.id);
+//		}
+//		midVersionCombo.setItems(versionList.toArray(new String[0]));
+//		midVersionCombo.select(0);
+//		midVersionComboSelected();
+//		
+//		if(selectedMiddleware.type.equals("free")) {
+//			osVersionCombo.removeAll();
+//			osVersionCombo.setItems(selectedMiddleware.supportedOs.toArray(new String[0]));
+//			osVersionCombo.setEnabled(true);
+//			osVersionCombo.setBackground(getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+//			osVersionCombo.select(0);
+//		} else {
+//			List<String> osList = new ArrayList<String>();
+//			for(Version each : selectedMiddleware.versions) {
+//				osList.add(each.os);
+//			}
+//			osVersionCombo.setItems(osList.toArray(new String[0]));
+//			osVersionCombo.setEnabled(false);
+//			osVersionCombo.setBackground(getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+//			osVersionCombo.select(0);
+//			midVersionComboSelected();
+//		}
+//		
+//		languageCombo.setEnabled(selectedMiddleware.hasLanguageSelection);
+//		languageCombo.removeAll();
+//		if(selectedMiddleware.hasLanguageSelection) {
+//			languageCombo.setItems(LANGUAGE_ITEMS);
+//		} else {
+//			languageCombo.add("C++");
+//		}
+//		languageCombo.select(0);
+//		
+//		configCombo.setEnabled(selectedMiddleware.type.equals("link"));
+//		configCombo.removeAll();
+//		if(selectedMiddleware.type.equals("link")) {
+//			configCombo.setItems(CONFIGURATION_ITEMS);
+//		} else {
+//			configCombo.add("Std");
+//		}
+//		configCombo.select(0);
+//		/////
+//		Map<String, List<String>> selectedPreset = selectedMiddleware.functionalPresets;
+//		for(Button each : presetButtons) {
+//			each.dispose();
+//		}
+//		for(Label each : presetLabels) {
+//			each.dispose();
+//		}
+//		for (String key : selectedPreset.keySet()) {
+//			List<String> elems = selectedPreset.get(key);
+//			Button chkPreset = createRadioCheckButton(toolkit, presetComposite, key, SWT.CHECK);
+//			if(selectedParam != null && selectedParam.getPreSets().contains(key)) {
+//				chkPreset.setSelection(true);
+//			}
+//			presetButtons.add(chkPreset);
+//			chkPreset.addSelectionListener(new SelectionAdapter() {
+//				@Override
+//				public void widgetSelected(SelectionEvent e) {
+//					if(chkPreset.getSelection()) {
+//						if(selectedParam != null) {
+//							if(selectedParam.getPreSets().contains(key) == false) {
+//								selectedParam.getPreSets().add(key);
+//							}
+//						}
+//					} else {
+//						if(selectedParam != null) {
+//							selectedParam.getPreSets().remove(key);
+//						}
+//					}
+//					for(String each : elems) {
+//						boolean exists = librariesList.stream()
+//								.anyMatch(item -> each.equals(item.getName()));
+//						if(chkPreset.getSelection()) {
+//							if(exists) continue;
+//							LibraryParam elem = new LibraryParam();
+//							elem.resetUpdated();
+//							elem.setName(each);
+//							librariesList.add(elem);
+//							
+//						} else {
+//							if(exists==false) continue;
+//							librariesList.removeIf(item -> each.equals(item.getName()));
+//						}
+//					}
+//					librariesListViewer.refresh();
+//					update();
+//				}
+//			});
+//			
+//			StringBuilder builder = new StringBuilder();
+//			for(String each : elems) {
+//				if(0 < builder.length()) {
+//					builder.append(System.lineSeparator());
+//				}
+//				builder.append(each);
+//			}
+//
+//			Label helpLabel = new Label(presetComposite, SWT.NONE);
+//			helpLabel.setImage(smallInfo);
+//			helpLabel.setToolTipText(builder.toString());
+//			helpLabel.setCursor(getSite().getShell().getDisplay().getSystemCursor(SWT.CURSOR_HAND));
+//			presetLabels.add(helpLabel);
+//
+//		}
+//		presetComposite.layout();
+//		
+//		if(updateLibs) {
+//			librariesList.clear();
+//			for(String each : selectedMiddleware.defaultLibs) {
+//				boolean exists = librariesList.stream()
+//						.anyMatch(item -> each.equals(item.getName()));
+//				if(exists) continue;
+//				LibraryParam elem = new LibraryParam();
+//				elem.setName(each);
+//				librariesList.add(elem);
+//			}
+//			librariesListViewer.refresh();
+//			/////
+//			repositoriesList.clear();
+//			repositoryListViewer.refresh();
+//		}
 	}
 	
 	private void midVersionComboSelected() {
-		int selected = midVersionCombo.getSelectionIndex();
-		selectedVersion = selectedMiddleware.versions.get(selected);
-		osVersionCombo.setText(selectedVersion.os);
+//		int selected = midVersionCombo.getSelectionIndex();
+//		selectedVersion = selectedMiddleware.versions.get(selected);
+//		osVersionCombo.setText(selectedVersion.os);
 	}
 
 	private void createLibrarySection(FormToolkit toolkit, ScrolledForm form) {

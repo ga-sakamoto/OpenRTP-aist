@@ -29,7 +29,7 @@ RUN apt-get update && apt-get install -y \
 
 #if( ${containerParam.pipList.size()} > 0 )
 ${sharp} 5. Install Python Dependencies
-RUN pip3 install --no-cache-dir #foreach($pipLib in ${containerParam.pipList})${pipLib}#end
+RUN pip3 install --break-system-packages --no-cache-dir #foreach($pipLib in ${containerParam.pipList})${pipLib}#end
 #end
 
 ${sharp} 6. Create Non-root User
@@ -49,11 +49,7 @@ RUN (userdel -r ubuntu || true) \
 USER ${dol}USERNAME
 
 RUN echo "source /opt/ros/${dol}{ROS_DISTRO}/setup.bash" >> /home/${dol}USERNAME/.bashrc && \
-#if( ${tmpltHelper.convMiddleware(${containerParam.middleware})} == 1 )
-    echo "if [ -f /workspace/${containerParam.workspace}/devel/setup.bash ]; then source /workspace/${containerParam.workspace}/devel/setup.bash; fi" >> /home/${dol}USERNAME/.bashrc
-#elseif( ${tmpltHelper.convMiddleware(${containerParam.middleware})} == 2 )
     echo "if [ -f /workspace/${containerParam.workspace}/install/setup.bash ]; then source /workspace/${containerParam.workspace}/install/setup.bash; fi" >> /home/${dol}USERNAME/.bashrc
-#end
 
 ${sharp} 7. Setup Workspace
 RUN sudo mkdir -p /workspace/${containerParam.workspace}/src \
@@ -66,23 +62,14 @@ RUN git clone -b ${repParam.branch} ${repParam.uRL}
 #end
 
 WORKDIR /workspace/${containerParam.workspace}
-#if( ${tmpltHelper.convMiddleware(${containerParam.middleware})} == 1 )
-RUN rosdep init || true && rosdep update && sudo apt-get update && rosdep install -r -y -i --from-paths src
-RUN catkin init && bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash && catkin build -j2" 
-#elseif( ${tmpltHelper.convMiddleware(${containerParam.middleware})} == 2 )
 RUN sudo apt-get update && rosdep update && rosdep install -r -y -i --from-paths src
 RUN bash -c "source /opt/ros/${ROS_DISTRO}/setup.bash && MAKEFLAGS='-j2' colcon build --symlink-install --executor sequential" 
-#end
 
 ${sharp} 9. Setup Entrypoint
 RUN echo '${sharp}!/bin/bash' > /workspace/entrypoint.sh && \
     echo 'set -e' >> /workspace/entrypoint.sh && \
     echo 'source /opt/ros/${ROS_DISTRO}/setup.bash' >> /workspace/entrypoint.sh && \
-#if( ${tmpltHelper.convMiddleware(${containerParam.middleware})} == 1 )
-    echo 'if [ -f /workspace/${containerParam.workspace}/devel/setup.bash ]; then source /workspace/${containerParam.workspace}/devel/setup.bash; fi' >> /workspace/entrypoint.sh && \
-#elseif( ${tmpltHelper.convMiddleware(${containerParam.middleware})} == 2 )
     echo 'if [ -f /workspace/${containerParam.workspace}/install/setup.bash ]; then source /workspace/${containerParam.workspace}/install/setup.bash; fi' >> /workspace/entrypoint.sh && \
-#end
     echo 'exec "${dol}@"' >> /workspace/entrypoint.sh && \
     sudo chmod +x /workspace/entrypoint.sh
 
@@ -94,7 +81,7 @@ RUN mkdir -p /home/${dol}USERNAME/.ros/log \
 VOLUME ["/home/${dol}USERNAME/.ros/log"]
 
 ${sharp} 11. Security: Revoke Sudo Privileges
-RUN sudo rm -f /etc/sudoers.d/${dol}USERNAME
+RUN sudo rm -f /etc/sudoers.d/${dol}USERNAME \
     && test ! -f /etc/sudoers.d/${dol}USERNAME
 
 ${sharp} 12. Execution Command

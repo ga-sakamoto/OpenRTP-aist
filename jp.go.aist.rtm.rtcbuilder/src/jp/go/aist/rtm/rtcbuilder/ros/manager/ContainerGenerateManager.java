@@ -1,4 +1,4 @@
-package jp.go.aist.rtm.rtcbuilder.manager;
+package jp.go.aist.rtm.rtcbuilder.ros.manager;
 
 import static jp.go.aist.rtm.rtcbuilder.util.RTCUtil.form;
 
@@ -16,6 +16,7 @@ import jp.go.aist.rtm.rtcbuilder.container.param.ContainerParam;
 import jp.go.aist.rtm.rtcbuilder.container.param.setting.ContainerConfig;
 import jp.go.aist.rtm.rtcbuilder.generator.GeneratedResult;
 import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
+import jp.go.aist.rtm.rtcbuilder.manager.GenerateManager;
 import jp.go.aist.rtm.rtcbuilder.template.TemplateHelper;
 import jp.go.aist.rtm.rtcbuilder.template.TemplateUtil;
 import jp.go.aist.rtm.rtcbuilder.ui.preference.ContainerPreferenceManager;
@@ -25,7 +26,7 @@ import jp.go.aist.rtm.rtcbuilder.ui.preference.ContainerPreferenceManager;
  */
 public class ContainerGenerateManager extends GenerateManager {
 
-	static final String TEMPLATE_PATH = "jp/go/aist/rtm/rtcbuilder/template";
+	static final String TEMPLATE_PATH = "jp/go/aist/rtm/rtcbuilder/ros/template";
 
 	static final String MSG_ERROR_GENERATE_FILE = "Container generation error. [{0}]";
 
@@ -102,7 +103,7 @@ public class ContainerGenerateManager extends GenerateManager {
 			builder.append(param.getConfiguration());
 			builder.append(".Dockerfile");
 			
-			result.add(generateOpenRTMContainer(contextMap, builder.toString()));
+			result.add(generateROSContainer(contextMap, builder.toString()));
 		}
 
 		return result;
@@ -112,8 +113,8 @@ public class ContainerGenerateManager extends GenerateManager {
 		return source.replace("+", "p").toLowerCase();
 	}
 
-	public GeneratedResult generateOpenRTMContainer(Map<String, Object> contextMap, String outfile) {
-		String infile = "container/OpenRTM_Container.vsl";
+	public GeneratedResult generateROSContainer(Map<String, Object> contextMap, String outfile) {
+		String infile = "container/ROS_Container.vsl";
 		return generate(infile, outfile, contextMap);
 	}
 

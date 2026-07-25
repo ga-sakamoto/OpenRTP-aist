@@ -1,15 +1,13 @@
 package jp.go.aist.rtm.rtcbuilder.container.param;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jp.go.aist.rtm.rtcbuilder.container.param.setting.ConditionalRule;
 import jp.go.aist.rtm.rtcbuilder.container.param.setting.ContainerConfig;
-import jp.go.aist.rtm.rtcbuilder.container.param.setting.InstallDefinition;
-import jp.go.aist.rtm.rtcbuilder.container.param.setting.LibraryMapping;
 import jp.go.aist.rtm.rtcbuilder.container.param.setting.MappingDb;
+import jp.go.aist.rtm.rtcbuilder.container.param.setting.MiddlewareDetail;
+import jp.go.aist.rtm.rtcbuilder.container.param.setting.PackageProvider;
 import jp.go.aist.rtm.rtcbuilder.generator.param.AbstractRecordedParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.RecordedList;
 
@@ -24,6 +22,7 @@ public class ContainerParam extends AbstractRecordedParam {
 	private RecordedList<String> preSets;
 	private RecordedList<RepositoryParam> repositories;
 	
+	private List<String> defaultLibs = new ArrayList<String>();
 	private List<String> aptList = new ArrayList<String>();
 	private List<String> pipList = new ArrayList<String>();
 	
@@ -99,6 +98,9 @@ public class ContainerParam extends AbstractRecordedParam {
 		return repositories;
 	}
 	
+	public List<String> getDefaultLibs() {
+		return defaultLibs;
+	}
 	public List<String> getAptList() {
 		return aptList;
 	}
@@ -106,196 +108,111 @@ public class ContainerParam extends AbstractRecordedParam {
 		return pipList;
 	}
 	
-	public void prepareLibraries(ContainerConfig containerConfig) {
-		List<String> libList = new ArrayList<String>();
-		List<String> apts = new ArrayList<String>();
-		List<String> pips = new ArrayList<String>();
+	public void updateDefaultLibs(ContainerConfig containerConfig) {
+		defaultLibs.clear();
 
-		MappingDb mdb = containerConfig.mappingDb;
-		libList.addAll(mdb.defaultLibs.common);
-
-		String middleware = this.middleware.replace(" ", "").toLowerCase();
-		libList.addAll(mdb.defaultLibs.byMiddleware.get(middleware));
+		Map<String, MiddlewareDetail> middlewares = containerConfig.getMiddlewares();
+		if(middlewares.keySet().contains(getMiddlewareName()) == false) return;
 		
-		if(mdb.defaultLibs.byLanguage.keySet().contains(middleware)) {
-			Map<String, List<String>> byLang = mdb.defaultLibs.byLanguage.get(middleware);
-			if(byLang!= null) {
-				if(byLang.keySet().contains(this.language.toLowerCase())) {
-					libList.addAll(byLang.get(this.language.toLowerCase()));
-				}
+		MiddlewareDetail detail = middlewares.get(getMiddlewareName());
+		for(String each : detail.defaultLibs) {
+			defaultLibs.add(each);
+		}
+	}
+	
+	public void prepareLibraries(ContainerConfig containerConfig) {
+		MappingDb mdb = containerConfig.mappingDb;
+		Map<String, Map<String, PackageProvider>> libraries = mdb.libraries;
+		
+		for(String lib : this.defaultLibs) {
+			if(libraries.keySet().contains(lib) == false) {
+				this.aptList.add(lib);
+				continue;
 			}
+			Map<String, PackageProvider> libDef = libraries.get(lib);
+			parseLibs(libDef, "apt");
 		}
 		
 		for(LibraryParam libParam : this.libraries) {
 			String libName = libParam.getName();
-			if(libList.contains(libName) == false) {
-				libList.add(libName);	
+			String installer = libParam.getInstaller();
+			if(libraries.keySet().contains(libName) == false) {
+				if(installer.equals("apt")) {
+					this.aptList.add(libName);	
+				} else if(installer.equals("pip")) {
+					this.pipList.add(libName);	
+				}
+				continue;
 			}
-			for(ConditionalRule each : mdb.defaultLibs.conditional) {
-				if(each.triggers.contains(libName)) {
-					for(String lib : each.libs) {
-						if(libList.contains(lib) == false) {
-							libList.add(lib);	
-						}
+			//
+			Map<String, PackageProvider> libDef = libraries.get(libName);
+			parseLibs(libDef, installer);
+		}
+	}
+
+	private void parseLibs(Map<String, PackageProvider> libDef, String installer) {
+		if(libDef.keySet().contains(getMiddlewareName().toLowerCase())) {
+			PackageProvider details = libDef.get(getMiddlewareName().toLowerCase());
+			setLibList(installer, details);
+
+		} else if(libDef.keySet().contains(getOSVersion())) {
+			PackageProvider details = libDef.get(getOSVersion());
+			setLibList(installer, details);
+
+		} else if(libDef.keySet().contains(this.language.toLowerCase())) {
+			PackageProvider details = libDef.get(this.language.toLowerCase());
+			setLibList(installer, details);
+
+		} else if(libDef.keySet().contains("default")) {
+			PackageProvider details = libDef.get("default");
+			setLibList(installer, details);
+		}
+	}
+
+	private void setLibList(String installer, PackageProvider details) {
+		if(installer.equals("apt")) {
+			if(details.apt != null && 0 < details.apt.length()) {
+				String[] libs = details.apt.split(" ");
+				for(String each : libs) {
+					if(each.contains("${ROS_DISTRO}")) {
+						String middleware = this.mdlVersion.toLowerCase();
+						each = each.replace("${ROS_DISTRO}", middleware);
+					}
+					if(this.aptList.contains(each.trim()) == false) {
+						this.aptList.add(each.trim());
 					}
 				}
 			}
-		}
-		/////
-		Map<String, LibraryMapping> libDb = mdb.libraries;
-		for(String lib : libList) {
-			if(libDb.keySet().contains(lib)) {
-				LibraryMapping mapping = libDb.get(lib);
-				Map<String, InstallDefinition> detailMap = mapping.getPlatforms();
-				InstallDefinition def = getDefinition(detailMap);
-				if(def != null) {
-					Map<String, Object> instInfo = def.getInstallInfo();
-					if(instInfo.size() == 1) {
-						String key = def.getInstallInfo().keySet().iterator().next();
-						if(key.equals("pip")) {
-							pips.add(lib);
-						} else {
-							apts.add(lib);
-						}
-					} else {
-						String infoKey = "default";
-						if(instInfo.keySet().contains(this.mdlVersion)) {
-							infoKey = this.mdlVersion;
-						};
-						Object target = instInfo.get(infoKey);
-						if (target instanceof HashMap) {
-						    HashMap<?, ?> map = (HashMap<?, ?>) target;
-						    if (!map.isEmpty()) {
-						        Object key = map.keySet().iterator().next();
-								if(key.equals("pip")) {
-									pips.add(lib);
-								} else {
-									apts.add(lib);
-								}
-						    }
-						}
+		} else if(installer.equals("pip")) {
+			if(details.pip != null && 0 < details.pip.length()) {
+				String[] libs = details.apt.split(" ");
+				for(String each : libs) {
+					if(each.contains("${ROS_DISTRO}")) {
+						String middleware = this.mdlVersion.toLowerCase();
+						each = each.replace("${ROS_DISTRO}", middleware);
+					}
+					if(this.pipList.contains(each.trim()) == false) {
+						this.pipList.add(each.trim());
 					}
 				}
-				
-			} else {
-				apts.add(lib);
 			}
-		}
-		//
-		for(String each : apts) {
-			String convName = getContainerLibName(containerConfig, each, "apt");
-			if(convName.contains(" ")) {
-				String[] convNames = convName.split(" ");
-				for(String eachLib : convNames) {
-					if(this.aptList.contains(eachLib) == false) {
-						this.aptList.add(eachLib);	
-					}
-				}
-			} else {
-				if(this.aptList.contains(convName)==false) {
-					this.aptList.add(convName);
-				}
-			}
-		}
-		for(String each : pips) {
-			String convName = getContainerLibName(containerConfig, each, "pip");
-			if(convName.contains(" ")) {
-				String[] convNames = convName.split(" ");
-				for(String eachLib : convNames) {
-					if(this.pipList.contains(eachLib) == false) {
-						this.pipList.add(eachLib);	
-					}
-				}
-			} else {
-				if(this.pipList.contains(convName)==false) {
-					this.pipList.add(convName);
-				}
-			}
-		}
-		if(0 < this.aptList.size()) {
-			this.aptList.sort(null);
-		}
-		if(0 < this.pipList.size()) {
-			this.pipList.sort(null);
 		}
 	}
 	
-	public String getContainerLibName(ContainerConfig containerConfig, String source, String strKey) {
-		MappingDb mdb = containerConfig.mappingDb;
-		Map<String, LibraryMapping> libDb = mdb.libraries;
-		
-		if(libDb.keySet().contains(source)) {
-			LibraryMapping mapping = libDb.get(source);
-			Map<String, InstallDefinition> detailMap = mapping.getPlatforms();
-			
-			InstallDefinition def = getDefinition(detailMap);
-			if(def != null) {
-				Map<String, Object> instInfo = def.getInstallInfo();
-				if(instInfo.size() == 1) {
-					String targtValue = (String)instInfo.get(strKey);
-					if(targtValue != null) {
-						if(targtValue.contains("${ROS_DISTRO}")) {
-							String middleware = this.mdlVersion.toLowerCase();
-							targtValue = targtValue.replace("${ROS_DISTRO}", middleware);
-						}
-						return targtValue;
-					}
-				} else {
-					String infoKey = "default";
-					if(instInfo.keySet().contains(this.mdlVersion.toLowerCase())) {
-						infoKey = this.mdlVersion.toLowerCase();
-					};
-					Object target = instInfo.get(infoKey);
-					if (target instanceof HashMap) {
-					    HashMap<?, ?> map = (HashMap<?, ?>) target;
-					    if (!map.isEmpty()) {
-							String targtValue = (String)map.get(strKey);
-							if(targtValue.contains("${ROS_DISTRO}")) {
-								String middleware = this.mdlVersion.toLowerCase();
-								targtValue = targtValue.replace("${ROS_DISTRO}", middleware);
-							}
-							return targtValue;
-					    }
-					}
-				}
-			}
-			return source;
-		} else {
-			return source;
-		}
-	}
+	private String getMiddlewareName() {
+		if(this.middleware == null || this.middleware.length() == 0) return "";
 
+		return this.middleware.replace(" ", "");
+	}
 	
-	private InstallDefinition getDefinition(Map<String, InstallDefinition> detailMap) {
-		InstallDefinition def = null;
-		String middleware = this.middleware.replace(" ", "").toLowerCase();
-		if(detailMap.keySet().contains(middleware)) {
-			def = detailMap.get(middleware);
-			return def;
-		}
+	private String getOSVersion() {
+		if(this.osVersion == null || this.osVersion.length() == 0) return "";
 
-		String lang = this.language.toLowerCase();
-		if(detailMap.keySet().contains(lang)) {
-			def = detailMap.get(lang);
-			return def;
-		}
-
-		String osInfo = this.osVersion;
-		String[] elems = osInfo.split(" ");
-		if(0<elems.length) {
-			String osName = elems[0].toLowerCase();
-			if(detailMap.keySet().contains(osName)) {
-				def = detailMap.get(osName);
-				return def;
-			} 
-		}
-		if(detailMap.keySet().contains("default")) {
-			def = detailMap.get("default");
-			return def;
-		}
-		return null;
+		String[] elems = this.osVersion.split(" ");
+		if(elems.length == 0) return "";
+		return elems[0].toLowerCase();
 	}
-
+	
 	@Override
 	public boolean isUpdated() {
 		if (super.isUpdated()) {
