@@ -44,9 +44,15 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.iso.iso22166.part202.profile.SIM;
 import org.openrtp.namespaces.rtc.version03.RtcProfile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jp.ac.meijo_u.iso22166_part202.util.RTC2ISOProfileHandler;
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
 import jp.go.aist.rtm.rtcbuilder.RtcBuilderPlugin;
+import jp.go.aist.rtm.rtcbuilder.container.param.ContainerParam;
+import jp.go.aist.rtm.rtcbuilder.container.param.setting.ContainerConfig;
+import jp.go.aist.rtm.rtcbuilder.container.param.setting.MiddlewareDetail;
+import jp.go.aist.rtm.rtcbuilder.container.param.setting.Version;
 import jp.go.aist.rtm.rtcbuilder.extension.AddFormPageExtension;
 import jp.go.aist.rtm.rtcbuilder.extension.EditorExtension;
 import jp.go.aist.rtm.rtcbuilder.fsm.ScXMLHandler;
@@ -70,6 +76,7 @@ import jp.go.aist.rtm.rtcbuilder.model.component.PortDirection;
 import jp.go.aist.rtm.rtcbuilder.model.component.ServiceInterface;
 import jp.go.aist.rtm.rtcbuilder.model.component.ServicePort;
 import jp.go.aist.rtm.rtcbuilder.ui.preference.ComponentPreferenceManager;
+import jp.go.aist.rtm.rtcbuilder.ui.preference.ContainerPreferenceManager;
 import jp.go.aist.rtm.rtcbuilder.ui.preference.DocumentPreferenceManager;
 import jp.go.aist.rtm.rtcbuilder.util.StringUtil;
 
@@ -129,6 +136,16 @@ public class RtcBuilderEditor extends FormEditor implements IActionFilter {
 		try {
 			ProfileHandler handler = new ProfileHandler();
 			generatorParam = handler.restorefromXMLFile(fileEditorInput.getPath().toOSString());
+			/////
+			String configText = ContainerPreferenceManager.getInstance().getSettings();
+			ObjectMapper mapper = new ObjectMapper();
+			try {
+				ContainerConfig containerSettings =  mapper.readValue(configText, ContainerConfig.class);
+				for(ContainerParam each : generatorParam.getRtcParam().getContainerSettings() ) {
+					each.updateDefaultLibs(containerSettings);
+				}
+			} catch (Exception e) {
+			}
 			//
 			String targetFile = this.getRtcParam().getName() + "FSM.scxml";
 			IProject project = root.getProject(this.getRtcParam().getOutputProject());

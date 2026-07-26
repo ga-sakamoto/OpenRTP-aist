@@ -502,7 +502,7 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 					if (orgROSxml.exists()) {
 						IFile renameFile = project.getFile(IRtcBuilderConstantsROS.DEFAULT_ROS_XML + genTime);
 						orgROSxml.move(renameFile.getFullPath(), true, null);
-						FileUtil.removeBackupFiles(project.getLocation().toOSString(), IRtcBuilderConstants.DEFAULT_RTC_XML);
+						FileUtil.removeBackupFiles(project.getLocation().toOSString(), IRtcBuilderConstantsROS.DEFAULT_ROS_XML);
 					}
 					IFile saveROSxml = project.getFile(IRtcBuilderConstantsROS.DEFAULT_ROS_XML);
 					saveROSxml.create(new ByteArrayInputStream(strXml.getBytes("UTF-8")), true, null);

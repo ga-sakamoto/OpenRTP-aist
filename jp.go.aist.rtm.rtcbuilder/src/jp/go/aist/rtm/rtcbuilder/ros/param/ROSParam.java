@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Set;
 
 import jp.go.aist.rtm.rtcbuilder.ParamBase;
+import jp.go.aist.rtm.rtcbuilder.container.param.ContainerParam;
+import jp.go.aist.rtm.rtcbuilder.container.param.setting.ContainerConfig;
 import jp.go.aist.rtm.rtcbuilder.generator.param.ActionsParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.GeneratorParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.PropertyParam;
@@ -70,6 +72,9 @@ public class ROSParam extends ParamBase implements Serializable {
 	private RecordedList<String> extMsgFiles = new RecordedList<String>();
 	private RecordedList<String> extSrvFiles = new RecordedList<String>();
 	private RecordedList<String> extActionFiles = new RecordedList<String>();
+	//
+	private RecordedList<ContainerParam> containerSettings = new RecordedList<ContainerParam>();
+	private ContainerConfig containerConfig = null;
 
 	public ROSParam() {
 		ProfileHandlerROS handler = new ProfileHandlerROS();
@@ -817,5 +822,16 @@ public class ROSParam extends ParamBase implements Serializable {
 		for(ActionParam each : this.actionClients) {
 			each.convertInfo();
 		}
+	}
+	
+	public RecordedList<ContainerParam> getContainerSettings() {
+		return containerSettings;
+	}
+
+	public ContainerConfig getContainerConfig() {
+		return containerConfig;
+	}
+	public void setContainerConfig(ContainerConfig containerConfig) {
+		this.containerConfig = containerConfig;
 	}
 }

@@ -34,9 +34,13 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.iso.iso22166.part202.profile.SIM;
 import org.openrtp.namespaces.ros.version01.RosProfile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jp.ac.meijo_u.iso22166_part202.util.ROS2ISOProfileHandler;
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
 import jp.go.aist.rtm.rtcbuilder.RtcBuilderPlugin;
+import jp.go.aist.rtm.rtcbuilder.container.param.ContainerParam;
+import jp.go.aist.rtm.rtcbuilder.container.param.setting.ContainerConfig;
 import jp.go.aist.rtm.rtcbuilder.generator.param.GeneratorParam;
 import jp.go.aist.rtm.rtcbuilder.manager.GenerateManager;
 import jp.go.aist.rtm.rtcbuilder.model.component.BuildView;
@@ -59,6 +63,7 @@ import jp.go.aist.rtm.rtcbuilder.ros.ui.preference.ROSPreferenceManager;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.AbstractEditorFormPage;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.IMessageConstants;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.RtcBuilderEditor;
+import jp.go.aist.rtm.rtcbuilder.ui.preference.ContainerPreferenceManager;
 
 /**
  * RtcBuilderエディタ
@@ -115,6 +120,16 @@ public class ROSBuilderEditor extends RtcBuilderEditor implements IActionFilter 
 		try {
 			ProfileHandlerROS handler = new ProfileHandlerROS();
 			generatorParam = handler.restorefromXMLFile(fileEditorInput.getPath().toOSString());
+			/////
+			String configText = ContainerPreferenceManager.getInstance().getSettingsROS();
+			ObjectMapper mapper = new ObjectMapper();
+			try {
+				ContainerConfig containerSettings =  mapper.readValue(configText, ContainerConfig.class);
+				for(ContainerParam each : generatorParam.getROSParam().getContainerSettings() ) {
+					each.updateDefaultLibs(containerSettings);
+				}
+			} catch (Exception e) {
+			}
 			//
 			if( buildview==null ) buildview = ComponentFactory.eINSTANCE.createBuildView();
 			updateEMFModuleName(this.getROSParam().getNodeName());

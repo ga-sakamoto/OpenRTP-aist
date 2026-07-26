@@ -1,12 +1,22 @@
 package jp.go.aist.rtm.rtcbuilder.ros.ui.editors;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -21,7 +31,6 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
@@ -31,6 +40,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
@@ -39,16 +49,21 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jp.go.aist.rtm.rtcbuilder.RtcBuilderPlugin;
 import jp.go.aist.rtm.rtcbuilder.container.param.ContainerParam;
 import jp.go.aist.rtm.rtcbuilder.container.param.LibraryParam;
 import jp.go.aist.rtm.rtcbuilder.container.param.RepositoryParam;
 import jp.go.aist.rtm.rtcbuilder.container.param.setting.ContainerConfig;
+import jp.go.aist.rtm.rtcbuilder.container.param.setting.MiddlewareDetail;
 import jp.go.aist.rtm.rtcbuilder.container.param.setting.Version;
 import jp.go.aist.rtm.rtcbuilder.generator.param.RecordedList;
-import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
 import jp.go.aist.rtm.rtcbuilder.nl.Messages;
+import jp.go.aist.rtm.rtcbuilder.ros.param.ROSParam;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.AbstractEditorFormPage;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.IMessageConstants;
+import jp.go.aist.rtm.rtcbuilder.ui.preference.ContainerPreferenceManager;
 import jp.go.aist.rtm.rtcbuilder.util.ValidationUtil;
 
 public class ROSContainerEditorFormPage extends AbstractEditorFormPage {
@@ -57,6 +72,10 @@ public class ROSContainerEditorFormPage extends AbstractEditorFormPage {
 			"C++", "Python" };
 	private static final String[] CONFIGURATION_ITEMS = new String[] {
 			"Min", "Full" };
+	private static final List<String> INSTALLER_ITEMS = Arrays.asList(
+			"apt", "pip" );
+	static final int LIBRARY_NAME = 0;
+	static final int LIBRARY_INSTALLER = 1;
 
 	private String configText;
 
@@ -67,13 +86,11 @@ public class ROSContainerEditorFormPage extends AbstractEditorFormPage {
 	private Button addTargetButton;	
 	private Button deleteTargetButton;
 	
-	private Combo middlewareCombo;
-	private Combo midVersionCombo;
-	private Combo osVersionCombo;
 	private Text workspaceText;
 	private Combo languageCombo;
 	private Combo configCombo;
 
+	private TableViewer defaultListViewer;
 	private TableViewer librariesListViewer;
 	private Button addLibraryButton;	
 	private Button deleteLibraryButton;
@@ -86,7 +103,7 @@ public class ROSContainerEditorFormPage extends AbstractEditorFormPage {
 
 	private ContainerParam selectedParam;
 	private ContainerConfig containerSettings;
-//	private Middleware selectedMiddleware;
+	private MiddlewareDetail selectedMiddleware;
 	private Version selectedVersion;
 	
 	private Composite presetComposite;
@@ -95,11 +112,9 @@ public class ROSContainerEditorFormPage extends AbstractEditorFormPage {
 	private Image smallInfo = null;
 
 	private RecordedList<ContainerParam> paramList = new RecordedList<ContainerParam>();
+	private List<String> defaultList = new ArrayList<String>();
 	private List<LibraryParam> librariesList = new ArrayList<LibraryParam>();
 	private List<RepositoryParam> repositoriesList = new ArrayList<RepositoryParam>();
-	
-	private Font cautionFont;
-	private Label cautionLabel;
 
 	/**
 	 * コンストラクタ
@@ -110,28 +125,30 @@ public class ROSContainerEditorFormPage extends AbstractEditorFormPage {
 	public ROSContainerEditorFormPage(ROSBuilderEditor editor) {
 		super(editor, "id", Messages.getString("IMessageConstants.CONTAINER_SECTION"));
 		
-//		configText = ContainerPreferenceManager.getInstance().getSettings();
-//		
-//		ObjectMapper mapper = new ObjectMapper();
-//		try {
-//			containerSettings = mapper.readValue(configText, ContainerConfig.class);
-//			selectedMiddleware = containerSettings.middlewares.get(0);
-//			selectedVersion = selectedMiddleware.versions.get(0);
-//		} catch (Exception e) {
-//			containerSettings = new ContainerConfig();
-//			selectedMiddleware = new Middleware();
-//			selectedVersion = new Version();
-//		}
-//		
-//		URL url = RtcBuilderPlugin.getDefault().getBundle().getEntry("/");
-//		ImageDescriptor hintIcon;
-//		try {
-//			hintIcon = ImageDescriptor.createFromURL(new URL(url ,"icons/question.png"));
-//			smallInfo = hintIcon.createImage();
-//		} catch (MalformedURLException e) {
-//		}
-//		/////
-//		paramList = editor.getRtcParam().getContainerSettings();
+		configText = ContainerPreferenceManager.getInstance().getSettingsROS();
+		
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			containerSettings = mapper.readValue(configText, ContainerConfig.class);
+    		selectedMiddleware = getMiddleware();
+    		if(selectedMiddleware != null) {
+				selectedVersion = selectedMiddleware.versions.get(0);
+    		}
+		} catch (Exception e) {
+			containerSettings = new ContainerConfig();
+			selectedMiddleware = new MiddlewareDetail();
+			selectedVersion = new Version();
+		}
+		
+		URL url = RtcBuilderPlugin.getDefault().getBundle().getEntry("/");
+		ImageDescriptor hintIcon;
+		try {
+			hintIcon = ImageDescriptor.createFromURL(new URL(url ,"icons/question.png"));
+			smallInfo = hintIcon.createImage();
+		} catch (MalformedURLException e) {
+		}
+		/////
+		paramList = editor.getROSParam().getContainerSettings();
 	}
 
 	/**
@@ -202,95 +219,62 @@ public class ROSContainerEditorFormPage extends AbstractEditorFormPage {
 		configButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-//				FileDialog dialog = new FileDialog(getSite().getShell(),SWT.OPEN);
-//		        dialog.setText(Messages.getString("IMC.CONTAINER_SETTING_BTN"));
-//				String[] names = new String[] { Messages.getString("IMessageConstants.FILETYPE_JSON") };
-//				String[] exts = new String[] { "*.json" };
-//				dialog.setFilterNames(names);
-//				dialog.setFilterExtensions(exts);
-//				
-//				String selectedFileName = dialog.open();
-//				if(selectedFileName==null) return;
-//				
-//				ObjectMapper mapper = new ObjectMapper();
-//				try {
-//					byte[] bytes = Files.readAllBytes(Paths.get(selectedFileName));
-//					String content = new String(bytes, StandardCharsets.UTF_8);
-////					ContainerPreferenceManager.getInstance().setSettings(content);
-//					
-//					containerSettings = mapper.readValue(content, ContainerConfig.class);
-//					selectedMiddleware = containerSettings.middlewares.get(0);
-//					selectedVersion = selectedMiddleware.versions.get(0);
-//					
-//					ContainerPreferenceManager.getInstance().setSettings(content);
-//
-//					cautionLabel.setVisible(false);
-//				    GridData gd = (GridData) cautionLabel.getLayoutData();
-//				    gd.exclude = true;
-//				    cautionLabel.getParent().layout(true, true);
-//				    updateEnable(true);
-//				    
-//					List<String> midList = new ArrayList<String>();
-//					for(Middleware each : containerSettings.middlewares) {
-//						midList.add(each.name);
-//					}
-//					middlewareCombo.setItems(midList.toArray(new String[0]));
-//					middlewareCombo.select(0);
-//					if(0 < paramList.size()) {
-//						targetListViewer.setSelection(new StructuredSelection(targetListViewer.getElementAt(0)));
-//					    presetComposite.layout();
-//					}
-//					
-//					MessageDialog.openInformation(getSite().getShell(),
-//							"Information",
-//							Messages.getString("IMC.CONTAINER_INFO_SETTING"));
-//				    
-//				} catch (Exception ex) {
-//				    GridData gd = (GridData) cautionLabel.getLayoutData();
-//				    gd.exclude = false;
-//				    cautionLabel.setVisible(true);
-//				    cautionLabel.getParent().layout(true, true);
-//				    updateEnable(false);
-//				    
-//					MessageDialog.openWarning(getSite().getShell(),
-//							"Error",
-//							Messages.getString("IMC.CONTAINER_CAUTION_SETTING"));
-//				}
+				FileDialog dialog = new FileDialog(getSite().getShell(),SWT.OPEN);
+		        dialog.setText(Messages.getString("IMC.CONTAINER_SETTING_BTN"));
+				String[] names = new String[] { Messages.getString("IMessageConstants.FILETYPE_JSON") };
+				String[] exts = new String[] { "*.json" };
+				dialog.setFilterNames(names);
+				dialog.setFilterExtensions(exts);
+				
+				String selectedFileName = dialog.open();
+				if(selectedFileName==null) return;
+				
+				ObjectMapper mapper = new ObjectMapper();
+				try {
+					byte[] bytes = Files.readAllBytes(Paths.get(selectedFileName));
+					String content = new String(bytes, StandardCharsets.UTF_8);
+					
+					containerSettings = mapper.readValue(content, ContainerConfig.class);
+		    		selectedMiddleware = getMiddleware();
+		    		if(selectedMiddleware == null) {
+						MessageDialog.openWarning(getSite().getShell(),
+								"Error",
+								Messages.getString("IMC.CONTAINER_CAUTION_SETTING_ROS"));
+						return;
+		    		}
+					selectedVersion = selectedMiddleware.versions.get(0);
+					
+					ContainerPreferenceManager.getInstance().setSettingsROS(content);
+
+				    updateEnable(true);
+				    
+					MessageDialog.openInformation(getSite().getShell(),
+							"Information",
+							Messages.getString("IMC.CONTAINER_INFO_SETTING"));
+				    
+				} catch (Exception ex) {
+				    updateEnable(false);
+				    
+					MessageDialog.openWarning(getSite().getShell(),
+							"Error",
+							Messages.getString("IMC.CONTAINER_CAUTION_SETTING"));
+				}
 		    }
 		});
 		//
-		cautionFont = new Font(form.getDisplay(), IMessageConstants.TITLE_FONT, 12, SWT.BOLD);
-		cautionLabel = managedForm.getToolkit().createLabel(form.getBody(), Messages.getString("IMC.CONTAINER_SETTING_CAUTION"));
-		cautionLabel.setFont(cautionFont);
-		cautionLabel.setForeground(getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_RED));
-		GridData gridData = new GridData();
-		gridData.horizontalSpan = 2;
-		cautionLabel.setLayoutData(gridData);
-		////////////
 		createBasicModelInformationSection(toolkit, form);
 		createHintSection(toolkit, form);
 		createTargetListSection(toolkit, form);
 		createEnvironmentSection(toolkit, form);
+		createDefaultLibrarySection(toolkit, form);
 		createLibrarySection(toolkit, form);
 		createRepositorySection(toolkit, form);
 		
-		if(0 < paramList.size()) {
-			targetListViewer.setSelection(new StructuredSelection(targetListViewer.getElementAt(0)));
-		}
-		
-		if(configText == null || configText.length() == 0) {
-			updateEnable(false);
-		} else {
-			cautionLabel.setVisible(false);
-		    gd = (GridData) cautionLabel.getLayoutData();
-		    gd.exclude = true;
-		    cautionLabel.getParent().layout(true, true);
-			middlewareComboSelected(toolkit, false);
-		}
-
 		if(paramList.size() == 0) {
 			updateEnable(false);
 			addTargetButton.setEnabled(true);
+		} else {
+			targetListViewer.setSelection(new StructuredSelection(targetListViewer.getElementAt(0)));
 		}
 
 		load();
@@ -301,13 +285,11 @@ public class ROSContainerEditorFormPage extends AbstractEditorFormPage {
 		addTargetButton.setEnabled(enable);
 		deleteTargetButton.setEnabled(enable);
 		
-		middlewareCombo.setEnabled(enable);
-		midVersionCombo.setEnabled(enable);
-		osVersionCombo.setEnabled(enable);
 		workspaceText.setEnabled(enable);
 		languageCombo.setEnabled(enable);
 		configCombo.setEnabled(enable);
 		
+		defaultListViewer.getTable().setEnabled(enable);
 		librariesListViewer.getTable().setEnabled(enable);
 		addLibraryButton.setEnabled(enable);
 		deleteLibraryButton.setEnabled(enable);
@@ -331,8 +313,8 @@ public class ROSContainerEditorFormPage extends AbstractEditorFormPage {
 
 	private void createHintSection(FormToolkit toolkit, ScrolledForm form) {
 		Composite composite = createHintSectionBase(toolkit, form, 6);
-		createHintLabel(Messages.getString("IMC.CONTAINER_HINT_MODULE_NAME"),
-						IMessageConstants.CONTAINERC_HINT_MODULENAME_DESC,
+		createHintLabel(Messages.getString("IMC.CONTAINER_NODE_NAME"),
+						IMessageConstants.CONTAINERC_HINT_NODENAME_DESC,
 						toolkit, composite);
 		createHintLabel(Messages.getString("IMC.CONTAINER_HINT_DESCRIPTION"),
 						IMessageConstants.CONTAINERC_HINT_DESCRIPTION_DESC,
@@ -340,15 +322,15 @@ public class ROSContainerEditorFormPage extends AbstractEditorFormPage {
 		
 		createHintSpace(toolkit, composite);
 		
-		createHintLabel(Messages.getString("IMC.CONTAINER_HINT_MIDDLEWARE"),
-				Messages.getString("IMC.CONTAINER_HINT_MIDDLEWARE_DESC"),
-				toolkit, composite);
-		createHintLabel(Messages.getString("IMC.CONTAINER_HINT_MIDDLEWARE_VERSION"),
-				Messages.getString("IMC.CONTAINER_HINT_MIDDLEWARE_VERSION_DESC"),
-				toolkit, composite);
-		createHintLabel(Messages.getString("IMC.CONTAINER_HINT_OS_VERSION"),
-				Messages.getString("IMC.CONTAINER_HINT_OS_VERSION_DESC"),
-				toolkit, composite);
+//		createHintLabel(Messages.getString("IMC.CONTAINER_HINT_MIDDLEWARE"),
+//				Messages.getString("IMC.CONTAINER_HINT_MIDDLEWARE_DESC"),
+//				toolkit, composite);
+//		createHintLabel(Messages.getString("IMC.CONTAINER_HINT_MIDDLEWARE_VERSION"),
+//				Messages.getString("IMC.CONTAINER_HINT_MIDDLEWARE_VERSION_DESC"),
+//				toolkit, composite);
+//		createHintLabel(Messages.getString("IMC.CONTAINER_HINT_OS_VERSION"),
+//				Messages.getString("IMC.CONTAINER_HINT_OS_VERSION_DESC"),
+//				toolkit, composite);
 		createHintLabel(Messages.getString("IMC.CONTAINER_HINT_WORKSPACE"),
 				IMessageConstants.CONTAINERC_HINT_WORKSPACE_DESC,
 				toolkit, composite);
@@ -384,6 +366,8 @@ public class ROSContainerEditorFormPage extends AbstractEditorFormPage {
 		gridData.verticalAlignment = GridData.BEGINNING;
 		sctBasicInfo.setLayoutData(gridData);
 		//
+		ROSParam rosParam = ((ROSBuilderEditor)editor).getROSParam();
+		
 		Composite composite = toolkit.createComposite(sctBasicInfo, SWT.NULL);
 		composite.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
 		toolkit.paintBordersFor(composite);
@@ -395,10 +379,10 @@ public class ROSContainerEditorFormPage extends AbstractEditorFormPage {
 
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
 		moduleNameText = createLabelAndText(toolkit, composite,
-				Messages.getString("IMC.CONTAINER_MODULE_NAME"),
+				Messages.getString("IMC.CONTAINER_NODE_NAME"),
 				SWT.NONE, SWT.COLOR_BLACK, 2);
 		moduleNameText.setLayoutData(gridData);
-		moduleNameText.setText(editor.getRtcParam().getName());
+		moduleNameText.setText(rosParam.getNodeName());
 		moduleNameText.setEditable(false);
 		moduleNameText.setBackground(getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 
@@ -408,7 +392,7 @@ public class ROSContainerEditorFormPage extends AbstractEditorFormPage {
 		descriptionText = createLabelAndText(toolkit, composite,
 				Messages.getString("IMC.BASIC_LBL_DESCRIPTION"), SWT.MULTI | SWT.V_SCROLL | SWT.WRAP);
 		descriptionText.setLayoutData(gridData);
-		descriptionText.setText(editor.getRtcParam().getDescription());
+		descriptionText.setText(rosParam.getDescription());
 		descriptionText.setEditable(false);
 		descriptionText.setBackground(getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 	}
@@ -454,50 +438,35 @@ public class ROSContainerEditorFormPage extends AbstractEditorFormPage {
 		
 		targetListViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
-//				int selectionIndex = targetListViewer.getTable().getSelectionIndex();
-//				if(selectionIndex < 0) return;
-//				
-//				selectedParam = paramList.get(selectionIndex);
-//				Optional<Middleware> result = containerSettings.middlewares.stream()
-//											    .filter(item -> item.name.equals(selectedParam.getMiddleware()))
-//											    .findFirst();
-//				if(result.isPresent() == false) {
-//					return;
-//				}
-//				selectedMiddleware = result.get();
-//				
-//				Optional<Version> resultVer = selectedMiddleware.versions.stream()
-//											    .filter(item -> item.id.equals(selectedParam.getMdlVersion()))
-//											    .findFirst();
-//				if(resultVer.isPresent() == false) {
-//					return;
-//				}
-//				selectedVersion = resultVer.get();
-//				
-//				middlewareCombo.setText(selectedMiddleware.name);
-//				middlewareComboSelected(toolkit, false);
-//				midVersionCombo.setText(selectedVersion.id);
-//				midVersionComboSelected();
-//				
-//				workspaceText.setText(selectedParam.getWorkspace());
-//				languageCombo.setText(selectedParam.getLanguage());
-//				configCombo.setText(selectedParam.getConfiguration());
-//				/////
-//				librariesList = selectedParam.getLibraries();
-//				for(String each : selectedMiddleware.defaultLibs) {
-//					boolean exists = librariesList.stream()
-//										.anyMatch(item -> each.equals(item.getName()));
-//					if(exists) continue;
-//					LibraryParam elem = new LibraryParam();
-//					elem.setName(each);
-//					librariesList.add(elem);
-//				}
-//				librariesListViewer.setInput(librariesList);
-//				/////
-//				urlText.setText("");
-//				branchText.setText("");
-//				repositoriesList = selectedParam.getRepositories();
-//				repositoryListViewer.setInput(repositoriesList);
+				int selectionIndex = targetListViewer.getTable().getSelectionIndex();
+				if(selectionIndex < 0) return;
+				
+				selectedParam = paramList.get(selectionIndex);
+				if( containerSettings.getMiddlewares().keySet().contains(selectedParam.getMiddleware()) == false) return;
+				selectedMiddleware = containerSettings.getMiddlewares().get(selectedParam.getMiddleware());
+				
+				Optional<Version> resultVer = selectedMiddleware.versions.stream()
+											    .filter(item -> item.id.equals(selectedParam.getMdlVersion()))
+											    .findFirst();
+				if(resultVer.isPresent() == false) {
+					return;
+				}
+				selectedVersion = resultVer.get();
+				middlewareComboSelected(toolkit);
+				
+				workspaceText.setText(selectedParam.getWorkspace());
+				languageCombo.setText(selectedParam.getLanguage());
+				configCombo.setText(selectedParam.getConfiguration());
+				/////
+				defaultList = selectedParam.getDefaultLibs();
+				defaultListViewer.setInput(defaultList);
+				librariesList = selectedParam.getLibraries();
+				librariesListViewer.setInput(librariesList);
+				/////
+				urlText.setText("");
+				branchText.setText("");
+				repositoriesList = selectedParam.getRepositories();
+				repositoryListViewer.setInput(repositoriesList);
 			}
 		});
 		
@@ -516,18 +485,20 @@ public class ROSContainerEditorFormPage extends AbstractEditorFormPage {
 		addTargetButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-//				Middleware newMid = containerSettings.middlewares.get(0);
-//				Version newVersion = newMid.versions.get(0);
-//				
-//				ContainerParam elem = new ContainerParam();
-//				elem.setMiddleware(newMid.name);
-//				elem.setMdlVersion(newVersion.id);
-//				elem.setOsVersion(newVersion.os);
-//				paramList.add(elem);
-//				updateEnable(true);
-//				targetListViewer.refresh();
-//				targetListViewer.setSelection(new StructuredSelection(targetListViewer.getElementAt(paramList.size() - 1)));
-//				update();
+				MiddlewareDetail newMid = getMiddleware();
+				if(newMid == null) return;
+				Version newVersion = newMid.versions.get(0);
+				
+				ContainerParam elem = new ContainerParam();
+				elem.setMiddleware(getMiddlewareName());
+				elem.setMdlVersion(newVersion.id);
+				elem.setOsVersion(newVersion.os);
+				elem.updateDefaultLibs(containerSettings);
+				paramList.add(elem);
+				updateEnable(true);
+				targetListViewer.refresh();
+				targetListViewer.setSelection(new StructuredSelection(targetListViewer.getElementAt(paramList.size() - 1)));
+				update();
 			}
 		});
 		
@@ -549,8 +520,10 @@ public class ROSContainerEditorFormPage extends AbstractEditorFormPage {
 					} else {
 						workspaceText.setText("");
 						selectedParam = null;
+						defaultList.clear();
 						librariesList.clear();
 						repositoriesList.clear();
+						defaultListViewer.refresh();;
 						librariesListViewer.refresh();;
 						repositoryListViewer.refresh();;
 						updateEnable(false);
@@ -580,53 +553,6 @@ public class ROSContainerEditorFormPage extends AbstractEditorFormPage {
 		composite.setLayoutData(gd);
 		sctEnv.setClient(composite);
 
-		List<String> midList = new ArrayList<String>();
-//		if(containerSettings.middlewares != null) {
-//			for(Middleware each : containerSettings.middlewares) {
-//				midList.add(each.name);
-//			}
-//		}
-		middlewareCombo = createLabelAndCombo(toolkit, composite,
-				Messages.getString("IMC.CONTAINER_MIDDLEWARE_NAME"),
-				midList.toArray(new String[0]),
-				SWT.COLOR_BLACK, 3);
-		middlewareCombo.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				middlewareComboSelected(toolkit, true);
-				update();
-			}
-		});
-		
-		List<String> versionList = new ArrayList<String>();
-//		if(selectedMiddleware.versions != null) {
-//			for(Version each : selectedMiddleware.versions) {
-//				versionList.add(each.id);
-//			}
-//		}
-		
-		midVersionCombo = createLabelAndCombo(toolkit, composite,
-				Messages.getString("IMC.CONTAINER_MIDDLEWARE_Version"),
-				versionList.toArray(new String[0]),
-				SWT.COLOR_BLACK, 1);
-		midVersionCombo.addSelectionListener(new SelectionListener() {
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				midVersionComboSelected();
-				update();
-			}
-		});
-		osVersionCombo = createLabelAndCombo(toolkit, composite,
-				Messages.getString("IMC.CONTAINER_OS_Version"),
-				versionList.toArray(new String[0]),
-				SWT.COLOR_BLACK, 1);
-
 		workspaceText = createLabelAndText(toolkit, composite,
 				Messages.getString("IMC.CONTAINER_WORKSPACE"), SWT.NONE, SWT.COLOR_BLACK, 3);
 		
@@ -641,145 +567,112 @@ public class ROSContainerEditorFormPage extends AbstractEditorFormPage {
 
 	}
 	
-	private void middlewareComboSelected(FormToolkit toolkit, boolean updateLibs ) {
-//		int selected = middlewareCombo.getSelectionIndex();
-//		if(selected < 0) return;
-//		
-//		selectedMiddleware = containerSettings.middlewares.get(selected);
-//		
-//		midVersionCombo.removeAll();
-//		List<String> versionList = new ArrayList<String>();
-//		for(Version each : selectedMiddleware.versions) {
-//			versionList.add(each.id);
-//		}
-//		midVersionCombo.setItems(versionList.toArray(new String[0]));
-//		midVersionCombo.select(0);
-//		midVersionComboSelected();
-//		
-//		if(selectedMiddleware.type.equals("free")) {
-//			osVersionCombo.removeAll();
-//			osVersionCombo.setItems(selectedMiddleware.supportedOs.toArray(new String[0]));
-//			osVersionCombo.setEnabled(true);
-//			osVersionCombo.setBackground(getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
-//			osVersionCombo.select(0);
-//		} else {
-//			List<String> osList = new ArrayList<String>();
-//			for(Version each : selectedMiddleware.versions) {
-//				osList.add(each.os);
-//			}
-//			osVersionCombo.setItems(osList.toArray(new String[0]));
-//			osVersionCombo.setEnabled(false);
-//			osVersionCombo.setBackground(getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
-//			osVersionCombo.select(0);
-//			midVersionComboSelected();
-//		}
-//		
-//		languageCombo.setEnabled(selectedMiddleware.hasLanguageSelection);
-//		languageCombo.removeAll();
-//		if(selectedMiddleware.hasLanguageSelection) {
-//			languageCombo.setItems(LANGUAGE_ITEMS);
-//		} else {
-//			languageCombo.add("C++");
-//		}
-//		languageCombo.select(0);
-//		
-//		configCombo.setEnabled(selectedMiddleware.type.equals("link"));
-//		configCombo.removeAll();
-//		if(selectedMiddleware.type.equals("link")) {
-//			configCombo.setItems(CONFIGURATION_ITEMS);
-//		} else {
-//			configCombo.add("Std");
-//		}
-//		configCombo.select(0);
-//		/////
-//		Map<String, List<String>> selectedPreset = selectedMiddleware.functionalPresets;
-//		for(Button each : presetButtons) {
-//			each.dispose();
-//		}
-//		for(Label each : presetLabels) {
-//			each.dispose();
-//		}
-//		for (String key : selectedPreset.keySet()) {
-//			List<String> elems = selectedPreset.get(key);
-//			Button chkPreset = createRadioCheckButton(toolkit, presetComposite, key, SWT.CHECK);
-//			if(selectedParam != null && selectedParam.getPreSets().contains(key)) {
-//				chkPreset.setSelection(true);
-//			}
-//			presetButtons.add(chkPreset);
-//			chkPreset.addSelectionListener(new SelectionAdapter() {
-//				@Override
-//				public void widgetSelected(SelectionEvent e) {
-//					if(chkPreset.getSelection()) {
-//						if(selectedParam != null) {
-//							if(selectedParam.getPreSets().contains(key) == false) {
-//								selectedParam.getPreSets().add(key);
-//							}
-//						}
-//					} else {
-//						if(selectedParam != null) {
-//							selectedParam.getPreSets().remove(key);
-//						}
-//					}
-//					for(String each : elems) {
-//						boolean exists = librariesList.stream()
-//								.anyMatch(item -> each.equals(item.getName()));
-//						if(chkPreset.getSelection()) {
-//							if(exists) continue;
-//							LibraryParam elem = new LibraryParam();
-//							elem.resetUpdated();
-//							elem.setName(each);
-//							librariesList.add(elem);
-//							
-//						} else {
-//							if(exists==false) continue;
-//							librariesList.removeIf(item -> each.equals(item.getName()));
-//						}
-//					}
-//					librariesListViewer.refresh();
-//					update();
-//				}
-//			});
-//			
-//			StringBuilder builder = new StringBuilder();
-//			for(String each : elems) {
-//				if(0 < builder.length()) {
-//					builder.append(System.lineSeparator());
-//				}
-//				builder.append(each);
-//			}
-//
-//			Label helpLabel = new Label(presetComposite, SWT.NONE);
-//			helpLabel.setImage(smallInfo);
-//			helpLabel.setToolTipText(builder.toString());
-//			helpLabel.setCursor(getSite().getShell().getDisplay().getSystemCursor(SWT.CURSOR_HAND));
-//			presetLabels.add(helpLabel);
-//
-//		}
-//		presetComposite.layout();
-//		
-//		if(updateLibs) {
-//			librariesList.clear();
-//			for(String each : selectedMiddleware.defaultLibs) {
-//				boolean exists = librariesList.stream()
-//						.anyMatch(item -> each.equals(item.getName()));
-//				if(exists) continue;
-//				LibraryParam elem = new LibraryParam();
-//				elem.setName(each);
-//				librariesList.add(elem);
-//			}
-//			librariesListViewer.refresh();
-//			/////
-//			repositoriesList.clear();
-//			repositoryListViewer.refresh();
-//		}
+	private void middlewareComboSelected(FormToolkit toolkit) {
+		Map<String, List<String>> selectedPreset = selectedMiddleware.functionalPresets;
+		for(Button each : presetButtons) {
+			each.dispose();
+		}
+		for(Label each : presetLabels) {
+			each.dispose();
+		}
+		for (String key : selectedPreset.keySet()) {
+			List<String> elems = selectedPreset.get(key);
+			Button chkPreset = createRadioCheckButton(toolkit, presetComposite, key, SWT.CHECK);
+			if(selectedParam != null && selectedParam.getPreSets().contains(key)) {
+				chkPreset.setSelection(true);
+			}
+			presetButtons.add(chkPreset);
+			chkPreset.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if(chkPreset.getSelection()) {
+						if(selectedParam != null) {
+							if(selectedParam.getPreSets().contains(key) == false) {
+								selectedParam.getPreSets().add(key);
+							}
+						}
+					} else {
+						if(selectedParam != null) {
+							selectedParam.getPreSets().remove(key);
+						}
+					}
+					librariesList.removeIf(item -> item.canUpdate() == false);
+					for(String preset : selectedParam.getPreSets()) {
+						if(selectedMiddleware.functionalPresets.keySet().contains(preset) == false) continue;
+						List<String> libs = selectedMiddleware.functionalPresets.get(preset);
+						for(String each : libs) {
+							boolean exists = librariesList.stream()
+									.anyMatch(item -> each.equals(item.getName()));
+							if(exists) continue;
+							LibraryParam elem = new LibraryParam();
+							elem.resetUpdated();
+							elem.setName(each);
+							librariesList.add(elem);
+						}
+					}
+					librariesListViewer.refresh();
+					update();
+				}
+			});
+			
+			StringBuilder builder = new StringBuilder();
+			for(String each : elems) {
+				if(0 < builder.length()) {
+					builder.append(System.lineSeparator());
+				}
+				builder.append(each);
+			}
+
+			Label helpLabel = new Label(presetComposite, SWT.NONE);
+			helpLabel.setImage(smallInfo);
+			helpLabel.setToolTipText(builder.toString());
+			helpLabel.setCursor(getSite().getShell().getDisplay().getSystemCursor(SWT.CURSOR_HAND));
+			presetLabels.add(helpLabel);
+
+		}
+		presetComposite.layout();
 	}
 	
-	private void midVersionComboSelected() {
-//		int selected = midVersionCombo.getSelectionIndex();
-//		selectedVersion = selectedMiddleware.versions.get(selected);
-//		osVersionCombo.setText(selectedVersion.os);
-	}
+	private void createDefaultLibrarySection(FormToolkit toolkit, ScrolledForm form) {
+//		Section sctDefaultLibs = toolkit.createSection(form.getBody(),
+//				Section.TITLE_BAR | Section.EXPANDED | Section.TWISTIE);
+		Section sctDefaultLibs = toolkit.createSection(form.getBody(),
+				Section.TITLE_BAR | Section.TWISTIE);
+		sctDefaultLibs.setExpanded(false);
+		sctDefaultLibs.setText(Messages.getString("IMC.CONTAINER_TITLE_DEFAULT_LIBRARY"));
+		GridData gridData = new GridData();
+		gridData.horizontalAlignment = GridData.FILL;
+		gridData.verticalAlignment = GridData.BEGINNING;
+		sctDefaultLibs.setLayoutData(gridData);
+		//
+		Composite composite = toolkit.createComposite(sctDefaultLibs, SWT.NULL);
+		composite.setData(FormToolkit.KEY_DRAW_BORDER, FormToolkit.TEXT_BORDER);
+		toolkit.paintBordersFor(composite);
+		GridLayout gl = new GridLayout(4, false);
+		composite.setLayout(gl);
+		GridData gd = new GridData(GridData.FILL_BOTH);
+		composite.setLayoutData(gd);
+		sctDefaultLibs.setClient(composite);
 
+		defaultListViewer = new TableViewer(composite, SWT.FULL_SELECTION
+				| SWT.SINGLE | SWT.BORDER);
+		defaultListViewer.setContentProvider(new ArrayContentProvider());
+		Table librariesListTable = defaultListViewer.getTable();
+		librariesListTable.setLinesVisible(true);
+		librariesListTable.setHeaderVisible(true);
+		gd = new GridData();
+		gd.heightHint = 100;
+		gd.verticalAlignment = SWT.FILL;
+		gd.horizontalAlignment = SWT.FILL;
+		gd.grabExcessVerticalSpace = true;
+		gd.grabExcessHorizontalSpace = true;
+		librariesListTable.setLayoutData(gd);
+
+		createColumn(defaultListViewer, "Library Name", 400);
+		defaultListViewer.setLabelProvider(new DefultLiLabelProvider());
+		defaultListViewer.setInput(defaultList);
+	}
+	
 	private void createLibrarySection(FormToolkit toolkit, ScrolledForm form) {
 		Composite composite = createSectionBaseWithLabel(toolkit, form,
 				Messages.getString("IMC.CONTAINER_TITLE_LIBRARY"),
@@ -800,7 +693,9 @@ public class ROSContainerEditorFormPage extends AbstractEditorFormPage {
 		librariesListTable.setLayoutData(gd);
 		
 		TableViewerColumn nameColumn = createColumn(librariesListViewer, "Library Name", 200);
-		nameColumn.setEditingSupport(new LibraryNameCellModifier(librariesListViewer));
+		nameColumn.setEditingSupport(new LibraryCellModifier(librariesListViewer, LIBRARY_NAME));
+		TableViewerColumn installerColumn = createColumn(librariesListViewer, "Installer", 100);
+		installerColumn.setEditingSupport(new LibraryCellModifier(librariesListViewer, LIBRARY_INSTALLER));
 
 		librariesListViewer.setLabelProvider(new LibraryLabelProvider());
 		librariesListViewer.setInput(librariesList);
@@ -821,6 +716,7 @@ public class ROSContainerEditorFormPage extends AbstractEditorFormPage {
 			public void widgetSelected(SelectionEvent e) {
 				LibraryParam elem = new LibraryParam();
 				elem.setName("new_lib");
+				elem.setCanUpdate(true);
 				librariesList.add(elem);
 				librariesListViewer.refresh();
 				update();
@@ -987,6 +883,22 @@ public class ROSContainerEditorFormPage extends AbstractEditorFormPage {
 		}
 	}
 	//////////
+	public class DefultLiLabelProvider extends LabelProvider implements ITableLabelProvider {
+		public Image getColumnImage(Object element, int columnIndex) {
+			return null;
+		}
+
+		public String getColumnText(Object element, int columnIndex) {
+			if (element instanceof String == false) return null;
+			String elem = (String) element;
+			if (columnIndex == 0) {
+				return elem;
+			} else {
+				return "";
+			}
+		}
+	}
+	//////////
 	private class LibraryLabelProvider extends LabelProvider implements ITableLabelProvider {
 		public Image getColumnImage(Object element, int columnIndex) {
 			return null;
@@ -997,21 +909,42 @@ public class ROSContainerEditorFormPage extends AbstractEditorFormPage {
 			LibraryParam elem = (LibraryParam) element;
 			if (columnIndex == 0) {
 				return elem.getName();
+			} else if (columnIndex == 1) {
+				if(elem.canUpdate()) {
+					return elem.getInstaller();
+				} else {
+					return "";
+				}
 			} else {
 				return "";
 			}
 		}
 	}
-	private class LibraryNameCellModifier extends EditingSupport {
+	private class LibraryCellModifier extends EditingSupport {
 		private CellEditor editor;
+		int column;
 
-		public LibraryNameCellModifier(ColumnViewer viewer) {
+		public LibraryCellModifier(ColumnViewer viewer, int column) {
 			super(viewer);
-			editor = new TextCellEditor(((TableViewer) viewer).getTable());
+			
+			this.column = column;
+			switch (this.column) {
+			case LIBRARY_NAME:
+				editor = new TextCellEditor(((TableViewer) viewer).getTable());
+				break;
+			case LIBRARY_INSTALLER:
+				editor = new ComboBoxCellEditor(((TableViewer) viewer).getTable(),
+												INSTALLER_ITEMS.toArray(new String[0]),
+												SWT.READ_ONLY);
+				break;
+			default:
+				break;
+			}
 		}
 		@Override
 		protected boolean canEdit(Object element) {
-			return true;
+			LibraryParam elem = (LibraryParam) element;
+			return elem.canUpdate();
 		}
 		@Override
 		protected CellEditor getCellEditor(Object element) {
@@ -1021,20 +954,46 @@ public class ROSContainerEditorFormPage extends AbstractEditorFormPage {
 		protected Object getValue(Object element) {
 			if (element instanceof LibraryParam == false) return null;
 			LibraryParam elem = (LibraryParam) element;
-			return elem.getName();
+			
+			String label = null;
+			switch (this.column) {
+				case LIBRARY_NAME:
+					label = elem.getName();
+					break;
+				case LIBRARY_INSTALLER:
+					int index = INSTALLER_ITEMS.indexOf(elem.getInstaller());
+					return new Integer(index);
+				default:
+					break;
+			}
+			if (label == null) {
+				return null;
+			}
+			return label;
 		}
 		@Override
 		protected void setValue(Object element, Object value) {
 			if (element instanceof LibraryParam == false) return;
 			
-			String modified = (String) value;
-			boolean exists = librariesList.stream()
-					.anyMatch(item -> modified.equals(item.getName()));
-			if(exists) return;
-
 			LibraryParam elem = (LibraryParam) element;
-			elem.setName((String) value);
-			getViewer().update(element, null);
+			switch (this.column) {
+				case LIBRARY_NAME:
+					String modified = (String) value;
+					boolean exists = librariesList.stream()
+							.anyMatch(item -> modified.equals(item.getName()));
+					if(exists) return;
+
+					elem.setName((String) value);
+					getViewer().update(element, null);
+					break;
+				case LIBRARY_INSTALLER:
+					elem.setInstaller(INSTALLER_ITEMS.get(((Integer) value).intValue()));
+					getViewer().update(element, null);
+					break;
+				default:
+					break;
+			}
+
 			update();
 		}
 	}
@@ -1058,10 +1017,7 @@ public class ROSContainerEditorFormPage extends AbstractEditorFormPage {
 	}
 	//////////		
 	public void update() {
-		if( middlewareCombo != null && selectedParam != null ) {
-			selectedParam.setMiddleware(middlewareCombo.getText());
-			selectedParam.setMdlVersion(midVersionCombo.getText());
-			selectedParam.setOsVersion(osVersionCombo.getText());
+		if( workspaceText != null && selectedParam != null ) {
 			selectedParam.setWorkspace(workspaceText.getText());
 			selectedParam.setLanguage(languageCombo.getText());
 			selectedParam.setConfiguration(configCombo.getText());
@@ -1075,10 +1031,10 @@ public class ROSContainerEditorFormPage extends AbstractEditorFormPage {
 	 * データをロードする
 	 */
 	public void load() {
-		if( middlewareCombo == null ) return;
+		if( workspaceText == null ) return;
 		
-		RtcParam rtcParam = editor.getRtcParam();
-		paramList = rtcParam.getContainerSettings();
+		ROSParam rosParam = ((ROSBuilderEditor)editor).getROSParam();
+		paramList = rosParam.getContainerSettings();
 		targetListViewer.setInput(paramList);
 
 		if(0 < paramList.size()) {
@@ -1089,9 +1045,9 @@ public class ROSContainerEditorFormPage extends AbstractEditorFormPage {
 	public String validateParam() {
 		String result = null;
 
-		RtcParam rtcParam = editor.getRtcParam();
+		ROSParam rosParam = ((ROSBuilderEditor)editor).getROSParam();
 		
-		for(ContainerParam each : rtcParam.getContainerSettings()) {
+		for(ContainerParam each : rosParam.getContainerSettings()) {
 			result = ValidationUtil.validateContainerSetting(each);
 			if( result != null) return result;
 		}
@@ -1099,9 +1055,21 @@ public class ROSContainerEditorFormPage extends AbstractEditorFormPage {
 		return null;
 	}
 	
-	@Override
-	public void dispose() {
-		if( cautionFont!=null ) cautionFont.dispose();
-		super.dispose();
+	public MiddlewareDetail getMiddleware() {
+		for(String key : containerSettings.getMiddlewares().keySet() ) {
+			if(key.toLowerCase().startsWith("ros")) {
+				return containerSettings.getMiddlewares().get(key);
+			}
+		}
+		return null;
+	}
+	
+	public String getMiddlewareName() {
+		for(String key : containerSettings.getMiddlewares().keySet() ) {
+			if(key.toLowerCase().startsWith("ros")) {
+				return key;
+			}
+		}
+		return "";
 	}
 }

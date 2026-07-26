@@ -212,12 +212,12 @@ public class ParamUtil {
 			createConfigParam(profile.getConfigurationSet().getConfiguration(), rtcParam);
 		}
 		convertFromModuleLanguage(profile, managerList, rtcParam);
-		convertFromModuleLanguage(profile, rtcParam);
+		convertFromModuleActivity(profile, rtcParam);
 		//
 		return rtcParam;
 	}
 
-	private void convertFromModuleLanguage(RtcProfile profile, RtcParam rtcParam) {
+	private void convertFromModuleActivity(RtcProfile profile, RtcParam rtcParam) {
 		Actions actions = profile.getActions();
 		if( actions != null ) {
 			if( actions.getOnInitialize() != null )
@@ -307,7 +307,17 @@ public class ParamUtil {
 								.collect(Collectors.toList());
 						for(Property each : libs) {
 							jp.go.aist.rtm.rtcbuilder.container.param.LibraryParam lib = new jp.go.aist.rtm.rtcbuilder.container.param.LibraryParam();
-							lib.setName(each.getValue());
+							String strVal = each.getValue();
+							String[] elems = strVal.split("\\|");
+							if(0 < elems.length) {
+								lib.setName(elems[0]);
+							}
+							if(1 < elems.length) {
+								lib.setInstaller(elems[1]);
+							}
+							if(2 < elems.length) {
+								lib.setCanUpdate(Boolean.valueOf(elems[2]));
+							}
 							param.getLibraries().add(lib);
 						}
 						
@@ -655,7 +665,7 @@ public class ParamUtil {
 			for(jp.go.aist.rtm.rtcbuilder.container.param.LibraryParam lib : param.getLibraries()) {
 				Property prop = factory.createProperty();
 				prop.setName(strKey);
-				prop.setValue(lib.getName());
+				prop.setValue(lib.getName() + "|" + lib.getInstaller() + "|" + Boolean.valueOf(lib.canUpdate()).toString());
 				lang.getProperties().add(prop);
 			}
 			String strKeyCat = IRtcBuilderConstants.CONTAINER_PREFIX + "category_" + lang.getTargets().size();

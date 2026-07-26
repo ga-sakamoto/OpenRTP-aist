@@ -16,6 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import jp.go.aist.rtm.rtcbuilder.IRTCBMessageConstants;
+import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
+import jp.go.aist.rtm.rtcbuilder.RtcBuilderPlugin;
 import jp.go.aist.rtm.rtcbuilder.generator.param.GeneratorParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.ParamUtil;
 import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
@@ -31,6 +33,11 @@ public class ProfileHandlerROS {
 
 	private List<GenerateManager> managerList = null;
 	private boolean isDirect = false;
+
+	public ProfileHandlerROS() {
+		super();
+		managerList = RtcBuilderPlugin.getDefault().getLoader().getManagerList(IRtcBuilderConstants.MIDDLEWARE_ROS);
+	}
 
 	public 	String createInitialROSXml() {
 		String result = "";
@@ -62,7 +69,7 @@ public class ProfileHandlerROS {
 	public String convert2ROSXML(GeneratorParam generatorParam) throws Exception {
 	    String xmlFile = "";
 	    ParamUtilROS putil = new ParamUtilROS();
-		RosProfile profile = putil.convertToROSModule(generatorParam);
+		RosProfile profile = putil.convertToROSModule(generatorParam, managerList);
 		XmlHandlerROS handler = new XmlHandlerROS();
 		xmlFile = handler.convertToXmlROS(profile);
 		return xmlFile;
@@ -71,7 +78,7 @@ public class ProfileHandlerROS {
 	public String convert2ROSXML(ROSParam target) throws Exception {
 	    String xmlFile = "";
 	    ParamUtilROS putil = new ParamUtilROS();
-		RosProfile profile = putil.convertToROSModule(target);
+		RosProfile profile = putil.convertToROSModule(target, managerList);
 		XmlHandlerROS handler = new XmlHandlerROS();
 		xmlFile = handler.convertToXmlROS(profile);
 		return xmlFile;
@@ -79,7 +86,7 @@ public class ProfileHandlerROS {
 
 	public RosProfile convert2XMLProfile(ROSParam target) throws Exception {
 	    ParamUtilROS putil = new ParamUtilROS();
-	    RosProfile profile = putil.convertToROSModule(target);
+	    RosProfile profile = putil.convertToROSModule(target, managerList);
 		return profile;
 	}
 
@@ -126,7 +133,7 @@ public class ProfileHandlerROS {
 	
 	public void storeToXML(String filePath, GeneratorParam generatorParam) throws Exception {
 	    ParamUtilROS putil = new ParamUtilROS();
-		RosProfile profile = putil.convertToROSModule(generatorParam);
+		RosProfile profile = putil.convertToROSModule(generatorParam, managerList);
 		XmlHandlerROS handler = new XmlHandlerROS();
 
 		String xmlString = handler.convertToXmlROS(profile);

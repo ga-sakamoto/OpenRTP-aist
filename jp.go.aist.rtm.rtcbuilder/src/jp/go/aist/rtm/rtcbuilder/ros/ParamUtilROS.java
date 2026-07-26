@@ -2,7 +2,9 @@ package jp.go.aist.rtm.rtcbuilder.ros;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.openrtp.namespaces.ros.version01.Action;
 import org.openrtp.namespaces.ros.version01.ActionDoc;
@@ -38,7 +40,11 @@ import org.openrtp.namespaces.ros.version01.Topic;
 import org.openrtp.namespaces.ros.version01.TopicDoc;
 import org.openrtp.namespaces.ros.version01.TopicExt;
 
+import jp.ac.meijo_u.iso22166_part202.util.IProfileConstants;
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
+import jp.go.aist.rtm.rtcbuilder.container.param.ContainerParam;
+import jp.go.aist.rtm.rtcbuilder.container.param.LibraryParam;
+import jp.go.aist.rtm.rtcbuilder.container.param.RepositoryParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.GeneratorParam;
 import jp.go.aist.rtm.rtcbuilder.generator.param.ParamUtil;
 import jp.go.aist.rtm.rtcbuilder.generator.param.PropertyParam;
@@ -52,7 +58,6 @@ import jp.go.aist.rtm.rtcbuilder.ros.param.TargetEnvParam;
 import jp.go.aist.rtm.rtcbuilder.ros.param.TimerParam;
 import jp.go.aist.rtm.rtcbuilder.ros.param.TopicParam;
 import jp.go.aist.rtm.rtcbuilder.ros.ui.preference.ROSPreferenceManager;
-import jp.go.aist.rtm.rtcbuilder.ui.preference.DocumentPreferenceManager;
 
 public class ParamUtilROS extends ParamUtil {
 	public static RosProfile initialROSXml() {
@@ -162,8 +167,7 @@ public class ParamUtilROS extends ParamUtil {
 		if( profile.getParameters() != null ) {
 			createParameterParam(profile.getParameters(), rosParam);
 		}
-		convertFromModuleLanguage(profile, rosParam);
-//		convertFromModuleLanguage(profile, rtcParam);
+		convertFromModuleLanguage(profile, managerList, rosParam);
 		//
 		return rosParam;
 	}
@@ -231,7 +235,6 @@ public class ParamUtilROS extends ParamUtil {
 				rosParam.getTimers().add(elem);
 			}
 		}
-		
 	}
 	
 	private void convertFromModuleLifecycleCallback(int callbackId, LifecycleCallback callback, ROSParam rosParam) {
@@ -431,7 +434,7 @@ public class ParamUtilROS extends ParamUtil {
 		}
 	}
 
-	private void convertFromModuleLanguage(RosProfile profile, ROSParam rosParam) {
+	private void convertFromModuleLanguage(RosProfile profile, List<GenerateManager> managerList, ROSParam rosParam) {
 		Language language = profile.getLanguage();
 		if (language != null) {
 			String langKind = language.getKind();
@@ -439,21 +442,20 @@ public class ParamUtilROS extends ParamUtil {
 				rosParam.getLangList().clear();
 				rosParam.getLangList().add(IRtcBuilderConstants.LANG_CPP);
 			} else {
-//				if (managerList != null) {
-//					for (GenerateManager manager : managerList) {
-//						manager.convertProfile(profile);
-//						language = profile.getLanguage();
-//						langKind = language.getKind();
-//						if (langKind.trim().equals(manager.getManagerKey())) {
-//							rtcParam.getLangList().clear();
-//							rtcParam.getLangList().add(manager.getManagerKey());
-//							rtcParam.getLangArgList().clear();
-//							rtcParam.getLangArgList().add(manager.getLangArgList());
-//							rtcParam.setRtmVersion(manager.getTargetVersion());
-//							break;
-//						}
-//					}
-//				}
+				if (managerList != null) {
+					for (GenerateManager manager : managerList) {
+						manager.convertProfile(profile);
+						language = profile.getLanguage();
+						langKind = language.getKind();
+						if (langKind.trim().equals(manager.getManagerKey())) {
+							rosParam.getLangList().clear();
+							rosParam.getLangList().add(manager.getManagerKey());
+							rosParam.getLangArgList().clear();
+							rosParam.getLangArgList().add(manager.getLangArgList());
+							break;
+						}
+					}
+				}
 			}
 			if( language instanceof LanguageExt ) {
 				LanguageExt langExt = (LanguageExt)language;
@@ -469,16 +471,82 @@ public class ParamUtilROS extends ParamUtil {
 					env.getLibraries().add(libParam);
 				}
 				rosParam.setTargetEnv(env);
+				//////
+				String strKey = IRtcBuilderConstants.CONTAINER_PREFIX + "middleware_";
+				List<Property> middlewares = langExt.getProperties().stream()
+						.filter(p -> p.getName().toLowerCase().startsWith(strKey))
+						.collect(Collectors.toList());
+				for(Property each : middlewares) {
+					String[] elems = each.getName().split("_");
+					String strIdx = elems[elems.length-1];
+					
+					ContainerParam param = new ContainerParam();
+					param.setMiddleware(each.getValue());
+					param.setMdlVersion(getTargetPropertyValue(langExt.getProperties(), "mdl_version_"+ strIdx));
+					param.setOsVersion(getTargetPropertyValue(langExt.getProperties(), "os_version_"+ strIdx));
+					param.setWorkspace(getTargetPropertyValue(langExt.getProperties(), "workspace_"+ strIdx));
+					param.setLanguage(getTargetPropertyValue(langExt.getProperties(), "language_"+ strIdx));
+					param.setConfiguration(getTargetPropertyValue(langExt.getProperties(), "configration_"+ strIdx));
+					
+					List<Property> libs = getTargetProperty(langExt.getProperties(), IRtcBuilderConstants.CONTAINER_PREFIX + "lib_"+ strIdx);
+					for(Property lib : libs) {
+						String[] libElems = lib.getValue().split("\\|");
+						LibraryParam libParam = new LibraryParam();
+						if(0 < libElems.length) {
+							libParam.setName(libElems[0]);
+						}
+						if(1 < libElems.length) {
+							libParam.setInstaller(libElems[1]);
+						}
+						if(2 < libElems.length) {
+							libParam.setCanUpdate(Boolean.valueOf(libElems[2]).booleanValue());
+						}
+						param.getLibraries().add(libParam);
+					}
+					
+					List<Property> repos = getTargetProperty(langExt.getProperties(), IRtcBuilderConstants.CONTAINER_PREFIX + "giturl_"+ strIdx);
+					for(Property repo : repos) {
+						String[] repoElems = repo.getValue().split("\\|");
+						RepositoryParam repoParam = new RepositoryParam();
+						if(0 < repoElems.length) {
+							repoParam.setURL(repoElems[0]);
+						}
+						if(1 < repoElems.length) {
+							repoParam.setBranch(repoElems[1]);
+						}
+						param.getRepositories().add(repoParam);
+					}
+					
+					List<Property> preSets = getTargetProperty(langExt.getProperties(), IRtcBuilderConstants.CONTAINER_PREFIX + "category_"+ strIdx);
+					for(Property preSet : preSets) {
+						param.getPreSets().add(preSet.getValue());
+					}
+
+					rosParam.getContainerSettings().add(param);
+				}
 			}
 		}
 	}
+	private String getTargetPropertyValue(List<Property> propList, String key) {
+		String elemKey = IRtcBuilderConstants.CONTAINER_PREFIX + key;
+		List<Property> filtered = getTargetProperty(propList, elemKey);
+		if(filtered.size() == 1) return filtered.get(0).getValue();
+		return "";
+	}
+	
+	private List<Property> getTargetProperty(List<Property> propList, String key) {
+		List<Property> filtered = propList.stream()
+									.filter(p -> p.getName().toLowerCase().equals(key))
+									.collect(Collectors.toList());
+		return filtered;
+	}
 	//////////
-	public RosProfile convertToROSModule(GeneratorParam generatorParam) throws Exception {
+	public RosProfile convertToROSModule(GeneratorParam generatorParam, List<GenerateManager> managerList) throws Exception {
 		ROSParam rosParam = generatorParam.getROSParam();
-		return convertToROSModule(rosParam);
+		return convertToROSModule(rosParam, managerList);
 	}
 
-	public RosProfile convertToROSModule(ROSParam target) throws Exception {
+	public RosProfile convertToROSModule(ROSParam target, List<GenerateManager> managerList) throws Exception {
 		org.openrtp.namespaces.ros.version01.ObjectFactory factory = new org.openrtp.namespaces.ros.version01.ObjectFactory();
 		RosProfile profile = factory.createRosProfile();
 		profile.setVersion(target.getSchemaVersion());
@@ -509,34 +577,43 @@ public class ParamUtilROS extends ParamUtil {
 		for(ParameterParam paramp : target.getParameters()) {
 			profile.getParameters().add(createParameter(paramp));
 		}
-		convertToModuleLanguage(target, factory, profile);
-//		
-//		for(ContainerParam param : target.getContainerSettings()) {
-//			LanguageExt lang =  (LanguageExt)profile.getLanguage();
-////			lang.getTargets().clear();
-//			
-//			TargetEnvironment env = createTargetEnv(param);
-//			lang.getTargets().add(env);
-//			
-//			String strKey = IRtcBuilderConstants.CONTAINER_PREFIX + "lib_" + lang.getTargets().size();
-//			for(jp.go.aist.rtm.rtcbuilder.container.param.LibraryParam lib : param.getLibraries()) {
-//				Property prop = factory.createProperty();
-//				prop.setName(strKey);
-//				prop.setValue(lib.getName());
-//				lang.getProperties().add(prop);
-//			}
-//			String strKeyCat = IRtcBuilderConstants.CONTAINER_PREFIX + "category_" + lang.getTargets().size();
-//			for(String each : param.getPreSets()) {
-//				Property prop = factory.createProperty();
-//				prop.setName(strKeyCat);
-//				prop.setValue(each);
-//				lang.getProperties().add(prop);
-//			}
-//		}
-//
-//		deleteInapplicableItem(profile, managerList);
+		convertToModuleLanguage(managerList, target, factory, profile);
+		
+		LanguageExt lang = (LanguageExt)profile.getLanguage();
+		for(int index=0; index<target.getContainerSettings().size(); index++) {
+			ContainerParam param = target.getContainerSettings().get(index);
+			
+			addContainerInfo(factory, "middleware_" + index, param.getMiddleware(), lang);
+			addContainerInfo(factory, "mdl_version_" + index, param.getMdlVersion(), lang);
+			addContainerInfo(factory, "os_version_" + index, param.getOsVersion(), lang);
+			addContainerInfo(factory, "workspace_" + index, param.getWorkspace(), lang);
+			addContainerInfo(factory, "language_" + index, param.getLanguage(), lang);
+			addContainerInfo(factory, "configration_" + index, param.getConfiguration(), lang);
+			for(LibraryParam lib : param.getLibraries() ) {
+				String strVal = lib.getName() + "|" + lib.getInstaller() + "|" + lib.canUpdate();
+				addContainerInfo(factory, "lib_" + index, strVal, lang);
+				
+			}
+			for(RepositoryParam rep : param.getRepositories() ) {
+				String strVal = rep.getURL() + "|" + rep.getBranch();
+				addContainerInfo(factory, "giturl_" + index, strVal, lang);
+				
+			}
+			for(String each : param.getPreSets()) {
+				addContainerInfo(factory, "category_" + index, each, lang);
+			}
+		}
 
 		return profile;
+	}
+	
+	private void addContainerInfo(org.openrtp.namespaces.ros.version01.ObjectFactory factory,
+									String key, String value, LanguageExt lang) {
+		String strKey = IRtcBuilderConstants.CONTAINER_PREFIX + key;
+		Property prop = factory.createProperty();
+		prop.setName(strKey);
+		prop.setValue(value);
+		lang.getProperties().add(prop);
 	}
 	
 	private void convertToModuleBasicROS(ROSParam param, org.openrtp.namespaces.ros.version01.ObjectFactory factory, RosProfile profile) {
@@ -740,11 +817,21 @@ public class ParamUtilROS extends ParamUtil {
 		return param;
 	}
 
-	private void convertToModuleLanguage(ROSParam param, ObjectFactory factory, RosProfile profile) {
+	private void convertToModuleLanguage(List<GenerateManager> managerList, ROSParam param, ObjectFactory factory, RosProfile profile) {
 		LanguageExt language = factory.createLanguageExt();
 		for( String languagep : param.getLangList() ) {
 			if(languagep.equals(IRtcBuilderConstants.LANG_CPP)) {
 				language.setKind(IRtcBuilderConstants.LANG_CPP);
+			} else {
+				if( managerList != null ) {
+					for( Iterator<GenerateManager> iter = managerList.iterator(); iter.hasNext(); ) {
+						GenerateManager manager = iter.next();
+						if( languagep.trim().equals(manager.getManagerKey())) {
+							language.setKind(manager.getManagerKey());
+							break;
+						}
+					}
+				}
 			}
 		}
 		//

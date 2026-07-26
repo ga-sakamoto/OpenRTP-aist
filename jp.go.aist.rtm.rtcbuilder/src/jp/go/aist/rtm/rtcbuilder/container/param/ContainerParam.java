@@ -123,6 +123,8 @@ public class ContainerParam extends AbstractRecordedParam {
 	public void prepareLibraries(ContainerConfig containerConfig) {
 		MappingDb mdb = containerConfig.mappingDb;
 		Map<String, Map<String, PackageProvider>> libraries = mdb.libraries;
+		this.aptList.clear();
+		this.pipList.clear();
 		
 		for(String lib : this.defaultLibs) {
 			if(libraries.keySet().contains(lib) == false) {

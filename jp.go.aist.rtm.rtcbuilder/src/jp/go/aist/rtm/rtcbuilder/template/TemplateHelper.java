@@ -30,12 +30,9 @@ import static jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants.DOC_UNIT_PREFIX;
 import static jp.go.aist.rtm.rtcbuilder.util.StringUtil.splitString;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
-import jp.go.aist.rtm.rtcbuilder.container.param.ContainerParam;
-import jp.go.aist.rtm.rtcbuilder.container.param.setting.ContainerConfig;
 import jp.go.aist.rtm.rtcbuilder.fsm.EventParam;
 import jp.go.aist.rtm.rtcbuilder.fsm.StateParam;
 import jp.go.aist.rtm.rtcbuilder.fsm.TransitionParam;
@@ -581,7 +578,11 @@ public class TemplateHelper {
 	}
 	
 	public String convOSVersion(String source) {
-		String result = source.replace(" ", "");
+		String result = source;
+		if(result.contains("(")) {
+			result = result.substring(0, result.indexOf("(") - 1);
+		}
+		result = result.replace(" ", "");
 		return result.toLowerCase();
 	}
 	
