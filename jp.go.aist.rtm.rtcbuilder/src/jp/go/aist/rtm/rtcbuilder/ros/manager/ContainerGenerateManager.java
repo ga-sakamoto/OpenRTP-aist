@@ -15,8 +15,8 @@ import jp.go.aist.rtm.rtcbuilder.ParamBase;
 import jp.go.aist.rtm.rtcbuilder.container.param.ContainerParam;
 import jp.go.aist.rtm.rtcbuilder.container.param.setting.ContainerConfig;
 import jp.go.aist.rtm.rtcbuilder.generator.GeneratedResult;
-import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
 import jp.go.aist.rtm.rtcbuilder.manager.GenerateManager;
+import jp.go.aist.rtm.rtcbuilder.ros.param.ROSParam;
 import jp.go.aist.rtm.rtcbuilder.template.TemplateHelper;
 import jp.go.aist.rtm.rtcbuilder.template.TemplateUtil;
 import jp.go.aist.rtm.rtcbuilder.ui.preference.ContainerPreferenceManager;
@@ -52,24 +52,24 @@ public class ContainerGenerateManager extends GenerateManager {
 	 * @return 出力結果のリスト
 	 */
 	public List<GeneratedResult> generateTemplateCode(ParamBase baseParam) {
-		RtcParam rtcParam = (RtcParam)baseParam;
+		ROSParam rosParam = (ROSParam)baseParam;
 		
-		if(rtcParam.getContainerSettings() == null || rtcParam.getContainerSettings().size() == 0) {
+		if(rosParam.getContainerSettings() == null || rosParam.getContainerSettings().size() == 0) {
 			return new ArrayList<GeneratedResult>();
 		}
 
 		Map<String, Object> contextMap = new HashMap<String, Object>();
 		contextMap.put("template", TEMPLATE_PATH);
-		contextMap.put("rtcParam", rtcParam);
+		contextMap.put("rosParam", rosParam);
 		contextMap.put("tmpltHelper", new TemplateHelper());
 		
 		ContainerConfig containerConfig;
-		if(rtcParam.getContainerConfig()==null) {
+		if(rosParam.getContainerConfig()==null) {
 			String configText = ContainerPreferenceManager.getInstance().getSettings();
 			ObjectMapper mapper = new ObjectMapper();
 			try {
 				containerConfig = mapper.readValue(configText, ContainerConfig.class);
-				rtcParam.setContainerConfig(containerConfig);
+				rosParam.setContainerConfig(containerConfig);
 			} catch (Exception e) {
 				return new ArrayList<GeneratedResult>();
 			}
@@ -77,13 +77,13 @@ public class ContainerGenerateManager extends GenerateManager {
 
 		List<GeneratedResult> result = new ArrayList<GeneratedResult>();
 		
-		for(ContainerParam param : rtcParam.getContainerSettings()) {
-			param.prepareLibraries(rtcParam.getContainerConfig());
+		for(ContainerParam param : rosParam.getContainerSettings()) {
+			param.prepareLibraries(rosParam.getContainerConfig());
 			contextMap.put("containerParam", param);
 			
 			StringBuilder builder = new StringBuilder();
 			builder.append("scripts/");
-			builder.append(rtcParam.getName()).append("__");
+			builder.append(rosParam.getNodeName()).append("__");
 			
 			String osInfo = param.getOsVersion();
 			String[] elems = osInfo.split(" ");

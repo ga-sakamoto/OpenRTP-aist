@@ -19,25 +19,23 @@ import jp.go.aist.rtm.rtcbuilder.container.param.RepositoryParam;
 import jp.go.aist.rtm.rtcbuilder.container.param.setting.ContainerConfig;
 import jp.go.aist.rtm.rtcbuilder.generator.GeneratedResult;
 import jp.go.aist.rtm.rtcbuilder.generator.param.GeneratorParam;
-import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
 import jp.go.aist.rtm.rtcbuilder.ros.manager.ContainerGenerateManager;
+import jp.go.aist.rtm.rtcbuilder.ros.param.ROSParam;
 
 public class ContainerROS2Test extends TestBase {
 
-	RtcParam rtcParam;
+	ROSParam rosParam;
 	GeneratorParam genParam;
 	ContainerConfig containerConfig;
 
 	@Before
 	protected void setUp() throws Exception {
 		genParam = new GeneratorParam();
-		rtcParam = new RtcParam(genParam, true);
-		rtcParam.setOutputProject(rootPath + "/resource/work");
-		rtcParam.setLanguage(IRtcBuilderConstants.LANG_CPP);
-		rtcParam.setLanguageArg(IRtcBuilderConstants.LANG_CPP_ARG);
-		rtcParam.setRtmVersion("1.0.0");
-		rtcParam.setIsTest(true);
-		genParam.setRtcParam(rtcParam);
+		rosParam = new ROSParam(genParam, true);
+		rosParam.setOutputProject(rootPath + "/resource/work");
+		rosParam.setLanguage(IRtcBuilderConstants.LANG_CPP);
+		rosParam.setLanguageArg(IRtcBuilderConstants.LANG_CPP_ARG);
+		genParam.setROSParam(rosParam);
 		
 		ObjectMapper mapper = new ObjectMapper();
 		try {
@@ -45,7 +43,7 @@ public class ContainerROS2Test extends TestBase {
 			String content = new String(bytes, StandardCharsets.UTF_8);
 			
 			containerConfig = mapper.readValue(content, ContainerConfig.class);
-			rtcParam.setContainerConfig(containerConfig);
+			rosParam.setContainerConfig(containerConfig);
 		} catch (Exception ex) {
 			int a = 0;
 		}
@@ -61,11 +59,11 @@ public class ContainerROS2Test extends TestBase {
 	}
 
 	public void testCranePlusMinCpp() throws Exception {
-		rtcParam.setName("crane_plus");
-		rtcParam.setDescription("CRANE+ V2ロボット用のROS 2パッケージスイート。制御、記述、シミュレーション、およびMoveIt!設定ファイルが含まれています。");
-		rtcParam.setVersion("1.0.1");
-		rtcParam.setVender("Shota Aoki, Atsushi Kuwagata, Yusuke Kato");
-		rtcParam.setCategory("Sample");
+		rosParam.setNodeName("crane_plus");
+		rosParam.setDescription("CRANE+ V2ロボット用のROS 2パッケージスイート。制御、記述、シミュレーション、およびMoveIt!設定ファイルが含まれています。");
+		rosParam.setVersion("1.0.1");
+		rosParam.setMaintainer("Shota Aoki, Atsushi Kuwagata, Yusuke Kato");
+		rosParam.setCategory("Sample");
 		
 		ContainerParam param = new ContainerParam();
 		param.setMiddleware("ROS 2");
@@ -75,7 +73,7 @@ public class ContainerROS2Test extends TestBase {
 		param.setLanguage("C++");
 		param.setConfiguration("Min");
 		param.updateDefaultLibs(containerConfig);
-		rtcParam.getContainerSettings().add(param);
+		rosParam.getContainerSettings().add(param);
 		/////
 		List<String> libraries = Arrays.asList(
 				"rclcpp", 
@@ -136,18 +134,18 @@ public class ContainerROS2Test extends TestBase {
 		Generator generator = new Generator();
 		generator.clearGenerateManager();
 		generator.addGenerateManager(new ContainerGenerateManager());
-		List<GeneratedResult> result = generator.generateTemplateCode(genParam);
+		List<GeneratedResult> result = generator.generateTemplateCodeROS(genParam);
 
 		String resourceDir = rootPath + "/resource/scripts/ROS/";
 		checkCode(result, resourceDir, "crane_plus__Ubuntu-24.04__ROS2-jazzy__cpp_Min.Dockerfile");
 	}
 	
 	public void testCranePlusFullCpp() throws Exception {
-		rtcParam.setName("crane_plus");
-		rtcParam.setDescription("CRANE+ V2ロボット用のROS 2パッケージスイート。制御、記述、シミュレーション、およびMoveIt!設定ファイルが含まれています。");
-		rtcParam.setVersion("1.0.1");
-		rtcParam.setVender("Shota Aoki, Atsushi Kuwagata, Yusuke Kato");
-		rtcParam.setCategory("Sample");
+		rosParam.setNodeName("crane_plus");
+		rosParam.setDescription("CRANE+ V2ロボット用のROS 2パッケージスイート。制御、記述、シミュレーション、およびMoveIt!設定ファイルが含まれています。");
+		rosParam.setVersion("1.0.1");
+		rosParam.setMaintainer("Shota Aoki, Atsushi Kuwagata, Yusuke Kato");
+		rosParam.setCategory("Sample");
 		
 		ContainerParam param = new ContainerParam();
 		param.setMiddleware("ROS 2");
@@ -157,7 +155,7 @@ public class ContainerROS2Test extends TestBase {
 		param.setLanguage("C++");
 		param.setConfiguration("Full");
 		param.updateDefaultLibs(containerConfig);
-		rtcParam.getContainerSettings().add(param);
+		rosParam.getContainerSettings().add(param);
 		/////
 		List<String> libraries = Arrays.asList(
 				"rclcpp", 
@@ -218,18 +216,18 @@ public class ContainerROS2Test extends TestBase {
 		Generator generator = new Generator();
 		generator.clearGenerateManager();
 		generator.addGenerateManager(new ContainerGenerateManager());
-		List<GeneratedResult> result = generator.generateTemplateCode(genParam);
+		List<GeneratedResult> result = generator.generateTemplateCodeROS(genParam);
 
 		String resourceDir = rootPath + "/resource/scripts/ROS/";
 		checkCode(result, resourceDir, "crane_plus__Ubuntu-24.04__ROS2-jazzy__cpp_Full.Dockerfile");
 	}
 	
 	public void testMinimalPublisherCpp() throws Exception {
-		rtcParam.setName("ros2_minimal_publisher_cpp");
-		rtcParam.setDescription("ROS 2公式examplesのJazzy C++ Minimal Publisherビルドサンプル。");
-		rtcParam.setVersion("1.0.1");
-		rtcParam.setVender("ROS 2 examples maintainers");
-		rtcParam.setCategory("Sample");
+		rosParam.setNodeName("ros2_minimal_publisher_cpp");
+		rosParam.setDescription("ROS 2公式examplesのJazzy C++ Minimal Publisherビルドサンプル。");
+		rosParam.setVersion("1.0.1");
+		rosParam.setMaintainer("ROS 2 examples maintainers");
+		rosParam.setCategory("Sample");
 		
 		ContainerParam param = new ContainerParam();
 		param.setMiddleware("ROS 2");
@@ -239,7 +237,7 @@ public class ContainerROS2Test extends TestBase {
 		param.setLanguage("C++");
 		param.setConfiguration("Min");
 		param.updateDefaultLibs(containerConfig);
-		rtcParam.getContainerSettings().add(param);
+		rosParam.getContainerSettings().add(param);
 		/////
 		/////
 		RepositoryParam rep2 = new RepositoryParam();
@@ -250,18 +248,18 @@ public class ContainerROS2Test extends TestBase {
 		Generator generator = new Generator();
 		generator.clearGenerateManager();
 		generator.addGenerateManager(new ContainerGenerateManager());
-		List<GeneratedResult> result = generator.generateTemplateCode(genParam);
+		List<GeneratedResult> result = generator.generateTemplateCodeROS(genParam);
 
 		String resourceDir = rootPath + "/resource/scripts/ROS/";
 		checkCode(result, resourceDir, "ros2_minimal_publisher_cpp__Ubuntu-24.04__ROS2-jazzy__cpp_Min.Dockerfile");
 	}
 	
 	public void testMinimalPublisherPython() throws Exception {
-		rtcParam.setName("ros2_minimal_publisher_python");
-		rtcParam.setDescription("ROS 2公式examplesのJazzy Python Minimal Publisherビルドサンプル。");
-		rtcParam.setVersion("1.0.1");
-		rtcParam.setVender("ROS 2 examples maintainers");
-		rtcParam.setCategory("Sample");
+		rosParam.setNodeName("ros2_minimal_publisher_python");
+		rosParam.setDescription("ROS 2公式examplesのJazzy Python Minimal Publisherビルドサンプル。");
+		rosParam.setVersion("1.0.1");
+		rosParam.setMaintainer("ROS 2 examples maintainers");
+		rosParam.setCategory("Sample");
 		
 		ContainerParam param = new ContainerParam();
 		param.setMiddleware("ROS 2");
@@ -271,7 +269,7 @@ public class ContainerROS2Test extends TestBase {
 		param.setLanguage("Python");
 		param.setConfiguration("Min");
 		param.updateDefaultLibs(containerConfig);
-		rtcParam.getContainerSettings().add(param);
+		rosParam.getContainerSettings().add(param);
 		/////
 		List<String> libraries = Arrays.asList(
 				"python3-setuptools"
@@ -286,18 +284,18 @@ public class ContainerROS2Test extends TestBase {
 		Generator generator = new Generator();
 		generator.clearGenerateManager();
 		generator.addGenerateManager(new ContainerGenerateManager());
-		List<GeneratedResult> result = generator.generateTemplateCode(genParam);
+		List<GeneratedResult> result = generator.generateTemplateCodeROS(genParam);
 
 		String resourceDir = rootPath + "/resource/scripts/ROS/";
 		checkCode(result, resourceDir, "ros2_minimal_publisher_python__Ubuntu-24.04__ROS2-jazzy__python_Min.Dockerfile");
 	}
 	
 	public void testManualPython() throws Exception {
-		rtcParam.setName("ros2_manual_apt_pip");
-		rtcParam.setDescription("ROS 2 Jazzy Python sample that installs JSON-unknown jq and packaging libraries through manually selected apt and pip Installers.");
-		rtcParam.setVersion("1.0.1");
-		rtcParam.setVender("ROS 2 examples maintainers");
-		rtcParam.setCategory("Sample");
+		rosParam.setNodeName("ros2_manual_apt_pip");
+		rosParam.setDescription("ROS 2 Jazzy Python sample that installs JSON-unknown jq and packaging libraries through manually selected apt and pip Installers.");
+		rosParam.setVersion("1.0.1");
+		rosParam.setMaintainer("ROS 2 examples maintainers");
+		rosParam.setCategory("Sample");
 		
 		ContainerParam param = new ContainerParam();
 		param.setMiddleware("ROS 2");
@@ -307,7 +305,7 @@ public class ContainerROS2Test extends TestBase {
 		param.setLanguage("Python");
 		param.setConfiguration("Min");
 		param.updateDefaultLibs(containerConfig);
-		rtcParam.getContainerSettings().add(param);
+		rosParam.getContainerSettings().add(param);
 		/////
 		List<String> libraries = Arrays.asList(
 				"python3-setuptools",
@@ -323,7 +321,7 @@ public class ContainerROS2Test extends TestBase {
 		Generator generator = new Generator();
 		generator.clearGenerateManager();
 		generator.addGenerateManager(new ContainerGenerateManager());
-		List<GeneratedResult> result = generator.generateTemplateCode(genParam);
+		List<GeneratedResult> result = generator.generateTemplateCodeROS(genParam);
 
 		String resourceDir = rootPath + "/resource/scripts/ROS/";
 		checkCode(result, resourceDir, "ros2_manual_apt_pip__Ubuntu-24.04__ROS2-jazzy__python_Min.Dockerfile");

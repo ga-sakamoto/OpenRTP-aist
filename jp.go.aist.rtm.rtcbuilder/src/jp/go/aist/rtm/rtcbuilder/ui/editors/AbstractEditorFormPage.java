@@ -10,20 +10,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import jp.go.aist.rtm.rtcbuilder.RtcBuilderPlugin;
-import jp.go.aist.rtm.rtcbuilder.generator.IDLParamConverter;
-import jp.go.aist.rtm.rtcbuilder.generator.param.DataTypeParam;
-import jp.go.aist.rtm.rtcbuilder.generator.param.idl.IdlPathParam;
-import jp.go.aist.rtm.rtcbuilder.model.component.BuildView;
-import jp.go.aist.rtm.rtcbuilder.util.FileUtil;
-import jp.go.aist.rtm.rtcbuilder.util.RTCUtil;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceProxy;
-import org.eclipse.core.resources.IResourceProxyVisitor;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -62,6 +52,14 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import jp.go.aist.rtm.rtcbuilder.RtcBuilderPlugin;
+import jp.go.aist.rtm.rtcbuilder.generator.IDLParamConverter;
+import jp.go.aist.rtm.rtcbuilder.generator.param.DataTypeParam;
+import jp.go.aist.rtm.rtcbuilder.generator.param.idl.IdlPathParam;
+import jp.go.aist.rtm.rtcbuilder.model.component.BuildView;
+import jp.go.aist.rtm.rtcbuilder.util.FileUtil;
+import jp.go.aist.rtm.rtcbuilder.util.RTCUtil;
 
 public abstract class AbstractEditorFormPage extends FormPage {
 

@@ -11,7 +11,6 @@ import java.io.OutputStreamWriter;
 import java.util.List;
 
 import org.openrtp.namespaces.ros.version01.RosProfile;
-import org.openrtp.namespaces.rtc.version03.RtcProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,12 +18,9 @@ import jp.go.aist.rtm.rtcbuilder.IRTCBMessageConstants;
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
 import jp.go.aist.rtm.rtcbuilder.RtcBuilderPlugin;
 import jp.go.aist.rtm.rtcbuilder.generator.param.GeneratorParam;
-import jp.go.aist.rtm.rtcbuilder.generator.param.ParamUtil;
-import jp.go.aist.rtm.rtcbuilder.generator.param.RtcParam;
 import jp.go.aist.rtm.rtcbuilder.manager.GenerateManager;
 import jp.go.aist.rtm.rtcbuilder.ros.param.ROSParam;
 import jp.go.aist.rtm.rtcbuilder.ros.ui.editors.IMessageConstantsROS;
-import jp.go.aist.rtm.toolscommon.profiles.util.XmlHandler;
 import jp.go.aist.rtm.toolscommon.profiles.util.XmlHandlerROS;
 
 public class ProfileHandlerROS {

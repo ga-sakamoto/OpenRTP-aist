@@ -73,6 +73,7 @@ import jp.go.aist.rtm.rtcbuilder.ros.IRtcBuilderConstantsROS;
 import jp.go.aist.rtm.rtcbuilder.ros.ProfileHandlerROS;
 import jp.go.aist.rtm.rtcbuilder.ros.manager.CXXGenerateManager;
 import jp.go.aist.rtm.rtcbuilder.ros.manager.CommonGenerateManager;
+import jp.go.aist.rtm.rtcbuilder.ros.manager.ContainerGenerateManager;
 import jp.go.aist.rtm.rtcbuilder.ros.param.PackageParam;
 import jp.go.aist.rtm.rtcbuilder.ros.param.ROSParam;
 import jp.go.aist.rtm.rtcbuilder.ui.Perspective.LanguageProperty;
@@ -453,6 +454,7 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 						}
 					}
 				}
+				rtcBuilder.addGenerateManager(new ContainerGenerateManager());
 				
 				GeneratorParam generatorParam = editor.getGeneratorParam();
 				String genTime = DATE_FORMAT.format(new GregorianCalendar().getTime());

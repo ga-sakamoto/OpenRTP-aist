@@ -51,8 +51,6 @@ import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
 import jp.go.aist.rtm.rtcbuilder.RtcBuilderPlugin;
 import jp.go.aist.rtm.rtcbuilder.container.param.ContainerParam;
 import jp.go.aist.rtm.rtcbuilder.container.param.setting.ContainerConfig;
-import jp.go.aist.rtm.rtcbuilder.container.param.setting.MiddlewareDetail;
-import jp.go.aist.rtm.rtcbuilder.container.param.setting.Version;
 import jp.go.aist.rtm.rtcbuilder.extension.AddFormPageExtension;
 import jp.go.aist.rtm.rtcbuilder.extension.EditorExtension;
 import jp.go.aist.rtm.rtcbuilder.fsm.ScXMLHandler;

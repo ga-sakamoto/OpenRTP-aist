@@ -104,6 +104,23 @@ public class ROSParam extends ParamBase implements Serializable {
 		setUpdated(false);
 	}
 
+	public ROSParam(GeneratorParam parent, boolean isTest) {
+		this.parent = parent;
+
+		if (!isTest) {
+			ProfileHandlerROS handler = new ProfileHandlerROS();
+			rosxml = handler.createInitialROSXml();
+		}
+
+		actions = new RecordedList<ActionsParam>();
+		for (int intidx = IRtcBuilderConstantsROS.ACTIVITY_CONFIGURE; intidx < IRtcBuilderConstantsROS.ACTIVITY_DUMMY; intidx++) {
+			actions.add(new ActionsParam());
+		}
+		this.target_env.setRosVersion("2");
+		//
+		setUpdated(false);
+	}
+
 	public void initialize() {
 		this.packageName = ROSParam.DEFAULT_PACKAGE_NAME;
 		this.nodeName = ROSParam.DEFAULT_NODE_NAME;

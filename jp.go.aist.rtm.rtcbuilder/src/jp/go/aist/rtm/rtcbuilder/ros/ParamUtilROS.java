@@ -40,7 +40,6 @@ import org.openrtp.namespaces.ros.version01.Topic;
 import org.openrtp.namespaces.ros.version01.TopicDoc;
 import org.openrtp.namespaces.ros.version01.TopicExt;
 
-import jp.ac.meijo_u.iso22166_part202.util.IProfileConstants;
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
 import jp.go.aist.rtm.rtcbuilder.container.param.ContainerParam;
 import jp.go.aist.rtm.rtcbuilder.container.param.LibraryParam;

@@ -12,8 +12,8 @@ ${sharp} 2. Multi-Architecture and Metadata
 ARG TARGETARCH
 LABEL org.opencontainers.image.architecture="${dol}{TARGETARCH:-amd64}"
 ${sharp} Metadata
-LABEL org.opencontainers.image.authors="${rtcParam.vender}"
-LABEL org.opencontainers.image.description="${rtcParam.description}"
+LABEL org.opencontainers.image.authors="${rosParam.maintainer}"
+LABEL org.opencontainers.image.description="${rosParam.description}"
 
 ${sharp} 3. Environment Variables
 ENV DEBIAN_FRONTEND=noninteractive
