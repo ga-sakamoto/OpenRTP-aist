@@ -20,12 +20,12 @@
     ],
     "functional_presets": {
       "Image Processing": [
-        "OpenCV",
-        "OpenCV-Python"
+            "opencv",
+            "opencv-python"
       ],
       "Camera": [
-        "OpenCV",
-        "OpenCV-Python",
+            "opencv",
+            "opencv-python",
         "libudev-dev"
       ],
       "RTM Tools": [
@@ -43,7 +43,7 @@
         "gnuplot"
       ],
       "Hardware Control": [
-        "DynamixelSDK",
+            "dynamixelsdk",
         "libdynamixel",
         "libmikataarm",
         "libaqua",
@@ -75,6 +75,16 @@
           "apt": "cmake"
         }
       },
+      "libboost-all-dev": {
+        "default": {
+          "apt": "libboost-all-dev"
+        }
+      },
+      "boost": {
+        "default": {
+          "apt": "libboost-all-dev"
+        }
+      },
       "python-is-python3": {
         "default": {
           "apt": "python-is-python3"
@@ -85,7 +95,7 @@
           "apt": "python3-pip"
         }
       },
-      "OpenRTM-aist": {
+      "openrtm-aist": {
         "c++": {
           "apt": "openrtm2 openrtm2-dev openrtm2-idl openrtm2-naming"
         },
@@ -96,26 +106,20 @@
           "apt": "openrtm2"
         }
       },
-      "OpenRTM-aist-Python": {
-        "openrtm": {
-          "apt": "openrtm2-python3 openrtm2-naming"
-        },
-        "ubuntu": {
-          "apt": "openrtm2-python3 openrtm2-naming"
-        },
+      "openrtm2": {
         "default": {
-          "apt": "openrtm2-python3 openrtm2-naming"
+          "apt": "openrtm2"
         }
       },
-      "openrtm-aist": {
+      "openrtm-aist-python": {
         "openrtm": {
-          "apt": ""
+          "apt": "openrtm2-python3 openrtm2-naming"
         },
         "ubuntu": {
-          "apt": ""
+          "apt": "openrtm2-python3 openrtm2-naming"
         },
         "default": {
-          "apt": ""
+          "apt": "openrtm2-python3 openrtm2-naming"
         }
       },
       "openrtm-aist-dev": {
@@ -144,7 +148,12 @@
           "apt": "openrtm2-naming"
         }
       },
-      "omniORB": {
+      "openrtm2-python3": {
+        "default": {
+          "apt": "openrtm2-python3"
+        }
+      },
+      "omniorb": {
         "openrtm": {
           "apt": "libomniorb4-dev omniidl"
         },
@@ -214,30 +223,6 @@
           "apt": "openrtm2-dev"
         }
       },
-      "rtm-naming": {
-        "openrtm": {
-          "apt": ""
-        },
-        "default": {
-          "apt": ""
-        }
-      },
-      "rtm-config": {
-        "openrtm": {
-          "apt": ""
-        },
-        "default": {
-          "apt": ""
-        }
-      },
-      "rtm-skelwrapper": {
-        "openrtm": {
-          "apt": "openrtm2-dev"
-        },
-        "default": {
-          "apt": "openrtm2-dev"
-        }
-      },
       "coil": {
         "openrtm": {
           "apt": "openrtm2-dev"
@@ -249,7 +234,7 @@
           "apt": "openrtm2-dev"
         }
       },
-      "OpenCV": {
+      "opencv": {
         "ubuntu": {
           "apt": "libopencv-dev"
         },
@@ -263,7 +248,7 @@
           "apt": "libopencv-dev"
         }
       },
-      "OpenCV-Python": {
+      "opencv-python": {
         "python": {
           "apt": "python3-opencv"
         },
@@ -347,7 +332,7 @@
           "apt": "libudev-dev"
         }
       },
-      "DynamixelSDK": {
+      "dynamixelsdk": {
         "openrtm": {
           "apt": "build-essential"
         },

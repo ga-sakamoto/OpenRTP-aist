@@ -95,11 +95,11 @@ public class ContainerRTCTest extends TestBase {
 		checkCode(result, resourceDir, "openrtm_manual_apt_pip__Ubuntu-24.04__OpenRTM-latest__cpp_Std.Dockerfile");
 	}
 	
-	public void testSimplePython() throws Exception {
-		rtcParam.setName("SimplePythonRTC");
-		rtcParam.setDescription("Simple OpenRTM C++ environment sample for RTCBuilder Dockerfile generation. This profile does not specify GitURL, so the generated Dockerfile only prepares the OpenRTM C++ container environment.");
+	public void testRTCActivationTestCpp() throws Exception {
+		rtcParam.setName("RTCActivationTest");
+		rtcParam.setDescription("OpenRTM 2.x C++ RTC sample for testing component activation. The repository root is directly buildable with CMake.");
 		rtcParam.setVersion("1.0.1");
-		rtcParam.setVender("rsdlab");
+		rtcParam.setVender("Nobu19800");
 		rtcParam.setCategory("Sample");
 		
 		ContainerParam param = new ContainerParam();
@@ -107,28 +107,34 @@ public class ContainerRTCTest extends TestBase {
 		param.setMdlVersion("latest");
 		param.setOsVersion("Ubuntu 24.04");
 		param.setWorkspace("workspace");
-		param.setLanguage("Python");
+		param.setLanguage("C++");
 		param.setConfiguration("Std");
 		param.updateDefaultLibs(containerConfig);
 		rtcParam.getContainerSettings().add(param);
-		/////
+
 		List<String> libraries = Arrays.asList(
-				"OpenRTM-aist-Python" 
+				"OpenRTM-aist", 
+				"omniORB" 
 				);
 		createLibraries(param, libraries, "apt");
+		/////
+		RepositoryParam rep1 = new RepositoryParam();
+		rep1.setURL("https://github.com/Nobu19800/RTCActivationTest.git");
+		rep1.setBranch("main");
+		param.getRepositories().add(rep1);
 
 		Generator generator = new Generator();
 		List<GeneratedResult> result = generator.generateTemplateCode(genParam);
 
 		String resourceDir = rootPath + "/resource/scripts/RTC/";
-		checkCode(result, resourceDir, "SimplePythonRTC__Ubuntu-24.04__OpenRTM-latest__python_Std.Dockerfile");
+		checkCode(result, resourceDir, "RTCActivationTest__Ubuntu-24.04__OpenRTM-latest__cpp_Std.Dockerfile");
 	}
 	
-	public void testSimpleCpp() throws Exception {
-		rtcParam.setName("SimpleCppRTC");
-		rtcParam.setDescription("Simple OpenRTM C++ environment sample for RTCBuilder Dockerfile generation. This profile does not specify GitURL, so the generated Dockerfile only prepares the OpenRTM C++ container environment.");
+	public void testRTCLoadTestCpp() throws Exception {
+		rtcParam.setName("RTCLoadTest");
+		rtcParam.setDescription("OpenRTM 2.x C++ RTC sample that measures RTC startup time. The repository root is directly buildable with CMake.");
 		rtcParam.setVersion("1.0.1");
-		rtcParam.setVender("rsdlab");
+		rtcParam.setVender("Nobu19800");
 		rtcParam.setCategory("Sample");
 		
 		ContainerParam param = new ContainerParam();
@@ -147,18 +153,23 @@ public class ContainerRTCTest extends TestBase {
 				);
 		createLibraries(param, libraries, "apt");
 
+		RepositoryParam rep1 = new RepositoryParam();
+		rep1.setURL("https://github.com/Nobu19800/RTCLoadTest.git");
+		rep1.setBranch("main");
+		param.getRepositories().add(rep1);
+
 		Generator generator = new Generator();
 		List<GeneratedResult> result = generator.generateTemplateCode(genParam);
 
 		String resourceDir = rootPath + "/resource/scripts/RTC/";
-		checkCode(result, resourceDir, "SimpleCppRTC__Ubuntu-24.04__OpenRTM-latest__cpp_Std.Dockerfile");
+		checkCode(result, resourceDir, "RTCLoadTest__Ubuntu-24.04__OpenRTM-latest__cpp_Std.Dockerfile");
 	}
 	
-	public void testMikataArmStdCpp() throws Exception {
-		rtcParam.setName("MikataArmRTC");
-		rtcParam.setDescription("「Mikata Arm」というロボットアームを制御するためのソフトウェアモジュールである");
+	public void testSimplePythonRTCStdPython() throws Exception {
+		rtcParam.setName("SimplePythonRTC");
+		rtcParam.setDescription("Simple OpenRTM Python environment sample for RTCBuilder Dockerfile generation. This profile does not specify GitURL, so the generated Dockerfile only prepares the OpenRTM Python container environment.");
 		rtcParam.setVersion("1.0.1");
-		rtcParam.setVender("Ogata Labratory");
+		rtcParam.setVender("rsdlab");
 		rtcParam.setCategory("Sample");
 		
 		ContainerParam param = new ContainerParam();
@@ -166,36 +177,26 @@ public class ContainerRTCTest extends TestBase {
 		param.setMdlVersion("latest");
 		param.setOsVersion("Ubuntu 24.04");
 		param.setWorkspace("workspace");
-		param.setLanguage("C++");
+		param.setLanguage("Python");
 		param.setConfiguration("Std");
 		param.updateDefaultLibs(containerConfig);
 		rtcParam.getContainerSettings().add(param);
 		/////
 		List<String> libraries = Arrays.asList(
-				"OpenRTM-aist", 
-				"omniORB", 
-				"eigen", 
-				"libdynamixel", 
-				"libmikataarm", 
-				"libaqua" 
+				"openrtm-aist-python"
 				);
 		createLibraries(param, libraries, "apt");
 		/////
-		RepositoryParam rep2 = new RepositoryParam();
-		rep2.setURL("https://github.com/ogata-lab-admin/MikataArmRTC.git");
-		rep2.setBranch("master");
-		param.getRepositories().add(rep2);
-
 		Generator generator = new Generator();
 		List<GeneratedResult> result = generator.generateTemplateCode(genParam);
 
 		String resourceDir = rootPath + "/resource/scripts/RTC/";
-		checkCode(result, resourceDir, "MikataArmRTC__Ubuntu-24.04__OpenRTM-latest__cpp_Std.Dockerfile");
+		checkCode(result, resourceDir, "SimplePythonRTC__Ubuntu-24.04__OpenRTM-latest__python_Std.Dockerfile");
 	}
 	
-	public void testCranePlusStdCpp() throws Exception {
-		rtcParam.setName("CraneplusRTC");
-		rtcParam.setDescription("CraneplusRTC");
+	public void testSimpleCppRTCStdCpp() throws Exception {
+		rtcParam.setName("SimpleCppRTC");
+		rtcParam.setDescription("Simple OpenRTM C++ environment sample for RTCBuilder Dockerfile generation. This profile does not specify GitURL, so the generated Dockerfile only prepares the OpenRTM C++ container environment.");
 		rtcParam.setVersion("1.0.1");
 		rtcParam.setVender("rsdlab");
 		rtcParam.setCategory("Sample");
@@ -212,22 +213,14 @@ public class ContainerRTCTest extends TestBase {
 		/////
 		List<String> libraries = Arrays.asList(
 				"OpenRTM-aist", 
-				"omniORB", 
-				"DynamixelSDK", 
-				"boost", 
-				"OpenCV" 
+				"omniORB"
 				);
 		createLibraries(param, libraries, "apt");
 		/////
-		RepositoryParam rep2 = new RepositoryParam();
-		rep2.setURL("https://github.com/masahiro0720/CRANEplusRTC_ver2.git");
-		rep2.setBranch("master");
-		param.getRepositories().add(rep2);
-
 		Generator generator = new Generator();
 		List<GeneratedResult> result = generator.generateTemplateCode(genParam);
 
 		String resourceDir = rootPath + "/resource/scripts/RTC/";
-		checkCode(result, resourceDir, "CraneplusRTC__Ubuntu-24.04__OpenRTM-latest__cpp_Std.Dockerfile");
+		checkCode(result, resourceDir, "SimpleCppRTC__Ubuntu-24.04__OpenRTM-latest__cpp_Std.Dockerfile");
 	}
 }

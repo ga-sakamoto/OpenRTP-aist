@@ -174,7 +174,7 @@
           "apt": "libopencv-dev"
         }
       },
-      "DynamixelSDK": {
+      "dynamixelsdk": {
         "ros2": {
           "apt": "ros-${ROS_DISTRO}-dynamixel-sdk"
         },
@@ -293,9 +293,7 @@
       },
       "gazebo_ros_pkgs": {
         "ros2": {
-          "jazzy": {
-            "apt": "ros-${ROS_DISTRO}-ros-gz-sim"
-          }
+          "apt": "ros-${ROS_DISTRO}-ros-gz-sim"
         }
       },
       "ros_gz_bridge": {
@@ -760,9 +758,7 @@
       },
       "gazebo_ros2_control": {
         "ros2": {
-          "jazzy": {
-            "apt": "ros-${ROS_DISTRO}-gz-ros2-control"
-          }
+          "apt": "ros-${ROS_DISTRO}-gz-ros2-control"
         }
       },
       "navigation": {

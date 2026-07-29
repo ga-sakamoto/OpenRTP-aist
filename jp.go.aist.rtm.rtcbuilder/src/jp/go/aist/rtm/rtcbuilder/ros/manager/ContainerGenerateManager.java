@@ -82,7 +82,7 @@ public class ContainerGenerateManager extends GenerateManager {
 			contextMap.put("containerParam", param);
 			
 			StringBuilder builder = new StringBuilder();
-			builder.append("scripts/");
+			builder.append("Dockerfile/");
 			builder.append(rosParam.getNodeName()).append("__");
 			
 			String osInfo = param.getOsVersion();

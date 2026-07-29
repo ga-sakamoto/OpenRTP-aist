@@ -138,7 +138,7 @@ public class ContainerParam extends AbstractRecordedParam {
 		for(LibraryParam libParam : this.libraries) {
 			String libName = libParam.getName();
 			String installer = libParam.getInstaller();
-			if(libraries.keySet().contains(libName) == false) {
+			if(libraries.keySet().contains(libName.toLowerCase()) == false) {
 				if(installer.equals("apt")) {
 					this.aptList.add(libName);	
 				} else if(installer.equals("pip")) {
@@ -147,7 +147,7 @@ public class ContainerParam extends AbstractRecordedParam {
 				continue;
 			}
 			//
-			Map<String, PackageProvider> libDef = libraries.get(libName);
+			Map<String, PackageProvider> libDef = libraries.get(libName.toLowerCase());
 			parseLibs(libDef, installer);
 		}
 	}

@@ -3,30 +3,20 @@
 # ==============================================================================
 
 # 1. Base Image
-# This Dockerfile uses an official OpenRTM image.
-# Note:
-#   OpenRTM target policy: latest.
 FROM docker.io/openrtm/devel-rtm:ubuntu24.04
 
 # 2. Multi-Architecture and Metadata
 ARG TARGETARCH
 LABEL org.opencontainers.image.architecture="${TARGETARCH:-amd64}"
-LABEL org.opencontainers.image.base.name="docker.io/openrtm/devel-rtm:ubuntu24.04"
-LABEL org.opencontainers.image.version="OpenRTM-latest"
-LABEL org.opencontainers.image.source-openrtm-version="2.0.1"
-LABEL org.opencontainers.image.legacy-build-compat="false"
 LABEL org.opencontainers.image.authors="rsdlab"
 LABEL org.opencontainers.image.description="Simple OpenRTM C++ environment sample for RTCBuilder Dockerfile generation. This profile does not specify GitURL, so the generated Dockerfile only prepares the OpenRTM C++ container environment."
-LABEL org.opencontainers.image.ref.name="The official OpenRTM Ubuntu 24.04 development image is used as the base. The latest OpenRTM packages are installed from the official APT repository at build time."
 
 
 # 3. Environment Variables
 ENV DEBIAN_FRONTEND=noninteractive
 ENV OPENRTM_VERSION=latest
-ENV SOURCE_OPENRTM_VERSION=2.0.1
 ENV OPENRTM_NAMING_COMMAND=rtm2-naming
 ENV OPENRTM_CONFIG_COMMAND=rtm2-config
-ENV OPENRTM_LEGACY_BUILD_COMPAT=false
 
 
 # 4. Configure the official OpenRTM APT repository
@@ -55,12 +45,6 @@ RUN apt-get update \
     omniidl \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-
-# OpenRTM 1.x command compatibility links for legacy CMake projects
-RUN if [ -x /usr/bin/rtm2-skelwrapper ]; then \
-        ln -sf /usr/bin/rtm2-skelwrapper /usr/bin/rtm-skelwrapper; \
-        ln -sf /usr/bin/rtm2-skelwrapper /bin/rtm-skelwrapper; \
-    fi
 
 # 6. Create Non-root User
 ARG USERNAME=container_user
