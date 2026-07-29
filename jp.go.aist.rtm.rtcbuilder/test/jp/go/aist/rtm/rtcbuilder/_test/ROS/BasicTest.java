@@ -822,4 +822,168 @@ public class BasicTest extends TestBase {
 		checkCode(result, resourceDir, "eval7_extra_dependency_cpp_pkg_interfaces/CMakeLists.txt");
 		checkCode(result, resourceDir, "eval7_extra_dependency_cpp_pkg_interfaces/LICENSE");
 	}
+	
+	public void test08PoseController() throws Exception {
+		rosParam.setPackageName("eval8_pose_controller_cpp_pkg");
+		rosParam.setNodeName("pose_controller_node");
+		rosParam.setClassName("PoseControllerNode");
+		rosParam.setDescription("Lifecycle pose controller that drives a simulated mobile robot to a target pose using odometry feedback.");
+		rosParam.setVersion("0.0.1");
+		rosParam.setCategory("Controller");
+		rosParam.setMaintainer("rsdlab");
+		rosParam.setContactAddress("todo@example.com");
+		rosParam.setLicense("Apache-2.0");
+		
+		rosParam.setActionImplemented(IRtcBuilderConstantsROS.ACTIVITY_CLEANUP, true);
+		rosParam.setActionImplemented(IRtcBuilderConstantsROS.ACTIVITY_SHUTDOWN, true);
+		rosParam.setActionImplemented(IRtcBuilderConstantsROS.ACTIVITY_ERROR, true);
+		
+		rosParam.getExtActionFiles().add("MoveToPose.action");
+		
+		TopicParam topic1 = new TopicParam("Subscribe");
+		topic1.setName("odom");
+		topic1.setMessageType("nav_msgs/msg/Odometry");
+		topic1.setVarCallbackName("odom_callback");
+		topic1.setReliabilityType("BestEffort");
+		topic1.setHistoryType("Keep Last");
+		topic1.setDepth(10);
+		topic1.setDocDescription("Receive the current simulated robot pose and velocity.");
+		rosParam.getTopicSubscribes().add(topic1);
+
+		TopicParam topic2 = new TopicParam("Publish");
+		topic2.setName("cmd_vel");
+		topic2.setMessageType("geometry_msgs/msg/Twist");
+		topic2.setVarCallbackName("cmd_vel_publisher");
+		topic2.setReliabilityType("Reliable");
+		topic2.setHistoryType("Keep Last");
+		topic2.setDepth(10);
+		topic2.setDocDescription("Publish linear and angular velocity commands for the simulated mobile base.");
+		rosParam.getTopicPublishes().add(topic2);
+		
+		ActionParam action = new ActionParam();
+		action.setName("move_to_pose");
+		action.setType("MoveToPose");
+		action.setCallbackName("execute_move_to_pose");
+		action.setDocDescription("Drive the simulated mobile robot to a requested target pose.");
+		rosParam.getActionServers().add(action);
+		
+		ParameterParam param1 = new ParameterParam();
+		param1.setName("linear_gain");
+		param1.setType("double");
+		param1.setDefaultValue("1.0");
+		param1.setMin(0.0);
+		param1.setMax(10.0);
+		param1.setStep(0.1);
+		param1.setReadOnly(false);
+		param1.setDocDescription("Proportional gain for linear velocity control.");
+		rosParam.getParameters().add(param1);
+		
+		ParameterParam param2 = new ParameterParam();
+		param2.setName("angular_gain");
+		param2.setType("double");
+		param2.setDefaultValue("2.0");
+		param2.setMin(0.0);
+		param2.setMax(10.0);
+		param2.setStep(0.1);
+		param2.setReadOnly(false);
+		param2.setDocDescription("Proportional gain for angular velocity control.");
+		rosParam.getParameters().add(param2);
+
+		ParameterParam param3 = new ParameterParam();
+		param3.setName("max_linear_speed");
+		param3.setType("double");
+		param3.setDefaultValue("0.5");
+		param3.setMin(0.0);
+		param3.setMax(2.0);
+		param3.setStep(0.1);
+		param3.setReadOnly(false);
+		param3.setDocDescription("Maximum commanded linear velocity.");
+		rosParam.getParameters().add(param3);
+
+		ParameterParam param4 = new ParameterParam();
+		param4.setName("max_angular_speed");
+		param4.setType("double");
+		param4.setDefaultValue("1.0");
+		param4.setMin(0.0);
+		param4.setMax(5.0);
+		param4.setStep(0.1);
+		param4.setReadOnly(false);
+		param4.setDocDescription("Maximum commanded angular velocity.");
+		rosParam.getParameters().add(param4);
+		
+		ParameterParam param5 = new ParameterParam();
+		param5.setName("goal_tolerance");
+		param5.setType("double");
+		param5.setDefaultValue("0.05");
+		param5.setMin(0.001);
+		param5.setMax(1.0);
+		param5.setStep(0.01);
+		param5.setReadOnly(false);
+		param5.setDocDescription("Position tolerance used to determine goal completion.");
+		rosParam.getParameters().add(param5);
+
+		ParameterParam param6 = new ParameterParam();
+		param6.setName("yaw_tolerance");
+		param6.setType("double");
+		param6.setDefaultValue("0.05");
+		param6.setMin(0.001);
+		param6.setMax(3.14);
+		param6.setStep(0.01);
+		param6.setReadOnly(false);
+		param6.setDocDescription("Yaw tolerance used to determine final orientation completion.");
+		rosParam.getParameters().add(param6);
+		
+		ParameterParam param7 = new ParameterParam();
+		param7.setName("odom_timeout_sec");
+		param7.setType("double");
+		param7.setDefaultValue("0.5");
+		param7.setMin(0.05);
+		param7.setMax(10.0);
+		param7.setStep(0.05);
+		param7.setReadOnly(false);
+		param7.setDocDescription("Maximum allowed age of odometry data before stopping the robot.");
+		rosParam.getParameters().add(param7);
+
+		ParameterParam param8 = new ParameterParam();
+		param8.setName("control_enabled");
+		param8.setType("bool");
+		param8.setDefaultValue("true");
+		param8.setReadOnly(false);
+		param8.setDocDescription("Enable or disable velocity control.");
+		rosParam.getParameters().add(param8);
+		
+		TimerParam timer = new TimerParam();
+		timer.setName("control_timer");
+		timer.setRate(0.05);
+		timer.setCallBack("control_timer_callback");
+		timer.setDescription("Calculate and publish velocity commands while a move-to-pose goal is active.");
+		rosParam.getTimers().add(timer);
+
+		rosParam.convertInfo();
+
+		Generator generator = new Generator();
+		generator.clearGenerateManager();
+		generator.addGenerateManager(new CommonGenerateManager());
+		generator.addGenerateManager(new CXXGenerateManager());
+
+		List<GeneratedResult> result = generator.generateTemplateCodeROS(genParam);
+
+		String resourceDir = rootPath + "/resource/ROS/eval8_pose_controller_cpp_pkg_project/";
+
+		//eval8_pose_controller_cpp_pkg
+		checkCode(result, resourceDir, "eval8_pose_controller_cpp_pkg/README.md");
+		checkCode(result, resourceDir, "eval8_pose_controller_cpp_pkg/package.xml");
+		checkCode(result, resourceDir, "eval8_pose_controller_cpp_pkg/CMakeLists.txt");
+		checkCode(result, resourceDir, "eval8_pose_controller_cpp_pkg/LICENSE");
+		checkCode(result, resourceDir, "eval8_pose_controller_cpp_pkg/config/params.yaml");
+		checkCode(result, resourceDir, "eval8_pose_controller_cpp_pkg/launch/pose_controller_node.launch.py");
+		checkCode(result, resourceDir, "eval8_pose_controller_cpp_pkg/include/eval8_pose_controller_cpp_pkg/pose_controller_node.hpp");
+		checkCode(result, resourceDir, "eval8_pose_controller_cpp_pkg/src/main.cpp");
+		checkCode(result, resourceDir, "eval8_pose_controller_cpp_pkg/src/pose_controller_node.cpp");
+		//eval8_pose_controller_cpp_pkg_interfaces
+		checkCode(result, resourceDir, "eval8_pose_controller_cpp_pkg_interfaces/README.md");
+		checkCode(result, resourceDir, "eval8_pose_controller_cpp_pkg_interfaces/package.xml");
+		checkCode(result, resourceDir, "eval8_pose_controller_cpp_pkg_interfaces/CMakeLists.txt");
+		checkCode(result, resourceDir, "eval8_pose_controller_cpp_pkg_interfaces/LICENSE");
+	}
 }

@@ -140,7 +140,10 @@ public class TemplateHelperROS {
 		
 		for(ActionParam each : source.getActionClients()) {
 			String type = each.getType();
-			if(notExtAction(type, source) == false) continue;
+			if(notExtAction(type, source) == false) {
+				result.add(source.getPackageName() + "_interfaces");
+				continue;
+			}
 			String[] elems = type.split("/");
 			if(elems == null || elems.length == 0) continue;
 			
@@ -151,7 +154,10 @@ public class TemplateHelperROS {
 		}
 		for(ActionParam each : source.getActionServers()) {
 			String type = each.getType();
-			if(notExtAction(type, source) == false) continue;
+			if(notExtAction(type, source) == false) {
+				result.add(source.getPackageName() + "_interfaces");
+				continue;
+			}
 			String[] elems = type.split("/");
 			if(elems == null || elems.length == 0) continue;
 			
@@ -428,7 +434,9 @@ public class TemplateHelperROS {
 			String type = getMessageBasename(param.getType());
 			if(exsisted.contains(type)) continue;
 			if(result.contains(type)) continue;
-			if(source.getExtActionFiles().contains(type + ".action") == false) {
+			if(source.getExtActionFiles().contains(type + ".action")) {
+				result.add(source.getPackageName() + "_interfaces");
+			} else {
 				result.add(type);
 			}
 		}
@@ -436,11 +444,23 @@ public class TemplateHelperROS {
 			String type = getMessageBasename(param.getType());
 			if(exsisted.contains(type)) continue;
 			if(result.contains(type)) continue;
-			if(source.getExtActionFiles().contains(type + ".action") == false) {
+			if(source.getExtActionFiles().contains(type + ".action")) {
+				result.add(source.getPackageName() + "_interfaces");
+			} else {
 				result.add(type);
 			}
 		}
 		
 		return result;
+	}
+	
+	public static String convReliabilityType(String source) {
+		if(source.toLowerCase().equals("reliable")) {
+			return "reliable";
+		}
+		if(source.toLowerCase().equals("besteffort") || source.toLowerCase().equals("best effort")) {
+			return "best_effort";
+		}
+		return "";
 	}
 }

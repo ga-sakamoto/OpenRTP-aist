@@ -96,12 +96,12 @@ CallbackReturn ${rosParam.className}::on_configure(const rclcpp_lifecycle::State
   // Publish Topic: ${topic.name}
   // Type: ${tmpltHelper.convTopicType(${topic.messageType}, ${rosParam})}
   // Description: ${topic.docDescription}
-  ${topic.varCallbackName}_ = this->create_publisher<${tmpltHelper.slash2Cc(${tmpltHelper.convTopicType(${topic.messageType}, ${rosParam})})}>("${topic.name}", rclcpp::QoS(${topic.depth}).reliable());
+  ${topic.varCallbackName}_ = this->create_publisher<${tmpltHelper.slash2Cc(${tmpltHelper.convTopicType(${topic.messageType}, ${rosParam})})}>("${topic.name}", rclcpp::QoS(${topic.depth}).${tmpltHelper.convReliabilityType(${topic.reliabilityType})}());
 #end
 #end
 #if( ${rosParam.topicSubscribes.size()}>0 )
 #foreach($topic in ${rosParam.topicSubscribes})
-  ${topic.name}_sub_ = this->create_subscription<${tmpltHelper.slash2Cc(${topic.messageType})}>("${topic.name}", rclcpp::QoS(${topic.depth}).reliable(), std::bind(&${rosParam.className}::${topic.varCallbackName}, this, std::placeholders::_1));
+  ${topic.name}_sub_ = this->create_subscription<${tmpltHelper.slash2Cc(${topic.messageType})}>("${topic.name}", rclcpp::QoS(${topic.depth}).${tmpltHelper.convReliabilityType(${topic.reliabilityType})}(), std::bind(&${rosParam.className}::${topic.varCallbackName}, this, std::placeholders::_1));
 #end
 #end
 #if( ${rosParam.serviceClients.size()}>0 )

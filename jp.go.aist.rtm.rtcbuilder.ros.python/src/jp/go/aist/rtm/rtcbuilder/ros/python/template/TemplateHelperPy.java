@@ -78,10 +78,11 @@ public class TemplateHelperPy {
 	}
 
 	public static String getReliableType(String source) {
-		if(source.equals("Reliable")) {
+		if(source.toLowerCase().equals("reliable")) {
 			return "RELIABLE";
-		} else if(source.equals("Best_Effort")) {
-			return "BESTEFFORT";
+		} else if(source.toLowerCase().equals("best_effort")
+					|| source.toLowerCase().equals("besteffort")) {
+			return "BEST_EFFORT";
 		}
 		return "";
 	}
