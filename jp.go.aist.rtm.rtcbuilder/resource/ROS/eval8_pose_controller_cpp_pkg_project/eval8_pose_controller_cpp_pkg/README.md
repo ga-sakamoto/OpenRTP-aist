@@ -69,7 +69,7 @@ metadata, CMake `find_package()`, and `ament_target_dependencies()`,
 but the generator does not add arbitrary library includes or API calls for them.
 
 Extra dependencies:
-- `eval8_pose_controller_cpp_pkg_interfaces`
+- None
 
 ## Run
 

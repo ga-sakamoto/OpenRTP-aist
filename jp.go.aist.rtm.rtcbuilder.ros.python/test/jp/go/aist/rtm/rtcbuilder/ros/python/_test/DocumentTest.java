@@ -27,7 +27,7 @@ public class DocumentTest extends TestBase {
 
 	protected void setUp() throws Exception {
 		genParam = new GeneratorParam();
-		rosParam = new ROSParam(genParam);
+		rosParam = new ROSParam(genParam, true);
 		rosParam.setOutputProject(rootPath + "/resource/work");
 		rosParam.setLanguage(IRtcBuilderConstantsPython.LANG_PYTHON);
 		rosParam.setLanguageArg(IRtcBuilderConstantsPython.LANG_PYTHON_ARG);

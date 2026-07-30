@@ -65,7 +65,7 @@ metadata,
 but the generator does not add arbitrary library includes or API calls for them.
 
 Extra dependencies:
-- `eval5_robot_py_pkg_interfaces`
+- None
 
 ## Run
 

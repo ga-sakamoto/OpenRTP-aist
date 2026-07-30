@@ -110,6 +110,7 @@ public class TemplateHelperROS {
 
 	public static List<String> getServicePackage(ROSParam source) {
 		List<String> result = new ArrayList<String>();
+		List<String> existed = getTopicTypes(source);
 		
 		for(ServiceParam each : source.getServiceClients()) {
 			String type = each.getType();
@@ -117,9 +118,9 @@ public class TemplateHelperROS {
 			String[] elems = type.split("/");
 			if(elems == null || elems.length == 0) continue;
 			
-			if(result.contains(elems[0])==false) {
-				result.add(elems[0]);
-			}
+			if(existed.contains(elems[0])) continue;
+			if(result.contains(elems[0])) continue;
+			result.add(elems[0]);
 		}
 		for(ServiceParam each : source.getServiceServers()) {
 			String type = each.getType();
@@ -127,9 +128,9 @@ public class TemplateHelperROS {
 			String[] elems = type.split("/");
 			if(elems == null || elems.length == 0) continue;
 			
-			if(result.contains(elems[0])==false) {
-				result.add(elems[0]);
-			}
+			if(existed.contains(elems[0])) continue;
+			if(result.contains(elems[0])) continue;
+			result.add(elems[0]);
 		}
 		
 		return result;
@@ -141,28 +142,34 @@ public class TemplateHelperROS {
 		for(ActionParam each : source.getActionClients()) {
 			String type = each.getType();
 			if(notExtAction(type, source) == false) {
-				result.add(source.getPackageName() + "_interfaces");
+				String typeName = source.getPackageName() + "_interfaces";
+				if(existed.contains(typeName)) continue;
+				if(result.contains(typeName)) continue;
+				result.add(typeName);
 				continue;
 			}
 			String[] elems = type.split("/");
 			if(elems == null || elems.length == 0) continue;
 			
-			if(result.contains(elems[0])) continue;
 			if(existed.contains(elems[0])) continue;
+			if(result.contains(elems[0])) continue;
 			
 			result.add(elems[0]);
 		}
 		for(ActionParam each : source.getActionServers()) {
 			String type = each.getType();
 			if(notExtAction(type, source) == false) {
-				result.add(source.getPackageName() + "_interfaces");
+				String typeName = source.getPackageName() + "_interfaces";
+				if(existed.contains(typeName)) continue;
+				if(result.contains(typeName)) continue;
+				result.add(typeName);
 				continue;
 			}
 			String[] elems = type.split("/");
 			if(elems == null || elems.length == 0) continue;
 			
-			if(result.contains(elems[0])) continue;
 			if(existed.contains(elems[0])) continue;
+			if(result.contains(elems[0])) continue;
 			
 			result.add(elems[0]);
 		}
@@ -331,7 +338,6 @@ public class TemplateHelperROS {
 	}
 
 	public static boolean hasDefinedIF(ROSParam source) {
-		if(checkCustomIF(source)) return true;
 		if(0 < source.getTargetEnv().getLibraries().size() ) return true;
 		
 		return false;
@@ -432,23 +438,30 @@ public class TemplateHelperROS {
 		
 		for(ActionParam param : source.getActionClients()) {
 			String type = getMessageBasename(param.getType());
-			if(exsisted.contains(type)) continue;
-			if(result.contains(type)) continue;
+			String typeName = "";
+			
 			if(source.getExtActionFiles().contains(type + ".action")) {
-				result.add(source.getPackageName() + "_interfaces");
+				typeName = source.getPackageName() + "_interfaces";
 			} else {
-				result.add(type);
+				typeName = type;
 			}
+			if(exsisted.contains(typeName)) continue;
+			if(result.contains(typeName)) continue;
+			result.add(typeName);
 		}
+		
 		for(ActionParam param : source.getActionServers()) {
 			String type = getMessageBasename(param.getType());
-			if(exsisted.contains(type)) continue;
-			if(result.contains(type)) continue;
+			String typeName = "";
+
 			if(source.getExtActionFiles().contains(type + ".action")) {
-				result.add(source.getPackageName() + "_interfaces");
+				typeName = source.getPackageName() + "_interfaces";
 			} else {
-				result.add(type);
+				typeName = type;
 			}
+			if(exsisted.contains(typeName)) continue;
+			if(result.contains(typeName)) continue;
+			result.add(typeName);
 		}
 		
 		return result;

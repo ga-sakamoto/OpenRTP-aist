@@ -68,7 +68,7 @@ metadata, CMake `find_package()`, and `ament_target_dependencies()`,
 but the generator does not add arbitrary library includes or API calls for them.
 
 Extra dependencies:
-- `eval5_robot_cpp_pkg_interfaces`
+- None
 
 ## Run
 
