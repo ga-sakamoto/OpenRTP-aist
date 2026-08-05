@@ -429,9 +429,12 @@ public class ROSContainerEditorFormPage extends AbstractEditorFormPage {
 		gd.heightHint = 80;
 		targetListTable.setLayoutData(gd);
 
-		createColumn(targetListViewer, "Middleware", 150);
-		createColumn(targetListViewer, "Version", 120);
-		createColumn(targetListViewer, "OS Version", 180);
+		createColumn(targetListViewer, "Middleware", 100);
+		createColumn(targetListViewer, "Version", 80);
+		createColumn(targetListViewer, "OS Version", 140);
+		createColumn(targetListViewer, "Workspace", 110);
+		createColumn(targetListViewer, "Language", 80);
+		createColumn(targetListViewer, "Configuration", 120);
 
 		targetListViewer.setLabelProvider(new TargetLabelProvider());
 		targetListViewer.setInput(paramList);
@@ -877,6 +880,12 @@ public class ROSContainerEditorFormPage extends AbstractEditorFormPage {
 				return elem.getMdlVersion();
 			} else if (columnIndex == 2) {
 				return elem.getOsVersion();
+			} else if (columnIndex == 3) {
+				return elem.getWorkspace();
+			} else if (columnIndex == 4) {
+				return elem.getLanguage();
+			} else if (columnIndex == 5) {
+				return elem.getConfiguration();
 			} else {
 				return "";
 			}

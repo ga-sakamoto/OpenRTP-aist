@@ -70,6 +70,7 @@ public class ServiceEditorFormPage extends AbstractEditorFormPage {
 	//
 	private Text serviceNameText;
 	private Combo serviceTypeCombo;
+	private Text typePackageText;
 	private Text variableNameText;
 	
 	private Text descriptionText;
@@ -155,7 +156,7 @@ public class ServiceEditorFormPage extends AbstractEditorFormPage {
 				Messages.getString("IMC.ROS_SERVICE_LBL_SERVICENAME"), SWT.BORDER, 1);
 		//
 		Group detailGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
-		detailGroup.setLayout(new GridLayout(4, false));
+		detailGroup.setLayout(new GridLayout(5, false));
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 2;
 		detailGroup.setLayoutData(gd);
@@ -248,9 +249,32 @@ public class ServiceEditorFormPage extends AbstractEditorFormPage {
 				}
 			}
 		});
+		
+		Button reloadButton = toolkit.createButton(detailGroup, "ReLoad", SWT.PUSH);
+		reloadButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		updateDefaultValue();
+	    		serviceTypeCombo.removeAll();
+				currentList.clear();
+				currentList.addAll(typeList);
+				for(String item : currentList) {
+					serviceTypeCombo.add(item);
+				}
+
+				preSelection = null;
+				typePackageText.setText("");
+				if(0 < serviceTypeCombo.getItemCount()) {
+					serviceTypeCombo.select(0);
+				}
+			}
+		});
+		//
+		typePackageText = createLabelAndText(toolkit, detailGroup, " ", SWT.NONE, SWT.COLOR_BLACK, 2, 1);
+		toolkit.createLabel(detailGroup, "");
 		/////
 		variableNameText = createLabelAndText(toolkit, detailGroup,
-				IMessageConstantsROS.TOPIC_VARNAME, SWT.NONE, SWT.COLOR_BLACK, 2, 2);
+				IMessageConstantsROS.TOPIC_VARNAME, SWT.NONE, SWT.COLOR_BLACK, 3, 2);
 
 		/////
 		Group documentGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
@@ -350,7 +374,17 @@ public class ServiceEditorFormPage extends AbstractEditorFormPage {
 						portName.append(" (OutPort)");
 					}
 					serviceNameText.setText(portName.toString());
-					serviceTypeCombo.setText(selectParam.getType());
+
+					String strType = selectParam.getType();
+					int lastSlashIndex = strType.lastIndexOf('/');
+					if (lastSlashIndex == -1) {
+						serviceTypeCombo.setText(selectParam.getType());
+						typePackageText.setText("");
+					} else {
+						typePackageText.setText(strType.substring(0, lastSlashIndex));
+						serviceTypeCombo.setText(strType.substring(lastSlashIndex + 1));
+					}
+
 					variableNameText.setText(selectParam.getVarCallbackName());
 					descriptionText.setText(StringUtil.getDisplayDocText(selectParam.getDocDescription()));
 					argumentText.setText(StringUtil.getDisplayDocText(selectParam.getDocArgument()));
@@ -365,7 +399,12 @@ public class ServiceEditorFormPage extends AbstractEditorFormPage {
 
 	public void update() {
 		if (selectParam != null) {
-			selectParam.setType(serviceTypeCombo.getText());
+			String typePackage = typePackageText.getText(); 
+			if(typePackage == null || typePackage.length() == 0) {
+				selectParam.setType(serviceTypeCombo.getText());
+			} else {
+				selectParam.setType(typePackage + "/" + serviceTypeCombo.getText());
+			}
 			selectParam.setVarCallbackName(variableNameText.getText());
 			
 			selectParam.setDocDescription(StringUtil.getDocText(descriptionText.getText()));
@@ -388,7 +427,12 @@ public class ServiceEditorFormPage extends AbstractEditorFormPage {
 
 	private void setDocumentContents() {
 		if( preSelection != null ) {
-			preSelection.setType(serviceTypeCombo.getText());
+			String typePackage = typePackageText.getText(); 
+			if(typePackage == null || typePackage.length() == 0) {
+				preSelection.setType(serviceTypeCombo.getText());
+			} else {
+				selectParam.setType(typePackage + "/" + serviceTypeCombo.getText());
+			}
 			//
 			preSelection.setDocDescription(StringUtil.getDocText(descriptionText.getText()));
 			preSelection.setDocArgument(StringUtil.getDocText(argumentText.getText()));
@@ -399,6 +443,7 @@ public class ServiceEditorFormPage extends AbstractEditorFormPage {
 	private void clearText() {
 		serviceNameText.setText("");
 		serviceTypeCombo.select(0);
+		typePackageText.setText("");
 		variableNameText.setText("");
 		descriptionText.setText("");
 		argumentText.setText("");

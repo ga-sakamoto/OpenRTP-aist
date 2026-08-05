@@ -72,6 +72,7 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 	//
 	private Text topicNameText;
 	private Combo messageTypeCombo;
+	private Text typePackageText;
 	private Combo reliabilityCombo;
 	private Combo historyCombo;
 	private Text depthText;
@@ -276,7 +277,7 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 				Messages.getString("IMC.ROS_TOPIC_LBL_TOPICNAME"), SWT.BORDER, 1);
 		//
 		Group detailGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
-		detailGroup.setLayout(new GridLayout(4, false));
+		detailGroup.setLayout(new GridLayout(5, false));
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 2;
 		detailGroup.setLayoutData(gd);
@@ -369,12 +370,34 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 				}
 			}
 		});
+		
+		Button reloadButton = toolkit.createButton(detailGroup, "ReLoad", SWT.PUSH);
+		reloadButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		updateDefaultValue();
+				messageTypeCombo.removeAll();
+				currentList.clear();
+				currentList.addAll(typeList);
+				for(String item : currentList) {
+					messageTypeCombo.add(item);
+				}
+				
+				preSelection = null;
+				typePackageText.setText("");
+				if(0 < messageTypeCombo.getItemCount()) {
+					messageTypeCombo.select(0);
+				}
+			}
+		});
+		//
+		typePackageText = createLabelAndText(toolkit, detailGroup, " ", SWT.NONE, SWT.COLOR_BLACK, 2, 1);
 		//
 		Group qoSGroup = new Group(detailGroup, SWT.SHADOW_ETCHED_IN);
 		qoSGroup.setLayout(new GridLayout(6, false));
 		qoSGroup.setText("QoS");
 		gd = new GridData(GridData.FILL_HORIZONTAL);
-		gd.horizontalSpan = 4;
+		gd.horizontalSpan = 5;
 		qoSGroup.setLayoutData(gd);
 		
 		reliabilityCombo = createCombo(toolkit, qoSGroup, 
@@ -396,7 +419,7 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 				Messages.getString("IMC.ROS_TOPIC_LBL_DEPTH"), SWT.BORDER);
 		/////
 		variableNameText = createLabelAndText(toolkit, detailGroup,
-				IMessageConstantsROS.TOPIC_VARNAME, SWT.NONE, SWT.COLOR_BLACK, 2, 2);
+				IMessageConstantsROS.TOPIC_VARNAME, SWT.NONE, SWT.COLOR_BLACK, 3, 2);
 
 		/////
 		Group documentGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
@@ -501,7 +524,22 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 						portName.append(" (Publish)");
 					}
 					topicNameText.setText(portName.toString());
-					messageTypeCombo.setText(selectParam.getMessageType());
+					
+					String msgType = selectParam.getMessageType();
+					if(defaultList.contains(msgType)) {
+						messageTypeCombo.setText(selectParam.getMessageType());
+						typePackageText.setText("");
+					} else {
+						int lastSlashIndex = msgType.lastIndexOf('/');
+						if (lastSlashIndex == -1) {
+							messageTypeCombo.setText(selectParam.getMessageType());
+							typePackageText.setText("");
+						} else {
+							typePackageText.setText(msgType.substring(0, lastSlashIndex));
+							messageTypeCombo.setText(msgType.substring(lastSlashIndex + 1));
+						}
+					}
+					
 					reliabilityCombo.setText(selectParam.getReliabilityType());
 					historyCombo.setText(selectParam.getHistoryType());
 					depthText.setText(selectParam.getDepth().toString());
@@ -522,7 +560,12 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 
 	public void update() {
 		if (selectParam != null) {
-			selectParam.setMessageType(messageTypeCombo.getText());
+			String typePackage = typePackageText.getText(); 
+			if(typePackage == null || typePackage.length() == 0) {
+				selectParam.setMessageType(messageTypeCombo.getText());
+			} else {
+				selectParam.setMessageType(typePackage + "/" + messageTypeCombo.getText());
+			}
 
 			selectParam.setReliabilityType(reliabilityCombo.getText());
 			selectParam.setHistoryType(historyCombo.getText());
@@ -557,7 +600,12 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 
 	private void setDocumentContents() {
 		if( preSelection != null ) {
-			preSelection.setMessageType(messageTypeCombo.getText());
+			String typePackage = typePackageText.getText(); 
+			if(typePackage == null || typePackage.length() == 0) {
+				selectParam.setMessageType(messageTypeCombo.getText());
+			} else {
+				selectParam.setMessageType(typePackage + "/" + messageTypeCombo.getText());
+			}
 			
 			preSelection.setReliabilityType(reliabilityCombo.getText());
 			preSelection.setHistoryType(historyCombo.getText());
@@ -580,6 +628,7 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 	private void clearText() {
 		topicNameText.setText("");
 		messageTypeCombo.setText("");
+		typePackageText.setText("");
 		reliabilityCombo.select(0);
 		historyCombo.select(0);
 		depthText.setText("");

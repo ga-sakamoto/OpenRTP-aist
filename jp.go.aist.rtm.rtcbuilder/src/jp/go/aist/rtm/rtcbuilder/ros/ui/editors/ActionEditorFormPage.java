@@ -70,6 +70,7 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 	//
 	private Text actionNameText;
 	private Combo actionTypeCombo;
+	private Text typePackageText;
 	private Text callbackNameText;
 	
 	private Text descriptionText;
@@ -155,7 +156,7 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 				Messages.getString("IMC.ROS_ACTION_LBL_ACTIONNAME"), SWT.BORDER, 1);
 		//
 		Group detailGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
-		detailGroup.setLayout(new GridLayout(4, false));
+		detailGroup.setLayout(new GridLayout(5, false));
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
 		gd.horizontalSpan = 2;
 		detailGroup.setLayoutData(gd);
@@ -248,9 +249,32 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 				}
 			}
 		});
+		
+		Button reloadButton = toolkit.createButton(detailGroup, "ReLoad", SWT.PUSH);
+		reloadButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+	    		updateDefaultValue();
+	    		actionTypeCombo.removeAll();
+				currentList.clear();
+				currentList.addAll(typeList);
+				for(String item : currentList) {
+					actionTypeCombo.add(item);
+				}
+
+				preSelection = null;
+				typePackageText.setText("");
+				if(0 < actionTypeCombo.getItemCount()) {
+					actionTypeCombo.select(0);
+				}
+			}
+		});
+		//
+		typePackageText = createLabelAndText(toolkit, detailGroup, " ", SWT.NONE, SWT.COLOR_BLACK, 2, 1);
+		toolkit.createLabel(detailGroup, "");
 		/////
 		callbackNameText = createLabelAndText(toolkit, detailGroup,
-				Messages.getString("IMC.ROS_ACTION_LBL_CALLBACK"), SWT.NONE, SWT.COLOR_BLACK, 2, 2);
+				Messages.getString("IMC.ROS_ACTION_LBL_CALLBACK"), SWT.NONE, SWT.COLOR_BLACK, 3, 2);
 
 		/////
 		Group documentGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
@@ -353,7 +377,17 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 						portName.append(" (ActionClient)");
 					}
 					actionNameText.setText(portName.toString());
-					actionTypeCombo.setText(selectParam.getType());
+					
+					String strType = selectParam.getType();
+					int lastSlashIndex = strType.lastIndexOf('/');
+					if (lastSlashIndex == -1) {
+						actionTypeCombo.setText(selectParam.getType());
+						typePackageText.setText("");
+					} else {
+						typePackageText.setText(strType.substring(0, lastSlashIndex));
+						actionTypeCombo.setText(strType.substring(lastSlashIndex + 1));
+					}
+
 					callbackNameText.setText(selectParam.getCallbackName());
 					descriptionText.setText(StringUtil.getDisplayDocText(selectParam.getDocDescription()));
 					goalText.setText(StringUtil.getDisplayDocText(selectParam.getDocGoal()));
@@ -369,7 +403,12 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 
 	public void update() {
 		if (selectParam != null) {
-			selectParam.setType(actionTypeCombo.getText());
+			String typePackage = typePackageText.getText(); 
+			if(typePackage == null || typePackage.length() == 0) {
+				selectParam.setType(actionTypeCombo.getText());
+			} else {
+				selectParam.setType(typePackage + "/" + actionTypeCombo.getText());
+			}
 			selectParam.setCallbackName(callbackNameText.getText());
 			
 			selectParam.setDocDescription(StringUtil.getDocText(descriptionText.getText()));
@@ -393,7 +432,12 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 
 	private void setDocumentContents() {
 		if( preSelection != null ) {
-			preSelection.setType(actionTypeCombo.getText());
+			String typePackage = typePackageText.getText(); 
+			if(typePackage == null || typePackage.length() == 0) {
+				selectParam.setType(actionTypeCombo.getText());
+			} else {
+				selectParam.setType(typePackage + "/" + actionTypeCombo.getText());
+			}
 			preSelection.setCallbackName(callbackNameText.getText());
 			//
 			preSelection.setDocDescription(StringUtil.getDocText(descriptionText.getText()));

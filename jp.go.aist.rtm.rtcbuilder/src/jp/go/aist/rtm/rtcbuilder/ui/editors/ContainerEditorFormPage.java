@@ -423,9 +423,11 @@ public class ContainerEditorFormPage extends AbstractEditorFormPage {
 		gd.heightHint = 80;
 		targetListTable.setLayoutData(gd);
 
-		createColumn(targetListViewer, "Middleware", 150);
-		createColumn(targetListViewer, "Version", 120);
+		createColumn(targetListViewer, "Middleware", 100);
+		createColumn(targetListViewer, "Version", 80);
 		createColumn(targetListViewer, "OS Version", 180);
+		createColumn(targetListViewer, "Workspace", 150);
+		createColumn(targetListViewer, "Language", 80);
 
 		targetListViewer.setLabelProvider(new TargetLabelProvider());
 		targetListViewer.setInput(paramList);
@@ -866,6 +868,10 @@ public class ContainerEditorFormPage extends AbstractEditorFormPage {
 				return elem.getMdlVersion();
 			} else if (columnIndex == 2) {
 				return elem.getOsVersion();
+			} else if (columnIndex == 3) {
+				return elem.getWorkspace();
+			} else if (columnIndex == 4) {
+				return elem.getLanguage();
 			} else {
 				return "";
 			}
