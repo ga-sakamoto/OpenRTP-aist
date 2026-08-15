@@ -7,10 +7,8 @@ Bundle-Version: 2.1.0
 Bundle-Vendor: %providerName
 Bundle-Activator: jp.go.aist.rtm.rtcbuilder.ros.python.ROSBuilderPythonPlugin
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.ui,org.eclipse.core.runtime,jp.go.aist.rtm
- .rtcbuilder
+Require-Bundle: org.eclipse.ui,org.eclipse.core.runtime,jp.go.aist.rtm.rtcbuilder
 Eclipse-LazyStart: true
-Bundle-Vendor: %providerName
 Export-Package: jp.go.aist.rtm.rtcbuilder.ros.python,
  jp.go.aist.rtm.rtcbuilder.ros.python.manager,
  jp.go.aist.rtm.rtcbuilder.ros.python.template.common,
