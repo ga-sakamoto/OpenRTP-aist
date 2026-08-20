@@ -111,8 +111,10 @@ public class StringUtil {
 		if (source == null) {
             return false;
         }
-		Pattern TARGET_PATTERN = Pattern.compile("[-\\s.\\p{IsHiragana}\\p{IsKatakana}\\p{IsHan}]");		
+		Pattern TARGET_PATTERN = Pattern.compile("[-\\s.\\p{IsHiragana}\\p{IsKatakana}\\p{IsHan}]");
         return TARGET_PATTERN.matcher(source).find();
+//		Pattern TARGET_PATTERN = Pattern.compile("[- .\\p{IsHiragana}\\p{IsKatakana}\\p{IsHan}]");
+//		return TARGET_PATTERN.matcher(source).find();
     }
 
 	public static boolean checkHyphenSpaceSlashJpn(String source) {
@@ -127,7 +129,7 @@ public class StringUtil {
         if (source == null) {
             return false;
         }
-        return !source.matches(".*[A-Z].*");
+        return source.matches(".*[A-Z].*");
     }
 	
 	public static boolean checkValidIdentifier(String source) {

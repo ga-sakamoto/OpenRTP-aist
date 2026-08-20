@@ -35,6 +35,7 @@ import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -238,6 +239,20 @@ public abstract class AbstractEditorFormPage extends FormPage {
 		return portParamTableViewer;
 	}
 
+	protected Label createLabel(FormToolkit toolkit, Composite composite,
+			String labelString, int hspan, Color color) {
+		Label label = toolkit.createLabel(composite, labelString);
+		if(color != null) {
+			label.setForeground(color);
+		}
+		
+		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
+		gridData.horizontalSpan = hspan;
+		label.setLayoutData(gridData);
+		return label;
+	}
+	
+
 	protected Text createLabelAndText(FormToolkit toolkit, Composite composite,
 			String labelString) {
 		return createLabelAndText(toolkit, composite, labelString, SWT.NONE, 0);
@@ -298,6 +313,12 @@ public abstract class AbstractEditorFormPage extends FormPage {
 		});
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.horizontalSpan = hspan;
+		
+		GC gc = new GC(text);
+		int fontHeight = gc.getFontMetrics().getHeight();
+		gc.dispose();
+		gridData.heightHint = fontHeight + 4;
+		
 		text.setLayoutData(gridData);
 		return text;
 	}
@@ -314,6 +335,12 @@ public abstract class AbstractEditorFormPage extends FormPage {
 		
 		GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
 		gridData.horizontalSpan = hspan;
+		
+		GC gc = new GC(text);
+		int fontHeight = gc.getFontMetrics().getHeight();
+		gc.dispose();
+		gridData.heightHint = fontHeight + 4;
+
 		text.setLayoutData(gridData);
 		return text;
 	}
@@ -455,6 +482,11 @@ public abstract class AbstractEditorFormPage extends FormPage {
 			}
 		});
 		GridData gd = new GridData(GridData.FILL_HORIZONTAL);
+		GC gc = new GC(text);
+		int fontHeight = gc.getFontMetrics().getHeight();
+		gc.dispose();
+		gd.heightHint = fontHeight + 4;
+
 		text.setLayoutData(gd);
 
 		Button checkButton = toolkit.createButton(composite, "Browse...", SWT.PUSH);

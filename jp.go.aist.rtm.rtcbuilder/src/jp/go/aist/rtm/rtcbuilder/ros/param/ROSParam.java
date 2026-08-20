@@ -504,7 +504,7 @@ public class ROSParam extends ParamBase implements Serializable {
 		if( !StringUtil.checkHyphenSpaceSlashDotJpn(this.packageName) ) {
 			return Messages.getString("IMC.VALIDATE_BASIC_PACKAGE_NAME2");
 		}
-		if( !StringUtil.hasUppercase(this.packageName) ) {
+		if( StringUtil.hasUppercase(this.packageName) ) {
 			return Messages.getString("IMC.VALIDATE_BASIC_PACKAGE_NAME6");
 		}
 		if( !StringUtil.checkMultiUnderBar(this.packageName) ) {
@@ -721,7 +721,7 @@ public class ROSParam extends ParamBase implements Serializable {
 	public List<String> validateWarnings() {
 		List<String> result = new ArrayList<String>();
 		
-		if( !StringUtil.hasUppercase(this.nodeName) ) {
+		if( StringUtil.hasUppercase(this.nodeName) ) {
 			result.add(Messages.getString("IMC.CAUTION_BASIC_NODE_NAME"));
 		}
 		

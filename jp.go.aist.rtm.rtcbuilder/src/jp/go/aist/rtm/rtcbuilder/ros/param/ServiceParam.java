@@ -133,7 +133,7 @@ public class ServiceParam extends AbstractRecordedParam implements Serializable 
 		if(this.name == null || this.name.length() == 0) {
 			return Messages.getString("IMC.VALIDATE_SERVICE_NAME1");
 		}
-		if( !StringUtil.checkHyphenSpaceDotJpn(this.name) ) {
+		if( StringUtil.checkHyphenSpaceDotJpn(this.name) ) {
 			return Messages.getString("IMC.VALIDATE_SERVICE_NAME2");
 		}
 		if( this.name.equals("/") ) {
@@ -152,7 +152,7 @@ public class ServiceParam extends AbstractRecordedParam implements Serializable 
 		if( this.type==null || this.type.length()==0 ) {
 			return Messages.getString("IMC.VALIDATE_SERVICE_TYPE1");
 		}
-		if( !StringUtil.checkInvalidFormat(this.type) ) {
+		if( StringUtil.checkInvalidFormat(this.type) ) {
 			return Messages.getString("IMC.VALIDATE_SERVICE_TYPE2");
 		}
 		if(this.type.endsWith("msg") || this.type.endsWith("action")

@@ -190,12 +190,6 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 		load();
 	}
 
-	private String getFileExtension(String filename){
-		int index = filename.lastIndexOf(".");
-		if( index > -1 ) return filename.substring(index + 1);
-		return "";
-	}
-
 	private void switchPerspective() {
 		ROSParam rosParam = editor.getGeneratorParam().getROSParam();
 		//Pluginの存在確認
@@ -444,7 +438,7 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 				
 				List<GenerateManager> managerList = RtcBuilderPlugin
 						.getDefault().getLoader().getManagerList(IRtcBuilderConstants.MIDDLEWARE_ROS);
-				if (managerList == null) {
+				if (managerList == null || rosParam.getLangList().contains(IRtcBuilderConstants.LANG_CPP)) {
 					rtcBuilder.addGenerateManager(new CommonGenerateManager());
 					rtcBuilder.addGenerateManager(new CXXGenerateManager());
 				} else {

@@ -113,11 +113,19 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 		//
 		final Composite composite = createSectionBaseWithLabel(toolkit, form,
 				Messages.getString("IMC.ROS_ACTION_TITLE"), Messages.getString("IMC.ROS_ACTION_EXPL"), 4);
-		serverTableViewer = createPortSection(toolkit, composite,
-				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_ACTION_TBLLBL_SERVER"), 0,
+
+		createLabel(toolkit, composite,
+				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_ACTION_TBLLBL_SERVER"),
+				2,
+				getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_RED));
+		createLabel(toolkit, composite,
+				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_ACTION_TBLLBL_CLENT"),
+				2,
+				getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_RED));
+
+		serverTableViewer = createPortSection(toolkit, composite, "", 0,
 				IRtcBuilderConstantsROS.SPEC_ACTION_SERVER);
-		clientTableViewer = createPortSection(toolkit, composite,
-				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_ACTION_TBLLBL_CLENT"), 1,
+		clientTableViewer = createPortSection(toolkit, composite, "", 1,
 				IRtcBuilderConstantsROS.SPEC_ACTION_CLIENT);
 		createHintSection(toolkit, form);
 
@@ -274,7 +282,7 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 		toolkit.createLabel(detailGroup, "");
 		/////
 		callbackNameText = createLabelAndText(toolkit, detailGroup,
-				Messages.getString("IMC.ROS_ACTION_LBL_CALLBACK"), SWT.NONE, SWT.COLOR_BLACK, 3, 2);
+				Messages.getString("IMC.ROS_ACTION_LBL_CALLBACK"), SWT.BORDER, SWT.COLOR_BLACK, 3, 2);
 
 		/////
 		Group documentGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
@@ -303,6 +311,7 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 			String columnLabel, final int initSel, String role) {
 
 		final TableViewer actionTableViewer = createTableViewer(toolkit,	parent, 70);
+		actionTableViewer.getTable().setHeaderVisible(false);
 
 		final TableViewerColumn col = super.createColumn(actionTableViewer, columnLabel, IRtcBuilderConstants.SINGLE_COLUMN_WIDTH);
 		col.setEditingSupport(new ActionEditingSuport(actionTableViewer));
@@ -323,7 +332,7 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 		buttonComposite.setLayout(gl);
 		GridData gd = new GridData();
 		gd.verticalAlignment = SWT.BEGINNING;
-		gd.widthHint = 50;
+		gd.widthHint = 80;
 		buttonComposite.setLayoutData(gd);
 
 		Button addButton = toolkit.createButton(buttonComposite, "Add", SWT.PUSH);
@@ -372,9 +381,9 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 				if( selectParam != null ) {
 					StringBuffer portName = new StringBuffer(selectParam.getName());
 					if(event.getSource().equals(serverTableViewer)) {
-						portName.append(" (ActionServer)");
+						portName.append(" (Server)");
 					} else {
-						portName.append(" (ActionClient)");
+						portName.append(" (Client)");
 					}
 					actionNameText.setText(portName.toString());
 					

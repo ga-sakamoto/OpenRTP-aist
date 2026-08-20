@@ -112,11 +112,19 @@ public class ServiceEditorFormPage extends AbstractEditorFormPage {
 		//
 		final Composite composite = createSectionBaseWithLabel(toolkit, form,
 				Messages.getString("IMC.ROS_SERVICE_TITLE"), Messages.getString("IMC.ROS_SERVICE_EXPL"), 4);
-		serverTableViewer = createPortSection(toolkit, composite,
-				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_SERVICE_TBLLBL_SERVER"), 0,
+		
+		createLabel(toolkit, composite,
+				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_SERVICE_TBLLBL_SERVER"),
+				2,
+				getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_RED));
+		createLabel(toolkit, composite,
+				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_SERVICE_TBLLBL_CLENT"),
+				2,
+				getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_RED));
+
+		serverTableViewer = createPortSection(toolkit, composite, "", 0,
 				IRtcBuilderConstantsROS.SPEC_SERVICE_SERVER);
-		clientTableViewer = createPortSection(toolkit, composite,
-				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_SERVICE_TBLLBL_CLENT"), 1,
+		clientTableViewer = createPortSection(toolkit, composite, "", 1,
 				IRtcBuilderConstantsROS.SPEC_SERVICE_CLIENT);
 		createHintSection(toolkit, form);
 
@@ -274,7 +282,7 @@ public class ServiceEditorFormPage extends AbstractEditorFormPage {
 		toolkit.createLabel(detailGroup, "");
 		/////
 		variableNameText = createLabelAndText(toolkit, detailGroup,
-				IMessageConstantsROS.TOPIC_VARNAME, SWT.NONE, SWT.COLOR_BLACK, 3, 2);
+				IMessageConstantsROS.TOPIC_VARNAME, SWT.BORDER, SWT.COLOR_BLACK, 3, 2);
 
 		/////
 		Group documentGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
@@ -300,6 +308,7 @@ public class ServiceEditorFormPage extends AbstractEditorFormPage {
 			String columnLabel, final int initSel, String role) {
 
 		final TableViewer portParamTableViewer = createTableViewer(toolkit,	parent, 70);
+		portParamTableViewer.getTable().setHeaderVisible(false);
 
 		final TableViewerColumn col = super.createColumn(portParamTableViewer, columnLabel, IRtcBuilderConstants.SINGLE_COLUMN_WIDTH);
 		col.setEditingSupport(new ServiceEditingSuport(portParamTableViewer));
@@ -320,7 +329,7 @@ public class ServiceEditorFormPage extends AbstractEditorFormPage {
 		buttonComposite.setLayout(gl);
 		GridData gd = new GridData();
 		gd.verticalAlignment = SWT.BEGINNING;
-		gd.widthHint = 50;
+		gd.widthHint = 80;
 		buttonComposite.setLayoutData(gd);
 
 		Button addButton = toolkit.createButton(buttonComposite, "Add", SWT.PUSH);
@@ -369,9 +378,9 @@ public class ServiceEditorFormPage extends AbstractEditorFormPage {
 				if( selectParam != null ) {
 					StringBuffer portName = new StringBuffer(selectParam.getName());
 					if(event.getSource().equals(serverTableViewer)) {
-						portName.append(" (InPort)");
+						portName.append(" (Server)");
 					} else {
-						portName.append(" (OutPort)");
+						portName.append(" (Client)");
 					}
 					serviceNameText.setText(portName.toString());
 

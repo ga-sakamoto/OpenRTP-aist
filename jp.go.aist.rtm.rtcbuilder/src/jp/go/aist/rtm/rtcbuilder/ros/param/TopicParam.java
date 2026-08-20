@@ -195,7 +195,7 @@ public class TopicParam extends AbstractRecordedParam implements Serializable {
 		if(this.name == null || this.name.length() == 0) {
 			return Messages.getString("IMC.VALIDATE_TOPIC_NAME1");
 		}
-		if( !StringUtil.checkHyphenSpaceDotJpn(this.name) ) {
+		if( StringUtil.checkHyphenSpaceDotJpn(this.name) ) {
 			return Messages.getString("IMC.VALIDATE_TOPIC_NAME2");
 		}
 		if( this.name.equals("/") ) {
@@ -210,14 +210,14 @@ public class TopicParam extends AbstractRecordedParam implements Serializable {
 		if( !StringUtil.checkStartedWithDigitFast(this.name) ) {
 			return Messages.getString("IMC.VALIDATE_TOPIC_NAME6");
 		}
-		if( !StringUtil.checkInvalidTilde(this.name) ) {
+		if( StringUtil.checkInvalidTilde(this.name) ) {
 			return Messages.getString("IMC.VALIDATE_TOPIC_NAME7");
 		}
 		
 		if(this.messageType == null || this.messageType.length() == 0) {
 			return Messages.getString("IMC.VALIDATE_TOPIC_TYPE1");
 		}
-		if( !StringUtil.checkInvalidFormat(this.messageType) ) {
+		if( StringUtil.checkInvalidFormat(this.messageType) ) {
 			return Messages.getString("IMC.VALIDATE_TOPIC_TYPE2");
 		}
 		if(this.messageType.endsWith("srv") || this.messageType.endsWith("action")

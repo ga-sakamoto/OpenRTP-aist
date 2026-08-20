@@ -227,11 +227,19 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 		//
 		final Composite composite = createSectionBaseWithLabel(toolkit, form,
 				Messages.getString("IMC.ROS_TOPIC_TITLE"), Messages.getString("IMC.ROS_TOPIC_EXPL"), 4);
-		subscribeTableViewer = createPortSection(toolkit, composite,
-				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_TOPIC_TBLLBL_INPORTNAME"), 0,
+		
+		createLabel(toolkit, composite,
+				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_TOPIC_TBLLBL_INPORTNAME"),
+				2,
+				getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_RED));
+		createLabel(toolkit, composite,
+				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_TOPIC_TBLLBL_OUTPORTNAME"),
+				2,
+				getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_RED));
+
+		subscribeTableViewer = createPortSection(toolkit, composite,"", 0,
 				IRtcBuilderConstantsROS.SPEC_TOPIC_SUBSCRIBE);
-		publishTableViewer = createPortSection(toolkit, composite,
-				IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_TOPIC_TBLLBL_OUTPORTNAME"), 1,
+		publishTableViewer = createPortSection(toolkit, composite, "", 1,
 				IRtcBuilderConstantsROS.SPEC_TOPIC_PUBLISH);
 		createHintSection(toolkit, form);
 
@@ -419,7 +427,7 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 				Messages.getString("IMC.ROS_TOPIC_LBL_DEPTH"), SWT.BORDER);
 		/////
 		variableNameText = createLabelAndText(toolkit, detailGroup,
-				IMessageConstantsROS.TOPIC_VARNAME, SWT.NONE, SWT.COLOR_BLACK, 3, 2);
+				IMessageConstantsROS.TOPIC_VARNAME, SWT.BORDER, SWT.COLOR_BLACK, 3, 2);
 
 		/////
 		Group documentGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
@@ -450,6 +458,7 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 			String columnLabel, final int initSel, String role) {
 
 		final TableViewer topicTableViewer = createTableViewer(toolkit,	parent, 70);
+		topicTableViewer.getTable().setHeaderVisible(false);
 
 		final TableViewerColumn col = super.createColumn(topicTableViewer, columnLabel, IRtcBuilderConstants.SINGLE_COLUMN_WIDTH);
 		col.setEditingSupport(new TopicEditingSuport(topicTableViewer));
@@ -470,7 +479,7 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 		buttonComposite.setLayout(gl);
 		GridData gd = new GridData();
 		gd.verticalAlignment = SWT.BEGINNING;
-		gd.widthHint = 50;
+		gd.widthHint = 80;
 		buttonComposite.setLayoutData(gd);
 
 		Button addButton = toolkit.createButton(buttonComposite, "Add", SWT.PUSH);
@@ -519,9 +528,9 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 				if( selectParam != null ) {
 					StringBuffer portName = new StringBuffer(selectParam.getName());
 					if(event.getSource().equals(subscribeTableViewer)) {
-						portName.append(" (Subscribe)");
+						portName.append(" (Subscriber)");
 					} else {
-						portName.append(" (Publish)");
+						portName.append(" (Publisher)");
 					}
 					topicNameText.setText(portName.toString());
 					

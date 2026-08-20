@@ -158,7 +158,14 @@ public class ParameterEditorFormPage extends AbstractEditorFormPage {
 		Composite composite = createSectionBaseWithLabel(toolkit, form,
 				Messages.getString("IMC.ROS_PARAMETER_TITLE"), Messages.getString("IMC.ROS_PARAMETER_EXPL"), 3);
 		//
+		createLabel(toolkit, composite,
+				IMessageConstants.REQUIRED + Messages.getString("IMC.CONFIGURATION_TBLLBL_NAME"),
+				3,
+				getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_RED));
+
 		final TableViewer parameterTableViewer = createTableViewer(toolkit,	composite);
+		parameterTableViewer.getTable().setHeaderVisible(false);
+
 		final TableViewerColumn col = super.createColumn(parameterTableViewer,
 				IMessageConstants.REQUIRED + Messages.getString("IMC.CONFIGURATION_TBLLBL_NAME"),
 				IRtcBuilderConstants.SINGLE_COLUMN_WIDTH);
@@ -179,7 +186,7 @@ public class ParameterEditorFormPage extends AbstractEditorFormPage {
 		gl.marginWidth = 1;
 		GridData gd = new GridData();
 		gd.verticalAlignment = SWT.BEGINNING;
-		gd.widthHint = 50;
+		gd.widthHint = 80;
 		buttonComposite.setLayoutData(gd);
 
 		Button addButton = toolkit.createButton(buttonComposite, "Add", SWT.PUSH);
