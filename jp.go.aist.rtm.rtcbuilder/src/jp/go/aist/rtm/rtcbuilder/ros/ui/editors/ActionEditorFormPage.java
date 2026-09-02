@@ -563,9 +563,9 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 			param.setName((String) value);
 			StringBuffer portName = new StringBuffer(param.getName());
 			if( this.getViewer()==serverTableViewer ) {
-				portName.append(" (ActionServer)");
+				portName.append(" (Server)");
 			} else {
-				portName.append(" (ActionClient)");
+				portName.append(" (Client)");
 			}
 			actionNameText.setText(portName.toString());
 

@@ -781,9 +781,9 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 			topicParam.setName((String) value);
 			StringBuffer portName = new StringBuffer(topicParam.getName());
 			if( this.getViewer()==subscribeTableViewer ) {
-				portName.append(" (Subscribe)");
+				portName.append(" (Subscriber)");
 			} else {
-				portName.append(" (Publish)");
+				portName.append(" (Publisher)");
 			}
 			topicNameText.setText(portName.toString());
 

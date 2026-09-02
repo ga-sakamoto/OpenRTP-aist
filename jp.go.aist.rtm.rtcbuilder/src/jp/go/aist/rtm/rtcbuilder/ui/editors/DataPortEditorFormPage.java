@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.jface.viewers.CellEditor.LayoutData;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -28,6 +29,7 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -35,6 +37,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ScrollBar;
@@ -128,10 +131,18 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 		//
 		final Composite composite = createSectionBaseWithLabel(toolkit, form,
 				Messages.getString("IMC.DATAPORT_TITLE"), Messages.getString("IMC.DATAPORT_EXPL"), 4);
-		inportTableViewer = createPortSection(toolkit, composite,
-				IMessageConstants.REQUIRED + Messages.getString("IMC.DATAPORT_TBLLBL_INPORTNAME"), 0, true);
-		outportTableViewer = createPortSection(toolkit, composite,
-				IMessageConstants.REQUIRED + Messages.getString("IMC.DATAPORT_TBLLBL_OUTPORTNAME"), 1, false);
+		
+		createLabel(toolkit, composite,
+				IMessageConstants.REQUIRED + Messages.getString("IMC.DATAPORT_TBLLBL_INPORTNAME"),
+				2,
+				getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_RED));
+		createLabel(toolkit, composite,
+				IMessageConstants.REQUIRED + Messages.getString("IMC.DATAPORT_TBLLBL_OUTPORTNAME"),
+				2,
+				getSite().getShell().getDisplay().getSystemColor(SWT.COLOR_RED));
+
+		inportTableViewer = createPortSection(toolkit, composite, "", 0, true);
+		outportTableViewer = createPortSection(toolkit, composite, "", 1, false);
 		createHintSection(toolkit, form);
 
 		createDetailSection(toolkit, form);
@@ -302,6 +313,7 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 			String columnLabel, final int initSel, boolean isInPort) {
 
 		final TableViewer portParamTableViewer = createTableViewer(toolkit,	parent, 70);
+		portParamTableViewer.getTable().setHeaderVisible(false);
 
 		final TableViewerColumn col = super.createColumn(portParamTableViewer, columnLabel, IRtcBuilderConstants.SINGLE_COLUMN_WIDTH);
 		col.setEditingSupport(new DataPortEditingSuport(portParamTableViewer));
@@ -322,7 +334,7 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 		buttonComposite.setLayout(gl);
 		GridData gd = new GridData();
 		gd.verticalAlignment = SWT.BEGINNING;
-		gd.widthHint = 50;
+		gd.widthHint = 80;
 		buttonComposite.setLayoutData(gd);
 
 		Button addButton = toolkit.createButton(buttonComposite, "Add", SWT.PUSH);
@@ -542,11 +554,11 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 	}
 
 	private class DataPortEditingSuport extends EditingSupport {
-		private CellEditor editor;
+		private ColumnViewer viewer;
 
 		public DataPortEditingSuport(ColumnViewer viewer) {
 			super(viewer);
-			editor = new TextCellEditor(((TableViewer) viewer).getTable());
+			this.viewer = viewer;
 		}
 
 		@Override
@@ -556,7 +568,21 @@ public class DataPortEditorFormPage extends AbstractEditorFormPage {
 
 		@Override
 		protected CellEditor getCellEditor(Object element) {
-			return editor;
+			return new TextCellEditor((Composite) viewer.getControl()) {
+	            @Override
+	            public LayoutData getLayoutData() {
+	                LayoutData data = super.getLayoutData();
+	                Control control = getControl();
+	                if (control != null && !control.isDisposed()) {
+	                    GC gc = new GC(control);
+	                    int fontHeight = gc.getFontMetrics().getHeight();
+	                    gc.dispose();
+	                    
+	                    data.minimumHeight = fontHeight + 4;
+	                }
+	                return data;
+	            }
+	        };
 		}
 
 		@Override
