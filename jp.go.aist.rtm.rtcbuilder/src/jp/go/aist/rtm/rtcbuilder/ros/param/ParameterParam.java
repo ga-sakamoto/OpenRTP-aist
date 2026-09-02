@@ -172,7 +172,7 @@ public class ParameterParam extends AbstractRecordedParam implements Serializabl
 		if(this.name == null || this.name.length() == 0) {
 			return Messages.getString("IMC.VALIDATE_PARAMETER_NAME1");
 		}
-		if( !StringUtil.checkHyphenSpaceSlashJpn(this.name) ) {
+		if( StringUtil.checkHyphenSpaceSlashJpn(this.name) ) {
 			return Messages.getString("IMC.VALIDATE_PARAMETER_NAME2");
 		}
 		if( this.name.contains("__") ) {

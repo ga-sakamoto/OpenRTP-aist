@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.jface.viewers.CellEditor.LayoutData;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -32,6 +33,7 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -39,6 +41,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -145,7 +148,8 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 		createHintLabel(Messages.getString("IMC.ROS_ACTION_HINT_CLIENT_TITLE"), Messages.getString("IMC.ROS_ACTION_HINT_CLIENT_DESC"), toolkit, composite);
 		createHintSpace(toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_ACTION_LBL_ACTIONNAME"), IMessageConstantsROS.ACTION_HINT_NAME_EXPL, toolkit, composite);
-		createHintLabel(Messages.getString("IMC.ROS_ACTION_LBL_ACTIONTYPE"), IMessageConstantsROS.ACTION_HINT_TYPE_EXPL, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_ACTION_LBL_ACTIONTYPE"), Messages.getString("IMC.ROS_ACTION_HINT_ACTION_TYPE_DESC"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_TOPIC_LBL_PACKAGE_TITLE"), IMessageConstantsROS.SERVICE_HINT_SERVICE_PACKAGE_EXPL, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_ACTION_LBL_CALLBACK"), IMessageConstantsROS.ACTION_HINT_CALLBACK_EXPL, toolkit, composite);
 		//
 		createHintSpace(toolkit, composite);
@@ -278,7 +282,9 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 			}
 		});
 		//
-		typePackageText = createLabelAndText(toolkit, detailGroup, " ", SWT.NONE, SWT.COLOR_BLACK, 2, 1);
+		typePackageText = createLabelAndText(toolkit, detailGroup,
+							IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_TOPIC_LBL_PACKAGE_TITLE"),
+							SWT.BORDER, SWT.COLOR_RED, 2, 1);
 		toolkit.createLabel(detailGroup, "");
 		/////
 		callbackNameText = createLabelAndText(toolkit, detailGroup,
@@ -511,11 +517,11 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 	}
 
 	private class ActionEditingSuport extends EditingSupport {
-		private CellEditor editor;
+		private ColumnViewer viewer;
 
 		public ActionEditingSuport(ColumnViewer viewer) {
 			super(viewer);
-			editor = new TextCellEditor(((TableViewer) viewer).getTable());
+			this.viewer = viewer;
 		}
 
 		@Override
@@ -525,7 +531,21 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 
 		@Override
 		protected CellEditor getCellEditor(Object element) {
-			return editor;
+			return new TextCellEditor((Composite) viewer.getControl()) {
+	            @Override
+	            public LayoutData getLayoutData() {
+	                LayoutData data = super.getLayoutData();
+	                Control control = getControl();
+	                if (control != null && !control.isDisposed()) {
+	                    GC gc = new GC(control);
+	                    int fontHeight = gc.getFontMetrics().getHeight();
+	                    gc.dispose();
+	                    
+	                    data.minimumHeight = fontHeight + 4;
+	                }
+	                return data;
+	            }
+	        };
 		}
 
 		@Override

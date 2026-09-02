@@ -607,10 +607,12 @@ public class ROSParam extends ParamBase implements Serializable {
 			}
 			checkSet.add(each.getName());
 
-			if( checkSet.contains(each.getVarCallbackName()) ) {
-				return Messages.getString("IMC.VALIDATE_TOPIC_DUPLICATE");
+			if(0 < each.getVarCallbackName().length()) {
+				if( checkVarSet.contains(each.getVarCallbackName()) ) {
+					return Messages.getString("IMC.VALIDATE_TOPIC_DUPLICATE");
+				}
+				checkVarSet.add(each.getVarCallbackName());
 			}
-			checkVarSet.add(each.getVarCallbackName());
 		}
 		for(TopicParam each : this.topicPublishes) {
 			String result = each.validateInfo();
@@ -621,10 +623,12 @@ public class ROSParam extends ParamBase implements Serializable {
 			}
 			checkSet.add(each.getName());
 
-			if( checkSet.contains(each.getVarCallbackName()) ) {
-				return Messages.getString("IMC.VALIDATE_TOPIC_DUPLICATE");
+			if(0 < each.getVarCallbackName().length()) {
+				if( checkVarSet.contains(each.getVarCallbackName()) ) {
+					return Messages.getString("IMC.VALIDATE_TOPIC_DUPLICATE");
+				}
+				checkVarSet.add(each.getVarCallbackName());
 			}
-			checkVarSet.add(each.getVarCallbackName());
 		}
 
 		return null;
@@ -643,10 +647,12 @@ public class ROSParam extends ParamBase implements Serializable {
 			}
 			checkSet.add(each.getName());
 
-			if( checkSet.contains(each.getVarCallbackName()) ) {
-				return Messages.getString("IMC.VALIDATE_SERVICE_CALLBACK_DUPLICATE");
+			if(0 < each.getVarCallbackName().length()) {
+				if( checkVarSet.contains(each.getVarCallbackName()) ) {
+					return Messages.getString("IMC.VALIDATE_SERVICE_CALLBACK_DUPLICATE");
+				}
+				checkVarSet.add(each.getVarCallbackName());
 			}
-			checkVarSet.add(each.getVarCallbackName());
 		}
 		for(ServiceParam each : this.serviceClients) {
 			String result = each.validateInfo();
@@ -657,10 +663,12 @@ public class ROSParam extends ParamBase implements Serializable {
 			}
 			checkSet.add(each.getName());
 
-			if( checkSet.contains(each.getVarCallbackName()) ) {
-				return Messages.getString("IMC.VALIDATE_SERVICE_CALLBACK_DUPLICATE");
+			if(0 < each.getVarCallbackName().length()) {
+				if( checkVarSet.contains(each.getVarCallbackName()) ) {
+					return Messages.getString("IMC.VALIDATE_SERVICE_CALLBACK_DUPLICATE");
+				}
+				checkVarSet.add(each.getVarCallbackName());
 			}
-			checkVarSet.add(each.getVarCallbackName());
 		}
 
 		return null;
@@ -679,10 +687,12 @@ public class ROSParam extends ParamBase implements Serializable {
 			}
 			checkSet.add(each.getName());
 
-			if( checkSet.contains(each.getCallbackName()) ) {
-				return Messages.getString("IMC.VALIDATE_ACTION_CALLBACK_DUPLICATE");
+			if(0 < each.getCallbackName().length()) {
+				if( checkVarSet.contains(each.getCallbackName()) ) {
+					return Messages.getString("IMC.VALIDATE_ACTION_CALLBACK_DUPLICATE");
+				}
+				checkVarSet.add(each.getCallbackName());
 			}
-			checkVarSet.add(each.getCallbackName());
 		}
 		for(ActionParam each : this.actionClients) {
 			String result = each.validateInfo();
@@ -693,10 +703,12 @@ public class ROSParam extends ParamBase implements Serializable {
 			}
 			checkSet.add(each.getName());
 
-			if( checkSet.contains(each.getCallbackName()) ) {
-				return Messages.getString("IMC.VALIDATE_ACTION_CALLBACK_DUPLICATE");
+			if(0 < each.getCallbackName().length()) {
+				if( checkVarSet.contains(each.getCallbackName()) ) {
+					return Messages.getString("IMC.VALIDATE_ACTION_CALLBACK_DUPLICATE");
+				}
+				checkVarSet.add(each.getCallbackName());
 			}
-			checkVarSet.add(each.getCallbackName());
 		}
 
 		return null;

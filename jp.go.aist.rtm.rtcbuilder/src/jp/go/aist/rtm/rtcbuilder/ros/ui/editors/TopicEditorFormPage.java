@@ -34,6 +34,7 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -41,6 +42,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -259,12 +261,13 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 		createHintLabel(Messages.getString("IMC.ROS_TOPIC_HINT_PUBLISH_TITLE"), Messages.getString("IMC.ROS_TOPIC_HINT_PUBLISH_DESC"), toolkit, composite);
 		createHintSpace(toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_TOPIC_LBL_TOPICNAME"), Messages.getString("IMC.ROS_TOPIC_HINT_TOPIC_NAME_DESC"), toolkit, composite);
-		createHintLabel(Messages.getString("IMC.ROS_TOPIC_LBL_DATATYPE"), IMessageConstantsROS.TOPIC_HINT_MESSAGETYPE_EXPL, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_TOPIC_LBL_DATATYPE"), Messages.getString("IMC.ROS_TOPIC_HINT_MESSAGE_TYPE_DESC"), toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_TOPIC_LBL_PACKAGE_TITLE"), IMessageConstantsROS.TOPIC_HINT_PACKAGE_EXPL, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_TOPIC_HINT_QoS_TITLE"), IMessageConstantsROS.TOPIC_HINT_QoS_DESC, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_TOPIC_HINT_RELIABILITY_TITLE"), IMessageConstantsROS.TOPIC_HINT_RELIABILITY_EXPL, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_TOPIC_HINT_HISTORY_TITLE"), IMessageConstantsROS.TOPIC_HINT_HISTORY_EXPL, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_TOPIC_HINT_DEPTH_TITLE"), IMessageConstantsROS.TOPIC_HINT_DEPTH_EXPL, toolkit, composite);
-		createHintLabel(IMessageConstantsROS.TOPIC_VARNAME, "", toolkit, composite);
+		createHintLabel(IMessageConstantsROS.TOPIC_CALLBACK_LBL, "", toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_TOPIC_HINT_VARNAME_SUBSCRIBE_TITLE"), IMessageConstantsROS.TOPIC_HINT_VARNAME_SUBSCRIBE_EXPL, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_TOPIC_HINT_VARNAME_PUBLISH_TITLE"), IMessageConstantsROS.TOPIC_HINT_VARNAME_PUBLISH_EXPL, toolkit, composite);
 		//
@@ -328,6 +331,27 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 			}
 			public void keyPressed(KeyEvent e) { }
 		});
+		messageTypeCombo.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                String selectedText = messageTypeCombo.getText();
+                if(defaultList.contains(selectedText) == false) {
+                	typePackageText.setText("");
+                	typePackageText.setEnabled(true);
+                	return;
+                }
+                
+				int lastSlashIndex = selectedText.lastIndexOf('/');
+				if (lastSlashIndex == -1) {
+                	typePackageText.setText("");
+                	typePackageText.setEnabled(true);
+					return;
+				}
+				
+				typePackageText.setText(selectedText.substring(0, lastSlashIndex));
+            	typePackageText.setEnabled(false);
+            }
+        });
 		GridData gdcombo = new GridData(GridData.FILL_HORIZONTAL);
 		gdcombo.horizontalSpan = 2;
 		messageTypeCombo.setLayoutData(gdcombo);
@@ -399,7 +423,9 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 			}
 		});
 		//
-		typePackageText = createLabelAndText(toolkit, detailGroup, " ", SWT.NONE, SWT.COLOR_BLACK, 2, 1);
+		typePackageText = createLabelAndText(toolkit, detailGroup,
+									IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_TOPIC_LBL_PACKAGE_TITLE"),
+									SWT.BORDER, SWT.COLOR_RED, 2, 1);
 		//
 		Group qoSGroup = new Group(detailGroup, SWT.SHADOW_ETCHED_IN);
 		qoSGroup.setLayout(new GridLayout(6, false));
@@ -427,7 +453,7 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 				Messages.getString("IMC.ROS_TOPIC_LBL_DEPTH"), SWT.BORDER);
 		/////
 		variableNameText = createLabelAndText(toolkit, detailGroup,
-				IMessageConstantsROS.TOPIC_VARNAME, SWT.BORDER, SWT.COLOR_BLACK, 3, 2);
+				Messages.getString("IMC.ROS_TOPIC_LBL_VARNAME"), SWT.BORDER, SWT.COLOR_BLACK, 3, 2);
 
 		/////
 		Group documentGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
@@ -535,11 +561,17 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 					topicNameText.setText(portName.toString());
 					
 					String msgType = selectParam.getMessageType();
+					int lastSlashIndex = msgType.lastIndexOf('/');
+					typePackageText.setEnabled(true);
 					if(defaultList.contains(msgType)) {
-						messageTypeCombo.setText(selectParam.getMessageType());
-						typePackageText.setText("");
+						messageTypeCombo.setText(msgType);
+						if (lastSlashIndex == -1) {
+							typePackageText.setText("");
+						} else {
+							typePackageText.setText(msgType.substring(0, lastSlashIndex));
+			            	typePackageText.setEnabled(false);
+						}
 					} else {
-						int lastSlashIndex = msgType.lastIndexOf('/');
 						if (lastSlashIndex == -1) {
 							messageTypeCombo.setText(selectParam.getMessageType());
 							typePackageText.setText("");
@@ -569,11 +601,14 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 
 	public void update() {
 		if (selectParam != null) {
-			String typePackage = typePackageText.getText(); 
-			if(typePackage == null || typePackage.length() == 0) {
-				selectParam.setMessageType(messageTypeCombo.getText());
-			} else {
-				selectParam.setMessageType(typePackage + "/" + messageTypeCombo.getText());
+			String typeMsg = messageTypeCombo.getText();
+			if(defaultList.contains(typeMsg) == false) {
+				String typePackage = typePackageText.getText(); 
+				if(typePackage == null || typePackage.length() == 0) {
+					selectParam.setMessageType(typeMsg);
+				} else {
+					selectParam.setMessageType(typePackage + "/" + typeMsg);
+				}
 			}
 
 			selectParam.setReliabilityType(reliabilityCombo.getText());
@@ -609,11 +644,16 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 
 	private void setDocumentContents() {
 		if( preSelection != null ) {
-			String typePackage = typePackageText.getText(); 
-			if(typePackage == null || typePackage.length() == 0) {
-				selectParam.setMessageType(messageTypeCombo.getText());
+			String typeMsg = messageTypeCombo.getText();
+			if(defaultList.contains(typeMsg) == false) {
+				String typePackage = typePackageText.getText(); 
+				if(typePackage == null || typePackage.length() == 0) {
+					selectParam.setMessageType(messageTypeCombo.getText());
+				} else {
+					selectParam.setMessageType(typePackage + "/" + messageTypeCombo.getText());
+				}
 			} else {
-				selectParam.setMessageType(typePackage + "/" + messageTypeCombo.getText());
+				selectParam.setMessageType(messageTypeCombo.getText());
 			}
 			
 			preSelection.setReliabilityType(reliabilityCombo.getText());
@@ -692,13 +732,15 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 			return topicParam.getName();
 		}
 	}
+	
+	
 
 	private class TopicEditingSuport extends EditingSupport {
-		private CellEditor editor;
+		private ColumnViewer viewer;
 
 		public TopicEditingSuport(ColumnViewer viewer) {
 			super(viewer);
-			editor = new TextCellEditor(((TableViewer) viewer).getTable());
+			this.viewer = viewer;
 		}
 
 		@Override
@@ -708,9 +750,22 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 
 		@Override
 		protected CellEditor getCellEditor(Object element) {
-			return editor;
+			return new TextCellEditor((Composite) viewer.getControl()) {
+	            @Override
+	            public LayoutData getLayoutData() {
+	                LayoutData data = super.getLayoutData();
+	                Control control = getControl();
+	                if (control != null && !control.isDisposed()) {
+	                    GC gc = new GC(control);
+	                    int fontHeight = gc.getFontMetrics().getHeight();
+	                    gc.dispose();
+	                    
+	                    data.minimumHeight = fontHeight + 4;
+	                }
+	                return data;
+	            }
+	        };
 		}
-
 		@Override
 		protected Object getValue(Object element) {
 			if (element instanceof TopicParam == false) return null;

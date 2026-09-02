@@ -13,12 +13,14 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
+import org.eclipse.jface.viewers.CellEditor.LayoutData;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
@@ -26,6 +28,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.ScrollBar;
 import org.eclipse.swt.widgets.Text;
@@ -393,11 +396,11 @@ public class ParameterEditorFormPage extends AbstractEditorFormPage {
 	}
 
 	private class ParameterModifier extends EditingSupport {
-		private CellEditor editor;
+		private ColumnViewer viewer;
 
 		public ParameterModifier(ColumnViewer viewer) {
 			super(viewer);
-			editor = new TextCellEditor(((TableViewer) viewer).getTable());
+			this.viewer = viewer;
 		}
 
 		@Override
@@ -407,7 +410,21 @@ public class ParameterEditorFormPage extends AbstractEditorFormPage {
 
 		@Override
 		protected CellEditor getCellEditor(Object element) {
-			return editor;
+			return new TextCellEditor((Composite) viewer.getControl()) {
+	            @Override
+	            public LayoutData getLayoutData() {
+	                LayoutData data = super.getLayoutData();
+	                Control control = getControl();
+	                if (control != null && !control.isDisposed()) {
+	                    GC gc = new GC(control);
+	                    int fontHeight = gc.getFontMetrics().getHeight();
+	                    gc.dispose();
+	                    
+	                    data.minimumHeight = fontHeight + 4;
+	                }
+	                return data;
+	            }
+	        };
 		}
 
 		@Override
