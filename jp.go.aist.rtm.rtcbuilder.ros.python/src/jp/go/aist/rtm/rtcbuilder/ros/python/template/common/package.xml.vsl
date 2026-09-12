@@ -28,10 +28,8 @@
 #end
 #if( ${tmpltHelper.getServiceTypes(${rosParam}).size()} > 0 )
   <!-- Service dependencies -->
-#if( ${rosParam.extSrvFiles.size()}>0 )
-  <exec_depend>${rosParam.packageName}_interfaces</exec_depend>
-#else
-  <exec_depend>std_srvs</exec_depend>
+#foreach($service in ${tmpltHelper.getServiceTypes(${rosParam})})
+  <exec_depend>${tmpltHelper.getMessageBasename(${service})}</exec_depend>
 #end
 #end
 #if( ${rosParam.actionClients.size()}>0 || ${rosParam.actionServers.size()}>0 )

@@ -103,7 +103,14 @@ public interface IMessageConstantsROS {
 			Messages.getString("IMC.ROS_TOPIC_HINT_PACKAGE_DESC_P1"),
 			Messages.getString("IMC.ROS_TOPIC_HINT_PACKAGE_DESC_P2"),
 			Messages.getString("IMC.ROS_TOPIC_HINT_PACKAGE_DESC_P3"),
-			Messages.getString("IMC.ROS_TOPIC_HINT_PACKAGE_DESC_P4")
+			Messages.getString("IMC.ROS_TOPIC_HINT_PACKAGE_DESC_P4"),
+			Messages.getString("IMC.ROS_TOPIC_HINT_PACKAGE_DESC_P5"),
+			Messages.getString("IMC.ROS_TOPIC_HINT_PACKAGE_DESC_P6"),
+			Messages.getString("IMC.ROS_TOPIC_HINT_PACKAGE_DESC_P7"),
+			Messages.getString("IMC.ROS_TOPIC_HINT_PACKAGE_DESC_P8"),
+			Messages.getString("IMC.ROS_TOPIC_HINT_PACKAGE_DESC_P9"),
+			Messages.getString("IMC.ROS_TOPIC_HINT_PACKAGE_DESC_P10"),
+			Messages.getString("IMC.ROS_TOPIC_HINT_PACKAGE_DESC_P11"),
 	});
 	public static final String TOPIC_HINT_RELIABILITY_EXPL = StringUtil.connectMessageWithSepalator( new String[]{
 			Messages.getString("IMC.ROS_TOPIC_HINT_RELIABILITY_DESC_P1"),
@@ -153,10 +160,17 @@ public interface IMessageConstantsROS {
 			Messages.getString("IMC.ROS_SERVICE_HINT_SERVICE_DESC_P2")
 	});
 	public static final String SERVICE_HINT_SERVICE_PACKAGE_EXPL = StringUtil.connectMessageWithSepalator( new String[]{
-			Messages.getString("IMC.ROS_SERVICE_HINT_SERVICE_PACKAGE_P1"),
-			Messages.getString("IMC.ROS_SERVICE_HINT_SERVICE_PACKAGE_P2"),
-			Messages.getString("IMC.ROS_SERVICE_HINT_SERVICE_PACKAGE_P3"),
-			Messages.getString("IMC.ROS_SERVICE_HINT_SERVICE_PACKAGE_P4")
+			Messages.getString("IMC.ROS_SERVICE_HINT_PACKAGE_DESC_P1"),
+			Messages.getString("IMC.ROS_SERVICE_HINT_PACKAGE_DESC_P2"),
+			Messages.getString("IMC.ROS_SERVICE_HINT_PACKAGE_DESC_P3"),
+			Messages.getString("IMC.ROS_SERVICE_HINT_PACKAGE_DESC_P4"),
+			Messages.getString("IMC.ROS_SERVICE_HINT_PACKAGE_DESC_P5"),
+			Messages.getString("IMC.ROS_SERVICE_HINT_PACKAGE_DESC_P6"),
+			Messages.getString("IMC.ROS_SERVICE_HINT_PACKAGE_DESC_P7"),
+			Messages.getString("IMC.ROS_SERVICE_HINT_PACKAGE_DESC_P8"),
+			Messages.getString("IMC.ROS_SERVICE_HINT_PACKAGE_DESC_P9"),
+			Messages.getString("IMC.ROS_SERVICE_HINT_PACKAGE_DESC_P10"),
+			Messages.getString("IMC.ROS_SERVICE_HINT_PACKAGE_DESC_P11"),
 	});
 	public static final String SERVICE_HINT_VAR_SERVER_EXPL = StringUtil.connectMessageWithSepalator( new String[]{
 			Messages.getString("IMC.ROS_SERVICE_HINT_VARNAME_SERVER_DESC_P1"),
@@ -195,10 +209,17 @@ public interface IMessageConstantsROS {
 			Messages.getString("IMC.ROS_ACTION_HINT_ACTION_NAME_DESC_P2")
 	});
 	public static final String ACTION_HINT_PACKAGE_EXPL = StringUtil.connectMessageWithSepalator( new String[]{
-			Messages.getString("IMC.ROS_ACTION_HINT_ACTION_PACKAGE_DESC_P1"),
-			Messages.getString("IMC.ROS_ACTION_HINT_ACTION_PACKAGE_DESC_P2"),
-			Messages.getString("IMC.ROS_ACTION_HINT_ACTION_PACKAGE_DESC_P3"),
-			Messages.getString("IMC.ROS_ACTION_HINT_ACTION_PACKAGE_DESC_P4")
+			Messages.getString("IMC.ROS_ACTION_HINT_PACKAGE_DESC_P1"),
+			Messages.getString("IMC.ROS_ACTION_HINT_PACKAGE_DESC_P2"),
+			Messages.getString("IMC.ROS_ACTION_HINT_PACKAGE_DESC_P3"),
+			Messages.getString("IMC.ROS_ACTION_HINT_PACKAGE_DESC_P4"),
+			Messages.getString("IMC.ROS_ACTION_HINT_PACKAGE_DESC_P5"),
+			Messages.getString("IMC.ROS_ACTION_HINT_PACKAGE_DESC_P6"),
+			Messages.getString("IMC.ROS_ACTION_HINT_PACKAGE_DESC_P7"),
+			Messages.getString("IMC.ROS_ACTION_HINT_PACKAGE_DESC_P8"),
+			Messages.getString("IMC.ROS_ACTION_HINT_PACKAGE_DESC_P9"),
+			Messages.getString("IMC.ROS_ACTION_HINT_PACKAGE_DESC_P10"),
+			Messages.getString("IMC.ROS_ACTION_HINT_PACKAGE_DESC_P11"),
 	});
 	public static final String ACTION_HINT_CALLBACK_EXPL = StringUtil.connectMessageWithSepalator( new String[]{
 			Messages.getString("IMC.ROS_ACTION_HINT_CALLBACK_DESC_P1"),

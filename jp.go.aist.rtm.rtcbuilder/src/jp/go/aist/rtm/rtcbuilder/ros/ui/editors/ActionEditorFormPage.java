@@ -25,7 +25,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
-import org.eclipse.jface.viewers.CellEditor.LayoutData;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -149,7 +148,7 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 		createHintSpace(toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_ACTION_LBL_ACTIONNAME"), IMessageConstantsROS.ACTION_HINT_NAME_EXPL, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_ACTION_LBL_ACTIONTYPE"), Messages.getString("IMC.ROS_ACTION_HINT_ACTION_TYPE_DESC"), toolkit, composite);
-		createHintLabel(Messages.getString("IMC.ROS_TOPIC_LBL_PACKAGE_TITLE"), IMessageConstantsROS.SERVICE_HINT_SERVICE_PACKAGE_EXPL, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_ACTION_LBL_PACKAGE_TITLE"), IMessageConstantsROS.ACTION_HINT_PACKAGE_EXPL, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_ACTION_LBL_CALLBACK"), IMessageConstantsROS.ACTION_HINT_CALLBACK_EXPL, toolkit, composite);
 		//
 		createHintSpace(toolkit, composite);
@@ -283,7 +282,7 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 		});
 		//
 		typePackageText = createLabelAndText(toolkit, detailGroup,
-							IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_TOPIC_LBL_PACKAGE_TITLE"),
+							IMessageConstants.REQUIRED + Messages.getString("IMC.ROS_ACTION_LBL_PACKAGE_TITLE"),
 							SWT.BORDER, SWT.COLOR_RED, 2, 1);
 		toolkit.createLabel(detailGroup, "");
 		/////

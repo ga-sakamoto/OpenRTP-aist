@@ -11,6 +11,7 @@ public class AllTestsPy {
 		//$JUnit-BEGIN$
 		suite.addTestSuite(BasicTest.class);
 		suite.addTestSuite(DocumentTest.class);
+		suite.addTestSuite(MeijoTest.class);
 		//$JUnit-END$
 		return suite;
 	}

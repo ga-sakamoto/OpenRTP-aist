@@ -10,6 +10,7 @@ public class AllROSTest {
 		//$JUnit-BEGIN$
 		suite.addTestSuite(BasicTest.class);
 		suite.addTestSuite(DocumentTest.class);
+		suite.addTestSuite(MeijoTest.class);
 
 		return suite;
 	}

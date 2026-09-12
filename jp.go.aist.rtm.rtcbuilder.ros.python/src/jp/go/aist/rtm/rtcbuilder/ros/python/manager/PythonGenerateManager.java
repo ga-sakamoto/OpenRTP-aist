@@ -95,7 +95,9 @@ public class PythonGenerateManager extends GenerateManager {
 		ROSParam rosParam = (ROSParam) contextMap.get("rosParam");
 		String outfile = rosParam.getPackageName() + "/setup.cfg";
 		String infile = "python/setup.cfg.vsl";
-		return generatePython(infile, outfile, contextMap);
+		GeneratedResult result = generatePython(infile, outfile, contextMap);
+		result.setNotBom(true);
+		return result;
 	}
 
 	public GeneratedResult generateSetupPy(Map<String, Object> contextMap) {
