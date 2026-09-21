@@ -335,7 +335,7 @@ public class DocumentTest extends TestBase {
 		ServiceParam service01 = new ServiceParam();
 		service01.setName("reset");
 		service01.setType("std_srvs/srv/Trigger");
-		service01.setVarCallbackName("handle_reset");
+		service01.setVarCallbackName("reset");
 		service01.setDocDescription("Reset internal state.");
 		service01.setDocArgument("Doc Arg Server1");
 		service01.setDocReturn("Doc Ret Server1");
@@ -344,7 +344,7 @@ public class DocumentTest extends TestBase {
 		ServiceParam service02 = new ServiceParam();
 		service02.setName("set_bool");
 		service02.setType("std_srvs/srv/SetBool");
-		service02.setVarCallbackName("handle_set_bool");
+		service02.setVarCallbackName("set_bool");
 		service02.setDocDescription("Set boolean state.");
 		service02.setDocArgument("Doc Arg Server2");
 		service02.setDocReturn("Doc Ret Server2");

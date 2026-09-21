@@ -11,7 +11,6 @@ find_package(lifecycle_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 # Service dependencies
-find_package(count_client_pkg_interfaces REQUIRED)
 find_package(count_server_pkg_interfaces REQUIRED)
 add_library(${PROJECT_NAME}_lib src/count_client_node.cpp)
 target_include_directories(${PROJECT_NAME}_lib PUBLIC

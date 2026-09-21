@@ -176,7 +176,7 @@ class ${rosParam.className}(LifecycleNode):
          - Return: ${service.docReturn}
         """
 #end
-        self.${service.name}_srv = self.create_service(${helperPy.getTypeName(${service.type})}, '${service.name}', self.${service.varCallbackName})
+        self.${service.name}_srv = self.create_service(${helperPy.getTypeName(${service.type})}, '${service.name}', self.handle_${service.varCallbackName})
 #end
 #foreach($action in ${rosParam.actionClients})
 #if( ${action.isDocExist()} )

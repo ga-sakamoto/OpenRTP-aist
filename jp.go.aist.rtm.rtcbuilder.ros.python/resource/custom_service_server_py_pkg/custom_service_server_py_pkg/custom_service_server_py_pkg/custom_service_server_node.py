@@ -24,7 +24,7 @@ class CustomServiceServerNode(LifecycleNode):
          - Argument: amount: value to add
          - Return: total and success
         """
-        self.count_srv = self.create_service(Count, 'count', self.count)
+        self.count_srv = self.create_service(Count, 'count', self.handle_count)
         return TransitionCallbackReturn.SUCCESS
 
     def on_activate(self, state: State) -> TransitionCallbackReturn:

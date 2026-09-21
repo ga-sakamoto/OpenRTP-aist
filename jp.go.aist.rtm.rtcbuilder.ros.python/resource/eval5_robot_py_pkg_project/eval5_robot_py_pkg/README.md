@@ -110,7 +110,7 @@ ros2 topic info cmd_vel
 
 | Role | Name | Type | Callback / Variable | Summary |
 | --- | --- | --- | --- | --- |
-| Server | set_mode | eval5_robot_py_pkg_interfaces/srv/SetMode | handle_set_mode | Set robot operation mode. |
+| Server | set_mode | eval5_robot_py_pkg_interfaces/srv/SetMode | set_mode | Set robot operation mode. |
 
 Useful commands:
 

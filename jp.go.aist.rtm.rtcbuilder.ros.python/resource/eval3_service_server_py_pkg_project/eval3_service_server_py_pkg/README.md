@@ -94,8 +94,8 @@ None.
 
 | Role | Name | Type | Callback / Variable | Summary |
 | --- | --- | --- | --- | --- |
-| Server | reset | std_srvs/srv/Trigger | handle_reset | Reset internal state. |
-| Server | set_bool | std_srvs/srv/SetBool | handle_set_bool | Set boolean state. |
+| Server | reset | std_srvs/srv/Trigger | reset | Reset internal state. |
+| Server | set_bool | std_srvs/srv/SetBool | set_bool | Set boolean state. |
 
 Useful commands:
 

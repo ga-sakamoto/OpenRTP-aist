@@ -6,8 +6,6 @@ import jp.go.aist.rtm.rtcbuilder.Generator;
 import jp.go.aist.rtm.rtcbuilder.generator.GeneratedResult;
 import jp.go.aist.rtm.rtcbuilder.generator.param.GeneratorParam;
 import jp.go.aist.rtm.rtcbuilder.ros.IRtcBuilderConstantsROS;
-import jp.go.aist.rtm.rtcbuilder.ros.manager.CXXGenerateManager;
-import jp.go.aist.rtm.rtcbuilder.ros.manager.CommonGenerateManager;
 import jp.go.aist.rtm.rtcbuilder.ros.param.ActionParam;
 import jp.go.aist.rtm.rtcbuilder.ros.param.PackageParam;
 import jp.go.aist.rtm.rtcbuilder.ros.param.ParameterParam;
@@ -379,14 +377,14 @@ public class BasicTest extends TestBase {
 		ServiceParam service01 = new ServiceParam();
 		service01.setName("reset");
 		service01.setType("std_srvs/srv/Trigger");
-		service01.setVarCallbackName("handle_reset");
+		service01.setVarCallbackName("reset");
 		service01.setDocDescription("Reset internal state.");
 		rosParam.getServiceServers().add(service01);
 		
 		ServiceParam service02 = new ServiceParam();
 		service02.setName("set_bool");
 		service02.setType("std_srvs/srv/SetBool");
-		service02.setVarCallbackName("handle_set_bool");
+		service02.setVarCallbackName("set_bool");
 		service02.setDocDescription("Set boolean state.");
 		rosParam.getServiceServers().add(service02);
 
@@ -615,7 +613,7 @@ public class BasicTest extends TestBase {
 		ServiceParam service = new ServiceParam();
 		service.setName("set_mode");
 		service.setType("SetMode");
-		service.setVarCallbackName("handle_set_mode");
+		service.setVarCallbackName("set_mode");
 		service.setDocDescription("Set robot operation mode.");
 		rosParam.getServiceServers().add(service);
 		

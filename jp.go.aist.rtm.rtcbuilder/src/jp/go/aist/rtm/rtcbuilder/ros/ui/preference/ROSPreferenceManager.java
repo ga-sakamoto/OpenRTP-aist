@@ -3,7 +3,6 @@ package jp.go.aist.rtm.rtcbuilder.ros.ui.preference;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 
-import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
 import jp.go.aist.rtm.rtcbuilder.RtcBuilderPlugin;
 import jp.go.aist.rtm.rtcbuilder.ros.IRtcBuilderConstantsROS;
 

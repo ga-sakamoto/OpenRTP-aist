@@ -22,9 +22,6 @@ find_package(${tmpltHelper.getMessageBasename(${topic})} REQUIRED)
 #end
 #if( ${tmpltHelper.getServiceTypes(${rosParam}).size()} > 0 )
 ${sharp} Service dependencies
-#if( ${rosParam.extSrvFiles.size()}>0 )
-find_package(${rosParam.packageName}_interfaces REQUIRED)
-#end
 #if( ${tmpltHelper.getServicePackage(${rosParam}).size()}>0 )
 #foreach($type in ${tmpltHelper.getServicePackage(${rosParam})})
 find_package(${type} REQUIRED)

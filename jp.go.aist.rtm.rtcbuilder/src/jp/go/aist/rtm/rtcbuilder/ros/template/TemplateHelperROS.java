@@ -111,7 +111,6 @@ public class TemplateHelperROS {
 	public static List<String> getServicePackage(ROSParam source) {
 		List<String> result = new ArrayList<String>();
 		List<String> existed = getTopicTypes(source);
-		existed.add(source.getPackageName() + "_interfaces");
 		
 		for(ServiceParam each : source.getServiceClients()) {
 			String type = each.getType();
