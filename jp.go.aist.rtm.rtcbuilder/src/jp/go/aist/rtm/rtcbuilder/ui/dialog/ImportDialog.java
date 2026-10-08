@@ -62,7 +62,7 @@ public class ImportDialog extends Dialog {
 	
 	@Override
 	protected Point getInitialSize() {
-		return new Point(500, 150);
+		return new Point(500, 180);
 	}
 	
 	@Override
@@ -79,7 +79,7 @@ public class ImportDialog extends Dialog {
 		Composite kindComposite = new Composite(mainComposite, SWT.NULL);
 		GridLayout gl = new GridLayout(3, false);
 		kindComposite.setLayout(gl);
-		kindComposite.setLayoutData(new GridData(GridData.FILL_BOTH | GridData.VERTICAL_ALIGN_CENTER));
+		kindComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_CENTER));
 		
 		Label label = new Label(kindComposite, SWT.NONE);
 		label.setText(Messages.getString("IMC.IMPORT_KIND")); //$NON-NLS-1$

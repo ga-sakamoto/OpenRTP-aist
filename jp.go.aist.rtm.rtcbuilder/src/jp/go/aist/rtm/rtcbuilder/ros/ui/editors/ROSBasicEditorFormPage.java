@@ -177,8 +177,7 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 		if (managerList != null) {
 			for (String key : RtcBuilderPlugin.getDefault().getLoader()
 					.getManagerKeyList(IRtcBuilderConstants.MIDDLEWARE_ROS)) {
-				Button extRadio = createRadioCheckButton(toolkit, LangGroup,
-						key, SWT.RADIO);
+				Button extRadio = createLanguageRadioButton(toolkit, LangGroup, key);
 				extRadio.addSelectionListener(createLanguageRadioListner());
 				buttonList.add(extRadio);
 			}
@@ -368,7 +367,7 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 		GridData gd = new GridData();
 		LangGroup.setLayoutData(gd);
 		//
-		cppRadio = createRadioCheckButton(toolkit, LangGroup, "C++", SWT.RADIO);
+		cppRadio = createLanguageRadioButton(toolkit, LangGroup, "C++");
 		cppRadio.addSelectionListener(createLanguageRadioListner());
 	}
 	

@@ -457,6 +457,26 @@ public abstract class AbstractEditorFormPage extends FormPage {
 			public void widgetSelected(SelectionEvent e) { update(); }
 		});
 		radio.setText(labelString);
+
+		GridData gd = new GridData();
+		gd.widthHint = 120;
+		radio.setLayoutData(gd);
+		
+		return radio;
+	}
+
+	protected Button createLanguageRadioButton(FormToolkit toolkit,
+			Composite composite, String labelString) {
+		Button radio = toolkit.createButton(composite, "", SWT.RADIO);
+		radio.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) { update(); }
+		});
+		radio.setText(labelString);
+
+		GridData gd = new GridData();
+		gd.widthHint = 80;
+		radio.setLayoutData(gd);
+		
 		return radio;
 	}
 

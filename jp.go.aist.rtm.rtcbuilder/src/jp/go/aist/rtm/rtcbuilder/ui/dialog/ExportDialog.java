@@ -66,7 +66,7 @@ public class ExportDialog extends Dialog {
 	
 	@Override
 	protected Point getInitialSize() {
-		return new Point(500, 160);
+		return new Point(500, 180);
 	}
 	
 	@Override
