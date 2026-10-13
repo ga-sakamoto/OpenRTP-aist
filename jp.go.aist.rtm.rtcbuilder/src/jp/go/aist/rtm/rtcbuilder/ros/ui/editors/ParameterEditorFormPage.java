@@ -290,7 +290,7 @@ public class ParameterEditorFormPage extends AbstractEditorFormPage {
 		createHintLabel(Messages.getString("IMC.CONFIGURATION_LBL_DATANAME"), Messages.getString("IMC.CONFIGURATION_HINT_DOC_NAME_DESC"), toolkit, composite);
 		createHintLabel(Messages.getString("IMC.CONFIGURATION_LBL_DEFAULT"), Messages.getString("IMC.CONFIGURATION_HINT_DOC_DEFAULT_DESC"), toolkit, composite);
 		createHintLabel(Messages.getString("IMC.CONFIGURATION_LBL_DESCRIPTION"), Messages.getString("IMC.ROS_PARAMETER_HINT_DESC_DESC"), toolkit, composite);
-		createHintLabel(Messages.getString("IMC.CONFIGURATION_LBL_UNIT"), IMessageConstantsROS.PARAMETER_HINT_DESC_EXPL, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.CONFIGURATION_LBL_UNIT"), Messages.getString("IMC.ROS_PARAMETER_HINT_UNIT_DESC"), toolkit, composite);
 		createHintLabel(Messages.getString("IMC.CONFIGURATION_LBL_RANGE"), IMessageConstants.CONFIGURATION_HINT_DOC_RANGE, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.CONFIGURATION_LBL_CONSTRAINT"), IMessageConstants.CONFIGURATION_HINT_DOC_CONSTRAINT, toolkit, composite);
 	}

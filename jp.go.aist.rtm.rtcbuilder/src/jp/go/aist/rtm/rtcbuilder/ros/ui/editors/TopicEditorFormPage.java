@@ -263,6 +263,9 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 		createHintLabel(Messages.getString("IMC.ROS_TOPIC_LBL_TOPICNAME"), Messages.getString("IMC.ROS_TOPIC_HINT_TOPIC_NAME_DESC"), toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_TOPIC_LBL_DATATYPE"), Messages.getString("IMC.ROS_TOPIC_HINT_MESSAGE_TYPE_DESC"), toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_TOPIC_LBL_PACKAGE_TITLE"), IMessageConstantsROS.TOPIC_HINT_PACKAGE_EXPL, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_TOPIC_HINT_PACKAGE_C1_TITLE"), IMessageConstantsROS.TOPIC_HINT_PACKAGE_C1_EXPL, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_TOPIC_HINT_PACKAGE_C2_TITLE"), IMessageConstantsROS.TOPIC_HINT_PACKAGE_C2_EXPL, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_TOPIC_HINT_PACKAGE_C3_TITLE"), IMessageConstantsROS.TOPIC_HINT_PACKAGE_C3_EXPL, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_TOPIC_HINT_QoS_TITLE"), IMessageConstantsROS.TOPIC_HINT_QoS_DESC, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_TOPIC_HINT_RELIABILITY_TITLE"), IMessageConstantsROS.TOPIC_HINT_RELIABILITY_EXPL, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_TOPIC_HINT_HISTORY_TITLE"), IMessageConstantsROS.TOPIC_HINT_HISTORY_EXPL, toolkit, composite);

@@ -148,6 +148,9 @@ public class ServiceEditorFormPage extends AbstractEditorFormPage {
 		createHintLabel(Messages.getString("IMC.ROS_SERVICE_LBL_SERVICENAME"), Messages.getString("IMC.ROS_SERVICE_HINT_SERVICE_NAME_DESC"), toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_SERVICE_LBL_SERVICETYPE"), Messages.getString("IMC.ROS_SERVICE_HINT_SERVICE_NAME_DESC"), toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_SERVICE_LBL_PACKAGE_TITLE"), IMessageConstantsROS.SERVICE_HINT_SERVICE_PACKAGE_EXPL, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_SERVICE_HINT_PACKAGE_C1_TITLE"), IMessageConstantsROS.SERVICE_HINT_SERVICE_PACKAGE_C1_EXPL, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_SERVICE_HINT_PACKAGE_C2_TITLE"), IMessageConstantsROS.SERVICE_HINT_SERVICE_PACKAGE_C2_EXPL, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_SERVICE_HINT_PACKAGE_C3_TITLE"), IMessageConstantsROS.SERVICE_HINT_SERVICE_PACKAGE_C3_EXPL, toolkit, composite);
 		createHintLabel(IMessageConstantsROS.SERVICE_CALLBACK_LBL, "", toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_SERVICE_HINT_VARNAME_SERVER_TITLE"), IMessageConstantsROS.SERVICE_HINT_VAR_SERVER_EXPL, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_SERVICE_HINT_VARNAME_CLIENT_TITLE"), IMessageConstantsROS.SERVICE_HINT_VAR_CLIENT_EXPL, toolkit, composite);

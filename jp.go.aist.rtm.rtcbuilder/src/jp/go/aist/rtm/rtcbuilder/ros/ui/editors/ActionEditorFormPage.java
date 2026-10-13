@@ -149,6 +149,9 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 		createHintLabel(Messages.getString("IMC.ROS_ACTION_LBL_ACTIONNAME"), IMessageConstantsROS.ACTION_HINT_NAME_EXPL, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_ACTION_LBL_ACTIONTYPE"), Messages.getString("IMC.ROS_ACTION_HINT_ACTION_TYPE_DESC"), toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_ACTION_LBL_PACKAGE_TITLE"), IMessageConstantsROS.ACTION_HINT_PACKAGE_EXPL, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_ACTION_HINT_PACKAGE_C1_TITLE"), IMessageConstantsROS.ACTION_HINT_PACKAGE_C1_EXPL, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_ACTION_HINT_PACKAGE_C2_TITLE"), IMessageConstantsROS.ACTION_HINT_PACKAGE_C2_EXPL, toolkit, composite);
+		createHintLabel(Messages.getString("IMC.ROS_ACTION_HINT_PACKAGE_C3_TITLE"), IMessageConstantsROS.ACTION_HINT_PACKAGE_C3_EXPL, toolkit, composite);
 		createHintLabel(Messages.getString("IMC.ROS_ACTION_LBL_CALLBACK"), IMessageConstantsROS.ACTION_HINT_CALLBACK_EXPL, toolkit, composite);
 		//
 		createHintSpace(toolkit, composite);
