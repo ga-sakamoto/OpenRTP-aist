@@ -213,6 +213,22 @@ public class StringUtil {
         return !VALID_FORMAT_PATTERN.matcher(input).matches();
     }
 	
+	public static boolean checkInvalidSrvFormat(String input) {
+        if (input == null || input.isEmpty()) {
+            return true;
+        }
+        Pattern VALID_FORMAT_PATTERN = Pattern.compile("^([^/]+/[^/]+/[^/]+|[^/]+\\.srv)$");
+        return !VALID_FORMAT_PATTERN.matcher(input).matches();
+    }
+
+	public static boolean checkInvalidActionFormat(String input) {
+        if (input == null || input.isEmpty()) {
+            return true;
+        }
+        Pattern VALID_FORMAT_PATTERN = Pattern.compile("^([^/]+/[^/]+/[^/]+|[^/]+\\.action)$");
+        return !VALID_FORMAT_PATTERN.matcher(input).matches();
+    }
+
 	public static String splitString(String source, int width, String prefix, int offset) {
 		if( source==null || source.equals("") || width<=0 ) return "";
 

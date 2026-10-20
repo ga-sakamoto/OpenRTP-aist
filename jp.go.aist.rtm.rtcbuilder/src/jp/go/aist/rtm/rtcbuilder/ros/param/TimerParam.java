@@ -81,7 +81,7 @@ public class TimerParam extends AbstractRecordedParam implements Serializable {
 			return Messages.getString("IMC.VALIDATE_LICYCLE_CALLBACK4");
 		}
 		
-		if(this.rate < 0.0) {
+		if(this.rate <= 0.0) {
 			return Messages.getString("IMC.VALIDATE_LICYCLE_RATE");
 		}
 
