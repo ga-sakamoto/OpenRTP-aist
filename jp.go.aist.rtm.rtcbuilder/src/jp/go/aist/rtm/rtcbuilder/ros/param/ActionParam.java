@@ -163,7 +163,7 @@ public class ActionParam extends AbstractRecordedParam implements Serializable {
 		if( StringUtil.checkInvalidActionFormat(this.type) ) {
 			return Messages.getString("IMC.VALIDATE_ACTION_TYPE2");
 		}
-		if(this.type.endsWith("msg") || this.type.endsWith("action")
+		if(this.type.endsWith("msg") || this.type.endsWith("srv")
 				 || this.type.contains(" ") || this.type.contains("･")) {
 			return Messages.getString("IMC.VALIDATE_ACTION_TYPE3");
 		}
