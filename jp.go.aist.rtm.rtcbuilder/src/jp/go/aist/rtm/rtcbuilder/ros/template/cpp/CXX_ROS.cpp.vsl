@@ -237,7 +237,7 @@ CallbackReturn ${rosParam.className}::on_cleanup(const rclcpp_lifecycle::State &
  * ${rosParam.getDocActionOverView(4)}
  */
 #end
-#if(${rosParam.IsNotImplemented(3)})// Optional: on_shutdown. Enable the declaration in the header before using this definition.
+#if(${rosParam.IsNotImplemented(4)})// Optional: on_shutdown. Enable the declaration in the header before using this definition.
 #end
 #if(${rosParam.IsNotImplemented(4)})// #end##
 CallbackReturn ${rosParam.className}::on_shutdown(const rclcpp_lifecycle::State &)
@@ -253,7 +253,7 @@ CallbackReturn ${rosParam.className}::on_shutdown(const rclcpp_lifecycle::State 
  * ${rosParam.getDocActionOverView(5)}
  */
 #end
-#if(${rosParam.IsNotImplemented(3)})// Optional: on_error. Enable the declaration in the header before using this definition.
+#if(${rosParam.IsNotImplemented(5)})// Optional: on_error. Enable the declaration in the header before using this definition.
 #end
 #if(${rosParam.IsNotImplemented(5)})// #end##
 CallbackReturn ${rosParam.className}::on_error(const rclcpp_lifecycle::State &)
