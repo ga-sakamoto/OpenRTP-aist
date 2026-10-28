@@ -516,14 +516,15 @@ public class TopicEditorFormPage extends AbstractEditorFormPage {
 			@SuppressWarnings("unchecked")
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String selected = messageTypeCombo.getText();
 				updateDefaultValue();
 				TopicParam selectParam = new TopicParam(role);
 				((List) topicTableViewer.getInput()).add(selectParam);
 				topicTableViewer.refresh();
 				update();
 				topicTableViewer.setSelection(new StructuredSelection(selectParam), true);
-				messageTypeCombo.setText(selected);
+				messageTypeCombo.setText("");
+				typePackageText.setText("");
+				
 			}
 		});
 		gd = new GridData(GridData.FILL_HORIZONTAL);

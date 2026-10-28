@@ -345,14 +345,14 @@ public class ServiceEditorFormPage extends AbstractEditorFormPage {
 			@SuppressWarnings("unchecked")
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String selected = serviceTypeCombo.getText();
 				updateDefaultValue();
 				ServiceParam selectParam = new ServiceParam(role);
 				((List) portParamTableViewer.getInput()).add(selectParam);
 				portParamTableViewer.refresh();
 				update();
 				portParamTableViewer.setSelection(new StructuredSelection(selectParam), true);
-				serviceTypeCombo.setText(selected);
+				serviceTypeCombo.setText("");
+				typePackageText.setText("");
 			}
 		});
 		gd = new GridData(GridData.FILL_HORIZONTAL);

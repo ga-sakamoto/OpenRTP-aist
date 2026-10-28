@@ -348,14 +348,14 @@ public class ActionEditorFormPage extends AbstractEditorFormPage {
 			@SuppressWarnings("unchecked")
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String selected = actionTypeCombo.getText();
 				updateDefaultValue();
 				ActionParam selectParam = new ActionParam(role);
 				((List) actionTableViewer.getInput()).add(selectParam);
 				actionTableViewer.refresh();
 				update();
 				actionTableViewer.setSelection(new StructuredSelection(selectParam), true);
-				actionTypeCombo.setText(selected);
+				actionTypeCombo.setText("");
+				typePackageText.setText("");
 			}
 		});
 		gd = new GridData(GridData.FILL_HORIZONTAL);
