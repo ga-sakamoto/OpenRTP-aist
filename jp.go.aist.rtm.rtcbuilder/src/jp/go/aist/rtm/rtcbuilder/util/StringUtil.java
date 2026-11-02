@@ -207,7 +207,7 @@ public class StringUtil {
         if (input == null || input.isEmpty()) {
             return true;
         }
-        Pattern VALID_FORMAT_PATTERN = Pattern.compile("^([^/]+/[^/]+/[^/]+|[^/]+\\.msg)$");
+        Pattern VALID_FORMAT_PATTERN = Pattern.compile("^([^/]+/[^/]+/[^/]+|[^/]+)$");
         return !VALID_FORMAT_PATTERN.matcher(input).matches();
     }
 	
@@ -215,7 +215,7 @@ public class StringUtil {
         if (input == null || input.isEmpty()) {
             return true;
         }
-        Pattern VALID_FORMAT_PATTERN = Pattern.compile("^([^/]+/[^/]+/[^/]+|[^/]+\\.srv)$");
+        Pattern VALID_FORMAT_PATTERN = Pattern.compile("^([^/]+/[^/]+/[^/]+|[^/]+)$");
         return !VALID_FORMAT_PATTERN.matcher(input).matches();
     }
 
@@ -223,7 +223,7 @@ public class StringUtil {
         if (input == null || input.isEmpty()) {
             return true;
         }
-        Pattern VALID_FORMAT_PATTERN = Pattern.compile("^([^/]+/[^/]+/[^/]+|[^/]+\\.action)$");
+        Pattern VALID_FORMAT_PATTERN = Pattern.compile("^([^/]+/[^/]+/[^/]+|[^/]+)$");
         return !VALID_FORMAT_PATTERN.matcher(input).matches();
     }
 
