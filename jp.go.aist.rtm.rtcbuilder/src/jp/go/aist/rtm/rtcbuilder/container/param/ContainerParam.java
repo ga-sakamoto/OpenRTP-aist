@@ -187,7 +187,7 @@ public class ContainerParam extends AbstractRecordedParam {
 			}
 		} else if(installer.equals("pip")) {
 			if(details.pip != null && 0 < details.pip.length()) {
-				String[] libs = details.apt.split(" ");
+				String[] libs = details.pip.split(" ");
 				for(String each : libs) {
 					if(each.contains("${ROS_DISTRO}")) {
 						String middleware = this.mdlVersion.toLowerCase();
