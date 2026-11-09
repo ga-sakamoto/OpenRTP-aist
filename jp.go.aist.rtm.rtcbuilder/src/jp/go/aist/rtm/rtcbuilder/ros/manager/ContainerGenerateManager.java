@@ -65,7 +65,7 @@ public class ContainerGenerateManager extends GenerateManager {
 		
 		ContainerConfig containerConfig;
 		if(rosParam.getContainerConfig()==null) {
-			String configText = ContainerPreferenceManager.getInstance().getSettings();
+			String configText = ContainerPreferenceManager.getInstance().getSettingsROS();
 			ObjectMapper mapper = new ObjectMapper();
 			try {
 				containerConfig = mapper.readValue(configText, ContainerConfig.class);

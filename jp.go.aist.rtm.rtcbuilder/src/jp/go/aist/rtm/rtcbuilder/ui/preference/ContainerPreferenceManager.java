@@ -96,7 +96,7 @@ public class ContainerPreferenceManager {
 		return result;
 	}
 	public void setSettingsROS(String defaultSettings) {
-		String oldSettings = getSettings();
+		String oldSettings = getSettingsROS();
 		RtcBuilderPlugin.getDefault().getPreferenceStore().setValue(Generate_Container_Settings_ROS, defaultSettings);
 		propertyChangeSupport.firePropertyChange(Generate_Container_Settings_ROS, oldSettings, defaultSettings);
 	}
