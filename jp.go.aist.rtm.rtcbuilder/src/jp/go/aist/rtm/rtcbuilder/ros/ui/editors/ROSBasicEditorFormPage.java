@@ -58,9 +58,13 @@ import org.openrtp.namespaces.ros.version01.RosProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jp.ac.meijo_u.iso22166_part202.util.ISO2ROSProfileHandler;
 import jp.ac.meijo_u.iso22166_part202.util.ROS2ISOProfileHandler;
 import jp.go.aist.rtm.rtcbuilder.Generator.MergeHandler;
+import jp.go.aist.rtm.rtcbuilder.container.param.ContainerParam;
+import jp.go.aist.rtm.rtcbuilder.container.param.setting.ContainerConfig;
 import jp.go.aist.rtm.rtcbuilder.GuiRtcBuilder;
 import jp.go.aist.rtm.rtcbuilder.IRTCBMessageConstants;
 import jp.go.aist.rtm.rtcbuilder.IRtcBuilderConstants;
@@ -84,6 +88,7 @@ import jp.go.aist.rtm.rtcbuilder.ui.dialog.ImportDialog;
 import jp.go.aist.rtm.rtcbuilder.ui.dialog.RestoreDialog;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.AbstractEditorFormPage;
 import jp.go.aist.rtm.rtcbuilder.ui.editors.IMessageConstants;
+import jp.go.aist.rtm.rtcbuilder.ui.preference.ContainerPreferenceManager;
 import jp.go.aist.rtm.rtcbuilder.util.FileUtil;
 import jp.go.aist.rtm.toolscommon.profiles.util.XmlHandlerROS;
 
@@ -880,8 +885,17 @@ public class ROSBasicEditorFormPage extends AbstractEditorFormPage {
 								Messages.getString("IMC.BASIC_IMPORT_ERROR"));
 						return;
 					}
-	        		
 		        }
+				String configText = ContainerPreferenceManager.getInstance().getSettingsROS();
+				ObjectMapper mapper = new ObjectMapper();
+				try {
+					ContainerConfig containerSettings =  mapper.readValue(configText, ContainerConfig.class);
+					for(ContainerParam each : editor.getGeneratorParam().getROSParam().getContainerSettings() ) {
+						each.updateDefaultLibs(containerSettings);
+					}
+				} catch (Exception e1) {
+				}
+				
 				MessageDialog.openInformation(getSite().getShell(), "Finish",
 						Messages.getString("IMC.BASIC_IMPORT_DONE"));
 				//
