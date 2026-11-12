@@ -393,18 +393,27 @@ public class ParamUtilROS extends ParamUtil {
 			String[] elems = constraint.split("\\|");
 			if(0<elems.length) {
 				double val = 0.0;
-				val = Double.parseDouble(elems[0]);
-				paramp.setMin(val);
+				try {
+					val = Double.parseDouble(elems[0]);
+					paramp.setMin(val);
+				} catch(Exception e1) {
+				}
 			}
 			if(1<elems.length) {
 				double val = 0.0;
-				val = Double.parseDouble(elems[1]);
-				paramp.setMax(val);
+				try {
+					val = Double.parseDouble(elems[1]);
+					paramp.setMax(val);
+				} catch(Exception e1) {
+				}
 			}
 			if(2<elems.length) {
 				double val = 0.0;
-				val = Double.parseDouble(elems[2]);
-				paramp.setStep(val);
+				try {
+					val = Double.parseDouble(elems[2]);
+					paramp.setStep(val);
+				} catch(Exception e1) {
+				}
 			}
 			
 			if( param instanceof ParameterDoc ) {
