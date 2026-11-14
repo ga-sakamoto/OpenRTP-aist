@@ -501,7 +501,7 @@ public class ROSParam extends ParamBase implements Serializable {
 		if ( this.packageName == null || this.packageName.length() == 0) {
 			return Messages.getString("IMC.VALIDATE_BASIC_PACKAGE_NAME1");
 		}
-		if( !StringUtil.checkHyphenSpaceSlashDotJpn(this.packageName) ) {
+		if( StringUtil.checkHyphenSpaceSlashDotJpn(this.packageName) ) {
 			return Messages.getString("IMC.VALIDATE_BASIC_PACKAGE_NAME2");
 		}
 		if( StringUtil.hasUppercase(this.packageName) ) {
@@ -510,7 +510,7 @@ public class ROSParam extends ParamBase implements Serializable {
 		if( !StringUtil.checkMultiUnderBar(this.packageName) ) {
 			return Messages.getString("IMC.VALIDATE_BASIC_PACKAGE_NAME4");
 		}
-		if( !StringUtil.checkStartedWithDigitOrUnderscoreFast(this.packageName) ) {
+		if( StringUtil.checkStartedWithDigitOrUnderscoreFast(this.packageName) ) {
 			return Messages.getString("IMC.VALIDATE_BASIC_PACKAGE_NAME3");
 		}
 		if(this.packageName.length() == 1) {
@@ -520,7 +520,7 @@ public class ROSParam extends ParamBase implements Serializable {
 		if ( this.nodeName == null || this.nodeName.length() == 0) {
 			return Messages.getString("IMC.VALIDATE_BASIC_NODE_NAME1");
 		}
-		if( !StringUtil.checkHyphenSpaceSlashDotJpn(this.nodeName) ) {
+		if( StringUtil.checkHyphenSpaceSlashDotJpn(this.nodeName) ) {
 			return Messages.getString("IMC.VALIDATE_BASIC_NODE_NAME2");
 		}
 		if( !StringUtil.checkStartedWithDigitFast(this.nodeName) ) {
@@ -562,7 +562,7 @@ public class ROSParam extends ParamBase implements Serializable {
 		}
 		
 		for(PackageParam each : this.target_env.getLibraries()) {
-			if( !StringUtil.checkHyphenSpaceSlashDotJpn(each.getName()) ) {
+			if( StringUtil.checkHyphenSpaceSlashDotJpn(each.getName()) ) {
 				return Messages.getString("IMC.VALIDATE_BASIC_DEPENDENCY1");
 			}
 			if( !StringUtil.checkStartedWithDigitFast(each.getName()) ) {

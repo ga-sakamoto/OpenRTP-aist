@@ -76,7 +76,7 @@ public class StringUtil {
 	        return false;
 	    }
 	    char firstChar = source.charAt(0);
-	    return !Character.isDigit(firstChar) || firstChar == '_';
+	    return Character.isDigit(firstChar) || firstChar == '_';
 	}
 	
 	public static boolean checkStartedWithDigitFast(String source) {
@@ -100,11 +100,11 @@ public class StringUtil {
 	}
 	
 	public static boolean checkHyphenSpaceSlashDotJpn(String source) {
-		if (source == null) {
-            return false;
-        }
-		Pattern TARGET_PATTERN = Pattern.compile("[-_\\s./\\d\\p{IsHiragana}\\p{IsKatakana}\\p{IsHan}]");
-        return TARGET_PATTERN.matcher(source).find();
+		if (source == null || source.isEmpty()) {
+	        return false;
+	    }
+		Pattern TARGET_PATTERN = Pattern.compile("[\\s\\u3000\\-./ー－．／。\\p{IsHiragana}\\p{IsKatakana}\\p{IsHan}]");
+		return TARGET_PATTERN.matcher(source).find();
     }
 
 	public static boolean checkHyphenSpaceDotJpn(String source) {
